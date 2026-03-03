@@ -157,7 +157,7 @@ client/
 | **net/http** | HTTP server (standard library) |
 | **coder/websocket** | WebSocket connections (maintained fork of nhooyr/websocket) |
 | **modernc.org/sqlite** | SQLite driver (pure Go, no CGO) |
-| **golang-jwt/jwt** | JWT token generation and validation |
+| **golang-jwt/jwt/v5** | JWT token generation and validation |
 | **golang.org/x/crypto/bcrypt** | Password hashing |
 | **golangci-lint** | Linting |
 
@@ -203,8 +203,10 @@ server/
 │   │   ├── hub.go              # Central WebSocket hub
 │   │   ├── client.go           # Individual client connection
 │   │   ├── messages.go         # Message type definitions
-│   │   └── handlers.go         # WebSocket message handlers
-│   └── gameloop/
+│   │   └── handlers.go         # WebSocket message handlers│   ├── dto/                    # Data Transfer Objects (request/response structs)
+│   │   ├── auth.go
+│   │   ├── village.go
+│   │   └── map.go│   └── gameloop/
 │       ├── ticker.go           # Game tick loop
 │       ├── resource_tick.go    # Resource production per tick
 │       ├── building_tick.go    # Building queue completion
@@ -459,4 +461,5 @@ All endpoints live under `/api/` with no version prefix. If breaking changes are
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of system architecture |
+| 2026-03-03 | Fixed golang-jwt to v5, added dto/ package to server folder structure |
 | 2026-03-03 | Replaced gorilla/websocket with coder/websocket, added missing WS messages (connection_ready, build_started, train_started/complete, village_state, subscription_confirmed), added API response envelope, error code catalog, pagination convention, map chunk spec, API versioning note |

@@ -115,12 +115,14 @@ All styles are written for **desktop first**. Mobile adaptations are overrides w
 | **Tablet** | 769px – 1024px | Adjusted layout |
 | **Mobile** | ≤ 768px | Simplified, stacked layout |
 
-Use CSS custom properties for breakpoints:
+Document breakpoint values as reference constants. Note that CSS custom properties **cannot** be used inside `@media` queries — use the raw pixel values directly in `@media`:
 
 ```css
+/* Reference only — these vars CANNOT be used in @media queries.
+   Always write @media (max-width: 768px) or @media (max-width: 1024px) directly. */
 :root {
-  --breakpoint-mobile: 768px;
-  --breakpoint-tablet: 1024px;
+  --breakpoint-mobile: 768px;   /* reference */
+  --breakpoint-tablet: 1024px;  /* reference */
 }
 ```
 
@@ -404,4 +406,5 @@ Contains:
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of styling guide |
+| 2026-03-03 | Added note that CSS custom properties cannot be used in @media queries — use raw pixel values |
 | 2026-03-03 | Simplified mobile strategy: removed separate .mobile.css files, all responsive overrides now live inside .module.css via @media queries |

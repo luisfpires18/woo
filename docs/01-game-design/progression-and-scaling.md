@@ -42,17 +42,108 @@ time(level) = base_time × (time_factor ^ (level - 1))
 
 > These are **draft values**. Will be tuned during playtesting. The principle is clear: early levels are quick and cheap, late levels are a major investment.
 
-### Production Rates (Iron Mine Example)
+### Production Rates — All Resource Buildings
 
-| Level | Iron/Hour |
-|-------|-----------|
+All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) share the same production curve:
+
+| Level | Resources/Hour |
+|-------|---------------|
 | 1 | 30 |
+| 2 | 40 |
+| 3 | 50 |
 | 5 | 60 |
 | 10 | 110 |
 | 15 | 170 |
 | 20 | 240 |
 
+> The column name matches the building output — Iron/Hour for Iron Mine, Wood/Hour for Lumber Mill, etc. They use the same numbers.
+
 Production increases roughly linearly to keep late-game upgrades worthwhile but not game-breaking.
+
+### Warehouse Capacity
+
+| Level | Max Storage per Resource |
+|-------|------------------------|
+| 1 | 1,000 |
+| 2 | 1,500 |
+| 3 | 2,200 |
+| 5 | 5,000 |
+| 10 | 15,000 |
+| 15 | 40,000 |
+| 20 | 80,000 |
+
+### Base Costs — All Buildings (Level 1)
+
+| Building | Iron | Wood | Stone | Food | Build Time | Scaling Factor |
+|----------|------|------|-------|------|-----------|----------------|
+| Town Hall | 200 | 200 | 200 | 100 | 5 min | 1.7 |
+| Iron Mine | 100 | 80 | 50 | 30 | 2 min | 1.5 |
+| Lumber Mill | 80 | 100 | 50 | 30 | 2 min | 1.5 |
+| Quarry | 80 | 50 | 100 | 30 | 2 min | 1.5 |
+| Farm | 50 | 80 | 50 | 20 | 2 min | 1.5 |
+| Warehouse | 120 | 120 | 100 | 50 | 3 min | 1.6 |
+| Barracks | 200 | 150 | 100 | 80 | 5 min | 1.8 |
+| Stable | 300 | 200 | 150 | 120 | 8 min | 1.8 |
+| Forge | 250 | 180 | 200 | 100 | 8 min | 1.8 |
+| Rune Altar | 300 | 250 | 250 | 150 | 10 min | 1.9 |
+| Walls | 150 | 100 | 200 | 50 | 4 min | 1.6 |
+| Marketplace | 180 | 180 | 120 | 80 | 5 min | 1.6 |
+| Embassy | 200 | 200 | 200 | 100 | 8 min | 1.7 |
+| Watchtower | 150 | 100 | 150 | 60 | 4 min | 1.6 |
+| Dock | 250 | 300 | 150 | 100 | 8 min | 1.8 |
+
+> Apply the cost formula: `cost(level) = base_cost × (scaling_factor ^ (level - 1))`. Scaling factor varies per building (resource buildings 1.5×, military 1.8×, etc.).
+
+### Utility Building Scaling
+
+#### Barracks — Training Speed Bonus
+
+| Level | Training Speed Bonus |
+|-------|---------------------|
+| 1 | Base (1.0×) |
+| 5 | 1.25× |
+| 10 | 1.6× |
+| 15 | 2.0× |
+| 20 | 2.5× |
+
+#### Forge — Tier Unlocks
+
+| Forge Level | Max Weapon Tier |
+|-------------|----------------|
+| 1 | Common |
+| 3 | Rare |
+| 5 | Epic |
+| 8 | Legendary |
+| 10 | Mythic |
+
+#### Walls — Defense Bonus
+
+| Level | Defense Bonus |
+|-------|-------------|
+| 1 | +5% |
+| 5 | +15% |
+| 10 | +30% |
+| 15 | +50% |
+| 20 | +75% |
+
+#### Marketplace — Trade Capacity
+
+| Level | Max Resources per Trade |
+|-------|------------------------|
+| 1 | 500 |
+| 5 | 2,000 |
+| 10 | 8,000 |
+| 15 | 20,000 |
+
+#### Watchtower — Detection Range
+
+| Level | Warning Time | Detail |
+|-------|-------------|--------|
+| 1 | 30 sec | "Incoming attack" only |
+| 3 | 1 min | Approximate troop count |
+| 5 | 2 min | Troop types visible |
+| 8 | 5 min | Exact troop count + types |
+| 10 | 10 min | Full detail + origin village |
 
 ---
 
@@ -186,4 +277,4 @@ The final decision will be made during playtesting. The system should be configu
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of progression and scaling |
-| 2026-03-03 | Added all building base costs, production rates for all resource buildings, Warehouse capacity table, utility building scaling (Barracks, Forge tiers, Walls defense, Marketplace, Watchtower) |
+| 2026-03-03 | Added all building base costs, production rates for all resource buildings, Warehouse capacity table, utility building scaling (Barracks, Forge tiers, Walls defense, Marketplace, Watchtower) — re-applied after previous silent failure |

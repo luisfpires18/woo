@@ -70,55 +70,68 @@ Each WebSocket connection is wrapped in a `Client` struct with dedicated read/wr
 
 ```go
 // internal/websocket/client.go
+import "github.com/coder/websocket"
+
 type Client struct {
     hub      *Hub
     conn     *websocket.Conn
     send     chan []byte
     playerID int64
     topics   map[string]bool
+    cancel   context.CancelFunc // cancels readPump/writePump contexts
 }
 
-func (c *Client) ReadPump() {
+// ReadPump reads messages from the WebSocket connection.
+// Uses coder/websocket's context-based Read API.
+func (c *Client) ReadPump(ctx context.Context) {
     defer func() {
         c.hub.unregister <- c
-        c.conn.Close()
+        c.conn.Close(websocket.StatusNormalClosure, "read pump done")
     }()
 
     c.conn.SetReadLimit(maxMessageSize)
-    c.conn.SetReadDeadline(time.Now().Add(pongWait))
-    c.conn.SetPongHandler(func(string) error {
-        c.conn.SetReadDeadline(time.Now().Add(pongWait))
-        return nil
-    })
 
     for {
-        _, message, err := c.conn.ReadMessage()
+        _, data, err := c.conn.Read(ctx)
         if err != nil {
+            // Context cancelled or connection closed
             break
         }
-        c.hub.handleMessage(c, message)
+        c.hub.handleMessage(c, data)
     }
 }
 
-func (c *Client) WritePump() {
+// WritePump writes messages to the WebSocket connection.
+// Uses coder/websocket's context-based Write + Ping API.
+func (c *Client) WritePump(ctx context.Context) {
     ticker := time.NewTicker(pingPeriod)
     defer func() {
         ticker.Stop()
-        c.conn.Close()
+        c.conn.Close(websocket.StatusNormalClosure, "write pump done")
     }()
 
     for {
         select {
+        case <-ctx.Done():
+            return
         case msg, ok := <-c.send:
             if !ok {
-                c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+                c.conn.Close(websocket.StatusNormalClosure, "channel closed")
                 return
             }
-            c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-            c.conn.WriteMessage(websocket.TextMessage, msg)
+            writeCtx, cancel := context.WithTimeout(ctx, writeWait)
+            err := c.conn.Write(writeCtx, websocket.MessageText, msg)
+            cancel()
+            if err != nil {
+                return
+            }
         case <-ticker.C:
-            c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-            c.conn.WriteMessage(websocket.PingMessage, nil)
+            pingCtx, cancel := context.WithTimeout(ctx, writeWait)
+            err := c.conn.Ping(pingCtx)
+            cancel()
+            if err != nil {
+                return
+            }
         }
     }
 }
@@ -496,3 +509,4 @@ func (t *OnlineTracker) OnlineCount() int {
 |------|--------|
 | 2026-03-03 | Initial creation of Go multiplayer guide |
 | 2026-03-03 | Added coder/websocket library note, updated lazy resource calc with max_storage and food_consumption, added WebSocket reconnection policy |
+| 2026-03-03 | Rewrote Client ReadPump/WritePump code to use coder/websocket context-based API (was gorilla-style) |

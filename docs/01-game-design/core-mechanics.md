@@ -93,8 +93,10 @@ Canonical string identifiers used in the database `/buildings.building_type` col
 ```
 town_hall, iron_mine, lumber_mill, quarry, farm, warehouse,
 barracks, stable, forge, rune_altar, walls, marketplace,
-embassy, watchtower, dock
+embassy, watchtower, dock, grove_sanctum, colosseum
 ```
+
+> `dock` is Veridor-only, `grove_sanctum` is Sylvara-only, `colosseum` is Arkazia-only.
 
 ### Building Prerequisites & Max Levels
 
@@ -371,3 +373,4 @@ Players can form alliances for cooperative play.
 |------|--------|
 | 2026-03-03 | Initial creation of core mechanics |
 | 2026-03-03 | Added Initial Village Setup, building prerequisites/max levels, canonical constants, square grid map spec (401×401), map generation rules, Weapons of Chaos configurable count |
+| 2026-03-03 | Added grove_sanctum and colosseum to canonical building type constants |

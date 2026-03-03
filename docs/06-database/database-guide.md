@@ -66,15 +66,18 @@ migrations/
 ├── 001_create_players.sql
 ├── 002_create_villages.sql
 ├── 003_create_buildings.sql
-├── 004_create_resources.sql
-├── 005_create_troops.sql
-├── 006_create_weapons.sql
-├── 007_create_runes.sql
-├── 008_create_alliances.sql
-├── 009_create_world_map.sql
-├── 010_create_attacks.sql
-├── 011_create_weapons_of_chaos.sql
-└── 012_create_refresh_tokens.sql
+├── 004_create_building_queue.sql
+├── 005_create_resources.sql
+├── 006_create_troops.sql
+├── 007_create_training_queue.sql
+├── 008_create_weapons.sql
+├── 009_create_runes.sql
+├── 010_create_alliances.sql
+├── 011_create_alliance_members.sql
+├── 012_create_world_map.sql
+├── 013_create_attacks.sql
+├── 014_create_weapons_of_chaos.sql
+└── 015_create_refresh_tokens.sql
 ```
 
 ### Migration Runner
@@ -144,7 +147,7 @@ package repository
 
 import (
     "context"
-    "server/internal/model"
+    "github.com/luisfpires18/woo/internal/model"
 )
 
 type PlayerRepository interface {
@@ -187,7 +190,7 @@ import (
     "context"
     "database/sql"
     "fmt"
-    "server/internal/model"
+    "github.com/luisfpires18/woo/internal/model"
 )
 
 type playerRepo struct {
@@ -270,15 +273,15 @@ func (r *buildingRepo) CreateBatch(ctx context.Context, buildings []*model.Build
     defer tx.Rollback()
 
     stmt, err := tx.PrepareContext(ctx,
-        "INSERT INTO buildings (village_id, type, level) VALUES (?, ?, ?)")
+        "INSERT INTO buildings (village_id, building_type, level) VALUES (?, ?, ?)")
     if err != nil {
         return fmt.Errorf("prepare statement: %w", err)
     }
     defer stmt.Close()
 
     for _, b := range buildings {
-        if _, err := stmt.ExecContext(ctx, b.VillageID, b.Type, b.Level); err != nil {
-            return fmt.Errorf("insert building %s: %w", b.Type, err)
+        if _, err := stmt.ExecContext(ctx, b.VillageID, b.BuildingType, b.Level); err != nil {
+            return fmt.Errorf("insert building %s: %w", b.BuildingType, err)
         }
     }
 
@@ -442,3 +445,4 @@ func TestPlayerRepo_Create(t *testing.T) {
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of database guide |
+| 2026-03-03 | Fixed import paths to github.com/luisfpires18/woo/internal/model, fixed buildings.type→building_type, expanded migration list to 15 files |
