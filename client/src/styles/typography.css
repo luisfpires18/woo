@@ -1,0 +1,6 @@
+/* Typography */
+:root {
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'EB Garamond', serif;
+  --font-mono: 'Fira Code', monospace;
+}
