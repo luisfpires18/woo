@@ -1,0 +1,345 @@
+# Frontend Guide
+
+> All conventions for the React + TypeScript frontend. Read before writing any client code.
+
+---
+
+## Technology Stack
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| React | 18+ | UI framework |
+| TypeScript | 5+ | Type safety (strict mode enabled) |
+| Vite | 5+ | Build tool and dev server |
+| Zustand | 4+ | Global game state management |
+| TanStack Query (React Query) | 5+ | Server state fetching/caching |
+| React Router | 6+ | Client-side routing |
+| CSS Modules | built-in | Scoped component styling |
+| Vitest | latest | Unit testing framework |
+| React Testing Library | latest | Component testing |
+
+---
+
+## Folder Structure
+
+```
+client/src/
+├── components/             # Reusable UI components (used in 2+ places)
+│   ├── Button/
+│   │   ├── Button.tsx
+│   │   ├── Button.module.css
+│   │   └── Button.mobile.css
+│   ├── Modal/
+│   ├── Card/
+│   ├── ResourceBar/
+│   ├── Tooltip/
+│   ├── LoadingSpinner/
+│   ├── ErrorBoundary/
+│   └── Layout/
+│       ├── Header/
+│       ├── Sidebar/
+│       └── Footer/
+├── features/               # Feature modules (domain-specific)
+│   ├── auth/
+│   │   ├── components/     # Auth-specific components (LoginForm, RegisterForm)
+│   │   ├── hooks/          # Auth-specific hooks (useLogin, useRegister)
+│   │   └── pages/          # Auth pages (LoginPage, RegisterPage)
+│   ├── village/
+│   │   ├── components/     # VillageView, BuildingPanel, ResourcePanel
+│   │   ├── hooks/          # useVillage, useBuilding, useResources
+│   │   └── pages/          # VillagePage
+│   ├── map/
+│   │   ├── components/     # MapGrid, MapTile, MapControls
+│   │   ├── hooks/          # useMapData, useMapNavigation
+│   │   └── pages/          # MapPage
+│   ├── combat/
+│   ├── forge/
+│   └── lore/
+├── hooks/                  # Shared custom hooks
+│   ├── useWebSocket.ts     # WebSocket connection management
+│   ├── useAuth.ts          # Auth state convenience hook
+│   └── useMediaQuery.ts    # Responsive breakpoint hook
+├── services/               # API and WebSocket layer
+│   ├── api.ts              # REST API client (typed fetch wrapper)
+│   ├── websocket.ts        # WebSocket connection singleton
+│   └── auth.ts             # Auth-specific API calls
+├── stores/                 # Zustand stores
+│   ├── authStore.ts        # Auth state (user, token, login status)
+│   ├── gameStore.ts        # Real-time game state (current resources tick)
+│   ├── villageStore.ts     # Active village state
+│   └── mapStore.ts         # Map viewport and visible tiles
+├── styles/                 # Global styles
+│   ├── globals.css         # CSS reset, base styles, CSS variables
+│   ├── themes.css          # Dark/light mode theme variables
+│   └── typography.css      # Font imports and text styles
+├── types/                  # TypeScript interfaces (shared)
+│   ├── api.ts              # API request/response types
+│   ├── game.ts             # Game entity types (Village, Building, Troop, etc.)
+│   ├── websocket.ts        # WebSocket message types
+│   └── kingdom.ts          # Kingdom-specific types and constants
+├── utils/                  # Pure utility functions
+│   ├── format.ts           # Number formatting, date formatting, time-ago
+│   ├── calculations.ts     # Display-only calculations (resource ETA, countdown timers)
+│   └── constants.ts        # Client-side constants (building names, troop names, etc.)
+├── App.tsx                 # Root component with React Router
+├── main.tsx                # Entry point (renders App)
+└── vite-env.d.ts           # Vite type declarations
+```
+
+---
+
+## Component Rules
+
+### 1. Reuse is Mandatory
+
+If a UI element appears in **2 or more places**, it **must** be extracted to `client/src/components/`. Feature-specific components live inside their feature folder (`features/village/components/`). Shared components live in the top-level `components/` folder.
+
+### 2. Component Structure
+
+Every component follows this pattern:
+
+```
+ComponentName/
+├── ComponentName.tsx           # Component logic and JSX
+├── ComponentName.module.css    # Desktop styles (CSS Module)
+├── ComponentName.mobile.css    # Mobile overrides (@media ≤ 768px)
+└── ComponentName.test.tsx      # Unit tests (optional for simple presentational components)
+```
+
+### 3. Component Guidelines
+
+```tsx
+// Good: Typed props, destructured, no inline styles
+interface ButtonProps {
+  label: string;
+  variant?: 'primary' | 'secondary' | 'danger';
+  disabled?: boolean;
+  onClick: () => void;
+}
+
+export function Button({ label, variant = 'primary', disabled = false, onClick }: ButtonProps) {
+  return (
+    <button
+      className={`${styles.button} ${styles[variant]}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+}
+```
+
+### Anti-Patterns (DO NOT)
+
+- **No inline styles**: Always use CSS Modules.
+- **No `any` types**: All props, state, and API responses must be typed.
+- **No direct DOM manipulation**: Use React refs only when absolutely necessary.
+- **No business/game logic in components**: Components render; hooks and services calculate.
+- **No hardcoded strings**: Use constants for building names, troop names, resource names, etc.
+
+---
+
+## State Management
+
+### When to Use What
+
+| Data Type | Tool | Why |
+|----------|------|-----|
+| Server data (fetched once, cached) | **React Query** | Automatic caching, refetching, loading/error states |
+| Real-time game state (ticking resources) | **Zustand** | Synchronous updates from WebSocket, no re-fetch overhead |
+| Auth state (user, token) | **Zustand** | Needs to persist across components, updated on login/logout |
+| UI state (modal open, tab selection) | **React useState** | Component-local, no need for global state |
+| Form state (inputs, validation) | **React useState** or React Hook Form | Component-local |
+
+### Zustand Store Example
+
+```tsx
+// stores/villageStore.ts
+import { create } from 'zustand';
+import type { Village } from '../types/game';
+
+interface VillageStore {
+  activeVillage: Village | null;
+  setActiveVillage: (village: Village) => void;
+  updateResources: (resources: Partial<Village['resources']>) => void;
+}
+
+export const useVillageStore = create<VillageStore>((set) => ({
+  activeVillage: null,
+  setActiveVillage: (village) => set({ activeVillage: village }),
+  updateResources: (resources) =>
+    set((state) => ({
+      activeVillage: state.activeVillage
+        ? { ...state.activeVillage, resources: { ...state.activeVillage.resources, ...resources } }
+        : null,
+    })),
+}));
+```
+
+### React Query Example
+
+```tsx
+// features/village/hooks/useVillage.ts
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../../services/api';
+import type { Village } from '../../../types/game';
+
+export function useVillage(villageId: number) {
+  return useQuery<Village>({
+    queryKey: ['village', villageId],
+    queryFn: () => api.get(`/villages/${villageId}`),
+    staleTime: 30_000, // 30 seconds (server state doesn't change that fast)
+  });
+}
+```
+
+---
+
+## Routing Structure
+
+```tsx
+// App.tsx (simplified)
+<Routes>
+  {/* Public routes */}
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/register" element={<RegisterPage />} />
+
+  {/* Protected routes (require auth) */}
+  <Route element={<ProtectedLayout />}>
+    <Route path="/" element={<DashboardPage />} />
+    <Route path="/village/:id" element={<VillagePage />} />
+    <Route path="/map" element={<MapPage />} />
+    <Route path="/forge" element={<ForgePage />} />
+    <Route path="/alliance" element={<AlliancePage />} />
+    <Route path="/profile" element={<ProfilePage />} />
+  </Route>
+
+  {/* Single-player lore mode */}
+  <Route path="/lore" element={<LoreExplorerPage />} />
+</Routes>
+```
+
+---
+
+## TypeScript Rules
+
+1. **Strict mode**: `"strict": true` in `tsconfig.json`. No exceptions.
+2. **No `any`**: Use `unknown` if type is truly unknown, then narrow. Use generics when needed.
+3. **API types**: Every API response must have a corresponding TypeScript interface in `types/`.
+4. **Enum alternatives**: Prefer union types (`type Kingdom = 'veridor' | 'sylvara' | 'arkazia'`) over TypeScript enums.
+5. **Null safety**: Always handle `null` and `undefined` cases. Use optional chaining (`?.`) and nullish coalescing (`??`).
+
+### Type Example
+
+```tsx
+// types/game.ts
+export type Kingdom = 'veridor' | 'sylvara' | 'arkazia';
+export type ResourceType = 'iron' | 'wood' | 'stone' | 'food';
+
+export interface Resources {
+  iron: number;
+  wood: number;
+  stone: number;
+  food: number;
+}
+
+export interface Village {
+  id: number;
+  name: string;
+  x: number;
+  y: number;
+  isCapital: boolean;
+  resources: Resources;
+  buildings: Building[];
+}
+
+export interface Building {
+  id: number;
+  type: string;
+  level: number;
+}
+```
+
+---
+
+## WebSocket Integration
+
+### Connection Management
+
+```tsx
+// services/websocket.ts
+class WebSocketService {
+  private ws: WebSocket | null = null;
+  private listeners: Map<string, Set<(data: unknown) => void>> = new Map();
+
+  connect(token: string) {
+    this.ws = new WebSocket(`${WS_URL}?token=${token}`);
+    this.ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      this.emit(message.type, message.data);
+    };
+  }
+
+  subscribe(type: string, callback: (data: unknown) => void) {
+    if (!this.listeners.has(type)) {
+      this.listeners.set(type, new Set());
+    }
+    this.listeners.get(type)!.add(callback);
+    return () => this.listeners.get(type)?.delete(callback); // cleanup
+  }
+
+  send(type: string, data: unknown) {
+    this.ws?.send(JSON.stringify({ type, data }));
+  }
+
+  private emit(type: string, data: unknown) {
+    this.listeners.get(type)?.forEach((cb) => cb(data));
+  }
+}
+
+export const wsService = new WebSocketService();
+```
+
+### Using WebSocket in Components
+
+```tsx
+// hooks/useWebSocket.ts
+import { useEffect } from 'react';
+import { wsService } from '../services/websocket';
+
+export function useWebSocketEvent<T>(type: string, handler: (data: T) => void) {
+  useEffect(() => {
+    const unsubscribe = wsService.subscribe(type, handler as (data: unknown) => void);
+    return unsubscribe;
+  }, [type, handler]);
+}
+```
+
+---
+
+## Performance Guidelines
+
+1. **Code splitting**: Use `React.lazy()` + `Suspense` for route-level components. The map, forge, and lore modules should be lazy-loaded.
+2. **Memoization**: Use `React.memo()` for map tiles and list items that re-render frequently. Use `useMemo` and `useCallback` judiciously (don't over-optimize).
+3. **Virtual scrolling**: If troop lists or building lists grow large, use virtual scrolling (e.g., `@tanstack/react-virtual`).
+4. **Image optimization**: Use WebP format for game assets. Lazy-load images below the fold.
+5. **Bundle analysis**: Regularly check bundle size with `vite-plugin-visualizer`.
+
+---
+
+## Accessibility (a11y) Basics
+
+- All interactive elements must be keyboard-accessible.
+- Use semantic HTML: `<button>`, `<nav>`, `<main>`, `<section>`, `<header>`.
+- Add `aria-label` to icon-only buttons.
+- Ensure sufficient color contrast (especially in dark mode).
+- Use `role` attributes where semantic HTML doesn't suffice.
+
+---
+
+## Changelog
+
+| Date | Change |
+|------|--------|
+| 2026-03-03 | Initial creation of frontend guide |
