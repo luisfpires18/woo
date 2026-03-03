@@ -18,8 +18,7 @@ Every component that has styles **MUST** have this structure:
 ```
 ComponentName/
 ├── ComponentName.tsx
-├── ComponentName.module.css     # Desktop-first styles
-└── ComponentName.mobile.css     # Mobile overrides (≤ 768px)
+└── ComponentName.module.css     # Desktop-first styles + mobile overrides via @media
 ```
 
 ### How to Use
@@ -27,7 +26,6 @@ ComponentName/
 ```tsx
 // ComponentName.tsx
 import styles from './ComponentName.module.css';
-import './ComponentName.mobile.css'; // Mobile overrides loaded via side-effect
 
 export function ComponentName() {
   return <div className={styles.container}>...</div>;
@@ -46,17 +44,17 @@ export function ComponentName() {
   font-family: var(--font-heading);
   color: var(--text-primary);
 }
-```
 
-```css
-/* ComponentName.mobile.css */
+/* Mobile overrides */
 @media (max-width: 768px) {
-  /* Override or adjust desktop styles for mobile */
-  /* NOTE: Since mobile.css is not a CSS Module, use data attributes
-     or global class selectors if needed, or import the same module
-     and override. See "Mobile Strategy" section below. */
+  .container {
+    flex-direction: column;
+    padding: var(--spacing-sm);
+  }
 }
 ```
+
+All responsive overrides live **inside the same `.module.css` file** using `@media` queries. This keeps CSS Module scoping intact and simplifies the file structure.
 
 ---
 
@@ -64,43 +62,47 @@ export function ComponentName() {
 
 ### Web-First, Mobile-Second
 
-All styles are written for **desktop first**. Mobile adaptations are overrides.
+All styles are written for **desktop first**. Mobile adaptations are overrides written as `@media` queries **inside the same `.module.css` file**.
+
+### Why Not Separate `.mobile.css` Files?
+
+- Separate non-module CSS files break CSS Module scoping
+- Developers must maintain two files per component instead of one
+- Media queries inside modules are automatically scoped — no `data-component` attributes or `:global` hacks needed
+- Standard CSS pattern that all developers are familiar with
 
 ### Mobile CSS Pattern
 
-The `.mobile.css` file uses media queries to override the module styles. Since mobile CSS files are plain CSS (not modules), we use a consistent pattern:
-
-**Option A — Data Attribute Approach (Recommended)**
-
-```tsx
-// ComponentName.tsx
-import styles from './ComponentName.module.css';
-import './ComponentName.mobile.css';
-
-export function ComponentName() {
-  return <div className={styles.container} data-component="ComponentName">...</div>;
-}
-```
-
 ```css
-/* ComponentName.mobile.css */
-@media (max-width: 768px) {
-  [data-component="ComponentName"] {
-    flex-direction: column;
-    padding: var(--spacing-sm);
+/* ComponentName.module.css */
+
+/* Desktop-first styles */
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+}
+
+.sidebar {
+  width: 300px;
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    width: 100%;
   }
 }
-```
 
-**Option B — Shared Module Overrides**
-
-If `data-component` attributes are not desired, mobile styles can use the `:global` selector in a CSS module:
-
-```css
-/* ComponentName.mobile.css (as a module if needed) */
+/* Mobile adjustments */
 @media (max-width: 768px) {
-  :global([data-component="ComponentName"]) {
-    /* overrides */
+  .container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
   }
 }
 ```
@@ -402,3 +404,4 @@ Contains:
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of styling guide |
+| 2026-03-03 | Simplified mobile strategy: removed separate .mobile.css files, all responsive overrides now live inside .module.css via @media queries |

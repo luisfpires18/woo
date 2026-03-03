@@ -27,8 +27,7 @@ client/src/
 ├── components/             # Reusable UI components (used in 2+ places)
 │   ├── Button/
 │   │   ├── Button.tsx
-│   │   ├── Button.module.css
-│   │   └── Button.mobile.css
+│   │   └── Button.module.css
 │   ├── Modal/
 │   ├── Card/
 │   ├── ResourceBar/
@@ -101,8 +100,7 @@ Every component follows this pattern:
 ```
 ComponentName/
 ├── ComponentName.tsx           # Component logic and JSX
-├── ComponentName.module.css    # Desktop styles (CSS Module)
-├── ComponentName.mobile.css    # Mobile overrides (@media ≤ 768px)
+├── ComponentName.module.css    # Desktop styles + mobile overrides (@media ≤ 768px)
 └── ComponentName.test.tsx      # Unit tests (optional for simple presentational components)
 ```
 
@@ -301,6 +299,37 @@ class WebSocketService {
 export const wsService = new WebSocketService();
 ```
 
+### Reconnection Strategy
+
+The server does **not** replay missed events. When a WebSocket disconnects, the client must:
+
+1. **Detect disconnection** via the `onclose` event.
+2. **Retry with exponential backoff**: 1s → 2s → 4s → 8s → max 30s.
+3. **Re-authenticate**: Reconnect with current JWT (refresh if expired).
+4. **Re-subscribe** to all topics.
+5. **Fetch current state** via REST API to sync any missed updates.
+
+```ts
+// Simplified reconnection logic inside WebSocketService
+private reconnect(token: string) {
+  const maxDelay = 30_000;
+  let delay = 1_000;
+
+  const attempt = () => {
+    this.connect(token);
+    this.ws!.onerror = () => {
+      setTimeout(attempt, delay);
+      delay = Math.min(delay * 2, maxDelay);
+    };
+    this.ws!.onopen = () => {
+      delay = 1_000; // reset on success
+      this.resubscribeAll();
+    };
+  };
+  attempt();
+}
+```
+
 ### Using WebSocket in Components
 
 ```tsx
@@ -343,3 +372,4 @@ export function useWebSocketEvent<T>(type: string, handler: (data: T) => void) {
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of frontend guide |
+| 2026-03-03 | Removed .mobile.css convention; mobile overrides now live inside .module.css via @media queries |

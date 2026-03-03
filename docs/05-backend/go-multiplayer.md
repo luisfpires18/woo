@@ -2,6 +2,8 @@
 
 > WebSocket handling, game tick loop, real-time state management, and anti-cheat patterns. Read before implementing any multiplayer features.
 
+> **WebSocket Library**: This project uses **`coder/websocket`** (maintained fork of `nhooyr/websocket`). It supports the standard `net/http` stack, context-based cancellation, and `io.Reader`/`io.Writer` for messages. Do NOT use `gorilla/websocket` (archived). The API examples in this doc use `coder/websocket` conventions.
+
 ---
 
 ## WebSocket Architecture
@@ -231,7 +233,7 @@ func (s *ResourceService) GetCurrentResources(ctx context.Context, villageID int
         Iron:  min(stored.Iron + stored.IronRate*elapsed, stored.MaxStorage),
         Wood:  min(stored.Wood + stored.WoodRate*elapsed, stored.MaxStorage),
         Stone: min(stored.Stone + stored.StoneRate*elapsed, stored.MaxStorage),
-        Food:  min(stored.Food + stored.FoodRate*elapsed, stored.MaxStorage),
+        Food:  min(stored.Food + (stored.FoodRate-stored.FoodConsumption)*elapsed, stored.MaxStorage),
         LastUpdated: time.Now(),
     }, nil
 }
@@ -443,6 +445,16 @@ func main() {
 
 ---
 
+## WebSocket Reconnection
+
+The server does **not** handle reconnection logic. If a client disconnects:
+1. The Hub unregisters the client and cleans up all subscriptions.
+2. It is the **client's responsibility** to reconnect (see frontend guide for exponential backoff strategy).
+3. On reconnect, the client must re-authenticate (JWT in query param) and re-subscribe to all topics.
+4. Any events missed during disconnection are NOT replayed. The client should fetch current state via REST API after reconnecting.
+
+---
+
 ## Online Player Tracking
 
 Track which players are currently online via their WebSocket connections:
@@ -483,3 +495,4 @@ func (t *OnlineTracker) OnlineCount() int {
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of Go multiplayer guide |
+| 2026-03-03 | Added coder/websocket library note, updated lazy resource calc with max_storage and food_consumption, added WebSocket reconnection policy |

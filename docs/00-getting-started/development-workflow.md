@@ -28,6 +28,73 @@ master ────────────────────────�
 
 ---
 
+## Development Environment Setup
+
+### Prerequisites
+
+| Tool | Version | Notes |
+|------|---------|-------|
+| **Node.js** | 20 LTS | Use `.nvmrc` at repo root (`20`) for nvm users |
+| **Go** | 1.22+ | Required for the backend server |
+| **golangci-lint** | latest | Install via `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest` |
+| **Git** | 2.x+ | Standard version control |
+
+### Ports
+
+| Service | Port | URL |
+|---------|------|-----|
+| Frontend (Vite dev server) | 5173 | `http://localhost:5173` |
+| Backend (Go server) | 8080 | `http://localhost:8080` |
+
+### Vite Proxy
+
+The Vite dev server proxies API and WebSocket requests to the Go backend. Configure in `client/vite.config.ts`:
+
+```ts
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8080',
+      '/ws': {
+        target: 'http://localhost:8080',
+        ws: true,
+      },
+    },
+  },
+  // ...
+});
+```
+
+### Environment Variables
+
+Copy `server/.env.example` to `server/.env` and fill in secrets. See `docs/05-backend/go-guide.md` for the full list of variables.
+
+### How to Start
+
+```bash
+# Terminal 1 — Backend
+cd server
+cp .env.example .env      # first time only
+make run
+
+# Terminal 2 — Frontend
+cd client
+npm install               # first time only
+npm run dev
+```
+
+### .nvmrc
+
+A `.nvmrc` file at the repo root pins the Node.js version:
+
+```
+20
+```
+
+Run `nvm use` to switch to the correct version.
+
+---
+
 ## Agent Collaboration Protocol
 
 Every AI agent working on this project **MUST** follow this workflow:
@@ -168,4 +235,4 @@ A feature is "done" when:
 
 | Date | Change |
 |------|--------|
-| 2026-03-03 | Initial creation of development workflow |
+| 2026-03-03 | Initial creation of development workflow |\n| 2026-03-03 | Added Development Environment Setup section (Node 20 LTS, ports 5173/8080, Vite proxy, .nvmrc, startup instructions) |

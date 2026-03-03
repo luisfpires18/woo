@@ -76,8 +76,7 @@ client/
 │   ├── components/             # Reusable UI components
 │   │   ├── Button/
 │   │   │   ├── Button.tsx
-│   │   │   ├── Button.module.css
-│   │   │   └── Button.mobile.css
+│   │   │   └── Button.module.css
 │   │   ├── Modal/
 │   │   ├── Card/
 │   │   ├── ResourceBar/
@@ -156,7 +155,7 @@ client/
 |------|---------|
 | **Go 1.22+** | Server language |
 | **net/http** | HTTP server (standard library) |
-| **gorilla/websocket** or **nhooyr/websocket** | WebSocket connections |
+| **coder/websocket** | WebSocket connections (maintained fork of nhooyr/websocket) |
 | **modernc.org/sqlite** | SQLite driver (pure Go, no CGO) |
 | **golang-jwt/jwt** | JWT token generation and validation |
 | **golang.org/x/crypto/bcrypt** | Password hashing |
@@ -302,8 +301,14 @@ All WebSocket messages are JSON with a `type` field.
 ### Server → Client Messages
 
 ```json
+{ "type": "connection_ready", "data": { "player_id": 42, "server_time": "..." } }
+{ "type": "subscription_confirmed", "data": { "topics": ["village:123"] } }
+{ "type": "village_state", "data": { "village_id": 123, "buildings": [...], "resources": {...} } }
 { "type": "resource_update", "data": { "village_id": 123, "iron": 5000, "wood": 3200, ... } }
+{ "type": "build_started", "data": { "village_id": 123, "building_type": "barracks", "target_level": 2, "completes_at": "..." } }
 { "type": "build_complete", "data": { "village_id": 123, "building_type": "barracks", "new_level": 2 } }
+{ "type": "train_started", "data": { "village_id": 123, "troop_type": "iron_legionary", "quantity": 10, "completes_at": "..." } }
+{ "type": "train_complete", "data": { "village_id": 123, "troop_type": "iron_legionary", "quantity": 10 } }
 { "type": "attack_incoming", "data": { "village_id": 123, "arrives_at": "2026-03-03T15:30:00Z" } }
 { "type": "combat_result", "data": { "attack_id": 456, "winner": "attacker", ... } }
 { "type": "world_event", "data": { "event_type": "chaos_weapon_claimed", ... } }
@@ -381,9 +386,71 @@ func (g *GameLoop) Run(ctx context.Context) {
 | GET | `/api/villages/{id}` | Get village details (buildings, resources) |
 | POST | `/api/villages/{id}/build` | Start building construction |
 | POST | `/api/villages/{id}/train` | Start troop training |
-| GET | `/api/map?x={x}&y={y}&radius={r}` | Get map tiles around coordinates |
+| GET | `/api/map?x={x}&y={y}&range={r}` | Get map tiles (default range 10 = 21×21 chunk, max 20) |
 | GET | `/api/player/profile` | Get current player profile |
 | WS | `/ws` | WebSocket connection (with JWT auth) |
+
+---
+
+## API Response Conventions
+
+### Response Envelope
+
+All REST endpoints use a unified JSON envelope:
+
+**Success:**
+```json
+{
+  "data": { "id": 123, "name": "My Village", ... },
+  "error": null
+}
+```
+
+**Error:**
+```json
+{
+  "data": null,
+  "error": {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Not enough iron to build Barracks (need 200, have 150)"
+  }
+}
+```
+
+**List with pagination:**
+```json
+{
+  "data": [ ... ],
+  "meta": { "page": 1, "limit": 50, "total": 200 },
+  "error": null
+}
+```
+
+### Pagination
+
+Endpoints returning lists use query parameters:
+- `?page=1&limit=50` (defaults: page=1, limit=50, max limit=100)
+- Response always includes `meta` with `page`, `limit`, and `total`
+
+### Error Code Catalog
+
+| Code | HTTP Status | Description |
+|------|------------|-------------|
+| `INVALID_INPUT` | 400 | Malformed request or validation failure |
+| `UNAUTHORIZED` | 401 | Missing or invalid authentication |
+| `FORBIDDEN` | 403 | Authenticated but insufficient permissions |
+| `NOT_FOUND` | 404 | Resource does not exist |
+| `RATE_LIMITED` | 429 | Too many requests |
+| `INSUFFICIENT_RESOURCES` | 422 | Not enough resources for the action |
+| `BUILDING_IN_PROGRESS` | 422 | Building queue is full |
+| `PREREQUISITES_NOT_MET` | 422 | Required building levels not reached |
+| `QUEUE_FULL` | 422 | Training or building queue at capacity |
+| `MAX_LEVEL_REACHED` | 422 | Building already at maximum level |
+| `INTERNAL_ERROR` | 500 | Unexpected server error |
+
+### API Versioning
+
+All endpoints live under `/api/` with no version prefix. If breaking changes are needed in the future, a `/api/v2/` prefix will be introduced. The original `/api/` endpoints will be maintained for backward compatibility during migration.
 
 ---
 
@@ -392,3 +459,4 @@ func (g *GameLoop) Run(ctx context.Context) {
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of system architecture |
+| 2026-03-03 | Replaced gorilla/websocket with coder/websocket, added missing WS messages (connection_ready, build_started, train_started/complete, village_state, subscription_confirmed), added API response envelope, error code catalog, pagination convention, map chunk spec, API versioning note |

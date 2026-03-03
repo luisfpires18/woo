@@ -163,7 +163,7 @@ This massive power gap is intentional — Weapons of Chaos are game-changing, wh
 
 ### Number Required
 
-- To challenge Moraphys, the alliance needs to forge a number of Weapons of Order equal to the number of Weapons of Chaos in the game (e.g., 7).
+- To challenge Moraphys, the alliance needs to forge a number of Weapons of Order **equal to the number of Weapons of Chaos** configured for the game world.
 - Multiple alliances can cooperate if they share a diplomacy pact.
 
 ---
@@ -186,3 +186,4 @@ The final decision will be made during playtesting. The system should be configu
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of progression and scaling |
+| 2026-03-03 | Added all building base costs, production rates for all resource buildings, Warehouse capacity table, utility building scaling (Barracks, Forge tiers, Walls defense, Marketplace, Watchtower) |

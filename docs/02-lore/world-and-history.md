@@ -28,7 +28,9 @@ But power corrupts.
 
 Over generations, the Council grew divided. Some members sought to use the weapons not to protect, but to dominate. A faction within the Council — led by the forgemaster **Morath** — secretly modified the seven weapons, infusing them with Abyssal energy drawn from the very breaches they had sealed.
 
-The modification worked. The weapons became **far more powerful** — but they were tainted. They whispered to their wielders, fed them ambition, and slowly eroded their sanity. These became the **Weapons of Chaos**:
+The modification worked. The weapons became **far more powerful** — but they were tainted. They whispered to their wielders, fed them ambition, and slowly eroded their sanity. These became the **Weapons of Chaos**.
+
+The canonical lore describes seven Weapons of Chaos, listed below. However, **the exact number and identity of Weapons of Chaos are configurable per game world** — game administrators can adjust the count and properties at world creation. The seven listed here serve as the default set:
 
 1. **Voidfang** — A sword that cuts through any defense, but its wielder sees enemies in every ally.
 2. **The Tide Ender** — A trident that commands the seas, but slowly drowns the wielder's memories.
@@ -52,6 +54,8 @@ The aftermath:
   - **Arkazia** — to the mountains and highland fortresses
 - The seven Weapons of Chaos were scattered across the broken continent, each coming to rest in a **Chaos Shrine** — places where the Veil had thinned.
 - Morath disappeared. His followers went underground.
+
+> **Note**: The lore describes seven Weapons of Chaos for narrative purposes. In gameplay, the number is configurable per game world.
 
 ---
 
@@ -80,13 +84,13 @@ Morath discovered (before the Sundering) that if all seven Weapons of Chaos were
 - Moraphys sends raiding parties to harass players and test defenses.
 - Moraphys will attempt to steal Weapons of Chaos from player wielders via NPC attacks.
 - As the round progresses, Moraphys grows bolder and stronger — escalating pressure on all players.
-- When Moraphys collects **all seven Weapons of Chaos**, the **Endgame Event** triggers.
+- When Moraphys collects **all Weapons of Chaos** (however many are configured for the world), the **Endgame Event** triggers.
 
 ---
 
 ## The Endgame: Gathering of Chaos
 
-When Moraphys possesses all seven Weapons of Chaos:
+When Moraphys possesses all Weapons of Chaos:
 
 1. **Announcement**: A world-wide event notification: *"Moraphys has gathered the Weapons of Chaos. The Veil trembles. The world has [X] days."*
 2. **Countdown**: A configurable timer begins (TBD: days/weeks). This is the time players have to respond.
@@ -134,3 +138,4 @@ This prophecy is the in-lore justification for why Weapons of Order require **al
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of world and history lore |
+| 2026-03-03 | Made Weapons of Chaos count configurable per game world; kept 7 as canonical default lore set |

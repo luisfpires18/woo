@@ -25,8 +25,8 @@ players ──1:N──► villages ──1:N──► buildings
    │                 │
    │                 ├──1:1──► forge (building, but with extra state)
    │                 │
-   │                 └──1:N──► building_queue
-   │
+   │                 └──1:N──► building_queue   │                 │
+   │                 └──1:N──► training_queue   │
    ├──1:N──► weapons
    │
    ├──1:N──► runes
@@ -84,10 +84,10 @@ weapons_of_chaos (special singleton weapons on the map)
 |--------|------|------------|-------------|
 | id | INTEGER | PK, AUTOINCREMENT | Unique building ID |
 | village_id | INTEGER | FK → villages.id, NOT NULL | Village this building belongs to |
-| type | TEXT | NOT NULL | Building type (e.g., 'town_hall', 'iron_mine', 'barracks') |
+| building_type | TEXT | NOT NULL | Building type (e.g., 'town_hall', 'iron_mine', 'barracks'). See `docs/01-game-design/core-mechanics.md` for canonical constants. |
 | level | INTEGER | NOT NULL, DEFAULT 0 | Current level (0 = not built) |
 
-**Indexes**: `village_id`, `(village_id, type)` UNIQUE
+**Indexes**: `village_id`, `(village_id, building_type)` UNIQUE
 
 ---
 
@@ -118,10 +118,12 @@ weapons_of_chaos (special singleton weapons on the map)
 | iron_rate | REAL | NOT NULL, DEFAULT 0 | Iron production per hour |
 | wood_rate | REAL | NOT NULL, DEFAULT 0 | Wood production per hour |
 | stone_rate | REAL | NOT NULL, DEFAULT 0 | Stone production per hour |
-| food_rate | REAL | NOT NULL, DEFAULT 0 | Food production per hour (net: production - consumption) |
+| food_rate | REAL | NOT NULL, DEFAULT 0 | Food production per hour (gross) |
+| food_consumption | REAL | NOT NULL, DEFAULT 0 | Food consumed per hour by troops/population |
+| max_storage | REAL | NOT NULL, DEFAULT 1000 | Max storage per resource (from Warehouse level) |
 | last_updated | TEXT | NOT NULL | Timestamp of last resource write |
 
-**Note**: Current resources are calculated lazily: `current = stored + (rate × hours_since_last_updated)`. The `stored` values are only written to DB on events (build, trade, attack, login).
+**Note**: Current resources are calculated lazily: `current = min(stored + (rate × hours_since_last_updated), max_storage)`. Net food rate = `food_rate - food_consumption`. The `stored` values are only written to DB on events (build, trade, attack, login). The `max_storage` value is updated when the Warehouse is upgraded.
 
 ---
 
@@ -137,6 +139,21 @@ weapons_of_chaos (special singleton weapons on the map)
 
 **Indexes**: `village_id`, `(village_id, type)` UNIQUE  
 **Note**: Troops in transit are tracked by the `attacks` table. Village troops represent what's currently stationed.
+
+---
+
+### training_queue
+
+| Column | Type | Constraints | Description |
+|--------|------|------------|-------------|
+| id | INTEGER | PK, AUTOINCREMENT | Queue entry ID |
+| village_id | INTEGER | FK → villages.id, NOT NULL | Village |
+| troop_type | TEXT | NOT NULL | Unit type being trained (e.g., 'iron_legionary') |
+| quantity | INTEGER | NOT NULL | Number of units in this batch |
+| started_at | TEXT | NOT NULL | When training started |
+| completes_at | TEXT | NOT NULL | When training finishes |
+
+**Indexes**: `village_id`, `completes_at`
 
 ---
 
@@ -244,6 +261,8 @@ weapons_of_chaos (special singleton weapons on the map)
 
 ### weapons_of_chaos
 
+> **Configurable per game world.** The number and identity of Weapons of Chaos are set by game administrators at world creation. The schema supports any count.
+
 | Column | Type | Constraints | Description |
 |--------|------|------------|-------------|
 | id | INTEGER | PK, AUTOINCREMENT | Weapon of Chaos ID |
@@ -290,9 +309,10 @@ Used by the migration system to track which migrations have been applied.
 ## Notes for Implementation
 
 1. **SQLite → PostgreSQL**: When migrating, change `INTEGER AUTOINCREMENT` to `SERIAL`, `TEXT` timestamps to `TIMESTAMPTZ`, and `TEXT` JSON columns to `JSONB`. The Go repository interface stays the same.
-2. **Lazy resource calculation**: The `resources` table stores a snapshot. Actual current resources = snapshot + (rate × elapsed time). See `docs/06-database/database-guide.md`.
+2. **Lazy resource calculation**: The `resources` table stores a snapshot. Actual current resources = `min(snapshot + (rate × elapsed_time), max_storage)`. Net food = `food_rate - food_consumption`. See `docs/06-database/database-guide.md`.
 3. **Troop movement**: While troops are marching, they exist in the `attacks` table. The `troops` table only shows what's currently stationed in a village.
 4. **Weapon durability**: Decremented after each battle. When 0, weapon is deleted (with rune salvage logic).
+5. **Column naming**: All tables use `building_type` / `troop_type` (snake_case descriptive names). The `buildings` and `building_queue` tables both use `building_type` for consistency.
 
 ---
 
@@ -301,3 +321,4 @@ Used by the migration system to track which migrations have been applied.
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of data models |
+| 2026-03-03 | Added max_storage and food_consumption to resources, added training_queue table, renamed buildings.type to building_type, made weapons_of_chaos configurable, added column naming note |

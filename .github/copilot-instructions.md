@@ -45,7 +45,7 @@
 
 - Follow `docs/04-frontend/frontend-guide.md` strictly.
 - **Component reuse is mandatory.** If a UI element is used in 2+ places, extract it to `client/src/components/`.
-- Every component gets a `.module.css` + `.mobile.css` pair. See `docs/04-frontend/styling-guide.md`.
+- Every component gets a `.module.css` file with mobile overrides via `@media (max-width: 768px)` inside the same file. See `docs/04-frontend/styling-guide.md`.
 - Use TypeScript strict mode. All API responses must be typed.
 - State management: Zustand for global game state, React Query for server data.
 - **Web-first design.** Desktop layout first, then mobile adaptation.
@@ -73,7 +73,7 @@
 - CSS custom properties (variables) for theming in `:root`.
 - Fonts: `Cinzel` for headings, `EB Garamond` for body text.
 - Dark mode: black primary + crimson accent. Light mode: white primary + navy blue accent.
-- Every `.module.css` has a sibling `.mobile.css` loaded via `@media (max-width: 768px)`.
+- Every `.module.css` contains responsive overrides via `@media (max-width: 768px)` inside the same file (no separate `.mobile.css`).
 
 ---
 
@@ -83,7 +83,6 @@
 |------|-----------|---------|
 | React components | PascalCase | `VillagePanel.tsx` |
 | React component styles | PascalCase + module | `VillagePanel.module.css` |
-| React mobile styles | PascalCase + mobile | `VillagePanel.mobile.css` |
 | Go files | snake_case | `village_handler.go` |
 | Go test files | snake_case + _test | `village_handler_test.go` |
 | SQL migrations | numbered + snake_case | `001_create_players.sql` |
@@ -116,7 +115,7 @@
 
 - The three playable kingdoms are: **Veridor** (naval/ocean), **Sylvara** (forest/jungle), **Arkazia** (mountain/gladiator).
 - The enemy faction **Moraphys** is NPC-controlled and triggers the endgame by stealing all Weapons of Chaos.
-- **Weapons of Chaos** cause debuffs and chaos to their wielders. They are powerful but dangerous.
+- **Weapons of Chaos** cause debuffs and chaos to their wielders. They are powerful but dangerous. **Count is configurable per game world** — do not hardcode 7.
 - **Weapons of Order** are the counter — crafted by players through alliance-level collaboration to defeat Moraphys.
 - The four base resources are: **Iron**, **Wood**, **Stone**, **Food**.
 - Always cross-check `docs/02-lore/` and `docs/01-game-design/kingdoms.md` when implementing kingdom-specific content.
@@ -137,3 +136,4 @@
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of copilot instructions |
+| 2026-03-03 | Removed .mobile.css convention (responsive overrides in .module.css), removed mobile styles from file naming table, added configurable Weapons of Chaos count note |
