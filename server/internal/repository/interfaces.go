@@ -36,4 +36,13 @@ type BuildingRepository interface {
 type ResourceRepository interface {
 	Get(ctx context.Context, villageID int64) (*model.Resources, error)
 	Update(ctx context.Context, villageID int64, resources *model.Resources) error
+	Create(ctx context.Context, resources *model.Resources) error
+}
+
+// RefreshTokenRepository defines data access operations for refresh tokens.
+type RefreshTokenRepository interface {
+	Create(ctx context.Context, token *model.RefreshToken) error
+	GetByTokenHash(ctx context.Context, tokenHash string) (*model.RefreshToken, error)
+	DeleteByTokenHash(ctx context.Context, tokenHash string) error
+	DeleteAllByPlayerID(ctx context.Context, playerID int64) error
 }

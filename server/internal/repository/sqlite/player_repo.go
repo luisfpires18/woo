@@ -68,13 +68,17 @@ func (r *playerRepo) UpdateLastLogin(ctx context.Context, id int64) error {
 
 func scanPlayer(row *sql.Row) (*model.Player, error) {
 	var p model.Player
+	var createdAtStr string
+	var lastLoginStr nullableTimeStr
 	err := row.Scan(&p.ID, &p.Username, &p.Email, &p.PasswordHash,
-		&p.Kingdom, &p.OAuthProvider, &p.OAuthID, &p.CreatedAt, &p.LastLoginAt)
+		&p.Kingdom, &p.OAuthProvider, &p.OAuthID, &createdAtStr, &lastLoginStr)
 	if err == sql.ErrNoRows {
 		return nil, model.ErrNotFound
 	}
 	if err != nil {
 		return nil, fmt.Errorf("scan player: %w", err)
 	}
+	p.CreatedAt, _ = parseTime(createdAtStr)
+	p.LastLoginAt = lastLoginStr.Time()
 	return &p, nil
 }

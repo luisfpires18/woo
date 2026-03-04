@@ -10,8 +10,10 @@ import (
 	"time"
 
 	"github.com/luisfpires18/woo/internal/config"
+	"github.com/luisfpires18/woo/internal/handler"
 	"github.com/luisfpires18/woo/internal/middleware"
 	"github.com/luisfpires18/woo/internal/repository/sqlite"
+	"github.com/luisfpires18/woo/internal/service"
 )
 
 func main() {
@@ -38,7 +40,21 @@ func main() {
 
 	// Wire up repositories
 	playerRepo := sqlite.NewPlayerRepo(db)
-	_ = playerRepo // TODO: wire into services
+	refreshTokenRepo := sqlite.NewRefreshTokenRepo(db)
+	villageRepo := sqlite.NewVillageRepo(db)
+	buildingRepo := sqlite.NewBuildingRepo(db)
+	resourceRepo := sqlite.NewResourceRepo(db)
+
+	// Wire up services
+	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
+	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+
+	// Wire up handlers
+	authHandler := handler.NewAuthHandler(authService, villageService)
+	villageHandler := handler.NewVillageHandler(villageService)
+
+	// Auth middleware for protected routes
+	authMiddleware := middleware.Auth(authService.ValidateAccessToken)
 
 	// Set up HTTP router
 	mux := http.NewServeMux()
@@ -48,6 +64,17 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"status":"ok"}`))
 	})
+
+	// Auth routes (public)
+	authHandler.RegisterRoutes(mux)
+
+	// Protected routes — wrapped with auth middleware
+	protectedMux := http.NewServeMux()
+	villageHandler.RegisterRoutes(protectedMux)
+
+	// Mount protected routes under the auth middleware
+	mux.Handle("/api/villages", authMiddleware(protectedMux))
+	mux.Handle("/api/villages/", authMiddleware(protectedMux))
 
 	// Apply middleware stack
 	handler := middleware.Chain(
