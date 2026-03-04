@@ -20,14 +20,14 @@ import (
 
 // Auth errors.
 var (
-	ErrInvalidCredentials = errors.New("invalid email or password")
-	ErrEmailTaken         = errors.New("email already registered")
-	ErrUsernameTaken      = errors.New("username already taken")
-	ErrInvalidKingdom     = errors.New("kingdom must be veridor, sylvara, or arkazia")
+	ErrInvalidCredentials  = errors.New("invalid email or password")
+	ErrEmailTaken          = errors.New("email already registered")
+	ErrUsernameTaken       = errors.New("username already taken")
+	ErrInvalidKingdom      = errors.New("kingdom must be veridor, sylvara, or arkazia")
 	ErrInvalidRefreshToken = errors.New("invalid or expired refresh token")
-	ErrWeakPassword       = errors.New("password must be at least 8 characters")
-	ErrInvalidEmail       = errors.New("invalid email address")
-	ErrInvalidUsername    = errors.New("username must be 3-20 characters, alphanumeric and underscores only")
+	ErrWeakPassword        = errors.New("password must be at least 8 characters")
+	ErrInvalidEmail        = errors.New("invalid email address")
+	ErrInvalidUsername     = errors.New("username must be 3-20 characters, alphanumeric and underscores only")
 )
 
 var validKingdoms = map[string]bool{

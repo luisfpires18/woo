@@ -1,23 +1,73 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthStore } from './stores/authStore';
+import { useGameStore } from './stores/gameStore';
+import { PublicLayout } from './components/Layout/PublicLayout';
+import { ProtectedLayout } from './components/Layout/ProtectedLayout';
+import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
 
-function App() {
+const LoginPage = lazy(() =>
+  import('./features/auth/pages/LoginPage').then((m) => ({
+    default: m.LoginPage,
+  })),
+);
+const RegisterPage = lazy(() =>
+  import('./features/auth/pages/RegisterPage').then((m) => ({
+    default: m.RegisterPage,
+  })),
+);
+const VillagePage = lazy(() =>
+  import('./features/village/pages/VillagePage').then((m) => ({
+    default: m.VillagePage,
+  })),
+);
+
+function FullPageLoader() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40vh' }}>
+      <LoadingSpinner size="lg" />
+    </div>
   );
 }
 
-function Home() {
+/** Redirect / to the first village or a fallback */
+function HomeRedirect() {
+  const villages = useGameStore((s) => s.villages);
+  const first = villages[0];
+
+  if (first) {
+    return <Navigate to={`/village/${first.id}`} replace />;
+  }
+
+  // villages not loaded yet — ProtectedLayout will fetch them
+  return <FullPageLoader />;
+}
+
+function App() {
+  const restore = useAuthStore((s) => s.restore);
+
+  useEffect(() => {
+    restore();
+  }, [restore]);
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '4rem' }}>
-      <h1 style={{ fontFamily: 'Cinzel, serif' }}>Weapons of Order</h1>
-      <p style={{ fontFamily: 'EB Garamond, serif', fontSize: '1.2rem' }}>
-        The forge awaits.
-      </p>
-    </div>
+    <BrowserRouter>
+      <Suspense fallback={<FullPageLoader />}>
+        <Routes>
+          {/* Public routes */}
+          <Route element={<PublicLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+
+          {/* Protected routes */}
+          <Route element={<ProtectedLayout />}>
+            <Route path="/" element={<HomeRedirect />} />
+            <Route path="/village/:id" element={<VillagePage />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
 

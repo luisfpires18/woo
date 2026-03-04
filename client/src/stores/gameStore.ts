@@ -1,12 +1,20 @@
 import { create } from 'zustand';
-import type { Resources } from '../types/game';
+import type { VillageResponse, VillageListItem } from '../types/api';
 
 interface GameState {
-  resources: Resources | null;
-  setResources: (resources: Resources) => void;
+  /** Full village detail (buildings + resources) for the currently viewed village */
+  currentVillage: VillageResponse | null;
+  /** List of the player's villages (summary data) */
+  villages: VillageListItem[];
+
+  setCurrentVillage: (village: VillageResponse | null) => void;
+  setVillages: (villages: VillageListItem[]) => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
-  resources: null,
-  setResources: (resources) => set({ resources }),
+  currentVillage: null,
+  villages: [],
+
+  setCurrentVillage: (village) => set({ currentVillage: village }),
+  setVillages: (villages) => set({ villages }),
 }));

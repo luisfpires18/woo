@@ -1,0 +1,12 @@
+{
+  "name": "woo",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n server,client -c green,blue \"cd server && go run ./cmd/server\" \"cd client && npm run dev\"",
+    "dev:server": "cd server && go run ./cmd/server",
+    "dev:client": "cd client && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

@@ -2,5 +2,17 @@
 :root {
   --font-heading: 'Cinzel', serif;
   --font-body: 'EB Garamond', serif;
-  --font-mono: 'Fira Code', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Heading sizes */
+  --text-h1: 2rem;
+  --text-h2: 1.5rem;
+  --text-h3: 1.25rem;
+  --text-h4: 1.125rem;
+
+  /* Body sizes */
+  --text-lg: 1.125rem;
+  --text-base: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
 }

@@ -1,0 +1,87 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1.5rem 4rem 1fr auto;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.amount {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.rate {
+  font-size: 0.75rem;
+  color: var(--success);
+}
+
+.storage,
+.consumption {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border);
+}
+
+.storageLabel,
+.consumptionLabel {
+  color: var(--text-muted);
+}
+
+.storageValue {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.consumptionValue {
+  font-weight: 600;
+  color: var(--error);
+}
+
+@media (max-width: 768px) {
+  .panel {
+    padding: var(--spacing-md);
+  }
+
+  .row {
+    grid-template-columns: 1.5rem 3.5rem 1fr auto;
+  }
+}

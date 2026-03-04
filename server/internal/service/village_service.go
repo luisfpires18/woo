@@ -36,12 +36,12 @@ var kingdomBuilding = map[string]string{
 
 // Starting resource config.
 const (
-	startingResources   = 500.0
-	startingRate        = 30.0
-	startingStorage     = 1000.0
-	mapHalf             = 200 // map goes from -200 to +200
-	spawnMinDist        = 10  // don't spawn within 10 tiles of center (Moraphys)
-	maxSpawnAttempts    = 100
+	startingResources = 500.0
+	startingRate      = 30.0
+	startingStorage   = 1000.0
+	mapHalf           = 200 // map goes from -200 to +200
+	spawnMinDist      = 10  // don't spawn within 10 tiles of center (Moraphys)
+	maxSpawnAttempts  = 100
 )
 
 // VillageService handles village business logic.
