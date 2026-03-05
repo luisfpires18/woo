@@ -11,6 +11,8 @@ interface AuthState {
   refreshToken: string | null;
   player: PlayerInfo | null;
   isAuthenticated: boolean;
+  /** Whether restore() has been called at least once */
+  hydrated: boolean;
 
   /** Call on app init to restore session from localStorage */
   restore: () => void;
@@ -24,6 +26,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   refreshToken: null,
   player: null,
   isAuthenticated: false,
+  hydrated: false,
 
   restore: () => {
     const accessToken = localStorage.getItem('access_token');
@@ -33,7 +36,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (accessToken && playerStr) {
       try {
         const player = JSON.parse(playerStr) as PlayerInfo;
-        set({ accessToken, refreshToken, player, isAuthenticated: true });
+        set({ accessToken, refreshToken, player, isAuthenticated: true, hydrated: true });
+        return;
       } catch {
         // Corrupted data — clear it
         localStorage.removeItem('access_token');
@@ -41,6 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         localStorage.removeItem('player');
       }
     }
+    set({ hydrated: true });
   },
 
   login: async (data) => {

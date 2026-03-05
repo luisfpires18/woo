@@ -12,6 +12,7 @@ import styles from './ProtectedLayout.module.css';
 
 export function ProtectedLayout() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hydrated = useAuthStore((s) => s.hydrated);
   const setVillages = useGameStore((s) => s.setVillages);
   const loadAssets = useAssetStore((s) => s.load);
 
@@ -34,6 +35,10 @@ export function ProtectedLayout() {
       loadAssets();
     }
   }, [isAuthenticated, loadAssets]);
+
+  if (!hydrated) {
+    return <LoadingSpinner size="lg" />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
