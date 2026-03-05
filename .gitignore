@@ -38,3 +38,6 @@ vendor/
 # Coverage
 coverage/
 *.lcov
+
+# Uploaded assets
+server/uploads/

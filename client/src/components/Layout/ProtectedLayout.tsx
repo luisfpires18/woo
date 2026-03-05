@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
 import { useGameStore } from '../../stores/gameStore';
+import { useAssetStore } from '../../stores/assetStore';
 import { fetchVillages } from '../../services/village';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
@@ -12,6 +13,7 @@ import styles from './ProtectedLayout.module.css';
 export function ProtectedLayout() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const setVillages = useGameStore((s) => s.setVillages);
+  const loadAssets = useAssetStore((s) => s.load);
 
   // Fetch the player's village list on mount
   const { data: villages, isLoading } = useQuery({
@@ -25,6 +27,13 @@ export function ProtectedLayout() {
       setVillages(villages);
     }
   }, [villages, setVillages]);
+
+  // Pre-load game asset sprites on login
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadAssets();
+    }
+  }, [isAuthenticated, loadAssets]);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

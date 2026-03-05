@@ -22,6 +22,7 @@ type AdminService struct {
 	villageRepo      repository.VillageRepository
 	worldConfigRepo  repository.WorldConfigRepository
 	announcementRepo repository.AnnouncementRepository
+	gameAssetRepo    repository.GameAssetRepository
 }
 
 // NewAdminService creates a new AdminService.
@@ -30,12 +31,14 @@ func NewAdminService(
 	villageRepo repository.VillageRepository,
 	worldConfigRepo repository.WorldConfigRepository,
 	announcementRepo repository.AnnouncementRepository,
+	gameAssetRepo repository.GameAssetRepository,
 ) *AdminService {
 	return &AdminService{
 		playerRepo:       playerRepo,
 		villageRepo:      villageRepo,
 		worldConfigRepo:  worldConfigRepo,
 		announcementRepo: announcementRepo,
+		gameAssetRepo:    gameAssetRepo,
 	}
 }
 
@@ -203,4 +206,45 @@ func (s *AdminService) ListAnnouncements(ctx context.Context) ([]*dto.Announceme
 // DeleteAnnouncement removes an announcement by ID.
 func (s *AdminService) DeleteAnnouncement(ctx context.Context, id int64) error {
 	return s.announcementRepo.Delete(ctx, id)
+}
+
+// --- Game assets ---
+
+// ListGameAssets returns all game assets.
+func (s *AdminService) ListGameAssets(ctx context.Context) (*dto.GameAssetListResponse, error) {
+	assets, err := s.gameAssetRepo.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("list game assets: %w", err)
+	}
+
+	items := make([]*dto.GameAssetDTO, 0, len(assets))
+	for _, a := range assets {
+		var spriteURL *string
+		if a.SpritePath != nil {
+			u := "/uploads/" + *a.SpritePath
+			spriteURL = &u
+		}
+		items = append(items, &dto.GameAssetDTO{
+			ID:           a.ID,
+			Category:     a.Category,
+			DisplayName:  a.DisplayName,
+			DefaultIcon:  a.DefaultIcon,
+			SpriteURL:    spriteURL,
+			SpriteWidth:  a.SpriteWidth,
+			SpriteHeight: a.SpriteHeight,
+			UpdatedAt:    a.UpdatedAt,
+		})
+	}
+
+	return &dto.GameAssetListResponse{Assets: items}, nil
+}
+
+// GetGameAsset returns a single game asset by ID.
+func (s *AdminService) GetGameAsset(ctx context.Context, id string) (*model.GameAsset, error) {
+	return s.gameAssetRepo.GetByID(ctx, id)
+}
+
+// UpdateGameAssetSprite sets the sprite_path for a game asset.
+func (s *AdminService) UpdateGameAssetSprite(ctx context.Context, id string, spritePath *string) error {
+	return s.gameAssetRepo.UpdateSprite(ctx, id, spritePath)
 }

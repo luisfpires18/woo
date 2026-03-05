@@ -74,3 +74,22 @@ type AnnouncementResponse struct {
 	CreatedAt time.Time  `json:"created_at"`
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 }
+
+// --- Game assets ---
+
+// GameAssetDTO is a single game asset in the listing.
+type GameAssetDTO struct {
+	ID           string    `json:"id"`
+	Category     string    `json:"category"`
+	DisplayName  string    `json:"display_name"`
+	DefaultIcon  string    `json:"default_icon"`
+	SpriteURL    *string   `json:"sprite_url"`
+	SpriteWidth  int       `json:"sprite_width"`
+	SpriteHeight int       `json:"sprite_height"`
+	UpdatedAt    time.Time `json:"updated_at"`
+}
+
+// GameAssetListResponse is the response for GET /api/admin/assets.
+type GameAssetListResponse struct {
+	Assets []*GameAssetDTO `json:"assets"`
+}

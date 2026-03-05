@@ -46,11 +46,20 @@ func main() {
 	resourceRepo := sqlite.NewResourceRepo(db)
 	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
+	gameAssetRepo := sqlite.NewGameAssetRepo(db)
+
+	// Ensure uploads directory exists
+	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/resource", "uploads/sprites/unit"} {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			slog.Error("failed to create uploads directory", "dir", dir, "error", err)
+			os.Exit(1)
+		}
+	}
 
 	// Wire up services
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
 	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
-	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo)
+	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo)
 
 	// Wire up handlers
 	authHandler := handler.NewAuthHandler(authService, villageService)
@@ -84,6 +93,13 @@ func main() {
 	adminMux := http.NewServeMux()
 	adminHandler.RegisterRoutes(adminMux)
 	mux.Handle("/api/admin/", authMiddleware(middleware.RequireAdmin(adminMux)))
+
+	// Serve uploaded sprites with caching
+	fileServer := http.FileServer(http.Dir("uploads"))
+	mux.Handle("/uploads/", http.StripPrefix("/uploads/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		fileServer.ServeHTTP(w, r)
+	})))
 
 	// Apply middleware stack
 	handler := middleware.Chain(

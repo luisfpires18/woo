@@ -48,6 +48,11 @@ const AdminAnnouncementsPage = lazy(() =>
     default: m.AdminAnnouncementsPage,
   })),
 );
+const AdminAssetsPage = lazy(() =>
+  import('./features/admin/pages/AdminAssetsPage').then((m) => ({
+    default: m.AdminAssetsPage,
+  })),
+);
 
 function FullPageLoader() {
   return (
@@ -100,6 +105,7 @@ function App() {
             <Route path="config" element={<AdminConfigPage />} />
             <Route path="stats" element={<AdminStatsPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
+            <Route path="assets" element={<AdminAssetsPage />} />
           </Route>
         </Routes>
       </Suspense>

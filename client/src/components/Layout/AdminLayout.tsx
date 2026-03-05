@@ -7,6 +7,7 @@ const ADMIN_TABS = [
   { label: 'Config', path: '/admin/config' },
   { label: 'Stats', path: '/admin/stats' },
   { label: 'Announcements', path: '/admin/announcements' },
+  { label: 'Assets', path: '/admin/assets' },
 ];
 
 export function AdminLayout() {

@@ -1,0 +1,15 @@
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  object-fit: contain;
+  vertical-align: middle;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .icon {
+    /* Slightly reduce sprite size on mobile */
+    max-width: 48px;
+    max-height: 48px;
+  }
+}

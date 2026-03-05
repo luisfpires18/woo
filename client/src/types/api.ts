@@ -146,3 +146,22 @@ export interface AnnouncementResponse {
   created_at: string;
   expires_at?: string;
 }
+
+// Game asset types — mirrors server/internal/dto/admin.go
+
+export type AssetCategory = 'building' | 'resource' | 'unit';
+
+export interface GameAsset {
+  id: string;
+  category: AssetCategory;
+  display_name: string;
+  default_icon: string;
+  sprite_url: string | null;
+  sprite_width: number;
+  sprite_height: number;
+  updated_at: string;
+}
+
+export interface GameAssetListResponse {
+  assets: GameAsset[];
+}

@@ -64,3 +64,12 @@ type AnnouncementRepository interface {
 	ListActive(ctx context.Context) ([]*model.Announcement, error)
 	Delete(ctx context.Context, id int64) error
 }
+
+// GameAssetRepository defines data access operations for game assets (buildings, resources, units).
+type GameAssetRepository interface {
+	GetAll(ctx context.Context) ([]*model.GameAsset, error)
+	GetByID(ctx context.Context, id string) (*model.GameAsset, error)
+	GetByCategory(ctx context.Context, category string) ([]*model.GameAsset, error)
+	UpdateSprite(ctx context.Context, id string, spritePath *string) error
+	Create(ctx context.Context, asset *model.GameAsset) error
+}

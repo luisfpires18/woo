@@ -1,4 +1,5 @@
 import type { ResourcesResponse } from '../../../types/api';
+import { GameIcon } from '../../../components/GameIcon/GameIcon';
 import styles from './ResourcePanel.module.css';
 
 interface ResourcePanelProps {
@@ -9,12 +10,13 @@ const RESOURCE_ROWS: {
   key: keyof ResourcesResponse;
   rateKey: keyof ResourcesResponse;
   label: string;
-  icon: string;
+  assetId: string;
+  fallbackIcon: string;
 }[] = [
-  { key: 'iron', rateKey: 'iron_rate', label: 'Iron', icon: '⛏️' },
-  { key: 'wood', rateKey: 'wood_rate', label: 'Wood', icon: '🪵' },
-  { key: 'stone', rateKey: 'stone_rate', label: 'Stone', icon: '🪨' },
-  { key: 'food', rateKey: 'food_rate', label: 'Food', icon: '🌾' },
+  { key: 'iron', rateKey: 'iron_rate', label: 'Iron', assetId: 'iron', fallbackIcon: '⛏️' },
+  { key: 'wood', rateKey: 'wood_rate', label: 'Wood', assetId: 'wood', fallbackIcon: '🪵' },
+  { key: 'stone', rateKey: 'stone_rate', label: 'Stone', assetId: 'stone', fallbackIcon: '🪨' },
+  { key: 'food', rateKey: 'food_rate', label: 'Food', assetId: 'food', fallbackIcon: '🌾' },
 ];
 
 export function ResourcePanel({ resources }: ResourcePanelProps) {
@@ -25,7 +27,7 @@ export function ResourcePanel({ resources }: ResourcePanelProps) {
       <div className={styles.rows}>
         {RESOURCE_ROWS.map((r) => (
           <div key={r.key} className={styles.row}>
-            <span className={styles.icon}>{r.icon}</span>
+            <GameIcon assetId={r.assetId} fallback={r.fallbackIcon} size={18} className={styles.icon} />
             <span className={styles.label}>{r.label}</span>
             <span className={styles.amount}>
               {Math.floor(resources[r.key])}

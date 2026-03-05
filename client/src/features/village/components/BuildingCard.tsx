@@ -1,4 +1,5 @@
 import type { BuildingInfo } from '../../../types/api';
+import { GameIcon } from '../../../components/GameIcon/GameIcon';
 import styles from './BuildingCard.module.css';
 
 interface BuildingCardProps {
@@ -25,33 +26,12 @@ const BUILDING_LABELS: Record<string, string> = {
   colosseum: 'Colosseum',
 };
 
-const BUILDING_ICONS: Record<string, string> = {
-  town_hall: '🏛️',
-  iron_mine: '⛏️',
-  lumber_mill: '🪓',
-  quarry: '🪨',
-  farm: '🌾',
-  warehouse: '📦',
-  barracks: '⚔️',
-  stable: '🐴',
-  forge: '🔨',
-  rune_altar: '🔮',
-  walls: '🏰',
-  marketplace: '🏪',
-  embassy: '📜',
-  watchtower: '👁️',
-  dock: '⚓',
-  grove_sanctum: '🌿',
-  colosseum: '🏟️',
-};
-
 export function BuildingCard({ building }: BuildingCardProps) {
   const label = BUILDING_LABELS[building.building_type] ?? building.building_type;
-  const icon = BUILDING_ICONS[building.building_type] ?? '🏗️';
 
   return (
     <div className={styles.card}>
-      <span className={styles.icon}>{icon}</span>
+      <GameIcon assetId={building.building_type} fallback="🏗️" size={28} className={styles.icon} />
       <span className={styles.name}>{label}</span>
       <span className={styles.level}>Lv {building.level}</span>
     </div>
