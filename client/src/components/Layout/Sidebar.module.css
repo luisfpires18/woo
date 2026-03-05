@@ -57,6 +57,20 @@
   white-space: nowrap;
 }
 
+.adminDivider {
+  margin-top: auto;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border);
+}
+
+.adminLink {
+  color: var(--text-secondary);
+}
+
+.adminLink:hover {
+  color: var(--accent);
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .sidebar {

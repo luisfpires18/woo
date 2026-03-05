@@ -32,4 +32,5 @@ type PlayerInfo struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Kingdom  string `json:"kingdom"`
+	Role     string `json:"role"`
 }

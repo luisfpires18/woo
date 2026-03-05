@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useAuthStore } from '../../stores/authStore';
 import { useGameStore } from '../../stores/gameStore';
 import styles from './Sidebar.module.css';
 
@@ -11,7 +12,9 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const villages = useGameStore((s) => s.villages);
+  const player = useAuthStore((s) => s.player);
   const firstVillageId = villages[0]?.id;
+  const isAdmin = player?.role === 'admin';
 
   return (
     <nav className={styles.sidebar}>
@@ -44,6 +47,20 @@ export function Sidebar() {
             </li>
           );
         })}
+
+        {isAdmin && (
+          <li className={styles.adminDivider}>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `${styles.navLink} ${styles.adminLink} ${isActive ? styles.active : ''}`
+              }
+            >
+              <span className={styles.icon}>👑</span>
+              <span className={styles.label}>Admin</span>
+            </NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );

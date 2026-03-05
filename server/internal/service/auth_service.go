@@ -172,8 +172,8 @@ func (s *AuthService) Logout(ctx context.Context, rawToken string) error {
 	return s.refreshTokenRepo.DeleteByTokenHash(ctx, tokenHash)
 }
 
-// ValidateAccessToken parses and validates a JWT access token, returning the player ID.
-func (s *AuthService) ValidateAccessToken(tokenString string) (int64, error) {
+// ValidateAccessToken parses and validates a JWT access token, returning the player ID and role.
+func (s *AuthService) ValidateAccessToken(tokenString string) (int64, string, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -181,20 +181,25 @@ func (s *AuthService) ValidateAccessToken(tokenString string) (int64, error) {
 		return s.jwtSecret, nil
 	})
 	if err != nil {
-		return 0, fmt.Errorf("parse token: %w", err)
+		return 0, "", fmt.Errorf("parse token: %w", err)
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return 0, errors.New("invalid token claims")
+		return 0, "", errors.New("invalid token claims")
 	}
 
 	playerIDFloat, ok := claims["sub"].(float64)
 	if !ok {
-		return 0, errors.New("invalid subject claim")
+		return 0, "", errors.New("invalid subject claim")
 	}
 
-	return int64(playerIDFloat), nil
+	role, _ := claims["role"].(string)
+	if role == "" {
+		role = "player"
+	}
+
+	return int64(playerIDFloat), role, nil
 }
 
 // generateAuthResponse creates JWT access token + refresh token for a player.
@@ -205,6 +210,7 @@ func (s *AuthService) generateAuthResponse(ctx context.Context, player *model.Pl
 		"sub":      player.ID,
 		"username": player.Username,
 		"kingdom":  player.Kingdom,
+		"role":     player.Role,
 		"iss":      s.jwtIssuer,
 		"iat":      now.Unix(),
 		"exp":      now.Add(accessTokenDuration).Unix(),
@@ -240,6 +246,7 @@ func (s *AuthService) generateAuthResponse(ctx context.Context, player *model.Pl
 			Username: player.Username,
 			Email:    player.Email,
 			Kingdom:  player.Kingdom,
+			Role:     player.Role,
 		},
 	}, nil
 }

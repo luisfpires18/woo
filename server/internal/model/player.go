@@ -2,6 +2,12 @@ package model
 
 import "time"
 
+// Player roles.
+const (
+	RolePlayer = "player"
+	RoleAdmin  = "admin"
+)
+
 // Player represents a registered game player.
 type Player struct {
 	ID            int64      `json:"id"`
@@ -9,6 +15,7 @@ type Player struct {
 	Email         string     `json:"email"`
 	PasswordHash  string     `json:"-"`
 	Kingdom       string     `json:"kingdom"`
+	Role          string     `json:"role"`
 	OAuthProvider string     `json:"oauth_provider,omitempty"`
 	OAuthID       string     `json:"oauth_id,omitempty"`
 	CreatedAt     time.Time  `json:"created_at"`

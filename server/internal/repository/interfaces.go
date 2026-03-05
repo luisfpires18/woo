@@ -13,6 +13,9 @@ type PlayerRepository interface {
 	GetByEmail(ctx context.Context, email string) (*model.Player, error)
 	GetByOAuth(ctx context.Context, provider, oauthID string) (*model.Player, error)
 	UpdateLastLogin(ctx context.Context, id int64) error
+	UpdateRole(ctx context.Context, id int64, role string) error
+	ListAll(ctx context.Context, offset, limit int) ([]*model.Player, error)
+	Count(ctx context.Context) (int64, error)
 }
 
 // VillageRepository defines data access operations for villages.
@@ -22,6 +25,7 @@ type VillageRepository interface {
 	ListByPlayerID(ctx context.Context, playerID int64) ([]*model.Village, error)
 	Update(ctx context.Context, village *model.Village) error
 	GetByCoordinates(ctx context.Context, x, y int) (*model.Village, error)
+	Count(ctx context.Context) (int64, error)
 }
 
 // BuildingRepository defines data access operations for buildings.
@@ -45,4 +49,18 @@ type RefreshTokenRepository interface {
 	GetByTokenHash(ctx context.Context, tokenHash string) (*model.RefreshToken, error)
 	DeleteByTokenHash(ctx context.Context, tokenHash string) error
 	DeleteAllByPlayerID(ctx context.Context, playerID int64) error
+}
+
+// WorldConfigRepository defines data access operations for world configuration.
+type WorldConfigRepository interface {
+	Get(ctx context.Context, key string) (*model.WorldConfig, error)
+	GetAll(ctx context.Context) ([]*model.WorldConfig, error)
+	Set(ctx context.Context, key, value string) error
+}
+
+// AnnouncementRepository defines data access operations for announcements.
+type AnnouncementRepository interface {
+	Create(ctx context.Context, announcement *model.Announcement) error
+	ListActive(ctx context.Context) ([]*model.Announcement, error)
+	Delete(ctx context.Context, id int64) error
 }

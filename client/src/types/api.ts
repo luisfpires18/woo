@@ -46,6 +46,7 @@ export interface PlayerInfo {
   username: string;
   email: string;
   kingdom: string;
+  role: 'player' | 'admin';
 }
 
 // Village types — mirrors server/internal/dto/village.go
@@ -86,4 +87,62 @@ export interface VillageListItem {
   x: number;
   y: number;
   is_capital: boolean;
+}
+
+// Admin types — mirrors server/internal/dto/admin.go
+
+export interface PlayerListItem {
+  id: number;
+  username: string;
+  email: string;
+  kingdom: string;
+  role: 'player' | 'admin';
+  created_at: string;
+  last_login_at?: string;
+}
+
+export interface PlayerListResponse {
+  players: PlayerListItem[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface UpdateRoleRequest {
+  role: 'player' | 'admin';
+}
+
+export interface WorldConfigEntry {
+  key: string;
+  value: string;
+  description?: string;
+  updated_at: string;
+}
+
+export interface WorldConfigResponse {
+  configs: WorldConfigEntry[];
+}
+
+export interface SetConfigRequest {
+  value: string;
+}
+
+export interface StatsResponse {
+  total_players: number;
+  total_villages: number;
+}
+
+export interface CreateAnnouncementRequest {
+  title: string;
+  content: string;
+  expires_at?: string;
+}
+
+export interface AnnouncementResponse {
+  id: number;
+  title: string;
+  content: string;
+  author_id: number;
+  created_at: string;
+  expires_at?: string;
 }

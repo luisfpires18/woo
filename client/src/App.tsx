@@ -22,6 +22,33 @@ const VillagePage = lazy(() =>
   })),
 );
 
+// Admin (lazy-loaded)
+const AdminLayout = lazy(() =>
+  import('./components/Layout/AdminLayout').then((m) => ({
+    default: m.AdminLayout,
+  })),
+);
+const AdminPlayersPage = lazy(() =>
+  import('./features/admin/pages/AdminPlayersPage').then((m) => ({
+    default: m.AdminPlayersPage,
+  })),
+);
+const AdminConfigPage = lazy(() =>
+  import('./features/admin/pages/AdminConfigPage').then((m) => ({
+    default: m.AdminConfigPage,
+  })),
+);
+const AdminStatsPage = lazy(() =>
+  import('./features/admin/pages/AdminStatsPage').then((m) => ({
+    default: m.AdminStatsPage,
+  })),
+);
+const AdminAnnouncementsPage = lazy(() =>
+  import('./features/admin/pages/AdminAnnouncementsPage').then((m) => ({
+    default: m.AdminAnnouncementsPage,
+  })),
+);
+
 function FullPageLoader() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40vh' }}>
@@ -64,6 +91,15 @@ function App() {
           <Route element={<ProtectedLayout />}>
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/village/:id" element={<VillagePage />} />
+          </Route>
+
+          {/* Admin routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/players" replace />} />
+            <Route path="players" element={<AdminPlayersPage />} />
+            <Route path="config" element={<AdminConfigPage />} />
+            <Route path="stats" element={<AdminStatsPage />} />
+            <Route path="announcements" element={<AdminAnnouncementsPage />} />
           </Route>
         </Routes>
       </Suspense>

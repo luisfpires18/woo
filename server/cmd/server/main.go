@@ -44,14 +44,18 @@ func main() {
 	villageRepo := sqlite.NewVillageRepo(db)
 	buildingRepo := sqlite.NewBuildingRepo(db)
 	resourceRepo := sqlite.NewResourceRepo(db)
+	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
+	announcementRepo := sqlite.NewAnnouncementRepo(db)
 
 	// Wire up services
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
 	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo)
 
 	// Wire up handlers
 	authHandler := handler.NewAuthHandler(authService, villageService)
 	villageHandler := handler.NewVillageHandler(villageService)
+	adminHandler := handler.NewAdminHandler(adminService)
 
 	// Auth middleware for protected routes
 	authMiddleware := middleware.Auth(authService.ValidateAccessToken)
@@ -75,6 +79,11 @@ func main() {
 	// Mount protected routes under the auth middleware
 	mux.Handle("/api/villages", authMiddleware(protectedMux))
 	mux.Handle("/api/villages/", authMiddleware(protectedMux))
+
+	// Admin routes — wrapped with auth + admin middleware
+	adminMux := http.NewServeMux()
+	adminHandler.RegisterRoutes(adminMux)
+	mux.Handle("/api/admin/", authMiddleware(middleware.RequireAdmin(adminMux)))
 
 	// Apply middleware stack
 	handler := middleware.Chain(

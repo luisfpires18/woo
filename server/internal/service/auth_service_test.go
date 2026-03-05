@@ -43,6 +43,9 @@ func TestRegister_Success(t *testing.T) {
 	if resp.Player.Kingdom != "veridor" {
 		t.Errorf("expected kingdom 'veridor', got %q", resp.Player.Kingdom)
 	}
+	if resp.Player.Role != "player" {
+		t.Errorf("expected role 'player', got %q", resp.Player.Role)
+	}
 }
 
 func TestRegister_DuplicateEmail(t *testing.T) {
@@ -292,19 +295,22 @@ func TestValidateAccessToken(t *testing.T) {
 		t.Fatalf("register failed: %v", err)
 	}
 
-	playerID, err := svc.ValidateAccessToken(resp.AccessToken)
+	playerID, role, err := svc.ValidateAccessToken(resp.AccessToken)
 	if err != nil {
 		t.Fatalf("validate failed: %v", err)
 	}
 	if playerID != resp.Player.ID {
 		t.Errorf("expected player ID %d, got %d", resp.Player.ID, playerID)
 	}
+	if role != "player" {
+		t.Errorf("expected role 'player', got %q", role)
+	}
 }
 
 func TestValidateAccessToken_Invalid(t *testing.T) {
 	svc := newTestAuthService(t)
 
-	_, err := svc.ValidateAccessToken("not.a.valid.jwt")
+	_, _, err := svc.ValidateAccessToken("not.a.valid.jwt")
 	if err == nil {
 		t.Error("expected error for invalid token")
 	}

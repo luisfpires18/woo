@@ -94,3 +94,12 @@ func scanVillage(row *sql.Row) (*model.Village, error) {
 	v.CreatedAt, _ = parseTime(createdAtStr)
 	return &v, nil
 }
+
+func (r *villageRepo) Count(ctx context.Context) (int64, error) {
+	var count int64
+	err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM villages`).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("count villages: %w", err)
+	}
+	return count, nil
+}
