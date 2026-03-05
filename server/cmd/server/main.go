@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/luisfpires18/woo/internal/config"
+	"github.com/luisfpires18/woo/internal/gameloop"
 	"github.com/luisfpires18/woo/internal/handler"
 	"github.com/luisfpires18/woo/internal/middleware"
 	"github.com/luisfpires18/woo/internal/repository/sqlite"
@@ -44,6 +45,7 @@ func main() {
 	villageRepo := sqlite.NewVillageRepo(db)
 	buildingRepo := sqlite.NewBuildingRepo(db)
 	resourceRepo := sqlite.NewResourceRepo(db)
+	buildingQueueRepo := sqlite.NewBuildingQueueRepo(db)
 	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
@@ -59,11 +61,12 @@ func main() {
 	// Wire up services
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
 	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+	buildingService := service.NewBuildingService(db, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo)
 	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo)
 
 	// Wire up handlers
 	authHandler := handler.NewAuthHandler(authService, villageService)
-	villageHandler := handler.NewVillageHandler(villageService)
+	villageHandler := handler.NewVillageHandler(villageService, buildingService)
 	adminHandler := handler.NewAdminHandler(adminService)
 
 	// Auth middleware for protected routes
@@ -121,6 +124,10 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
+	// Start game loop (processes building completions every second)
+	gl := gameloop.New(buildingService, 1*time.Second)
+	gl.Start()
+
 	// Graceful shutdown context
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
@@ -137,6 +144,8 @@ func main() {
 	// Wait for shutdown signal
 	<-ctx.Done()
 	slog.Info("shutting down...")
+
+	gl.Stop()
 
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer shutdownCancel()

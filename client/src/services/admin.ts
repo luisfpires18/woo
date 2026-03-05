@@ -61,7 +61,7 @@ export async function fetchGameAssets(): Promise<GameAssetListResponse> {
 
 export async function uploadSprite(id: string, file: File): Promise<GameAsset> {
   const formData = new FormData();
-  formData.append('sprite', file);
+  formData.append('file', file);
 
   const token = localStorage.getItem('access_token');
   const response = await fetch(`/api/admin/assets/${id}/sprite`, {

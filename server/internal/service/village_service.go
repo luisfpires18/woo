@@ -174,8 +174,31 @@ func (s *VillageService) ListVillages(ctx context.Context, playerID int64) ([]dt
 }
 
 // getCalculatedResources performs lazy resource calculation: stored + rate × elapsed, capped at max.
+// If no resources row exists (e.g. admin-seeded village), it self-heals by creating default resources.
 func (s *VillageService) getCalculatedResources(ctx context.Context, villageID int64) (*model.Resources, error) {
 	res, err := s.resourceRepo.Get(ctx, villageID)
+	if errors.Is(err, model.ErrNotFound) {
+		// Self-heal: create default resources for villages missing a resources row
+		now := time.Now().UTC()
+		res = &model.Resources{
+			VillageID:       villageID,
+			Iron:            startingResources,
+			Wood:            startingResources,
+			Stone:           startingResources,
+			Food:            startingResources,
+			IronRate:        startingRate,
+			WoodRate:        startingRate,
+			StoneRate:       startingRate,
+			FoodRate:        startingRate,
+			FoodConsumption: 0,
+			MaxStorage:      startingStorage,
+			LastUpdated:     now,
+		}
+		if createErr := s.resourceRepo.Create(ctx, res); createErr != nil {
+			return nil, fmt.Errorf("create missing resources for village %d: %w", villageID, createErr)
+		}
+		return res, nil
+	}
 	if err != nil {
 		return nil, err
 	}

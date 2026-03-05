@@ -3,30 +3,57 @@ package middleware
 import (
 	"net/http"
 	"sync"
+	"time"
 
 	"golang.org/x/time/rate"
 )
 
+type rateLimiterEntry struct {
+	limiter  *rate.Limiter
+	lastSeen time.Time
+}
+
 // RateLimit returns middleware that rate-limits requests per IP address.
+// Stale entries are cleaned up periodically to prevent memory leaks.
 func RateLimit(requestsPerSecond int) Middleware {
 	var (
 		mu       sync.Mutex
-		limiters = make(map[string]*rate.Limiter)
+		limiters = make(map[string]*rateLimiterEntry)
 	)
+
+	// Background cleanup goroutine: every 3 minutes, remove entries not seen in 5 minutes.
+	go func() {
+		ticker := time.NewTicker(3 * time.Minute)
+		defer ticker.Stop()
+		for range ticker.C {
+			mu.Lock()
+			for ip, entry := range limiters {
+				if time.Since(entry.lastSeen) > 5*time.Minute {
+					delete(limiters, ip)
+				}
+			}
+			mu.Unlock()
+		}
+	}()
 
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ip := r.RemoteAddr
 
 			mu.Lock()
-			limiter, ok := limiters[ip]
+			entry, ok := limiters[ip]
 			if !ok {
-				limiter = rate.NewLimiter(rate.Limit(requestsPerSecond), requestsPerSecond)
-				limiters[ip] = limiter
+				entry = &rateLimiterEntry{
+					limiter:  rate.NewLimiter(rate.Limit(requestsPerSecond), requestsPerSecond),
+					lastSeen: time.Now(),
+				}
+				limiters[ip] = entry
+			} else {
+				entry.lastSeen = time.Now()
 			}
 			mu.Unlock()
 
-			if !limiter.Allow() {
+			if !entry.limiter.Allow() {
 				http.Error(w, `{"error":"rate limit exceeded"}`, http.StatusTooManyRequests)
 				return
 			}

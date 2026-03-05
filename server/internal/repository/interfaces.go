@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/luisfpires18/woo/internal/model"
 )
@@ -63,6 +64,14 @@ type WorldConfigRepository interface {
 type AnnouncementRepository interface {
 	Create(ctx context.Context, announcement *model.Announcement) error
 	ListActive(ctx context.Context) ([]*model.Announcement, error)
+	Delete(ctx context.Context, id int64) error
+}
+
+// BuildingQueueRepository defines data access operations for the building construction queue.
+type BuildingQueueRepository interface {
+	Insert(ctx context.Context, item *model.BuildingQueue) error
+	GetByVillageID(ctx context.Context, villageID int64) ([]*model.BuildingQueue, error)
+	GetCompleted(ctx context.Context, now time.Time) ([]*model.BuildingQueue, error)
 	Delete(ctx context.Context, id int64) error
 }
 

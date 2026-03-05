@@ -23,61 +23,70 @@
 
 | Resource | Starting Amount |
 |----------|----------------|
-| Iron | TBD |
-| Wood | TBD |
-| Stone | TBD |
-| Food | TBD |
+| Iron | 500 |
+| Wood | 500 |
+| Stone | 500 |
+| Food | 500 |
 
 ### A3. Production Rate Curve (Resources per Hour)
 
 All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) use the same production curve unless overridden below.
 
+**Formula**: `rate = base_rate + (level × rate_per_level)` where `base_rate = 10`, `rate_per_level = 20`.
+
 | Level | Resources/Hour |
 |-------|---------------|
-| 0 | 0 |
-| 1 | TBD |
-| 2 | TBD |
-| 3 | TBD |
-| 4 | TBD |
-| 5 | TBD |
-| 6 | TBD |
-| 7 | TBD |
-| 8 | TBD |
-| 9 | TBD |
-| 10 | TBD |
-| 11 | TBD |
-| 12 | TBD |
-| 13 | TBD |
-| 14 | TBD |
-| 15 | TBD |
-| 16 | TBD |
-| 17 | TBD |
-| 18 | TBD |
-| 19 | TBD |
-| 20 | TBD |
+| 0 | 10 |
+| 1 | 30 |
+| 2 | 50 |
+| 3 | 70 |
+| 4 | 90 |
+| 5 | 110 |
+| 6 | 130 |
+| 7 | 150 |
+| 8 | 170 |
+| 9 | 190 |
+| 10 | 210 |
+| 11 | 230 |
+| 12 | 250 |
+| 13 | 270 |
+| 14 | 290 |
+| 15 | 310 |
+| 16 | 330 |
+| 17 | 350 |
+| 18 | 370 |
+| 19 | 390 |
+| 20 | 410 |
 
 > If a kingdom bonus applies (e.g., Veridor +X% Wood), the bonus is applied on top of this base rate.
 
 ### A4. Warehouse Capacity Curve
 
+**Formula**: `capacity = base_storage + (level × storage_per_level)` where `base_storage = 1000`, `storage_per_level = 500`.
+
 | Level | Max Storage per Resource |
 |-------|------------------------|
-| 0 | 0 |
-| 1 | TBD |
-| 2 | TBD |
-| 3 | TBD |
-| 4 | TBD |
-| 5 | TBD |
-| 6 | TBD |
-| 7 | TBD |
-| 8 | TBD |
-| 9 | TBD |
-| 10 | TBD |
-| 11 | TBD |
-| 12 | TBD |
-| 13 | TBD |
-| 14 | TBD |
-| 15 | TBD |
+| 0 | 1000 |
+| 1 | 1500 |
+| 2 | 2000 |
+| 3 | 2500 |
+| 4 | 3000 |
+| 5 | 3500 |
+| 6 | 4000 |
+| 7 | 4500 |
+| 8 | 5000 |
+| 9 | 5500 |
+| 10 | 6000 |
+| 11 | 6500 |
+| 12 | 7000 |
+| 13 | 7500 |
+| 14 | 8000 |
+| 15 | 8500 |
+| 16 | 9000 |
+| 17 | 9500 |
+| 18 | 10000 |
+| 19 | 10500 |
+| 20 | 11000 |
 | 16 | TBD |
 | 17 | TBD |
 | 18 | TBD |
@@ -100,53 +109,53 @@ All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) use the same 
 
 | Building | Canonical ID | Function | Max Level | Prerequisites | Starting Level (New Village) |
 |----------|-------------|----------|-----------|---------------|------------------------------|
-| Town Hall | `town_hall` | Central building; gates access to all others | TBD | None | TBD |
-| Iron Mine | `iron_mine` | Produces Iron per hour | TBD | TBD | TBD |
-| Lumber Mill | `lumber_mill` | Produces Wood per hour | TBD | TBD | TBD |
-| Quarry | `quarry` | Produces Stone per hour | TBD | TBD | TBD |
-| Farm | `farm` | Produces Food per hour; determines population cap | TBD | TBD | TBD |
-| Warehouse | `warehouse` | Stores resources; level sets max storage | TBD | TBD | TBD |
-| Barracks | `barracks` | Trains infantry troops | TBD | TBD | TBD |
-| Stable | `stable` | Trains mounted/fast troops | TBD | TBD | TBD |
-| Forge | `forge` | Crafts weapons from resources + runes | TBD | TBD | TBD |
-| Rune Altar | `rune_altar` | Combines, enhances, and stores runes | TBD | TBD | TBD |
-| Walls | `walls` | Passive defense bonus for the village | TBD | TBD | TBD |
-| Marketplace | `marketplace` | Trade resources with other players | TBD | TBD | TBD |
-| Embassy | `embassy` | Required to form/join alliances | TBD | TBD | TBD |
-| Watchtower | `watchtower` | Detects incoming attacks | TBD | TBD | TBD |
+| Town Hall | `town_hall` | Central building; gates access to all others | 20 | None | 0 |
+| Iron Mine | `iron_mine` | Produces Iron per hour | 20 | None | 0 |
+| Lumber Mill | `lumber_mill` | Produces Wood per hour | 20 | None | 0 |
+| Quarry | `quarry` | Produces Stone per hour | 20 | None | 0 |
+| Farm | `farm` | Produces Food per hour; determines population cap | 20 | None | 0 |
+| Warehouse | `warehouse` | Stores resources; level sets max storage | 20 | None | 0 |
+| Barracks | `barracks` | Trains infantry troops | 20 | town_hall 3 | 0 |
+| Stable | `stable` | Trains mounted/fast troops | 15 | town_hall 5, barracks 5 | 0 |
+| Forge | `forge` | Crafts weapons from resources + runes | 10 | town_hall 5, barracks 3 | 0 |
+| Rune Altar | `rune_altar` | Combines, enhances, and stores runes | 10 | town_hall 7, forge 3 | 0 |
+| Walls | `walls` | Passive defense bonus for the village | 20 | town_hall 2 | 0 |
+| Marketplace | `marketplace` | Trade resources with other players | 15 | town_hall 5, warehouse 3 | 0 |
+| Embassy | `embassy` | Required to form/join alliances | 10 | town_hall 8 | 0 |
+| Watchtower | `watchtower` | Detects incoming attacks | 10 | town_hall 3, walls 1 | 0 |
 
 > **Prerequisites format**: `building_id level` (e.g., `town_hall 5, barracks 3`). Use `None` if no prerequisites.
 
 ### B2. Base Costs (Level 1) — All Buildings
 
-| Building | Iron | Wood | Stone | Food | Build Time | Scaling Factor |
-|----------|------|------|-------|------|-----------|----------------|
-| Town Hall | TBD | TBD | TBD | TBD | TBD | TBD |
-| Iron Mine | TBD | TBD | TBD | TBD | TBD | TBD |
-| Lumber Mill | TBD | TBD | TBD | TBD | TBD | TBD |
-| Quarry | TBD | TBD | TBD | TBD | TBD | TBD |
-| Farm | TBD | TBD | TBD | TBD | TBD | TBD |
-| Warehouse | TBD | TBD | TBD | TBD | TBD | TBD |
-| Barracks | TBD | TBD | TBD | TBD | TBD | TBD |
-| Stable | TBD | TBD | TBD | TBD | TBD | TBD |
-| Forge | TBD | TBD | TBD | TBD | TBD | TBD |
-| Rune Altar | TBD | TBD | TBD | TBD | TBD | TBD |
-| Walls | TBD | TBD | TBD | TBD | TBD | TBD |
-| Marketplace | TBD | TBD | TBD | TBD | TBD | TBD |
-| Embassy | TBD | TBD | TBD | TBD | TBD | TBD |
-| Watchtower | TBD | TBD | TBD | TBD | TBD | TBD |
+| Building | Iron | Wood | Stone | Food | Build Time | Scaling Factor | Time Factor |
+|----------|------|------|-------|------|-----------|----------------|-------------|
+| Town Hall | 200 | 200 | 200 | 100 | 5 min | 1.7 | 1.7 |
+| Iron Mine | 100 | 80 | 50 | 30 | 2 min | 1.5 | 1.5 |
+| Lumber Mill | 80 | 100 | 50 | 30 | 2 min | 1.5 | 1.5 |
+| Quarry | 80 | 50 | 100 | 30 | 2 min | 1.5 | 1.5 |
+| Farm | 50 | 80 | 50 | 20 | 2 min | 1.5 | 1.5 |
+| Warehouse | 120 | 120 | 100 | 50 | 3 min | 1.6 | 1.6 |
+| Barracks | 200 | 150 | 100 | 80 | 5 min | 1.8 | 1.8 |
+| Stable | 300 | 200 | 150 | 120 | 8 min | 1.8 | 1.8 |
+| Forge | 250 | 180 | 200 | 100 | 8 min | 1.8 | 1.8 |
+| Rune Altar | 300 | 250 | 250 | 150 | 10 min | 1.9 | 1.9 |
+| Walls | 150 | 100 | 200 | 50 | 4 min | 1.6 | 1.6 |
+| Marketplace | 180 | 180 | 120 | 80 | 5 min | 1.6 | 1.6 |
+| Embassy | 200 | 200 | 200 | 100 | 8 min | 1.7 | 1.7 |
+| Watchtower | 150 | 100 | 150 | 60 | 4 min | 1.6 | 1.6 |
 
 > **Cost formula**: `cost(level) = base_cost × (scaling_factor ^ (level - 1))`
-> **Time formula**: `time(level) = base_time × (time_factor ^ (level - 1))` — `time_factor` = TBD (global or per-building)
+> **Time formula**: `time(level) = base_time × (time_factor ^ (level - 1))`
 
 ### B3. Construction Rules
 
 | Rule | Value |
 |------|-------|
-| Max simultaneous constructions per village | TBD |
-| Can this be upgraded (e.g., Town Hall unlocks parallel queues)? | TBD |
-| Demolition policy | TBD (instant? cost? cooldown?) |
-| Resources returned on demolition | TBD (0%? 50%?) |
+| Max simultaneous constructions per village | 1 |
+| Can this be upgraded (e.g., Town Hall unlocks parallel queues)? | Not in v1 (future consideration) |
+| Demolition policy | Instant, no cooldown |
+| Resources returned on demolition | 0% (no refund) |
 
 ---
 
@@ -157,48 +166,48 @@ All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) use the same 
 | Property | Value |
 |----------|-------|
 | Canonical ID | `dock` |
-| Function | TBD |
-| Max Level | TBD |
-| Prerequisites | TBD |
+| Function | Naval operations, sea-based trade and troop transport |
+| Max Level | 15 |
+| Prerequisites | town_hall 6 |
 | Starting Level | 0 (not built) |
 
 **Base Cost (Level 1)**
 
 | Iron | Wood | Stone | Food | Build Time | Scaling Factor |
 |------|------|-------|------|-----------|----------------|
-| TBD | TBD | TBD | TBD | TBD | TBD |
+| 250 | 300 | 150 | 100 | 8 min | 1.8 |
 
 ### C2. Sylvara — Grove Sanctum
 
 | Property | Value |
 |----------|-------|
 | Canonical ID | `grove_sanctum` |
-| Function | TBD |
-| Max Level | TBD |
-| Prerequisites | TBD |
+| Function | Nature magic, enhanced rune crafting and forest-based bonuses |
+| Max Level | 15 |
+| Prerequisites | town_hall 6 |
 | Starting Level | 0 (not built) |
 
 **Base Cost (Level 1)**
 
 | Iron | Wood | Stone | Food | Build Time | Scaling Factor |
 |------|------|-------|------|-----------|----------------|
-| TBD | TBD | TBD | TBD | TBD | TBD |
+| 200 | 300 | 200 | 150 | 8 min | 1.8 |
 
 ### C3. Arkazia — Colosseum
 
 | Property | Value |
 |----------|-------|
 | Canonical ID | `colosseum` |
-| Function | TBD |
-| Max Level | TBD |
-| Prerequisites | TBD |
+| Function | Gladiatorial combat, troop morale boost and elite unit training |
+| Max Level | 15 |
+| Prerequisites | town_hall 6 |
 | Starting Level | 0 (not built) |
 
 **Base Cost (Level 1)**
 
 | Iron | Wood | Stone | Food | Build Time | Scaling Factor |
 |------|------|-------|------|-----------|----------------|
-| TBD | TBD | TBD | TBD | TBD | TBD |
+| 300 | 200 | 300 | 100 | 8 min | 1.8 |
 
 ### C4. Kingdom Bonuses
 
@@ -546,3 +555,4 @@ Losses = TBD
 | Date | Change |
 |------|--------|
 | 2026-03-05 | Initial creation — all values TBD for manual definition |
+| 2026-03-05 | Filled sections A2–A4 (starting resources, production rates, warehouse capacity), B1–B3 (building definitions, base costs, construction rules), C1–C3 (kingdom-specific buildings) with draft values matching `config/buildings.go` implementation |
