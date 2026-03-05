@@ -1,5 +1,7 @@
 # Core Mechanics
 
+> **Superseded**: Definitive tunable values (costs, stats, curves, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
+
 > All fundamental game systems. Read this before implementing any gameplay feature.
 
 ---
@@ -374,3 +376,4 @@ Players can form alliances for cooperative play.
 | 2026-03-03 | Initial creation of core mechanics |
 | 2026-03-03 | Added Initial Village Setup, building prerequisites/max levels, canonical constants, square grid map spec (401×401), map generation rules, Weapons of Chaos configurable count |
 | 2026-03-03 | Added grove_sanctum and colosseum to canonical building type constants |
+| 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |

@@ -1,5 +1,7 @@
 # Progression & Scaling
 
+> **Superseded**: Definitive tunable values (costs, rates, scaling factors, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
+
 > How buildings, troops, weapons, and runes scale in cost, time, and power. Essential reference for balancing.
 
 ---
@@ -278,3 +280,4 @@ The final decision will be made during playtesting. The system should be configu
 |------|--------|
 | 2026-03-03 | Initial creation of progression and scaling |
 | 2026-03-03 | Added all building base costs, production rates for all resource buildings, Warehouse capacity table, utility building scaling (Barracks, Forge tiers, Walls defense, Marketplace, Watchtower) — re-applied after previous silent failure |
+| 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |

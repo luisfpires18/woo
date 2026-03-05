@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/luisfpires18/woo/internal/dto"
-	"github.com/luisfpires18/woo/internal/model"
 	"github.com/luisfpires18/woo/internal/middleware"
+	"github.com/luisfpires18/woo/internal/model"
 	"github.com/luisfpires18/woo/internal/service"
 )
 
@@ -24,14 +24,14 @@ func NewAdminHandler(adminService *service.AdminService) *AdminHandler {
 // RegisterRoutes registers admin routes on the given mux.
 // All admin routes require auth + admin middleware applied externally.
 func (h *AdminHandler) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/admin/players", h.ListPlayers)
-	mux.HandleFunc("PATCH /api/admin/players/{id}/role", h.UpdatePlayerRole)
-	mux.HandleFunc("GET /api/admin/config", h.GetWorldConfig)
-	mux.HandleFunc("PUT /api/admin/config/{key}", h.SetWorldConfig)
-	mux.HandleFunc("GET /api/admin/stats", h.GetStats)
-	mux.HandleFunc("GET /api/admin/announcements", h.ListAnnouncements)
-	mux.HandleFunc("POST /api/admin/announcements", h.CreateAnnouncement)
-	mux.HandleFunc("DELETE /api/admin/announcements/{id}", h.DeleteAnnouncement)
+	mux.HandleFunc("GET /players", h.ListPlayers)
+	mux.HandleFunc("PATCH /players/{id}/role", h.UpdatePlayerRole)
+	mux.HandleFunc("GET /config", h.GetWorldConfig)
+	mux.HandleFunc("PUT /config/{key}", h.SetWorldConfig)
+	mux.HandleFunc("GET /stats", h.GetStats)
+	mux.HandleFunc("GET /announcements", h.ListAnnouncements)
+	mux.HandleFunc("POST /announcements", h.CreateAnnouncement)
+	mux.HandleFunc("DELETE /announcements/{id}", h.DeleteAnnouncement)
 }
 
 // ListPlayers handles GET /api/admin/players?offset=0&limit=20.

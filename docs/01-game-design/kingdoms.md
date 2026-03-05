@@ -1,5 +1,7 @@
 # Kingdoms
 
+> **Superseded**: Definitive tunable values (troop stats, bonuses, costs, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
+
 > Complete reference for all three playable kingdoms. Cross-reference with `docs/02-lore/kingdom-lore.md` for backstory.
 
 ---
@@ -162,3 +164,4 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of kingdoms reference |
+| 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
