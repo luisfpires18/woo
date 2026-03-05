@@ -56,7 +56,7 @@ export async function deleteAnnouncement(id: number): Promise<void> {
 // --- Game assets ---
 
 export async function fetchGameAssets(): Promise<GameAssetListResponse> {
-  return api.get<GameAssetListResponse>('/admin/assets');
+  return api.get<GameAssetListResponse>('/assets');
 }
 
 export async function uploadSprite(id: string, file: File): Promise<GameAsset> {

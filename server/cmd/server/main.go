@@ -89,6 +89,9 @@ func main() {
 	mux.Handle("/api/villages", authMiddleware(protectedMux))
 	mux.Handle("/api/villages/", authMiddleware(protectedMux))
 
+	// Game assets — read is auth-only (all players need icons), write is admin-only
+	mux.Handle("GET /api/assets", authMiddleware(http.HandlerFunc(adminHandler.ListAssets)))
+
 	// Admin routes — wrapped with auth + admin middleware
 	adminMux := http.NewServeMux()
 	adminHandler.RegisterRoutes(adminMux)
