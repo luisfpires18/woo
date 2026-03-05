@@ -165,19 +165,31 @@ func TestLogin_Success(t *testing.T) {
 		t.Fatalf("register failed: %v", err)
 	}
 
-	// Login
+	// Login with email
 	resp, err := svc.Login(ctx, &dto.LoginRequest{
-		Email:    "login@example.com",
+		Login:    "login@example.com",
 		Password: "securepass123",
 	})
 	if err != nil {
-		t.Fatalf("login failed: %v", err)
+		t.Fatalf("login with email failed: %v", err)
 	}
 	if resp.AccessToken == "" {
 		t.Error("expected access token")
 	}
 	if resp.Player.Username != "logintest" {
 		t.Errorf("expected username 'logintest', got %q", resp.Player.Username)
+	}
+
+	// Login with username
+	resp2, err := svc.Login(ctx, &dto.LoginRequest{
+		Login:    "logintest",
+		Password: "securepass123",
+	})
+	if err != nil {
+		t.Fatalf("login with username failed: %v", err)
+	}
+	if resp2.Player.Username != "logintest" {
+		t.Errorf("expected username 'logintest', got %q", resp2.Player.Username)
 	}
 }
 
@@ -196,7 +208,7 @@ func TestLogin_WrongPassword(t *testing.T) {
 	}
 
 	_, err = svc.Login(ctx, &dto.LoginRequest{
-		Email:    "wrong@example.com",
+		Login:    "wrong@example.com",
 		Password: "wrongpass00",
 	})
 	if err != service.ErrInvalidCredentials {
@@ -209,7 +221,7 @@ func TestLogin_NonexistentEmail(t *testing.T) {
 	ctx := context.Background()
 
 	_, err := svc.Login(ctx, &dto.LoginRequest{
-		Email:    "noexist@example.com",
+		Login:    "noexist@example.com",
 		Password: "securepass123",
 	})
 	if err != service.ErrInvalidCredentials {

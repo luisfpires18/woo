@@ -51,6 +51,14 @@ func (r *playerRepo) GetByEmail(ctx context.Context, email string) (*model.Playe
 	return scanPlayer(row)
 }
 
+func (r *playerRepo) GetByUsername(ctx context.Context, username string) (*model.Player, error) {
+	row := r.db.QueryRowContext(ctx,
+		`SELECT id, username, email, password_hash, kingdom, role, oauth_provider, oauth_id, created_at, last_login_at
+		 FROM players WHERE username = ?`, username,
+	)
+	return scanPlayer(row)
+}
+
 func (r *playerRepo) GetByOAuth(ctx context.Context, provider, oauthID string) (*model.Player, error) {
 	row := r.db.QueryRowContext(ctx,
 		`SELECT id, username, email, password_hash, kingdom, role, oauth_provider, oauth_id, created_at, last_login_at

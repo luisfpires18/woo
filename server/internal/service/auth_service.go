@@ -20,7 +20,7 @@ import (
 
 // Auth errors.
 var (
-	ErrInvalidCredentials  = errors.New("invalid email or password")
+	ErrInvalidCredentials  = errors.New("invalid username/email or password")
 	ErrEmailTaken          = errors.New("email already registered")
 	ErrUsernameTaken       = errors.New("username already taken")
 	ErrInvalidKingdom      = errors.New("kingdom must be veridor, sylvara, or arkazia")
@@ -110,16 +110,25 @@ func (s *AuthService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 	return s.generateAuthResponse(ctx, player)
 }
 
-// Login authenticates a player with email and password.
+// Login authenticates a player with email or username and password.
 func (s *AuthService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.AuthResponse, error) {
-	email := strings.ToLower(strings.TrimSpace(req.Email))
+	login := strings.TrimSpace(req.Login)
 
-	player, err := s.playerRepo.GetByEmail(ctx, email)
+	var player *model.Player
+	var err error
+
+	// If the login contains '@', treat it as an email; otherwise as a username.
+	if strings.Contains(login, "@") {
+		player, err = s.playerRepo.GetByEmail(ctx, strings.ToLower(login))
+	} else {
+		player, err = s.playerRepo.GetByUsername(ctx, login)
+	}
+
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
 			return nil, ErrInvalidCredentials
 		}
-		return nil, fmt.Errorf("get player by email: %w", err)
+		return nil, fmt.Errorf("get player: %w", err)
 	}
 
 	if player.PasswordHash == "" {

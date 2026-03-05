@@ -10,7 +10,7 @@ type RegisterRequest struct {
 
 // LoginRequest is the payload for POST /api/auth/login.
 type LoginRequest struct {
-	Email    string `json:"email"`
+	Login    string `json:"login"`
 	Password string `json:"password"`
 }
 

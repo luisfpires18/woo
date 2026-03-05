@@ -8,10 +8,10 @@ import { ApiRequestError } from '../../../services/api';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
-  const login = useAuthStore((s) => s.login);
+  const doLogin = useAuthStore((s) => s.login);
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export function LoginPage() {
     setLoading(true);
 
     try {
-      await login({ email, password });
+      await doLogin({ login, password });
       navigate('/');
     } catch (err) {
       if (err instanceof ApiRequestError) {
@@ -43,13 +43,13 @@ export function LoginPage() {
         {error && <p className={styles.error}>{error}</p>}
 
         <Input
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
+          label="Username or Email"
+          type="text"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          placeholder="username or email"
           required
-          autoComplete="email"
+          autoComplete="username"
         />
 
         <Input

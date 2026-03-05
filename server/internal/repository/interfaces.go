@@ -11,6 +11,7 @@ type PlayerRepository interface {
 	Create(ctx context.Context, player *model.Player) error
 	GetByID(ctx context.Context, id int64) (*model.Player, error)
 	GetByEmail(ctx context.Context, email string) (*model.Player, error)
+	GetByUsername(ctx context.Context, username string) (*model.Player, error)
 	GetByOAuth(ctx context.Context, provider, oauthID string) (*model.Player, error)
 	UpdateLastLogin(ctx context.Context, id int64) error
 	UpdateRole(ctx context.Context, id int64, role string) error
