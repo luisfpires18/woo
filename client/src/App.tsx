@@ -62,16 +62,29 @@ function FullPageLoader() {
   );
 }
 
-/** Redirect / to the first village or a fallback */
+/** Redirect / to the first village or show empty state */
 function HomeRedirect() {
   const villages = useGameStore((s) => s.villages);
+  const villagesLoaded = useGameStore((s) => s.villagesLoaded);
   const first = villages[0];
 
   if (first) {
     return <Navigate to={`/village/${first.id}`} replace />;
   }
 
-  // villages not loaded yet — ProtectedLayout will fetch them
+  if (villagesLoaded) {
+    // Villages fetched but list is empty
+    return (
+      <div style={{ textAlign: 'center', marginTop: '20vh', color: 'var(--text-muted)' }}>
+        <h2 style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>
+          No Village Yet
+        </h2>
+        <p>Your empire awaits. A village will be created for you shortly.</p>
+      </div>
+    );
+  }
+
+  // Still loading
   return <FullPageLoader />;
 }
 

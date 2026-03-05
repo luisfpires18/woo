@@ -95,7 +95,7 @@ func main() {
 	// Admin routes — wrapped with auth + admin middleware
 	adminMux := http.NewServeMux()
 	adminHandler.RegisterRoutes(adminMux)
-	mux.Handle("/api/admin/", authMiddleware(middleware.RequireAdmin(adminMux)))
+	mux.Handle("/api/admin/", authMiddleware(middleware.RequireAdmin(http.StripPrefix("/api/admin", adminMux))))
 
 	// Serve uploaded sprites with caching
 	fileServer := http.FileServer(http.Dir("uploads"))

@@ -6,6 +6,8 @@ interface GameState {
   currentVillage: VillageResponse | null;
   /** List of the player's villages (summary data) */
   villages: VillageListItem[];
+  /** Whether the village list has been fetched at least once */
+  villagesLoaded: boolean;
 
   setCurrentVillage: (village: VillageResponse | null) => void;
   setVillages: (villages: VillageListItem[]) => void;
@@ -14,7 +16,8 @@ interface GameState {
 export const useGameStore = create<GameState>((set) => ({
   currentVillage: null,
   villages: [],
+  villagesLoaded: false,
 
   setCurrentVillage: (village) => set({ currentVillage: village }),
-  setVillages: (villages) => set({ villages }),
+  setVillages: (villages) => set({ villages, villagesLoaded: true }),
 }));
