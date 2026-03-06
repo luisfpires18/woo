@@ -98,15 +98,15 @@ func TestGetVillage_Success(t *testing.T) {
 		t.Error("veridor village should have a dock building")
 	}
 
-	// Check resources (allow small delta due to lazy calculation elapsed time)
+	// Check resources (allow small delta due to lazy calculation — rates are per-second now)
 	if resp.Resources == nil {
 		t.Fatal("expected resources")
 	}
-	if resp.Resources.Iron < 499 || resp.Resources.Iron > 501 {
+	if resp.Resources.Iron < 499 || resp.Resources.Iron > 510 {
 		t.Errorf("expected ~500 iron, got %f", resp.Resources.Iron)
 	}
-	if resp.Resources.MaxStorage != 1000 {
-		t.Errorf("expected 1000 max storage, got %f", resp.Resources.MaxStorage)
+	if resp.Resources.MaxStorage != 1200 {
+		t.Errorf("expected 1200 max storage, got %f", resp.Resources.MaxStorage)
 	}
 }
 

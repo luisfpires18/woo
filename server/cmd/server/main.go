@@ -68,6 +68,7 @@ func main() {
 	authHandler := handler.NewAuthHandler(authService, villageService)
 	villageHandler := handler.NewVillageHandler(villageService, buildingService)
 	adminHandler := handler.NewAdminHandler(adminService)
+	playerHandler := handler.NewPlayerHandler(playerRepo, authService, villageService)
 
 	// Auth middleware for protected routes
 	authMiddleware := middleware.Auth(authService.ValidateAccessToken)
@@ -91,6 +92,9 @@ func main() {
 	// Mount protected routes under the auth middleware
 	mux.Handle("/api/villages", authMiddleware(protectedMux))
 	mux.Handle("/api/villages/", authMiddleware(protectedMux))
+
+	// Player routes (protected)
+	mux.Handle("PUT /api/player/kingdom", authMiddleware(http.HandlerFunc(playerHandler.ChooseKingdom)))
 
 	// Game assets — read is auth-only (all players need icons), write is admin-only
 	mux.Handle("GET /api/assets", authMiddleware(http.HandlerFunc(adminHandler.ListAssets)))

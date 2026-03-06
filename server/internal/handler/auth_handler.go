@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"log/slog"
 	"net/http"
 
 	"github.com/luisfpires18/woo/internal/dto"
@@ -45,12 +44,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create first village for the new player
-	if _, err := h.villageService.CreateFirstVillage(r.Context(), resp.Player.ID, req.Kingdom, req.Username); err != nil {
-		slog.Error("failed to create first village", "player_id", resp.Player.ID, "error", err)
-		// Don't fail registration — player was created, village can be retried
-	}
-
+	// Village is created later when the player chooses a kingdom
 	writeJSON(w, http.StatusCreated, resp)
 }
 

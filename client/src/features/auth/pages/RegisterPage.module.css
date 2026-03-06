@@ -24,20 +24,6 @@
   margin: 0;
 }
 
-.kingdomSection {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.kingdomLabel {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  letter-spacing: 0.03em;
-}
-
 .link {
   text-align: center;
   font-size: 0.875rem;

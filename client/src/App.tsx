@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 import { useGameStore } from './stores/gameStore';
+import { useThemeStore } from './stores/themeStore';
 import { PublicLayout } from './components/Layout/PublicLayout';
 import { ProtectedLayout } from './components/Layout/ProtectedLayout';
 import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
@@ -19,6 +20,11 @@ const RegisterPage = lazy(() =>
 const VillagePage = lazy(() =>
   import('./features/village/pages/VillagePage').then((m) => ({
     default: m.VillagePage,
+  })),
+);
+const KingdomSelectionPage = lazy(() =>
+  import('./features/kingdom/pages/KingdomSelectionPage').then((m) => ({
+    default: m.KingdomSelectionPage,
   })),
 );
 
@@ -64,9 +70,15 @@ function FullPageLoader() {
 
 /** Redirect / to the first village or show empty state */
 function HomeRedirect() {
+  const player = useAuthStore((s) => s.player);
   const villages = useGameStore((s) => s.villages);
   const villagesLoaded = useGameStore((s) => s.villagesLoaded);
   const first = villages[0];
+
+  // No kingdom chosen yet — go to selection
+  if (player && !player.kingdom) {
+    return <Navigate to="/choose-kingdom" replace />;
+  }
 
   if (first) {
     return <Navigate to={`/village/${first.id}`} replace />;
@@ -90,10 +102,12 @@ function HomeRedirect() {
 
 function App() {
   const restore = useAuthStore((s) => s.restore);
+  const initTheme = useThemeStore((s) => s.init);
 
   useEffect(() => {
     restore();
-  }, [restore]);
+    initTheme();
+  }, [restore, initTheme]);
 
   return (
     <BrowserRouter>
@@ -109,6 +123,7 @@ function App() {
           <Route element={<ProtectedLayout />}>
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/village/:id" element={<VillagePage />} />
+            <Route path="/choose-kingdom" element={<KingdomSelectionPage />} />
           </Route>
 
           {/* Admin routes */}

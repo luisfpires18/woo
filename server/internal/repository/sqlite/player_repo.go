@@ -91,6 +91,20 @@ func (r *playerRepo) UpdateRole(ctx context.Context, id int64, role string) erro
 	return nil
 }
 
+func (r *playerRepo) UpdateKingdom(ctx context.Context, id int64, kingdom string) error {
+	result, err := r.db.ExecContext(ctx,
+		`UPDATE players SET kingdom = ? WHERE id = ?`, kingdom, id,
+	)
+	if err != nil {
+		return fmt.Errorf("update kingdom for player %d: %w", id, err)
+	}
+	rows, _ := result.RowsAffected()
+	if rows == 0 {
+		return model.ErrNotFound
+	}
+	return nil
+}
+
 func (r *playerRepo) ListAll(ctx context.Context, offset, limit int) ([]*model.Player, error) {
 	rows, err := r.db.QueryContext(ctx,
 		`SELECT id, username, email, password_hash, kingdom, role, oauth_provider, oauth_id, created_at, last_login_at

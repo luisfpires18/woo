@@ -32,10 +32,10 @@ func TestListPlayers(t *testing.T) {
 
 	// Register two players (seed admin + 2 more via register = 3 total)
 	authSvc.Register(ctx, &dto.RegisterRequest{
-		Username: "player1", Email: "p1@test.com", Password: "password123", Kingdom: "veridor",
+		Username: "player1", Email: "p1@test.com", Password: "password123",
 	})
 	authSvc.Register(ctx, &dto.RegisterRequest{
-		Username: "player2", Email: "p2@test.com", Password: "password123", Kingdom: "sylvara",
+		Username: "player2", Email: "p2@test.com", Password: "password123",
 	})
 
 	resp, err := adminSvc.ListPlayers(ctx, 0, 20)
@@ -61,7 +61,6 @@ func TestListPlayers_Pagination(t *testing.T) {
 			Username: "pageplayer" + string(rune('a'+i)),
 			Email:    "page" + string(rune('a'+i)) + "@test.com",
 			Password: "password123",
-			Kingdom:  "arkazia",
 		})
 	}
 
@@ -82,7 +81,7 @@ func TestUpdatePlayerRole(t *testing.T) {
 	ctx := context.Background()
 
 	resp, err := authSvc.Register(ctx, &dto.RegisterRequest{
-		Username: "upgradeuser", Email: "upgrade@test.com", Password: "password123", Kingdom: "veridor",
+		Username: "upgradeuser", Email: "upgrade@test.com", Password: "password123",
 	})
 	if err != nil {
 		t.Fatalf("register: %v", err)
@@ -171,7 +170,7 @@ func TestGetStats(t *testing.T) {
 	ctx := context.Background()
 
 	authSvc.Register(ctx, &dto.RegisterRequest{
-		Username: "statsplayer", Email: "stats@test.com", Password: "password123", Kingdom: "veridor",
+		Username: "statsplayer", Email: "stats@test.com", Password: "password123",
 	})
 
 	stats, err := adminSvc.GetStats(ctx)
@@ -189,7 +188,7 @@ func TestAnnouncements_CRUD(t *testing.T) {
 
 	// Need a player ID for author
 	resp, _ := authSvc.Register(ctx, &dto.RegisterRequest{
-		Username: "announcer", Email: "ann@test.com", Password: "password123", Kingdom: "veridor",
+		Username: "announcer", Email: "ann@test.com", Password: "password123",
 	})
 	authorID := resp.Player.ID
 

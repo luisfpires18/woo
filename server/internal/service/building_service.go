@@ -27,13 +27,13 @@ type QueueTxInserter interface {
 
 // BuildingService handles building construction business logic.
 type BuildingService struct {
-	db            *sql.DB
-	villageRepo   repository.VillageRepository
-	buildingRepo  repository.BuildingRepository
-	resourceRepo  repository.ResourceRepository
-	queueRepo     repository.BuildingQueueRepository
-	queueTx       QueueTxInserter
-	playerRepo    repository.PlayerRepository
+	db           *sql.DB
+	villageRepo  repository.VillageRepository
+	buildingRepo repository.BuildingRepository
+	resourceRepo repository.ResourceRepository
+	queueRepo    repository.BuildingQueueRepository
+	queueTx      QueueTxInserter
+	playerRepo   repository.PlayerRepository
 }
 
 // NewBuildingService creates a new BuildingService.

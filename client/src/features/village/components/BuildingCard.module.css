@@ -8,7 +8,9 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   transition: border-color 0.2s, box-shadow 0.2s;
-  cursor: default;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
 }
 
 .card:hover {

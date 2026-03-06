@@ -37,10 +37,10 @@ var kingdomBuilding = map[string]string{
 // Starting resource config.
 const (
 	startingResources = 500.0
-	startingRate      = 30.0
-	startingStorage   = 1000.0
-	mapHalf           = 200 // map goes from -200 to +200
-	spawnMinDist      = 10  // don't spawn within 10 tiles of center (Moraphys)
+	startingRate      = 3.0    // per second
+	startingStorage   = 1200.0 // hardcoded cap for now
+	mapHalf           = 200    // map goes from -200 to +200
+	spawnMinDist      = 10     // don't spawn within 10 tiles of center (Moraphys)
 	maxSpawnAttempts  = 100
 )
 
@@ -204,12 +204,12 @@ func (s *VillageService) getCalculatedResources(ctx context.Context, villageID i
 	}
 
 	now := time.Now().UTC()
-	elapsed := now.Sub(res.LastUpdated).Hours()
+	elapsed := now.Sub(res.LastUpdated).Seconds()
 	if elapsed <= 0 {
 		return res, nil
 	}
 
-	// Calculate current resources: stored + rate*hours, capped at max_storage
+	// Calculate current resources: stored + rate*seconds, capped at max_storage
 	res.Iron = math.Min(res.Iron+res.IronRate*elapsed, res.MaxStorage)
 	res.Wood = math.Min(res.Wood+res.WoodRate*elapsed, res.MaxStorage)
 	res.Stone = math.Min(res.Stone+res.StoneRate*elapsed, res.MaxStorage)

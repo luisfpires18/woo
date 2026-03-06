@@ -13,14 +13,17 @@ import styles from './ProtectedLayout.module.css';
 export function ProtectedLayout() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const hydrated = useAuthStore((s) => s.hydrated);
+  const player = useAuthStore((s) => s.player);
   const setVillages = useGameStore((s) => s.setVillages);
   const loadAssets = useAssetStore((s) => s.load);
 
-  // Fetch the player's village list on mount
+  const hasKingdom = !!player?.kingdom;
+
+  // Fetch the player's village list on mount (only if kingdom is chosen)
   const { data: villages, isLoading } = useQuery({
     queryKey: ['villages'],
     queryFn: fetchVillages,
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && hasKingdom,
   });
 
   useEffect(() => {
@@ -42,6 +45,12 @@ export function ProtectedLayout() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Player hasn't chosen a kingdom yet — show kingdom selection
+  // (render directly, skip the full layout with Header/Sidebar)
+  if (player && !player.kingdom) {
+    return <Outlet />;
   }
 
   if (isLoading) {

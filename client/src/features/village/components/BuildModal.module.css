@@ -1,0 +1,152 @@
+.emptyMsg {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: var(--spacing-lg) 0;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--success);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 var(--spacing-sm);
+}
+
+.lockedTitle {
+  color: var(--text-muted);
+}
+
+.sectionIcon {
+  font-size: 0.875rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.lockedRow {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.rowHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.buildingName {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.03em;
+}
+
+.costs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs) var(--spacing-md);
+  font-size: 0.8125rem;
+}
+
+.costOk {
+  color: var(--text-secondary);
+}
+
+.costInsufficient {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.timeValue {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.prereqs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs) var(--spacing-md);
+  font-size: 0.75rem;
+}
+
+.prereqMet {
+  color: var(--success);
+}
+
+.prereqUnmet {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.prereqCurrent {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.buildBtn {
+  align-self: flex-end;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.03em;
+}
+
+.buildBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.buildBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: var(--spacing-md);
+  color: var(--error);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .costs {
+    font-size: 0.75rem;
+    gap: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .buildBtn {
+    align-self: stretch;
+    text-align: center;
+  }
+}

@@ -16,6 +16,7 @@ type PlayerRepository interface {
 	GetByOAuth(ctx context.Context, provider, oauthID string) (*model.Player, error)
 	UpdateLastLogin(ctx context.Context, id int64) error
 	UpdateRole(ctx context.Context, id int64, role string) error
+	UpdateKingdom(ctx context.Context, id int64, kingdom string) error
 	ListAll(ctx context.Context, offset, limit int) ([]*model.Player, error)
 	Count(ctx context.Context) (int64, error)
 }

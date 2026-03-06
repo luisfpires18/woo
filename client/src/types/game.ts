@@ -1,6 +1,6 @@
 // Game entity types — mirrors server domain models
 
-export type Kingdom = 'veridor' | 'sylvara' | 'arkazia';
+export type Kingdom = 'veridor' | 'sylvara' | 'arkazia' | 'draxys' | 'zandres' | 'lumus' | 'nordalh' | 'drakanith';
 
 export interface Player {
   id: number;

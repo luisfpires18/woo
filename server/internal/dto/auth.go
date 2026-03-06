@@ -5,7 +5,11 @@ type RegisterRequest struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Kingdom  string `json:"kingdom"`
+}
+
+// ChooseKingdomRequest is the payload for PUT /api/player/kingdom.
+type ChooseKingdomRequest struct {
+	Kingdom string `json:"kingdom"`
 }
 
 // LoginRequest is the payload for POST /api/auth/login.

@@ -23,7 +23,7 @@ var (
 	ErrInvalidCredentials  = errors.New("invalid username/email or password")
 	ErrEmailTaken          = errors.New("email already registered")
 	ErrUsernameTaken       = errors.New("username already taken")
-	ErrInvalidKingdom      = errors.New("kingdom must be veridor, sylvara, or arkazia")
+	ErrInvalidKingdom      = errors.New("invalid kingdom")
 	ErrInvalidRefreshToken = errors.New("invalid or expired refresh token")
 	ErrWeakPassword        = errors.New("password must be at least 8 characters")
 	ErrInvalidEmail        = errors.New("invalid email address")
@@ -31,9 +31,19 @@ var (
 )
 
 var validKingdoms = map[string]bool{
-	"veridor": true,
-	"sylvara": true,
-	"arkazia": true,
+	"veridor":   true,
+	"sylvara":   true,
+	"arkazia":   true,
+	"draxys":    true,
+	"zandres":   true,
+	"lumus":     true,
+	"nordalh":   true,
+	"drakanith": true,
+}
+
+// IsValidKingdom checks if the given kingdom string is a valid playable kingdom.
+func IsValidKingdom(kingdom string) bool {
+	return validKingdoms[kingdom]
 }
 
 const (
@@ -87,12 +97,12 @@ func (s *AuthService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 		return nil, fmt.Errorf("hash password: %w", err)
 	}
 
-	// Create player
+	// Create player — kingdom is empty until chosen post-login
 	player := &model.Player{
 		Username:     req.Username,
 		Email:        strings.ToLower(strings.TrimSpace(req.Email)),
 		PasswordHash: string(hash),
-		Kingdom:      strings.ToLower(strings.TrimSpace(req.Kingdom)),
+		Kingdom:      "",
 		CreatedAt:    time.Now().UTC(),
 	}
 
@@ -283,12 +293,7 @@ func (s *AuthService) validateRegisterInput(req *dto.RegisterRequest) error {
 		return ErrWeakPassword
 	}
 
-	// Kingdom
-	kingdom := strings.ToLower(strings.TrimSpace(req.Kingdom))
-	if !validKingdoms[kingdom] {
-		return ErrInvalidKingdom
-	}
-
+	// Kingdom is now chosen post-registration; skip validation here
 	return nil
 }
 

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS players (
     username TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT,
-    kingdom TEXT NOT NULL CHECK (kingdom IN ('veridor', 'sylvara', 'arkazia')),
+    kingdom TEXT NOT NULL DEFAULT '' CHECK (kingdom IN ('', 'veridor', 'sylvara', 'arkazia', 'draxys', 'zandres', 'lumus', 'nordalh', 'drakanith')),
     oauth_provider TEXT,
     oauth_id TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),

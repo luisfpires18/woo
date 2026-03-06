@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/luisfpires18/woo/internal/dto"
 	"github.com/luisfpires18/woo/internal/middleware"
 	"github.com/luisfpires18/woo/internal/model"
 	"github.com/luisfpires18/woo/internal/service"
-	"github.com/luisfpires18/woo/internal/dto"
 )
 
 // VillageHandler handles village HTTP endpoints.

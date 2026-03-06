@@ -26,7 +26,6 @@ func TestRegister_Success(t *testing.T) {
 		Username: "testplayer",
 		Email:    "test@example.com",
 		Password: "securepass123",
-		Kingdom:  "veridor",
 	})
 	if err != nil {
 		t.Fatalf("expected no error, got: %v", err)
@@ -40,8 +39,8 @@ func TestRegister_Success(t *testing.T) {
 	if resp.Player.Username != "testplayer" {
 		t.Errorf("expected username 'testplayer', got %q", resp.Player.Username)
 	}
-	if resp.Player.Kingdom != "veridor" {
-		t.Errorf("expected kingdom 'veridor', got %q", resp.Player.Kingdom)
+	if resp.Player.Kingdom != "" {
+		t.Errorf("expected empty kingdom, got %q", resp.Player.Kingdom)
 	}
 	if resp.Player.Role != "player" {
 		t.Errorf("expected role 'player', got %q", resp.Player.Role)
@@ -56,7 +55,6 @@ func TestRegister_DuplicateEmail(t *testing.T) {
 		Username: "player1",
 		Email:    "dupe@example.com",
 		Password: "securepass123",
-		Kingdom:  "sylvara",
 	}
 	if _, err := svc.Register(ctx, req); err != nil {
 		t.Fatalf("first register failed: %v", err)
@@ -77,7 +75,6 @@ func TestRegister_DuplicateUsername(t *testing.T) {
 		Username: "samename",
 		Email:    "first@example.com",
 		Password: "securepass123",
-		Kingdom:  "arkazia",
 	}
 	if _, err := svc.Register(ctx, req); err != nil {
 		t.Fatalf("first register failed: %v", err)
@@ -90,18 +87,20 @@ func TestRegister_DuplicateUsername(t *testing.T) {
 	}
 }
 
-func TestRegister_InvalidKingdom(t *testing.T) {
+func TestRegister_NoKingdomRequired(t *testing.T) {
 	svc := newTestAuthService(t)
 	ctx := context.Background()
 
-	_, err := svc.Register(ctx, &dto.RegisterRequest{
+	resp, err := svc.Register(ctx, &dto.RegisterRequest{
 		Username: "player",
 		Email:    "test@example.com",
 		Password: "securepass123",
-		Kingdom:  "mordor",
 	})
-	if err != service.ErrInvalidKingdom {
-		t.Errorf("expected ErrInvalidKingdom, got: %v", err)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if resp.Player.Kingdom != "" {
+		t.Errorf("expected empty kingdom after registration, got %q", resp.Player.Kingdom)
 	}
 }
 
@@ -113,7 +112,6 @@ func TestRegister_WeakPassword(t *testing.T) {
 		Username: "player",
 		Email:    "test@example.com",
 		Password: "short",
-		Kingdom:  "veridor",
 	})
 	if err != service.ErrWeakPassword {
 		t.Errorf("expected ErrWeakPassword, got: %v", err)
@@ -128,7 +126,6 @@ func TestRegister_InvalidEmail(t *testing.T) {
 		Username: "player",
 		Email:    "notanemail",
 		Password: "securepass123",
-		Kingdom:  "veridor",
 	})
 	if err != service.ErrInvalidEmail {
 		t.Errorf("expected ErrInvalidEmail, got: %v", err)
@@ -143,7 +140,6 @@ func TestRegister_InvalidUsername(t *testing.T) {
 		Username: "ab",
 		Email:    "test@example.com",
 		Password: "securepass123",
-		Kingdom:  "veridor",
 	})
 	if err != service.ErrInvalidUsername {
 		t.Errorf("expected ErrInvalidUsername, got: %v", err)
@@ -159,7 +155,6 @@ func TestLogin_Success(t *testing.T) {
 		Username: "logintest",
 		Email:    "login@example.com",
 		Password: "securepass123",
-		Kingdom:  "sylvara",
 	})
 	if err != nil {
 		t.Fatalf("register failed: %v", err)
@@ -201,7 +196,6 @@ func TestLogin_WrongPassword(t *testing.T) {
 		Username: "wrongpw",
 		Email:    "wrong@example.com",
 		Password: "correctpass1",
-		Kingdom:  "arkazia",
 	})
 	if err != nil {
 		t.Fatalf("register failed: %v", err)
@@ -238,7 +232,6 @@ func TestRefreshToken_Success(t *testing.T) {
 		Username: "refreshtest",
 		Email:    "refresh@example.com",
 		Password: "securepass123",
-		Kingdom:  "veridor",
 	})
 	if err != nil {
 		t.Fatalf("register failed: %v", err)
@@ -275,7 +268,6 @@ func TestRefreshToken_SingleUse(t *testing.T) {
 		Username: "singleuse",
 		Email:    "single@example.com",
 		Password: "securepass123",
-		Kingdom:  "sylvara",
 	})
 	if err != nil {
 		t.Fatalf("register failed: %v", err)
@@ -301,7 +293,6 @@ func TestValidateAccessToken(t *testing.T) {
 		Username: "validatetest",
 		Email:    "validate@example.com",
 		Password: "securepass123",
-		Kingdom:  "arkazia",
 	})
 	if err != nil {
 		t.Fatalf("register failed: %v", err)
@@ -336,7 +327,6 @@ func TestLogout(t *testing.T) {
 		Username: "logouttest",
 		Email:    "logout@example.com",
 		Password: "securepass123",
-		Kingdom:  "veridor",
 	})
 	if err != nil {
 		t.Fatalf("register failed: %v", err)

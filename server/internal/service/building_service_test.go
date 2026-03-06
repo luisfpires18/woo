@@ -289,9 +289,9 @@ func TestCompleteBuilds_UpdatesResourceRates(t *testing.T) {
 		t.Fatalf("CompleteBuilds failed: %v", err)
 	}
 
-	// Verify iron rate was updated: base(10) + level(1) * rate_per_level(20) = 30
+	// Verify iron rate was updated: base(1) + level(1) * rate_per_level(2) = 3
 	res, _ := svc.resourceRepo.Get(ctx, villageID)
-	expectedRate := 10.0 + 20.0*1 // BaseResourceRate + RatePerLevel * level
+	expectedRate := 1.0 + 2.0*1 // BaseResourceRate + RatePerLevel * level
 	if res.IronRate != expectedRate {
 		t.Errorf("expected iron_rate %.1f, got %.1f", expectedRate, res.IronRate)
 	}

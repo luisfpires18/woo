@@ -1,0 +1,162 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.headerSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.currentLevel {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.maxBadge {
+  display: inline-block;
+  padding: 2px var(--spacing-sm);
+  background-color: var(--accent);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.upgradingBanner {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.costGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.costRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.8125rem;
+}
+
+.costIcon {
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.costLabel {
+  color: var(--text-muted);
+  min-width: 3rem;
+}
+
+.costValueOk {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.costValueBad {
+  font-weight: 600;
+  color: var(--error);
+}
+
+.buildTime {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.timeValue {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.prereqList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  font-size: 0.8125rem;
+}
+
+.prereqMet {
+  color: var(--success);
+}
+
+.prereqUnmet {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.prereqCurrent {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.upgradeBtn {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.03em;
+  margin-top: var(--spacing-sm);
+}
+
+.upgradeBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.upgradeBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.error {
+  color: var(--error);
+  font-size: 0.8125rem;
+  text-align: center;
+  margin: 0;
+}

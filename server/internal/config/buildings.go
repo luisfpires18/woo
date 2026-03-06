@@ -214,14 +214,15 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 }
 
-// ResourceRatePerLevel defines how much each resource building produces per hour per level.
+// ResourceRatePerLevel defines how much each resource building produces per second per level.
 // Rate = base_rate + (level * rate_per_level)
-const BaseResourceRate = 10.0  // rate at level 0 (idle)
-const RatePerLevel = 20.0     // additional rate per level
+const BaseResourceRate = 1.0 // rate at level 0 (idle) — per second
+const RatePerLevel = 2.0     // additional rate per level — per second
 
 // StoragePerLevel defines warehouse capacity scaling.
-const BaseStorage = 1000.0    // storage at warehouse level 0
-const StoragePerLevel = 500.0 // additional storage per warehouse level
+// NOTE: storage is temporarily hardcoded to 1200 while warehouse logic is not wired up.
+const BaseStorage = 1200.0  // fixed cap for now
+const StoragePerLevel = 0.0 // disabled — warehouse does not affect cap yet
 
 // CostAtLevel calculates the resource cost for upgrading a building to the given level.
 // Formula: base_cost × scaling_factor^(level-1)

@@ -19,6 +19,8 @@ interface AuthState {
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
+  /** Update the player object (e.g. after kingdom selection) */
+  setPlayer: (player: PlayerInfo) => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -92,5 +94,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       player: null,
       isAuthenticated: false,
     });
+  },
+
+  setPlayer: (player) => {
+    localStorage.setItem('player', JSON.stringify(player));
+    set({ player });
   },
 }));

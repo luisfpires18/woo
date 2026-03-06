@@ -43,7 +43,13 @@
   align-items: start;
 }
 
-.buildings {
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.section {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);

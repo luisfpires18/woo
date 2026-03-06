@@ -1,4 +1,5 @@
 import type { ResourcesResponse } from '../../../types/api';
+import { useResourceTicker } from '../../../hooks/useResourceTicker';
 import { GameIcon } from '../../../components/GameIcon/GameIcon';
 import styles from './ResourcePanel.module.css';
 
@@ -20,6 +21,8 @@ const RESOURCE_ROWS: {
 ];
 
 export function ResourcePanel({ resources }: ResourcePanelProps) {
+  const live = useResourceTicker(resources);
+
   return (
     <div className={styles.panel}>
       <h3 className={styles.heading}>Resources</h3>
@@ -30,10 +33,10 @@ export function ResourcePanel({ resources }: ResourcePanelProps) {
             <GameIcon assetId={r.assetId} fallback={r.fallbackIcon} size={18} className={styles.icon} />
             <span className={styles.label}>{r.label}</span>
             <span className={styles.amount}>
-              {Math.floor(resources[r.key])}
+              {Math.floor(live[r.key])}
             </span>
             <span className={styles.rate}>
-              +{Math.floor(resources[r.rateKey])}/h
+              +{Math.floor(live[r.rateKey])}/s
             </span>
           </div>
         ))}
@@ -41,14 +44,14 @@ export function ResourcePanel({ resources }: ResourcePanelProps) {
 
       <div className={styles.storage}>
         <span className={styles.storageLabel}>Storage</span>
-        <span className={styles.storageValue}>{resources.max_storage}</span>
+        <span className={styles.storageValue}>{live.max_storage}</span>
       </div>
 
-      {resources.food_consumption > 0 && (
+      {live.food_consumption > 0 && (
         <div className={styles.consumption}>
           <span className={styles.consumptionLabel}>Food consumption</span>
           <span className={styles.consumptionValue}>
-            -{resources.food_consumption}/h
+            -{live.food_consumption}/s
           </span>
         </div>
       )}

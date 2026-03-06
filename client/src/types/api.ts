@@ -23,7 +23,6 @@ export interface RegisterRequest {
   username: string;
   email: string;
   password: string;
-  kingdom: string;
 }
 
 export interface LoginRequest {
@@ -45,8 +44,17 @@ export interface PlayerInfo {
   id: number;
   username: string;
   email: string;
-  kingdom: string;
+  kingdom: string; // empty string means kingdom not yet chosen
   role: 'player' | 'admin';
+}
+
+export interface ChooseKingdomRequest {
+  kingdom: string;
+}
+
+export interface ChooseKingdomResponse {
+  player: PlayerInfo;
+  village_id: number;
 }
 
 // Village types — mirrors server/internal/dto/village.go
@@ -60,6 +68,7 @@ export interface VillageResponse {
   is_capital: boolean;
   buildings: BuildingInfo[];
   resources: ResourcesResponse;
+  build_queue: BuildingQueueResponse[];
 }
 
 export interface BuildingInfo {
@@ -79,6 +88,31 @@ export interface ResourcesResponse {
   food_rate: number;
   food_consumption: number;
   max_storage: number;
+}
+
+// Building upgrade types — mirrors server/internal/dto/building.go
+
+export interface StartUpgradeRequest {
+  building_type: string;
+}
+
+export interface BuildingQueueResponse {
+  id: number;
+  building_type: string;
+  target_level: number;
+  started_at: string;
+  completes_at: string;
+}
+
+export interface BuildingCostResponse {
+  building_type: string;
+  current_level: number;
+  target_level: number;
+  iron: number;
+  wood: number;
+  stone: number;
+  food: number;
+  time_seconds: number;
 }
 
 export interface VillageListItem {

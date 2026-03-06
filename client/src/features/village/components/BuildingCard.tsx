@@ -1,39 +1,27 @@
 import type { BuildingInfo } from '../../../types/api';
+import type { BuildingType } from '../../../types/game';
 import { GameIcon } from '../../../components/GameIcon/GameIcon';
+import { BUILDING_CONFIGS } from '../../../config/buildings';
 import styles from './BuildingCard.module.css';
 
 interface BuildingCardProps {
   building: BuildingInfo;
+  onClick?: () => void;
 }
 
-const BUILDING_LABELS: Record<string, string> = {
-  town_hall: 'Town Hall',
-  iron_mine: 'Iron Mine',
-  lumber_mill: 'Lumber Mill',
-  quarry: 'Quarry',
-  farm: 'Farm',
-  warehouse: 'Warehouse',
-  barracks: 'Barracks',
-  stable: 'Stable',
-  forge: 'Forge',
-  rune_altar: 'Rune Altar',
-  walls: 'Walls',
-  marketplace: 'Marketplace',
-  embassy: 'Embassy',
-  watchtower: 'Watchtower',
-  dock: 'Dock',
-  grove_sanctum: 'Grove Sanctum',
-  colosseum: 'Colosseum',
-};
-
-export function BuildingCard({ building }: BuildingCardProps) {
-  const label = BUILDING_LABELS[building.building_type] ?? building.building_type;
+export function BuildingCard({ building, onClick }: BuildingCardProps) {
+  const cfg = BUILDING_CONFIGS[building.building_type as BuildingType];
+  const label = cfg?.displayName ?? building.building_type;
 
   return (
-    <div className={styles.card}>
+    <button
+      type="button"
+      className={styles.card}
+      onClick={onClick}
+    >
       <GameIcon assetId={building.building_type} fallback="🏗️" size={28} className={styles.icon} />
       <span className={styles.name}>{label}</span>
       <span className={styles.level}>Lv {building.level}</span>
-    </div>
+    </button>
   );
 }

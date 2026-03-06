@@ -4,9 +4,7 @@ import { useAuthStore } from '../../../stores/authStore';
 import { Button } from '../../../components/Button/Button';
 import { Input } from '../../../components/Input/Input';
 import { Card } from '../../../components/Card/Card';
-import { KingdomSelector } from '../components/KingdomSelector';
 import { ApiRequestError } from '../../../services/api';
-import type { Kingdom } from '../../../types/game';
 import styles from './RegisterPage.module.css';
 
 export function RegisterPage() {
@@ -16,7 +14,6 @@ export function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [kingdom, setKingdom] = useState<Kingdom | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -24,14 +21,9 @@ export function RegisterPage() {
     e.preventDefault();
     setError('');
 
-    if (!kingdom) {
-      setError('Choose your kingdom');
-      return;
-    }
-
     setLoading(true);
     try {
-      await register({ username, email, password, kingdom });
+      await register({ username, email, password });
       navigate('/');
     } catch (err) {
       if (err instanceof ApiRequestError) {
@@ -84,13 +76,8 @@ export function RegisterPage() {
           minLength={8}
         />
 
-        <div className={styles.kingdomSection}>
-          <label className={styles.kingdomLabel}>Choose Your Kingdom</label>
-          <KingdomSelector selected={kingdom} onSelect={setKingdom} />
-        </div>
-
         <Button type="submit" loading={loading} size="lg">
-          Forge Your Destiny
+          Create Account
         </Button>
 
         <p className={styles.link}>
