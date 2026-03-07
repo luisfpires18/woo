@@ -26,7 +26,7 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Property | Value |
 |----------|-------|
 | **Theme** | Naval / Ocean / Coastal |
-| **Colors** | Navy blue (#001F5B), silver, sea foam white |
+| **Colors** | Blue (#2196F3), white background, black text |
 | **Architecture** | Stone harbors, lighthouse towers, coral-reinforced walls |
 | **Playstyle** | Trade mastery, naval superiority, economic warfare |
 
@@ -65,7 +65,7 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Property | Value |
 |----------|-------|
 | **Theme** | Forest / Jungle / Nature-magic |
-| **Colors** | Deep green (#1B5E20), amber (#FF8F00), bark brown |
+| **Colors** | Forest green (#2E7D32), golden parchment background, black text |
 | **Architecture** | Treehouse fortresses, vine-wrapped palisades, living-wood walls |
 | **Playstyle** | Guerrilla warfare, fast strikes, rune mastery, ambush tactics |
 
@@ -104,7 +104,7 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Property | Value |
 |----------|-------|
 | **Theme** | Mountain / Gladiator / Knights |
-| **Colors** | Iron grey (#424242), crimson (#DC143C), dark gold (#B8860B) |
+| **Colors** | Crimson red (#DC143C), black background, white text |
 | **Architecture** | Stone fortresses, mountain citadels, colosseum arenas, iron-reinforced walls |
 | **Playstyle** | Heavy defense, superior crafting, brute force, siege warfare |
 
@@ -155,7 +155,7 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 - No kingdom should be strictly superior. Each excels in different situations.
 - **Rock-Paper-Scissors dynamics**: Veridor's economy outpaces Arkazia's slow expansion, Sylvara's speed counters Veridor's naval strategy, Arkazia's defense walls out Sylvara's hit-and-run tactics.
 - Balance will be refined through playtesting. Stat values in this document are **draft** — expect iteration.
-- Kingdom-specific UI theming (colors, artwork) will be implemented in Phase 7.
+- Kingdom-specific UI theming is implemented — each kingdom has a full CSS variable theme applied via `data-kingdom` attribute. See `docs/04-frontend/styling-guide.md`.
 
 ---
 
@@ -165,3 +165,4 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 |------|--------|
 | 2026-03-03 | Initial creation of kingdoms reference |
 | 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
+| 2026-03-06 | Updated kingdom color specs to match implemented kingdom themes |

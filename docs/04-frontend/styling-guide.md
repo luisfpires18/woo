@@ -132,110 +132,44 @@ Document breakpoint values as reference constants. Note that CSS custom properti
 
 ### CSS Custom Properties
 
-All colors, spacing, and typography values use CSS custom properties defined in `:root`. Theme switching swaps these variables.
+All colors, spacing, and typography values use CSS custom properties defined in `:root`. Kingdom theming overrides appearance variables per-kingdom via `[data-kingdom]` selectors.
 
-### Dark Mode (Default)
+### Default (Pre-auth / Neutral)
 
-```css
-:root,
-[data-theme="dark"] {
-  /* Colors */
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #2a2a2a;
-  --bg-elevated: #1e1e1e;
+`:root` defines a dark neutral default used before a kingdom is known (login/register pages). Once the player is authenticated and a kingdom is assigned, the `data-kingdom` attribute on `<html>` activates the appropriate kingdom theme overriding `--bg-*`, `--text-*`, `--accent*`, `--border*`, and `--shadow-*` variables.
 
-  --text-primary: #f0f0f0;
-  --text-secondary: #b0b0b0;
-  --text-muted: #707070;
+See `client/src/styles/themes.css` for the full variable definitions.
 
-  --accent: #DC143C;          /* Crimson */
-  --accent-hover: #B22222;    /* Firebrick */
-  --accent-light: #FF6B6B;    /* Lighter crimson for subtle highlights */
+### Kingdom Theming
 
-  --border: #333333;
-  --border-light: #444444;
+The light/dark theme system has been replaced with **kingdom-based theming**. Each of the 8 kingdoms fully overrides all appearance CSS variables via a `data-kingdom` attribute on `<html>`.
 
-  /* Status Colors */
-  --success: #2ECC71;
-  --warning: #F39C12;
-  --error: #E74C3C;
-  --info: #3498DB;
+**How it works:**
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
-}
-```
-
-### Light Mode
-
-```css
-[data-theme="light"] {
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #F0F0F0;
-  --bg-tertiary: #E5E5E5;
-  --bg-elevated: #FFFFFF;
-
-  --text-primary: #1a1a1a;
-  --text-secondary: #4a4a4a;
-  --text-muted: #8a8a8a;
-
-  --accent: #001F5B;          /* Navy Blue */
-  --accent-hover: #003087;    /* Brighter navy */
-  --accent-light: #1A4F8B;    /* Lighter navy for subtle highlights */
-
-  --border: #D0D0D0;
-  --border-light: #E0E0E0;
-
-  --success: #27AE60;
-  --warning: #E67E22;
-  --error: #C0392B;
-  --info: #2980B9;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-```
-
-### Theme Switching
-
-The theme is set via a `data-theme` attribute on `<html>`:
+1. `:root` defines the neutral dark default (used on login/register pages before a kingdom is known).
+2. After login, `themeStore` reads `player.kingdom` from `authStore` and applies `data-kingdom="<kingdom>"` on `<html>`.
+3. Each `[data-kingdom="..."]` selector overrides `--bg-*`, `--text-*`, `--accent*`, `--border*`, and `--shadow-*` variables.
+4. The theme is **derived from player data**, not localStorage. No manual toggle exists.
 
 ```tsx
-// In a theme hook or store
-document.documentElement.setAttribute('data-theme', theme); // 'dark' or 'light'
+// Applied automatically by themeStore
+document.documentElement.setAttribute('data-kingdom', kingdom); // e.g. 'veridor'
 ```
 
----
+**Kingdom color palettes:**
 
-## Kingdom Theming (Future)
+| Kingdom | Accent (Main) | Background tone | Text | `--text-on-accent` |
+|---------|--------------|----------------|------|--------------------|
+| **Arkazia** | `#DC143C` Crimson Red | Dark (black) | White | `#FFFFFF` |
+| **Draxys** | `#F9A825` Yellow | Dark (black) | White | `#000000` |
+| **Drakanith** | `#FF6D00` Orange | Dark (black) | White | `#FFFFFF` |
+| **Zandres** | `#795548` Brown | Dark (black) | White | `#FFFFFF` |
+| **Veridor** | `#2196F3` Blue | Light (white/blue tint) | Black | `#FFFFFF` |
+| **Nordalh** | `#7B1FA2` Purple | Light (white/purple tint) | Black | `#FFFFFF` |
+| **Lumus** | `#FBC02D` Golden Yellow | Light (white/yellow tint) | Black | `#000000` |
+| **Sylvara** | `#2E7D32` Forest Green | Warm parchment (golden) | Black | `#FFFFFF` |
 
-> Planned for Phase 7. Document for reference.
-
-Each kingdom will have additional CSS custom properties loaded dynamically:
-
-```css
-[data-kingdom="veridor"] {
-  --kingdom-primary: #001F5B;    /* Navy Blue */
-  --kingdom-secondary: #4A90D9;  /* Light Blue */
-  --kingdom-accent: #C0C0C0;    /* Silver */
-}
-
-[data-kingdom="sylvara"] {
-  --kingdom-primary: #1B5E20;    /* Deep Green */
-  --kingdom-secondary: #FF8F00;  /* Amber */
-  --kingdom-accent: #8D6E63;    /* Brown */
-}
-
-[data-kingdom="arkazia"] {
-  --kingdom-primary: #424242;    /* Iron Grey */
-  --kingdom-secondary: #DC143C;  /* Crimson */
-  --kingdom-accent: #B8860B;    /* Dark Gold */
-}
-```
+See `client/src/styles/themes.css` for the full variable definitions per kingdom.
 
 ---
 
@@ -387,9 +321,8 @@ Contains:
 ### themes.css
 
 Contains:
-- Dark mode variables (`:root` and `[data-theme="dark"]`)
-- Light mode variables (`[data-theme="light"]`)
-- Kingdom theme variables (future)
+- Neutral dark default variables (`:root`)
+- 8 kingdom theme overrides (`[data-kingdom="..."]`) for all appearance variables
 
 ### typography.css
 
@@ -408,3 +341,4 @@ Contains:
 | 2026-03-03 | Initial creation of styling guide |
 | 2026-03-03 | Added note that CSS custom properties cannot be used in @media queries — use raw pixel values |
 | 2026-03-03 | Simplified mobile strategy: removed separate .mobile.css files, all responsive overrides now live inside .module.css via @media queries |
+| 2026-03-06 | Replaced light/dark theme toggle with 8 kingdom-based themes. Removed ThemeToggle component. Theme derived from player data. |

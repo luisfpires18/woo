@@ -1,31 +1,35 @@
-/* Dark Mode (Default) */
-:root,
-[data-theme="dark"] {
-  /* Colors */
+/* ═══════════════════════════════════════════════════════════
+   Default (pre-auth / neutral dark) — used before kingdom is chosen
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  /* Backgrounds */
   --bg-primary: #0a0a0a;
   --bg-secondary: #1a1a1a;
   --bg-tertiary: #2a2a2a;
   --bg-elevated: #1e1e1e;
 
+  /* Text */
   --text-primary: #f0f0f0;
   --text-secondary: #e8e8e8;
   --text-muted: #c0c0c0;
 
+  /* Accent */
   --accent: #DC143C;          /* Crimson */
-  --accent-hover: #B22222;    /* Firebrick */
+  --accent-hover: #B22222;
   --accent-light: #FF6B6B;
   --text-on-accent: #FFFFFF;
 
+  /* Borders */
   --border: #333333;
   --border-light: #444444;
 
-  /* Status */
+  /* Status (shared — never per-kingdom) */
   --success: #2ECC71;
   --warning: #F39C12;
   --error: #E74C3C;
   --info: #3498DB;
 
-  /* Spacing */
+  /* Spacing (shared) */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -33,20 +37,18 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
 
-  /* Border Radius */
+  /* Border Radius (shared) */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-full: 9999px;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
 
-  /* Border Radius Extended */
-  --radius-full: 9999px;
-
-  /* Z-index Scale */
+  /* Z-index Scale (shared) */
   --z-base: 0;
   --z-dropdown: 100;
   --z-sticky: 200;
@@ -57,26 +59,174 @@
   --z-toast: 600;
 }
 
-/* Light Mode */
-[data-theme="light"] {
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #F0F0F0;
-  --bg-tertiary: #E5E5E5;
-  --bg-elevated: #FFFFFF;
+/* ═══════════════════════════════════════════════════════════
+   KINGDOM THEMES — dark-background kingdoms
+   ═══════════════════════════════════════════════════════════ */
 
-  --text-primary: #1A1A1A;
-  --text-secondary: #555555;
-  --text-muted: #999999;
-
-  --accent: #001F5B;          /* Navy Blue */
-  --accent-hover: #003087;
-  --accent-light: #1A4B8C;
+/* Arkazia — Red / Black / White text */
+[data-kingdom="arkazia"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  --bg-elevated: #1e1e1e;
+  --text-primary: #f0f0f0;
+  --text-secondary: #e0e0e0;
+  --text-muted: #b0b0b0;
+  --accent: #DC143C;
+  --accent-hover: #B22222;
+  --accent-light: #FF6B6B;
   --text-on-accent: #FFFFFF;
+  --border: #3a1a1a;
+  --border-light: #4a2a2a;
+  --shadow-sm: 0 1px 3px rgba(220, 20, 60, 0.15);
+  --shadow-md: 0 4px 6px rgba(220, 20, 60, 0.2);
+  --shadow-lg: 0 10px 25px rgba(220, 20, 60, 0.25);
+}
 
-  --border: #D0D0D0;
-  --border-light: #E0E0E0;
+/* Draxys — Yellow / Black / White text */
+[data-kingdom="draxys"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a0e;
+  --bg-tertiary: #2a2a1a;
+  --bg-elevated: #1e1e14;
+  --text-primary: #f0f0f0;
+  --text-secondary: #e0e0e0;
+  --text-muted: #b0b0b0;
+  --accent: #F9A825;
+  --accent-hover: #F57F17;
+  --accent-light: #FDD835;
+  --text-on-accent: #000000;
+  --border: #3a3520;
+  --border-light: #4a4530;
+  --shadow-sm: 0 1px 3px rgba(249, 168, 37, 0.15);
+  --shadow-md: 0 4px 6px rgba(249, 168, 37, 0.2);
+  --shadow-lg: 0 10px 25px rgba(249, 168, 37, 0.25);
+}
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+/* Drakanith — Orange / Black / White text */
+[data-kingdom="drakanith"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1610;
+  --bg-tertiary: #2a2418;
+  --bg-elevated: #1e1a14;
+  --text-primary: #f0f0f0;
+  --text-secondary: #e0e0e0;
+  --text-muted: #b0b0b0;
+  --accent: #FF6D00;
+  --accent-hover: #E65100;
+  --accent-light: #FF9E40;
+  --text-on-accent: #FFFFFF;
+  --border: #3a2a1a;
+  --border-light: #4a3a2a;
+  --shadow-sm: 0 1px 3px rgba(255, 109, 0, 0.15);
+  --shadow-md: 0 4px 6px rgba(255, 109, 0, 0.2);
+  --shadow-lg: 0 10px 25px rgba(255, 109, 0, 0.25);
+}
+
+/* Zandres — Brown / Black / White text */
+[data-kingdom="zandres"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1614;
+  --bg-tertiary: #2a241e;
+  --bg-elevated: #1e1a16;
+  --text-primary: #f0f0f0;
+  --text-secondary: #e0e0e0;
+  --text-muted: #b0b0b0;
+  --accent: #795548;
+  --accent-hover: #5D4037;
+  --accent-light: #A1887F;
+  --text-on-accent: #FFFFFF;
+  --border: #3a302a;
+  --border-light: #4a403a;
+  --shadow-sm: 0 1px 3px rgba(121, 85, 72, 0.15);
+  --shadow-md: 0 4px 6px rgba(121, 85, 72, 0.2);
+  --shadow-lg: 0 10px 25px rgba(121, 85, 72, 0.25);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   KINGDOM THEMES — light-background kingdoms
+   ═══════════════════════════════════════════════════════════ */
+
+/* Veridor — Blue / White / Black text */
+[data-kingdom="veridor"] {
+  --bg-primary: #F5F8FC;
+  --bg-secondary: #E8EFF7;
+  --bg-tertiary: #D6E3F0;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #1a1a1a;
+  --text-secondary: #3a3a3a;
+  --text-muted: #6a6a6a;
+  --accent: #2196F3;
+  --accent-hover: #1976D2;
+  --accent-light: #64B5F6;
+  --text-on-accent: #FFFFFF;
+  --border: #B8D0E8;
+  --border-light: #D0E0F0;
+  --shadow-sm: 0 1px 3px rgba(33, 150, 243, 0.1);
+  --shadow-md: 0 4px 6px rgba(33, 150, 243, 0.15);
+  --shadow-lg: 0 10px 25px rgba(33, 150, 243, 0.2);
+}
+
+/* Nordalh — Purple / White / Black text */
+[data-kingdom="nordalh"] {
+  --bg-primary: #F8F5FC;
+  --bg-secondary: #EFE8F7;
+  --bg-tertiary: #E0D6F0;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #1a1a1a;
+  --text-secondary: #3a3a3a;
+  --text-muted: #6a6a6a;
+  --accent: #7B1FA2;
+  --accent-hover: #6A1B9A;
+  --accent-light: #BA68C8;
+  --text-on-accent: #FFFFFF;
+  --border: #D0B8E8;
+  --border-light: #E0D0F0;
+  --shadow-sm: 0 1px 3px rgba(123, 31, 162, 0.1);
+  --shadow-md: 0 4px 6px rgba(123, 31, 162, 0.15);
+  --shadow-lg: 0 10px 25px rgba(123, 31, 162, 0.2);
+}
+
+/* Lumus — White / Yellow / Black text */
+[data-kingdom="lumus"] {
+  --bg-primary: #FFFEF5;
+  --bg-secondary: #FFF9E0;
+  --bg-tertiary: #FFF3C8;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #1a1a1a;
+  --text-secondary: #3a3a3a;
+  --text-muted: #6a6a6a;
+  --accent: #FBC02D;
+  --accent-hover: #F9A825;
+  --accent-light: #FFF176;
+  --text-on-accent: #000000;
+  --border: #E8D8A0;
+  --border-light: #F0E8C0;
+  --shadow-sm: 0 1px 3px rgba(251, 192, 45, 0.1);
+  --shadow-md: 0 4px 6px rgba(251, 192, 45, 0.15);
+  --shadow-lg: 0 10px 25px rgba(251, 192, 45, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   KINGDOM THEMES — golden-background kingdom
+   ═══════════════════════════════════════════════════════════ */
+
+/* Sylvara — Green / Golden / Black text */
+[data-kingdom="sylvara"] {
+  --bg-primary: #F5F0E0;
+  --bg-secondary: #FFF8E7;
+  --bg-tertiary: #E8DCC8;
+  --bg-elevated: #FFFDF5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #3a3a3a;
+  --text-muted: #6a6a6a;
+  --accent: #2E7D32;
+  --accent-hover: #1B5E20;
+  --accent-light: #66BB6A;
+  --text-on-accent: #FFFFFF;
+  --border: #D4C5A0;
+  --border-light: #E0D5B5;
+  --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.1);
+  --shadow-md: 0 4px 6px rgba(46, 125, 50, 0.15);
+  --shadow-lg: 0 10px 25px rgba(46, 125, 50, 0.2);
 }

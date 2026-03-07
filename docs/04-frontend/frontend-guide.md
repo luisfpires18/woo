@@ -69,7 +69,7 @@ client/src/
 │   └── mapStore.ts         # Map viewport and visible tiles
 ├── styles/                 # Global styles
 │   ├── globals.css         # CSS reset, base styles, CSS variables
-│   ├── themes.css          # Dark/light mode theme variables
+│   ├── themes.css          # Kingdom theme variables
 │   └── typography.css      # Font imports and text styles
 ├── types/                  # TypeScript interfaces (shared)
 │   ├── api.ts              # API request/response types
@@ -362,7 +362,7 @@ export function useWebSocketEvent<T>(type: string, handler: (data: T) => void) {
 - All interactive elements must be keyboard-accessible.
 - Use semantic HTML: `<button>`, `<nav>`, `<main>`, `<section>`, `<header>`.
 - Add `aria-label` to icon-only buttons.
-- Ensure sufficient color contrast (especially in dark mode).
+- Ensure sufficient color contrast (especially across kingdom themes).
 - Use `role` attributes where semantic HTML doesn't suffice.
 
 ---

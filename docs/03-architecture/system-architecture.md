@@ -104,7 +104,7 @@ client/
 │   │   └── gameStore.ts
 │   ├── styles/                 # Global styles
 │   │   ├── globals.css         # Reset, variables, fonts
-│   │   ├── themes.css          # Dark/light mode variables
+│   │   ├── themes.css          # Kingdom theme variables
 │   │   └── typography.css      # Font definitions
 │   ├── types/                  # TypeScript interfaces
 │   │   ├── api.ts              # API response/request types

@@ -18,8 +18,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Wardens of the Wild',
     description: 'The cradle kingdom — where humanity first took root on Bellum. Forests, rivers, and discipline.',
     traits: ['Archers & Scouts', 'Nature / Animal Runes', 'Healing & Survival'],
-    colorVar: '#4CAF50',
-    glowVar: 'rgba(76, 175, 80, 0.35)',
+    colorVar: '#2E7D32',
+    glowVar: 'rgba(46, 125, 50, 0.35)',
   },
   {
     id: 'arkazia',
@@ -27,8 +27,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Champions of the Arena',
     description: 'Mountain strongholds ruled by warlords. Steel, honour, and the glory of the Colosseum.',
     traits: ['Heavy Cavalry & Pikemen', 'Iron / Obsidian Runes', 'Fortress & Arena Culture'],
-    colorVar: '#FF9800',
-    glowVar: 'rgba(255, 152, 0, 0.35)',
+    colorVar: '#DC143C',
+    glowVar: 'rgba(220, 20, 60, 0.35)',
   },
   {
     id: 'veridor',
@@ -45,8 +45,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Scions of the Sands',
     description: 'Desert frontier born from Veridor\'s colonies. Heat, survival, and relentless endurance.',
     traits: ['Desert Infantry & Scorpion Riders', 'Scale / Swarm Runes', 'Arena & Frontier Culture'],
-    colorVar: '#E6A817',
-    glowVar: 'rgba(230, 168, 23, 0.35)',
+    colorVar: '#FDD835',
+    glowVar: 'rgba(253, 216, 53, 0.35)',
   },
   {
     id: 'zandres',
@@ -54,8 +54,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Keepers of the Deep',
     description: 'Hidden beneath the earth — a lost city of Thalori technic legacy and bioluminescent caverns.',
     traits: ['Underground Mining & Stonework', 'Technic / Circuit Runes', 'Secrecy & Ancient Systems'],
-    colorVar: '#9C27B0',
-    glowVar: 'rgba(156, 39, 176, 0.35)',
+    colorVar: '#795548',
+    glowVar: 'rgba(121, 85, 72, 0.35)',
   },
   {
     id: 'lumus',
@@ -63,8 +63,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Children of the Sun',
     description: 'Light-soaked western island of ritual and radiance. A surviving fragment of ancient purpose.',
     traits: ['Martial Artists & Staff Users', 'Physical / Solar Runes', 'Ritual & Discipline'],
-    colorVar: '#FDD835',
-    glowVar: 'rgba(253, 216, 53, 0.35)',
+    colorVar: '#FFFFFF',
+    glowVar: 'rgba(255, 255, 255, 0.35)',
   },
   {
     id: 'nordalh',
@@ -72,8 +72,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Wolves of the North',
     description: 'Cold northern colony forged from Arkazian expansion. Fjords, smithing, and direwolf cavalry.',
     traits: ['Direwolf Cavalry & Smiths', 'Frost / Beast Runes', 'Clan Endurance & Hearth Law'],
-    colorVar: '#78909C',
-    glowVar: 'rgba(120, 144, 156, 0.35)',
+    colorVar: '#7B1FA2',
+    glowVar: 'rgba(123, 31, 162, 0.35)',
   },
   {
     id: 'drakanith',
@@ -81,8 +81,8 @@ export const KINGDOMS: KingdomInfo[] = [
     tagline: 'Blood of the Volcano',
     description: 'Volcanic homeland of the Drakani — a people whose bodies carry draconic traits.',
     traits: ['Drakani Bloodline Warriors', 'Magma / Primal Runes', 'Volcanic Survival & Heat Forge'],
-    colorVar: '#F44336',
-    glowVar: 'rgba(244, 67, 54, 0.35)',
+    colorVar: '#FF6D00',
+    glowVar: 'rgba(255, 109, 0, 0.35)',
   },
 ];
 

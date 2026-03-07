@@ -6,6 +6,7 @@ import { useThemeStore } from './stores/themeStore';
 import { PublicLayout } from './components/Layout/PublicLayout';
 import { ProtectedLayout } from './components/Layout/ProtectedLayout';
 import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
+import type { Kingdom } from './types/game';
 
 const LoginPage = lazy(() =>
   import('./features/auth/pages/LoginPage').then((m) => ({
@@ -100,14 +101,30 @@ function HomeRedirect() {
   return <FullPageLoader />;
 }
 
+const VALID_KINGDOMS: readonly string[] = [
+  'veridor', 'sylvara', 'arkazia', 'draxys',
+  'zandres', 'lumus', 'nordalh', 'drakanith',
+];
+
 function App() {
   const restore = useAuthStore((s) => s.restore);
   const initTheme = useThemeStore((s) => s.init);
+  const setKingdom = useThemeStore((s) => s.setKingdom);
+  const playerKingdom = useAuthStore((s) => s.player?.kingdom);
 
   useEffect(() => {
     restore();
     initTheme();
   }, [restore, initTheme]);
+
+  // Sync kingdom theme whenever player.kingdom changes (login, restore, kingdom selection)
+  useEffect(() => {
+    if (playerKingdom && VALID_KINGDOMS.includes(playerKingdom)) {
+      setKingdom(playerKingdom as Kingdom);
+    } else {
+      setKingdom(null);
+    }
+  }, [playerKingdom, setKingdom]);
 
   return (
     <BrowserRouter>

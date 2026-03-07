@@ -2,7 +2,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useGameStore } from '../../stores/gameStore';
 import { ResourceBar } from './ResourceBar';
-import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 import styles from './Header.module.css';
 
 export function Header() {
@@ -30,7 +29,6 @@ export function Header() {
       </div>
 
       <div className={styles.right}>
-        <ThemeToggle />
         {isAuthenticated && player && (
           <div className={styles.user}>
             <span className={styles.username}>{player.username}</span>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../stores/authStore';
+import { useThemeStore } from '../../../stores/themeStore';
 import { KingdomCard, KINGDOMS } from '../components/KingdomCard';
 import { Button } from '../../../components/Button/Button';
 import { chooseKingdom } from '../../../services/player';
@@ -11,6 +12,7 @@ import styles from './KingdomSelectionPage.module.css';
 export function KingdomSelectionPage() {
   const player = useAuthStore((s) => s.player);
   const setPlayer = useAuthStore((s) => s.setPlayer);
+  const setKingdom = useThemeStore((s) => s.setKingdom);
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState<Kingdom | null>(null);
@@ -30,8 +32,9 @@ export function KingdomSelectionPage() {
 
     try {
       const resp = await chooseKingdom(selected);
-      // Update player in authStore with the new kingdom
+      // Update player in authStore with the new kingdom & apply theme immediately
       setPlayer(resp.player);
+      setKingdom(selected);
       navigate('/', { replace: true });
     } catch (err) {
       if (err instanceof ApiRequestError) {
