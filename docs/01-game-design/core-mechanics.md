@@ -12,10 +12,12 @@ The game has **four base resources**. Every village produces all four, but produ
 
 | Resource | Produced By | Primary Uses |
 |----------|------------|-------------|
-| **Iron** | Iron Mine | Weapons, troop equipment, advanced buildings |
-| **Wood** | Lumber Mill | Buildings, siege equipment, ships (Veridor) |
-| **Stone** | Quarry | Fortifications, walls, heavy structures |
-| **Food** | Farm | Troop upkeep, population sustenance, army size cap |
+| **Food** | 3 food buildings (e.g. Farm, Fishery, Orchard — admin-configurable per kingdom) | Troop upkeep, population sustenance, army size cap |
+| **Water** | 3 water buildings (e.g. Well, Spring, Aqueduct) | Buildings, crop irrigation, troop sustenance |
+| **Lumber** | 3 lumber buildings (e.g. Sawmill, Lumber Camp, Woodcutter) | Buildings, siege equipment, ships (Veridor) |
+| **Stone** | 3 stone buildings (e.g. Quarry, Stone Pit, Mine) | Fortifications, walls, heavy structures |
+
+Each resource type has **3 building slots** per village. Building display names, descriptions, icons, and sprites are **admin-configurable per kingdom** via the `resource_building_configs` table. The production rate is: `BaseResourceRate(1.0) + RatePerLevel(2.0) × sum(all 3 building levels for that resource type)`.
 
 ### Resource Rules
 
@@ -37,10 +39,10 @@ When a new player registers and selects a kingdom, their **first village** is cr
 | Building | Starting Level |
 |----------|---------------|
 | Town Hall | 1 |
-| Iron Mine | 1 |
-| Lumber Mill | 1 |
-| Quarry | 1 |
-| Farm | 1 |
+| food_1 / food_2 / food_3 | 1 |
+| water_1 / water_2 / water_3 | 1 |
+| lumber_1 / lumber_2 / lumber_3 | 1 |
+| stone_1 / stone_2 / stone_3 | 1 |
 | Warehouse | 1 |
 
 All other buildings start at level 0 (not built).
@@ -49,10 +51,10 @@ All other buildings start at level 0 (not built).
 
 | Resource | Amount |
 |----------|--------|
-| Iron | 500 |
-| Wood | 500 |
-| Stone | 500 |
 | Food | 500 |
+| Water | 500 |
+| Lumber | 500 |
+| Stone | 500 |
 
 ### Village Placement Rules
 
@@ -73,10 +75,10 @@ Buildings are constructed inside a village and provide various functions. Each b
 | Building | Function | Unlocks |
 |----------|---------|---------|
 | **Town Hall** | Central building. Its level determines what other buildings can be built. | All other buildings |
-| **Iron Mine** | Produces Iron per hour. Higher level = more production. | — |
-| **Lumber Mill** | Produces Wood per hour. | — |
-| **Quarry** | Produces Stone per hour. | — |
-| **Farm** | Produces Food per hour. Determines population cap. | — |
+| **food_1 / food_2 / food_3** | 3 slots that produce Food per hour. Display names are admin-configurable per kingdom. | — |
+| **water_1 / water_2 / water_3** | 3 slots that produce Water per hour. | — |
+| **lumber_1 / lumber_2 / lumber_3** | 3 slots that produce Lumber per hour. | — |
+| **stone_1 / stone_2 / stone_3** | 3 slots that produce Stone per hour. | — |
 | **Warehouse** | Stores resources. Level determines max storage per resource. | — |
 | **Barracks** | Trains infantry troops. Higher level = faster training, more unit types. | Troop types by level |
 | **Stable** | Trains mounted/fast troops. | Advanced troop types |
@@ -93,9 +95,11 @@ Buildings are constructed inside a village and provide various functions. Each b
 Canonical string identifiers used in the database `/buildings.building_type` column and all backend code:
 
 ```
-town_hall, iron_mine, lumber_mill, quarry, farm, warehouse,
-barracks, stable, forge, rune_altar, walls, marketplace,
-embassy, watchtower, dock, grove_sanctum, colosseum
+town_hall,
+food_1, food_2, food_3, water_1, water_2, water_3,
+lumber_1, lumber_2, lumber_3, stone_1, stone_2, stone_3,
+warehouse, barracks, stable, forge, rune_altar, walls,
+marketplace, embassy, watchtower, dock, grove_sanctum, colosseum
 ```
 
 > `dock` is Veridor-only, `grove_sanctum` is Sylvara-only, `colosseum` is Arkazia-only.
@@ -105,10 +109,10 @@ embassy, watchtower, dock, grove_sanctum, colosseum
 | Building | Canonical ID | Max Level | Prerequisites |
 |----------|-------------|-----------|---------------|
 | Town Hall | `town_hall` | 20 | None |
-| Iron Mine | `iron_mine` | 20 | None |
-| Lumber Mill | `lumber_mill` | 20 | None |
-| Quarry | `quarry` | 20 | None |
-| Farm | `farm` | 20 | None |
+| Food Fields | `food_1`, `food_2`, `food_3` | 20 | None |
+| Water Fields | `water_1`, `water_2`, `water_3` | 20 | None |
+| Lumber Fields | `lumber_1`, `lumber_2`, `lumber_3` | 20 | None |
+| Stone Fields | `stone_1`, `stone_2`, `stone_3` | 20 | None |
 | Warehouse | `warehouse` | 20 | None |
 | Barracks | `barracks` | 20 | Town Hall 3 |
 | Stable | `stable` | 15 | Town Hall 5, Barracks 5 |
@@ -145,7 +149,7 @@ Each kingdom has a unique set of troop types. See `docs/01-game-design/kingdoms.
 | **Carry Capacity** | Max resources this unit can carry when raiding |
 | **Food Upkeep** | Food consumed per hour per unit |
 | **Training Time** | Base time to train one unit |
-| **Training Cost** | Resource cost per unit (Iron, Wood, Stone, Food) |
+| **Training Cost** | Resource cost per unit (Food, Water, Lumber, Stone) |
 
 ### Troop Actions
 

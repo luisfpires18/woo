@@ -78,14 +78,14 @@ export interface BuildingInfo {
 }
 
 export interface ResourcesResponse {
-  iron: number;
-  wood: number;
-  stone: number;
   food: number;
-  iron_rate: number;
-  wood_rate: number;
-  stone_rate: number;
+  water: number;
+  lumber: number;
+  stone: number;
   food_rate: number;
+  water_rate: number;
+  lumber_rate: number;
+  stone_rate: number;
   food_consumption: number;
   max_storage: number;
 }
@@ -108,10 +108,10 @@ export interface BuildingCostResponse {
   building_type: string;
   current_level: number;
   target_level: number;
-  iron: number;
-  wood: number;
-  stone: number;
   food: number;
+  water: number;
+  lumber: number;
+  stone: number;
   time_seconds: number;
 }
 
@@ -183,7 +183,7 @@ export interface AnnouncementResponse {
 
 // Game asset types — mirrors server/internal/dto/admin.go
 
-export type AssetCategory = 'building' | 'resource' | 'unit';
+export type AssetCategory = 'building' | 'resource' | 'unit' | 'kingdom_flag';
 
 export interface GameAsset {
   id: string;
@@ -198,4 +198,22 @@ export interface GameAsset {
 
 export interface GameAssetListResponse {
   assets: GameAsset[];
+}
+
+// Resource building config types — mirrors server/internal/dto/admin.go
+
+export interface ResourceBuildingConfig {
+  id: number;
+  resource_type: string;
+  slot: number;
+  kingdom: string;
+  display_name: string;
+  description: string;
+  default_icon: string;
+  sprite_url: string | null;
+  updated_at: string;
+}
+
+export interface ResourceBuildingConfigListResponse {
+  configs: ResourceBuildingConfig[];
 }

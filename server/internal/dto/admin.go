@@ -93,3 +93,30 @@ type GameAssetDTO struct {
 type GameAssetListResponse struct {
 	Assets []*GameAssetDTO `json:"assets"`
 }
+
+// --- Resource building configs ---
+
+// ResourceBuildingConfigDTO is a single resource building config in API responses.
+type ResourceBuildingConfigDTO struct {
+	ID           int64   `json:"id"`
+	ResourceType string  `json:"resource_type"`
+	Slot         int     `json:"slot"`
+	Kingdom      string  `json:"kingdom"`
+	DisplayName  string  `json:"display_name"`
+	Description  string  `json:"description"`
+	DefaultIcon  string  `json:"default_icon"`
+	SpriteURL    *string `json:"sprite_url"`
+	UpdatedAt    string  `json:"updated_at"`
+}
+
+// ResourceBuildingConfigListResponse is the response for GET /api/admin/resource-buildings.
+type ResourceBuildingConfigListResponse struct {
+	Configs []*ResourceBuildingConfigDTO `json:"configs"`
+}
+
+// UpdateResourceBuildingConfigRequest is the payload for PUT /api/admin/resource-buildings/{id}.
+type UpdateResourceBuildingConfigRequest struct {
+	DisplayName string `json:"display_name"`
+	Description string `json:"description"`
+	DefaultIcon string `json:"default_icon"`
+}

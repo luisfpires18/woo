@@ -49,6 +49,7 @@ func main() {
 	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
+	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
 
 	// Ensure uploads directory exists
 	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/resource", "uploads/sprites/unit"} {
@@ -62,7 +63,7 @@ func main() {
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
 	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
 	buildingService := service.NewBuildingService(db, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo)
-	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo)
+	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo)
 
 	// Wire up handlers
 	authHandler := handler.NewAuthHandler(authService, villageService)
@@ -98,6 +99,9 @@ func main() {
 
 	// Game assets — read is auth-only (all players need icons), write is admin-only
 	mux.Handle("GET /api/assets", authMiddleware(http.HandlerFunc(adminHandler.ListAssets)))
+
+	// Resource building configs — read is auth-only (players need display names per kingdom)
+	mux.Handle("GET /api/resource-building-configs", authMiddleware(http.HandlerFunc(adminHandler.ListResourceBuildingConfigs)))
 
 	// Admin routes — wrapped with auth + admin middleware
 	adminMux := http.NewServeMux()

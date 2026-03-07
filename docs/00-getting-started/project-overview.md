@@ -89,10 +89,12 @@ Each kingdom has unique troops, bonuses, buildings, and lore. See `docs/01-game-
 
 | Resource | Description |
 |----------|------------|
-| **Iron** | Mined from deposits. Used in weapons, buildings, and troop equipment. |
-| **Wood** | Harvested from forests. Used in buildings, siege equipment, and ships. |
-| **Stone** | Quarried from mountains. Used in fortifications, walls, and heavy structures. |
-| **Food** | Produced by farms. Required to sustain troops and population. Limits army size. |
+| **Food** | Produced by 3 food buildings (admin-configurable per kingdom). Required to sustain troops and population. Limits army size. |
+| **Water** | Collected by 3 water buildings. Used in crop irrigation, troop sustenance, and buildings. |
+| **Lumber** | Harvested by 3 lumber buildings. Used in buildings, siege equipment, and ships. |
+| **Stone** | Quarried by 3 stone buildings. Used in fortifications, walls, and heavy structures. |
+
+Each resource has 3 building slots per village. Display names, descriptions, and sprites are admin-configurable per kingdom via the `resource_building_configs` table.
 
 ---
 

@@ -19,10 +19,10 @@ func NewResourceRepo(db *sql.DB) *resourceRepo {
 
 func (r *resourceRepo) Create(ctx context.Context, res *model.Resources) error {
 	_, err := r.db.ExecContext(ctx,
-		`INSERT INTO resources (village_id, iron, wood, stone, food, iron_rate, wood_rate, stone_rate, food_rate, food_consumption, max_storage, last_updated)
+		`INSERT INTO resources (village_id, food, water, lumber, stone, food_rate, water_rate, lumber_rate, stone_rate, food_consumption, max_storage, last_updated)
 		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		res.VillageID, res.Iron, res.Wood, res.Stone, res.Food,
-		res.IronRate, res.WoodRate, res.StoneRate, res.FoodRate,
+		res.VillageID, res.Food, res.Water, res.Lumber, res.Stone,
+		res.FoodRate, res.WaterRate, res.LumberRate, res.StoneRate,
 		res.FoodConsumption, res.MaxStorage, res.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
 	)
 	if err != nil {
@@ -33,14 +33,14 @@ func (r *resourceRepo) Create(ctx context.Context, res *model.Resources) error {
 
 func (r *resourceRepo) Get(ctx context.Context, villageID int64) (*model.Resources, error) {
 	row := r.db.QueryRowContext(ctx,
-		`SELECT village_id, iron, wood, stone, food, iron_rate, wood_rate, stone_rate, food_rate, food_consumption, max_storage, last_updated
+		`SELECT village_id, food, water, lumber, stone, food_rate, water_rate, lumber_rate, stone_rate, food_consumption, max_storage, last_updated
 		 FROM resources WHERE village_id = ?`, villageID,
 	)
 	var res model.Resources
 	var lastUpdatedStr string
 	err := row.Scan(
-		&res.VillageID, &res.Iron, &res.Wood, &res.Stone, &res.Food,
-		&res.IronRate, &res.WoodRate, &res.StoneRate, &res.FoodRate,
+		&res.VillageID, &res.Food, &res.Water, &res.Lumber, &res.Stone,
+		&res.FoodRate, &res.WaterRate, &res.LumberRate, &res.StoneRate,
 		&res.FoodConsumption, &res.MaxStorage, &lastUpdatedStr,
 	)
 	if err == sql.ErrNoRows {
@@ -55,10 +55,10 @@ func (r *resourceRepo) Get(ctx context.Context, villageID int64) (*model.Resourc
 
 func (r *resourceRepo) Update(ctx context.Context, villageID int64, res *model.Resources) error {
 	_, err := r.db.ExecContext(ctx,
-		`UPDATE resources SET iron = ?, wood = ?, stone = ?, food = ?, iron_rate = ?, wood_rate = ?, stone_rate = ?, food_rate = ?, food_consumption = ?, max_storage = ?, last_updated = ?
+		`UPDATE resources SET food = ?, water = ?, lumber = ?, stone = ?, food_rate = ?, water_rate = ?, lumber_rate = ?, stone_rate = ?, food_consumption = ?, max_storage = ?, last_updated = ?
 		 WHERE village_id = ?`,
-		res.Iron, res.Wood, res.Stone, res.Food,
-		res.IronRate, res.WoodRate, res.StoneRate, res.FoodRate,
+		res.Food, res.Water, res.Lumber, res.Stone,
+		res.FoodRate, res.WaterRate, res.LumberRate, res.StoneRate,
 		res.FoodConsumption, res.MaxStorage, res.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
 		villageID,
 	)

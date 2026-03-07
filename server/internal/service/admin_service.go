@@ -18,11 +18,12 @@ var (
 
 // AdminService handles admin-only business logic.
 type AdminService struct {
-	playerRepo       repository.PlayerRepository
-	villageRepo      repository.VillageRepository
-	worldConfigRepo  repository.WorldConfigRepository
-	announcementRepo repository.AnnouncementRepository
-	gameAssetRepo    repository.GameAssetRepository
+	playerRepo            repository.PlayerRepository
+	villageRepo           repository.VillageRepository
+	worldConfigRepo       repository.WorldConfigRepository
+	announcementRepo      repository.AnnouncementRepository
+	gameAssetRepo         repository.GameAssetRepository
+	resBuildingConfigRepo repository.ResourceBuildingConfigRepository
 }
 
 // NewAdminService creates a new AdminService.
@@ -32,13 +33,15 @@ func NewAdminService(
 	worldConfigRepo repository.WorldConfigRepository,
 	announcementRepo repository.AnnouncementRepository,
 	gameAssetRepo repository.GameAssetRepository,
+	resBuildingConfigRepo repository.ResourceBuildingConfigRepository,
 ) *AdminService {
 	return &AdminService{
-		playerRepo:       playerRepo,
-		villageRepo:      villageRepo,
-		worldConfigRepo:  worldConfigRepo,
-		announcementRepo: announcementRepo,
-		gameAssetRepo:    gameAssetRepo,
+		playerRepo:            playerRepo,
+		villageRepo:           villageRepo,
+		worldConfigRepo:       worldConfigRepo,
+		announcementRepo:      announcementRepo,
+		gameAssetRepo:         gameAssetRepo,
+		resBuildingConfigRepo: resBuildingConfigRepo,
 	}
 }
 
@@ -247,4 +250,69 @@ func (s *AdminService) GetGameAsset(ctx context.Context, id string) (*model.Game
 // UpdateGameAssetSprite sets the sprite_path for a game asset.
 func (s *AdminService) UpdateGameAssetSprite(ctx context.Context, id string, spritePath *string) error {
 	return s.gameAssetRepo.UpdateSprite(ctx, id, spritePath)
+}
+
+// --- Resource building configs ---
+
+// ListResourceBuildingConfigs returns all resource building configs, optionally filtered by kingdom.
+func (s *AdminService) ListResourceBuildingConfigs(ctx context.Context, kingdom string) (*dto.ResourceBuildingConfigListResponse, error) {
+	var configs []*model.ResourceBuildingConfig
+	var err error
+	if kingdom != "" {
+		configs, err = s.resBuildingConfigRepo.GetByKingdom(ctx, kingdom)
+	} else {
+		configs, err = s.resBuildingConfigRepo.GetAll(ctx)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("list resource building configs: %w", err)
+	}
+
+	items := make([]*dto.ResourceBuildingConfigDTO, 0, len(configs))
+	for _, c := range configs {
+		var spriteURL *string
+		if c.SpritePath != nil {
+			u := "/uploads/" + *c.SpritePath
+			spriteURL = &u
+		}
+		items = append(items, &dto.ResourceBuildingConfigDTO{
+			ID:           c.ID,
+			ResourceType: c.ResourceType,
+			Slot:         c.Slot,
+			Kingdom:      c.Kingdom,
+			DisplayName:  c.DisplayName,
+			Description:  c.Description,
+			DefaultIcon:  c.DefaultIcon,
+			SpriteURL:    spriteURL,
+			UpdatedAt:    c.UpdatedAt.Format(time.RFC3339),
+		})
+	}
+
+	return &dto.ResourceBuildingConfigListResponse{Configs: items}, nil
+}
+
+// GetResourceBuildingConfig returns a single resource building config by ID.
+func (s *AdminService) GetResourceBuildingConfig(ctx context.Context, id int64) (*model.ResourceBuildingConfig, error) {
+	return s.resBuildingConfigRepo.GetByID(ctx, id)
+}
+
+// UpdateResourceBuildingConfig updates display_name, description, and default_icon for a config.
+func (s *AdminService) UpdateResourceBuildingConfig(ctx context.Context, id int64, req *dto.UpdateResourceBuildingConfigRequest) error {
+	if req.DisplayName == "" {
+		return errors.New("display_name is required")
+	}
+	cfg, err := s.resBuildingConfigRepo.GetByID(ctx, id)
+	if err != nil {
+		return fmt.Errorf("get resource building config: %w", err)
+	}
+	cfg.DisplayName = req.DisplayName
+	cfg.Description = req.Description
+	if req.DefaultIcon != "" {
+		cfg.DefaultIcon = req.DefaultIcon
+	}
+	return s.resBuildingConfigRepo.Update(ctx, cfg)
+}
+
+// UpdateResourceBuildingConfigSprite sets the sprite_path for a resource building config.
+func (s *AdminService) UpdateResourceBuildingConfigSprite(ctx context.Context, id int64, spritePath *string) error {
+	return s.resBuildingConfigRepo.UpdateSprite(ctx, id, spritePath)
 }

@@ -1,4 +1,5 @@
 import type { Kingdom } from '../../../types/game';
+import { useAssetStore } from '../../../stores/assetStore';
 import styles from './KingdomCard.module.css';
 
 export interface KingdomInfo {
@@ -9,6 +10,8 @@ export interface KingdomInfo {
   traits: string[];
   colorVar: string;         // CSS color value
   glowVar: string;          // CSS glow/shadow color
+  playable: boolean;        // Whether players can choose this kingdom
+  lockReason?: string;      // Why the kingdom is locked (shown on card)
 }
 
 export const KINGDOMS: KingdomInfo[] = [
@@ -20,6 +23,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Archers & Scouts', 'Nature / Animal Runes', 'Healing & Survival'],
     colorVar: '#2E7D32',
     glowVar: 'rgba(46, 125, 50, 0.35)',
+    playable: true,
   },
   {
     id: 'arkazia',
@@ -29,6 +33,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Heavy Cavalry & Pikemen', 'Iron / Obsidian Runes', 'Fortress & Arena Culture'],
     colorVar: '#DC143C',
     glowVar: 'rgba(220, 20, 60, 0.35)',
+    playable: true,
   },
   {
     id: 'veridor',
@@ -38,6 +43,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Navy & Iron Verdict', 'Aquatic / Avian Runes', 'Trade & Expansion'],
     colorVar: '#2196F3',
     glowVar: 'rgba(33, 150, 243, 0.35)',
+    playable: true,
   },
   {
     id: 'draxys',
@@ -47,6 +53,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Desert Infantry & Scorpion Riders', 'Scale / Swarm Runes', 'Arena & Frontier Culture'],
     colorVar: '#FDD835',
     glowVar: 'rgba(253, 216, 53, 0.35)',
+    playable: true,
   },
   {
     id: 'zandres',
@@ -56,6 +63,8 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Underground Mining & Stonework', 'Technic / Circuit Runes', 'Secrecy & Ancient Systems'],
     colorVar: '#795548',
     glowVar: 'rgba(121, 85, 72, 0.35)',
+    playable: false,
+    lockReason: 'Underground realm — requires unique mechanics',
   },
   {
     id: 'lumus',
@@ -65,6 +74,8 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Martial Artists & Staff Users', 'Physical / Solar Runes', 'Ritual & Discipline'],
     colorVar: '#FFFFFF',
     glowVar: 'rgba(255, 255, 255, 0.35)',
+    playable: false,
+    lockReason: 'Island kingdom — requires Docks for all factions',
   },
   {
     id: 'nordalh',
@@ -74,6 +85,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Direwolf Cavalry & Smiths', 'Frost / Beast Runes', 'Clan Endurance & Hearth Law'],
     colorVar: '#7B1FA2',
     glowVar: 'rgba(123, 31, 162, 0.35)',
+    playable: true,
   },
   {
     id: 'drakanith',
@@ -83,6 +95,8 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Drakani Bloodline Warriors', 'Magma / Primal Runes', 'Volcanic Survival & Heat Forge'],
     colorVar: '#FF6D00',
     glowVar: 'rgba(255, 109, 0, 0.35)',
+    playable: false,
+    lockReason: 'Draconic bloodline — coming in a future expansion',
   },
 ];
 
@@ -90,20 +104,47 @@ interface KingdomCardProps {
   kingdom: KingdomInfo;
   selected: boolean;
   onSelect: () => void;
+  locked?: boolean;
 }
 
-export function KingdomCard({ kingdom, selected, onSelect }: KingdomCardProps) {
+export function KingdomCard({ kingdom, selected, onSelect, locked = false }: KingdomCardProps) {
+  const flagAsset = useAssetStore((s) => s.getById(`flag_${kingdom.id}`));
+  const flagUrl = flagAsset?.sprite_url;
+
+  const cardClass = [
+    styles.card,
+    selected ? styles.selected : '',
+    locked ? styles.locked : '',
+  ].filter(Boolean).join(' ');
+
   return (
     <button
       type="button"
-      className={`${styles.card} ${selected ? styles.selected : ''}`}
-      onClick={onSelect}
-      aria-pressed={selected}
+      className={cardClass}
+      onClick={locked ? undefined : onSelect}
+      aria-pressed={locked ? undefined : selected}
+      aria-disabled={locked || undefined}
       style={{
         '--kingdom-color': kingdom.colorVar,
         '--kingdom-glow': kingdom.glowVar,
       } as React.CSSProperties}
     >
+      {locked && <div className={styles.lockBadge}>Coming Soon</div>}
+
+      <div className={styles.flagArea}>
+        {flagUrl ? (
+          <img
+            src={flagUrl}
+            alt={`${kingdom.name} flag`}
+            className={styles.flagImg}
+          />
+        ) : (
+          <div className={styles.flagPlaceholder}>
+            <span className={styles.flagInitial}>{kingdom.name[0]}</span>
+          </div>
+        )}
+      </div>
+
       <div className={styles.header}>
         <span className={styles.name}>{kingdom.name}</span>
         <span className={styles.tagline}>{kingdom.tagline}</span>
@@ -119,7 +160,11 @@ export function KingdomCard({ kingdom, selected, onSelect }: KingdomCardProps) {
         ))}
       </ul>
 
-      {selected && <div className={styles.checkmark}>&#10003;</div>}
+      {locked && kingdom.lockReason && (
+        <p className={styles.lockReason}>{kingdom.lockReason}</p>
+      )}
+
+      {selected && !locked && <div className={styles.checkmark}>&#10003;</div>}
     </button>
   );
 }

@@ -84,7 +84,7 @@ weapons_of_chaos (special singleton weapons on the map)
 |--------|------|------------|-------------|
 | id | INTEGER | PK, AUTOINCREMENT | Unique building ID |
 | village_id | INTEGER | FK → villages.id, NOT NULL | Village this building belongs to |
-| building_type | TEXT | NOT NULL | Building type (e.g., 'town_hall', 'iron_mine', 'barracks'). See `docs/01-game-design/core-mechanics.md` for canonical constants. |
+| building_type | TEXT | NOT NULL | Building type (e.g., 'town_hall', 'food_1', 'barracks'). See `docs/01-game-design/core-mechanics.md` for canonical constants. |
 | level | INTEGER | NOT NULL, DEFAULT 0 | Current level (0 = not built) |
 
 **Indexes**: `village_id`, `(village_id, building_type)` UNIQUE
@@ -111,19 +111,45 @@ weapons_of_chaos (special singleton weapons on the map)
 | Column | Type | Constraints | Description |
 |--------|------|------------|-------------|
 | village_id | INTEGER | PK, FK → villages.id | One row per village |
-| iron | REAL | NOT NULL, DEFAULT 0 | Current stored iron |
-| wood | REAL | NOT NULL, DEFAULT 0 | Current stored wood |
-| stone | REAL | NOT NULL, DEFAULT 0 | Current stored stone |
 | food | REAL | NOT NULL, DEFAULT 0 | Current stored food |
-| iron_rate | REAL | NOT NULL, DEFAULT 0 | Iron production per hour |
-| wood_rate | REAL | NOT NULL, DEFAULT 0 | Wood production per hour |
-| stone_rate | REAL | NOT NULL, DEFAULT 0 | Stone production per hour |
-| food_rate | REAL | NOT NULL, DEFAULT 0 | Food production per hour (gross) |
+| water | REAL | NOT NULL, DEFAULT 0 | Current stored water |
+| lumber | REAL | NOT NULL, DEFAULT 0 | Current stored lumber |
+| stone | REAL | NOT NULL, DEFAULT 0 | Current stored stone |
+| food_rate | REAL | NOT NULL, DEFAULT 0 | Food production per second |
+| water_rate | REAL | NOT NULL, DEFAULT 0 | Water production per second |
+| lumber_rate | REAL | NOT NULL, DEFAULT 0 | Lumber production per second |
+| stone_rate | REAL | NOT NULL, DEFAULT 0 | Stone production per second |
 | food_consumption | REAL | NOT NULL, DEFAULT 0 | Food consumed per hour by troops/population |
 | max_storage | REAL | NOT NULL, DEFAULT 1000 | Max storage per resource (from Warehouse level) |
 | last_updated | TEXT | NOT NULL | Timestamp of last resource write |
 
 **Note**: Current resources are calculated lazily: `current = min(stored + (rate × hours_since_last_updated), max_storage)`. Net food rate = `food_rate - food_consumption`. The `stored` values are only written to DB on events (build, trade, attack, login). The `max_storage` value is updated when the Warehouse is upgraded.
+
+---
+
+### resource_building_configs
+
+Admin-managed display metadata for the 12 resource building slots, configurable per kingdom.
+
+| Column | Type | Constraints | Description |
+|--------|------|------------|-------------|
+| id | INTEGER | PK, AUTOINCREMENT | Unique config ID |
+| resource_type | TEXT | NOT NULL | 'food', 'water', 'lumber', or 'stone' |
+| slot | INTEGER | NOT NULL | 1, 2, or 3 |
+| kingdom | TEXT | NOT NULL | Kingdom name (e.g. 'veridor') |
+| display_name | TEXT | NOT NULL | Human-readable name (e.g. 'Fishery') |
+| description | TEXT | NOT NULL, DEFAULT '' | Optional description |
+| default_icon | TEXT | NOT NULL, DEFAULT '' | Emoji/icon fallback |
+| sprite_path | TEXT | NOT NULL, DEFAULT '' | Path to uploaded sprite image |
+| updated_at | TEXT | NOT NULL | ISO 8601 timestamp |
+
+**Indexes**: `(resource_type, slot, kingdom)` UNIQUE
+
+**Seed data**: 96 rows (8 kingdoms × 4 resources × 3 slots) with default names:
+- Food: Farm, Fishery, Orchard
+- Water: Well, Spring, Aqueduct
+- Lumber: Sawmill, Lumber Camp, Woodcutter
+- Stone: Quarry, Stone Pit, Mine
 
 ---
 

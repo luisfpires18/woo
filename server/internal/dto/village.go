@@ -21,15 +21,16 @@ type BuildingInfo struct {
 }
 
 // ResourcesResponse represents current resources (after lazy calculation).
+// Base resources: food, water, lumber, stone.
 type ResourcesResponse struct {
-	Iron            float64 `json:"iron"`
-	Wood            float64 `json:"wood"`
-	Stone           float64 `json:"stone"`
 	Food            float64 `json:"food"`
-	IronRate        float64 `json:"iron_rate"`
-	WoodRate        float64 `json:"wood_rate"`
-	StoneRate       float64 `json:"stone_rate"`
+	Water           float64 `json:"water"`
+	Lumber          float64 `json:"lumber"`
+	Stone           float64 `json:"stone"`
 	FoodRate        float64 `json:"food_rate"`
+	WaterRate       float64 `json:"water_rate"`
+	LumberRate      float64 `json:"lumber_rate"`
+	StoneRate       float64 `json:"stone_rate"`
 	FoodConsumption float64 `json:"food_consumption"`
 	MaxStorage      float64 `json:"max_storage"`
 }

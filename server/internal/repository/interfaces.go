@@ -84,3 +84,12 @@ type GameAssetRepository interface {
 	UpdateSprite(ctx context.Context, id string, spritePath *string) error
 	Create(ctx context.Context, asset *model.GameAsset) error
 }
+
+// ResourceBuildingConfigRepository defines data access operations for per-kingdom resource building cosmetics.
+type ResourceBuildingConfigRepository interface {
+	GetAll(ctx context.Context) ([]*model.ResourceBuildingConfig, error)
+	GetByKingdom(ctx context.Context, kingdom string) ([]*model.ResourceBuildingConfig, error)
+	GetByID(ctx context.Context, id int64) (*model.ResourceBuildingConfig, error)
+	Update(ctx context.Context, cfg *model.ResourceBuildingConfig) error
+	UpdateSprite(ctx context.Context, id int64, spritePath *string) error
+}

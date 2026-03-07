@@ -38,9 +38,9 @@ export function useResourceTicker(snapshot: ResourcesResponse): ResourcesRespons
 
   return {
     ...base,
-    iron: Math.min(base.iron + base.iron_rate * elapsed, cap),
-    wood: Math.min(base.wood + base.wood_rate * elapsed, cap),
-    stone: Math.min(base.stone + base.stone_rate * elapsed, cap),
     food: Math.max(0, Math.min(base.food + (base.food_rate - base.food_consumption) * elapsed, cap)),
+    water: Math.min(base.water + base.water_rate * elapsed, cap),
+    lumber: Math.min(base.lumber + base.lumber_rate * elapsed, cap),
+    stone: Math.min(base.stone + base.stone_rate * elapsed, cap),
   };
 }

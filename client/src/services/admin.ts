@@ -9,6 +9,8 @@ import type {
   UpdateRoleRequest,
   GameAssetListResponse,
   GameAsset,
+  ResourceBuildingConfig,
+  ResourceBuildingConfigListResponse,
 } from '../types/api';
 
 // --- Player management ---
@@ -81,4 +83,42 @@ export async function uploadSprite(id: string, file: File): Promise<GameAsset> {
 
 export async function deleteSprite(id: string): Promise<void> {
   await api.delete<{ message: string }>(`/admin/assets/${id}/sprite`);
+}
+
+// --- Resource building configs ---
+
+export async function fetchResourceBuildingConfigs(): Promise<ResourceBuildingConfigListResponse> {
+  return api.get<ResourceBuildingConfigListResponse>('/resource-building-configs');
+}
+
+export async function updateResourceBuildingConfig(
+  id: number,
+  data: { display_name: string; description: string; default_icon: string },
+): Promise<ResourceBuildingConfig> {
+  const res = await api.put<{ data: ResourceBuildingConfig }>(`/admin/resource-buildings/${id}`, data);
+  return res.data;
+}
+
+export async function uploadResourceBuildingSprite(id: number, file: File): Promise<ResourceBuildingConfig> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('access_token');
+  const response = await fetch(`/api/admin/resource-buildings/${id}/sprite`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({ error: 'Upload failed' }));
+    throw new Error(body.error || `HTTP ${response.status}`);
+  }
+
+  const result = await response.json();
+  return result.data;
+}
+
+export async function deleteResourceBuildingSprite(id: number): Promise<void> {
+  await api.delete<{ message: string }>(`/admin/resource-buildings/${id}/sprite`);
 }

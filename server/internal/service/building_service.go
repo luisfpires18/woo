@@ -148,25 +148,25 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 	now := time.Now().UTC()
 	elapsed := now.Sub(res.LastUpdated).Hours()
 	if elapsed > 0 {
-		res.Iron = clampStorage(res.Iron+res.IronRate*elapsed, res.MaxStorage)
-		res.Wood = clampStorage(res.Wood+res.WoodRate*elapsed, res.MaxStorage)
-		res.Stone = clampStorage(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
 		res.Food = clampStorage(res.Food+(res.FoodRate-res.FoodConsumption)*elapsed, res.MaxStorage)
 		if res.Food < 0 {
 			res.Food = 0
 		}
+		res.Water = clampStorage(res.Water+res.WaterRate*elapsed, res.MaxStorage)
+		res.Lumber = clampStorage(res.Lumber+res.LumberRate*elapsed, res.MaxStorage)
+		res.Stone = clampStorage(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
 	}
 
 	// 10. Check sufficient resources
-	if res.Iron < cost.Iron || res.Wood < cost.Wood || res.Stone < cost.Stone || res.Food < cost.Food {
+	if res.Food < cost.Food || res.Water < cost.Water || res.Lumber < cost.Lumber || res.Stone < cost.Stone {
 		return nil, model.ErrInsufficientResources
 	}
 
 	// 11. Deduct resources + insert queue atomically
-	res.Iron -= cost.Iron
-	res.Wood -= cost.Wood
-	res.Stone -= cost.Stone
 	res.Food -= cost.Food
+	res.Water -= cost.Water
+	res.Lumber -= cost.Lumber
+	res.Stone -= cost.Stone
 	res.LastUpdated = now
 
 	completesAt := now.Add(time.Duration(timeSec) * time.Second)
@@ -180,8 +180,8 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 
 	err = sqlt.WithTx(ctx, s.db, func(tx *sql.Tx) error {
 		if err := sqlt.UpdateResourcesTx(ctx, tx, villageID,
-			res.Iron, res.Wood, res.Stone, res.Food,
-			res.IronRate, res.WoodRate, res.StoneRate, res.FoodRate,
+			res.Food, res.Water, res.Lumber, res.Stone,
+			res.FoodRate, res.WaterRate, res.LumberRate, res.StoneRate,
 			res.FoodConsumption, res.MaxStorage,
 			res.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
 		); err != nil {
@@ -251,10 +251,10 @@ func (s *BuildingService) GetUpgradeCost(ctx context.Context, playerID, villageI
 		BuildingType: buildingType,
 		CurrentLevel: currentLevel,
 		TargetLevel:  targetLevel,
-		Iron:         cost.Iron,
-		Wood:         cost.Wood,
-		Stone:        cost.Stone,
 		Food:         cost.Food,
+		Water:        cost.Water,
+		Lumber:       cost.Lumber,
+		Stone:        cost.Stone,
 		TimeSec:      timeSec,
 	}, nil
 }
@@ -347,7 +347,7 @@ func (s *BuildingService) completeBuild(ctx context.Context, item *model.Buildin
 	}
 
 	// Update resource rates if it's a resource-producing building
-	if err := s.updateResourceRates(ctx, item.VillageID, item.BuildingType, item.TargetLevel); err != nil {
+	if err := s.updateResourceRates(ctx, item.VillageID, item.BuildingType, buildings); err != nil {
 		return fmt.Errorf("update resource rates: %w", err)
 	}
 
@@ -359,31 +359,48 @@ func (s *BuildingService) completeBuild(ctx context.Context, item *model.Buildin
 	return nil
 }
 
-// updateResourceRates updates the village resource rates/storage when a resource building is upgraded.
-func (s *BuildingService) updateResourceRates(ctx context.Context, villageID int64, buildingType string, newLevel int) error {
+// updateResourceRates updates the village resource rates/storage when a building is upgraded.
+// For resource buildings, it sums the levels of all 3 buildings producing the same resource type.
+func (s *BuildingService) updateResourceRates(ctx context.Context, villageID int64, buildingType string, buildings []*model.Building) error {
 	res, err := s.resourceRepo.Get(ctx, villageID)
 	if err != nil {
 		return fmt.Errorf("get resources: %w", err)
 	}
 
 	changed := false
-	newRate := config.BaseResourceRate + config.RatePerLevel*float64(newLevel)
 
-	switch buildingType {
-	case "iron_mine":
-		res.IronRate = newRate
+	// Check if it's a resource-producing building
+	resType := config.ResourceTypeForBuilding(buildingType)
+	if resType != "" {
+		// Sum levels of all buildings that produce this resource type
+		totalLevel := 0
+		for _, b := range buildings {
+			if config.ResourceTypeForBuilding(b.BuildingType) == resType {
+				totalLevel += b.Level
+			}
+		}
+		newRate := config.BaseResourceRate + config.RatePerLevel*float64(totalLevel)
+		switch resType {
+		case "food":
+			res.FoodRate = newRate
+		case "water":
+			res.WaterRate = newRate
+		case "lumber":
+			res.LumberRate = newRate
+		case "stone":
+			res.StoneRate = newRate
+		}
 		changed = true
-	case "lumber_mill":
-		res.WoodRate = newRate
-		changed = true
-	case "quarry":
-		res.StoneRate = newRate
-		changed = true
-	case "farm":
-		res.FoodRate = newRate
-		changed = true
-	case "warehouse":
-		res.MaxStorage = config.BaseStorage + config.StoragePerLevel*float64(newLevel)
+	}
+
+	// Warehouse still affects storage
+	if buildingType == "warehouse" {
+		for _, b := range buildings {
+			if b.BuildingType == "warehouse" {
+				res.MaxStorage = config.BaseStorage + config.StoragePerLevel*float64(b.Level)
+				break
+			}
+		}
 		changed = true
 	}
 

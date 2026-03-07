@@ -50,10 +50,10 @@ export function BuildingDetailModal({
   const prereqs = checkPrerequisites(type, allBuildings);
 
   const canAfford = cost
-    ? resources.iron >= cost.iron &&
-      resources.wood >= cost.wood &&
-      resources.stone >= cost.stone &&
-      resources.food >= cost.food
+    ? resources.food >= cost.food &&
+      resources.water >= cost.water &&
+      resources.lumber >= cost.lumber &&
+      resources.stone >= cost.stone
     : false;
 
   const canUpgrade = !isMaxLevel && prereqs.allMet && canAfford && !queueActive;
@@ -93,10 +93,10 @@ export function BuildingDetailModal({
                 {building.level === 0 ? 'Build to Level 1' : `Upgrade to Level ${effectiveTarget}`}
               </h4>
               <div className={styles.costGrid}>
-                <CostRow label="Iron" icon="⛏️" value={cost!.iron} available={resources.iron} />
-                <CostRow label="Wood" icon="🪵" value={cost!.wood} available={resources.wood} />
-                <CostRow label="Stone" icon="🪨" value={cost!.stone} available={resources.stone} />
                 <CostRow label="Food" icon="🌾" value={cost!.food} available={resources.food} />
+                <CostRow label="Water" icon="💧" value={cost!.water} available={resources.water} />
+                <CostRow label="Lumber" icon="🪵" value={cost!.lumber} available={resources.lumber} />
+                <CostRow label="Stone" icon="🪨" value={cost!.stone} available={resources.stone} />
               </div>
               <div className={styles.buildTime}>
                 <span>⏱ Build time:</span>

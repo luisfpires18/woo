@@ -41,6 +41,11 @@ func (h *AdminHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /assets", h.ListAssets)
 	mux.HandleFunc("POST /assets/{id}/sprite", h.UploadSprite)
 	mux.HandleFunc("DELETE /assets/{id}/sprite", h.DeleteSprite)
+	mux.HandleFunc("GET /resource-buildings", h.ListResourceBuildingConfigs)
+	mux.HandleFunc("GET /resource-buildings/{id}", h.GetResourceBuildingConfig)
+	mux.HandleFunc("PUT /resource-buildings/{id}", h.UpdateResourceBuildingConfig)
+	mux.HandleFunc("POST /resource-buildings/{id}/sprite", h.UploadResourceBuildingSprite)
+	mux.HandleFunc("DELETE /resource-buildings/{id}/sprite", h.DeleteResourceBuildingSprite)
 }
 
 // ListPlayers handles GET /api/admin/players?offset=0&limit=20.
@@ -347,6 +352,217 @@ func (h *AdminHandler) DeleteSprite(w http.ResponseWriter, r *http.Request) {
 	// Clear sprite_path in DB.
 	if err := h.adminService.UpdateGameAssetSprite(r.Context(), assetID, nil); err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to update asset")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"message": "sprite deleted"})
+}
+
+// --- Resource building configs ---
+
+// ListResourceBuildingConfigs handles GET /api/admin/resource-buildings?kingdom=X.
+func (h *AdminHandler) ListResourceBuildingConfigs(w http.ResponseWriter, r *http.Request) {
+	kingdom := r.URL.Query().Get("kingdom")
+
+	resp, err := h.adminService.ListResourceBuildingConfigs(r.Context(), kingdom)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to list resource building configs")
+		return
+	}
+	writeJSON(w, http.StatusOK, resp)
+}
+
+// GetResourceBuildingConfig handles GET /api/admin/resource-buildings/{id}.
+func (h *AdminHandler) GetResourceBuildingConfig(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid resource building config id")
+		return
+	}
+
+	cfg, err := h.adminService.GetResourceBuildingConfig(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "resource building config not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get resource building config")
+		return
+	}
+
+	var spriteURL *string
+	if cfg.SpritePath != nil {
+		u := "/uploads/" + *cfg.SpritePath
+		spriteURL = &u
+	}
+	writeJSON(w, http.StatusOK, &dto.ResourceBuildingConfigDTO{
+		ID:           cfg.ID,
+		ResourceType: cfg.ResourceType,
+		Slot:         cfg.Slot,
+		Kingdom:      cfg.Kingdom,
+		DisplayName:  cfg.DisplayName,
+		Description:  cfg.Description,
+		DefaultIcon:  cfg.DefaultIcon,
+		SpriteURL:    spriteURL,
+		UpdatedAt:    cfg.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+	})
+}
+
+// UpdateResourceBuildingConfig handles PUT /api/admin/resource-buildings/{id}.
+func (h *AdminHandler) UpdateResourceBuildingConfig(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid resource building config id")
+		return
+	}
+
+	var req dto.UpdateResourceBuildingConfigRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+
+	if err := h.adminService.UpdateResourceBuildingConfig(r.Context(), id, &req); err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "resource building config not found")
+			return
+		}
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"message": "config updated"})
+}
+
+// UploadResourceBuildingSprite handles POST /api/admin/resource-buildings/{id}/sprite.
+func (h *AdminHandler) UploadResourceBuildingSprite(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid resource building config id")
+		return
+	}
+
+	cfg, err := h.adminService.GetResourceBuildingConfig(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "resource building config not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get config")
+		return
+	}
+
+	// Same dimensions / limits as building sprites.
+	expectedDims := model.AssetSpriteDimensions["building"]
+	maxBytes := model.AssetMaxSpriteBytes["building"]
+
+	if err := r.ParseMultipartForm(maxBytes + 4096); err != nil {
+		writeError(w, http.StatusBadRequest, "file too large or invalid multipart")
+		return
+	}
+
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "missing file field")
+		return
+	}
+	defer file.Close()
+
+	ct := header.Header.Get("Content-Type")
+	if ct != "image/png" {
+		writeError(w, http.StatusBadRequest, "only PNG images are accepted")
+		return
+	}
+
+	if header.Size > maxBytes {
+		writeError(w, http.StatusBadRequest, fmt.Sprintf("file exceeds max size of %d KB", maxBytes/1024))
+		return
+	}
+
+	img, err := png.Decode(file)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid PNG image")
+		return
+	}
+
+	bounds := img.Bounds()
+	if bounds.Dx() != expectedDims[0] || bounds.Dy() != expectedDims[1] {
+		writeError(w, http.StatusBadRequest, fmt.Sprintf(
+			"image must be %dx%d pixels, got %dx%d",
+			expectedDims[0], expectedDims[1], bounds.Dx(), bounds.Dy(),
+		))
+		return
+	}
+
+	relDir := filepath.Join("sprites", "resource_building")
+	absDir := filepath.Join("uploads", relDir)
+	if err := os.MkdirAll(absDir, 0o755); err != nil {
+		slog.Error("failed to create sprite directory", "error", err)
+		writeError(w, http.StatusInternalServerError, "failed to save file")
+		return
+	}
+
+	filename := fmt.Sprintf("%s_%d_%s.png", cfg.ResourceType, cfg.Slot, cfg.Kingdom)
+	absPath := filepath.Join(absDir, filename)
+
+	if seeker, ok := file.(io.Seeker); ok {
+		seeker.Seek(0, io.SeekStart)
+	} else {
+		writeError(w, http.StatusInternalServerError, "cannot re-read file")
+		return
+	}
+
+	dst, err := os.Create(absPath)
+	if err != nil {
+		slog.Error("failed to create sprite file", "error", err)
+		writeError(w, http.StatusInternalServerError, "failed to save file")
+		return
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, file); err != nil {
+		slog.Error("failed to write sprite file", "error", err)
+		writeError(w, http.StatusInternalServerError, "failed to save file")
+		return
+	}
+
+	dbPath := relDir + "/" + filename
+	if err := h.adminService.UpdateResourceBuildingConfigSprite(r.Context(), id, &dbPath); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to update config sprite")
+		return
+	}
+
+	spriteURL := "/uploads/" + dbPath
+	writeJSON(w, http.StatusOK, map[string]string{
+		"message":    "sprite uploaded",
+		"sprite_url": spriteURL,
+	})
+}
+
+// DeleteResourceBuildingSprite handles DELETE /api/admin/resource-buildings/{id}/sprite.
+func (h *AdminHandler) DeleteResourceBuildingSprite(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid resource building config id")
+		return
+	}
+
+	cfg, err := h.adminService.GetResourceBuildingConfig(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "resource building config not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get config")
+		return
+	}
+
+	if cfg.SpritePath != nil {
+		absPath := filepath.Join("uploads", *cfg.SpritePath)
+		os.Remove(absPath)
+	}
+
+	if err := h.adminService.UpdateResourceBuildingConfigSprite(r.Context(), id, nil); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to update config sprite")
 		return
 	}
 

@@ -22,11 +22,11 @@ func WithTx(ctx context.Context, db *sql.DB, fn func(tx *sql.Tx) error) error {
 }
 
 // UpdateResourcesTx updates the resources row for a village within the given transaction.
-func UpdateResourcesTx(ctx context.Context, tx *sql.Tx, villageID int64, iron, wood, stone, food, ironRate, woodRate, stoneRate, foodRate, foodConsumption, maxStorage float64, lastUpdated string) error {
+func UpdateResourcesTx(ctx context.Context, tx *sql.Tx, villageID int64, food, water, lumber, stone, foodRate, waterRate, lumberRate, stoneRate, foodConsumption, maxStorage float64, lastUpdated string) error {
 	_, err := tx.ExecContext(ctx,
-		`UPDATE resources SET iron = ?, wood = ?, stone = ?, food = ?, iron_rate = ?, wood_rate = ?, stone_rate = ?, food_rate = ?, food_consumption = ?, max_storage = ?, last_updated = ?
+		`UPDATE resources SET food = ?, water = ?, lumber = ?, stone = ?, food_rate = ?, water_rate = ?, lumber_rate = ?, stone_rate = ?, food_consumption = ?, max_storage = ?, last_updated = ?
 		 WHERE village_id = ?`,
-		iron, wood, stone, food, ironRate, woodRate, stoneRate, foodRate,
+		food, water, lumber, stone, foodRate, waterRate, lumberRate, stoneRate,
 		foodConsumption, maxStorage, lastUpdated, villageID,
 	)
 	if err != nil {

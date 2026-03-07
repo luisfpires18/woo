@@ -117,7 +117,8 @@
 - The enemy faction **Moraphys** is NPC-controlled and triggers the endgame by stealing all Weapons of Chaos.
 - **Weapons of Chaos** cause debuffs and chaos to their wielders. They are powerful but dangerous. **Count is configurable per game world** — do not hardcode 7.
 - **Weapons of Order** are the counter — crafted by players through alliance-level collaboration to defeat Moraphys.
-- The four base resources are: **Iron**, **Wood**, **Stone**, **Food**.
+- The four base resources are: **Food**, **Water**, **Lumber**, **Stone**.
+- Each resource has 3 building slots per village (e.g. food_1/food_2/food_3). Display names are admin-configurable per kingdom via `resource_building_configs` table.
 - Always cross-check `docs/02-lore/` and `docs/01-game-design/kingdoms.md` when implementing kingdom-specific content.
 
 ---
@@ -137,3 +138,4 @@
 |------|--------|
 | 2026-03-03 | Initial creation of copilot instructions |
 | 2026-03-03 | Removed .mobile.css convention (responsive overrides in .module.css), removed mobile styles from file naming table, added configurable Weapons of Chaos count note |
+| 2026-03-03 | Resources refactored: Iron/Wood/Stone/Food → Food/Water/Lumber/Stone. 4 resource buildings → 12 (3 per resource). Added resource_building_configs table for admin customisation per kingdom |

@@ -22,7 +22,12 @@ var (
 
 // Starting building types for every village. Kingdom-specific building is appended.
 var commonBuildings = []string{
-	"town_hall", "iron_mine", "lumber_mill", "quarry", "farm", "warehouse",
+	"town_hall",
+	"food_1", "food_2", "food_3",
+	"water_1", "water_2", "water_3",
+	"lumber_1", "lumber_2", "lumber_3",
+	"stone_1", "stone_2", "stone_3",
+	"warehouse",
 	"barracks", "stable", "forge", "rune_altar", "walls", "marketplace",
 	"embassy", "watchtower",
 }
@@ -108,14 +113,14 @@ func (s *VillageService) CreateFirstVillage(ctx context.Context, playerID int64,
 	// Create initial resources
 	resources := &model.Resources{
 		VillageID:       village.ID,
-		Iron:            startingResources,
-		Wood:            startingResources,
-		Stone:           startingResources,
 		Food:            startingResources,
-		IronRate:        startingRate,
-		WoodRate:        startingRate,
-		StoneRate:       startingRate,
+		Water:           startingResources,
+		Lumber:          startingResources,
+		Stone:           startingResources,
 		FoodRate:        startingRate,
+		WaterRate:       startingRate,
+		LumberRate:      startingRate,
+		StoneRate:       startingRate,
 		FoodConsumption: 0,
 		MaxStorage:      startingStorage,
 		LastUpdated:     now,
@@ -182,14 +187,14 @@ func (s *VillageService) getCalculatedResources(ctx context.Context, villageID i
 		now := time.Now().UTC()
 		res = &model.Resources{
 			VillageID:       villageID,
-			Iron:            startingResources,
-			Wood:            startingResources,
-			Stone:           startingResources,
 			Food:            startingResources,
-			IronRate:        startingRate,
-			WoodRate:        startingRate,
-			StoneRate:       startingRate,
+			Water:           startingResources,
+			Lumber:          startingResources,
+			Stone:           startingResources,
 			FoodRate:        startingRate,
+			WaterRate:       startingRate,
+			LumberRate:      startingRate,
+			StoneRate:       startingRate,
 			FoodConsumption: 0,
 			MaxStorage:      startingStorage,
 			LastUpdated:     now,
@@ -210,13 +215,13 @@ func (s *VillageService) getCalculatedResources(ctx context.Context, villageID i
 	}
 
 	// Calculate current resources: stored + rate*seconds, capped at max_storage
-	res.Iron = math.Min(res.Iron+res.IronRate*elapsed, res.MaxStorage)
-	res.Wood = math.Min(res.Wood+res.WoodRate*elapsed, res.MaxStorage)
-	res.Stone = math.Min(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
 	res.Food = math.Min(res.Food+(res.FoodRate-res.FoodConsumption)*elapsed, res.MaxStorage)
 	if res.Food < 0 {
 		res.Food = 0
 	}
+	res.Water = math.Min(res.Water+res.WaterRate*elapsed, res.MaxStorage)
+	res.Lumber = math.Min(res.Lumber+res.LumberRate*elapsed, res.MaxStorage)
+	res.Stone = math.Min(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
 	res.LastUpdated = now
 
 	// Persist the recalculated snapshot
@@ -268,14 +273,14 @@ func (s *VillageService) buildVillageResponse(village *model.Village, buildings 
 		IsCapital: village.IsCapital,
 		Buildings: buildingInfos,
 		Resources: &dto.ResourcesResponse{
-			Iron:            resources.Iron,
-			Wood:            resources.Wood,
-			Stone:           resources.Stone,
 			Food:            resources.Food,
-			IronRate:        resources.IronRate,
-			WoodRate:        resources.WoodRate,
-			StoneRate:       resources.StoneRate,
+			Water:           resources.Water,
+			Lumber:          resources.Lumber,
+			Stone:           resources.Stone,
 			FoodRate:        resources.FoodRate,
+			WaterRate:       resources.WaterRate,
+			LumberRate:      resources.LumberRate,
+			StoneRate:       resources.StoneRate,
 			FoodConsumption: resources.FoodConsumption,
 			MaxStorage:      resources.MaxStorage,
 		},

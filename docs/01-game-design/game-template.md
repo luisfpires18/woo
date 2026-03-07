@@ -14,25 +14,25 @@
 
 | Resource | Produced By | Primary Uses |
 |----------|------------|-------------|
-| **Iron** | Iron Mine | TBD |
-| **Wood** | Lumber Mill | TBD |
-| **Stone** | Quarry | TBD |
-| **Food** | Farm | TBD |
+| **Food** | 3 food buildings (admin-configurable names per kingdom) | TBD |
+| **Water** | 3 water buildings | TBD |
+| **Lumber** | 3 lumber buildings | TBD |
+| **Stone** | 3 stone buildings | TBD |
 
 ### A2. Starting Resources (New Village)
 
 | Resource | Starting Amount |
 |----------|----------------|
-| Iron | 500 |
-| Wood | 500 |
-| Stone | 500 |
 | Food | 500 |
+| Water | 500 |
+| Lumber | 500 |
+| Stone | 500 |
 
 ### A3. Production Rate Curve (Resources per Hour)
 
-All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) use the same production curve unless overridden below.
+All 12 resource buildings (food_1/2/3, water_1/2/3, lumber_1/2/3, stone_1/2/3) use the same production curve. Rate = `BaseResourceRate(1.0) + RatePerLevel(2.0) × sum(levels of all 3 buildings for that resource)`.
 
-**Formula**: `rate = base_rate + (level × rate_per_level)` where `base_rate = 10`, `rate_per_level = 20`.
+**Formula**: `rate = base_rate(1.0) + rate_per_level(2.0) × total_level` where `total_level` = sum of all 3 building levels for that resource.
 
 | Level | Resources/Hour |
 |-------|---------------|
@@ -109,12 +109,12 @@ All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) use the same 
 
 | Building | Canonical ID | Function | Max Level | Prerequisites | Starting Level (New Village) |
 |----------|-------------|----------|-----------|---------------|------------------------------|
-| Town Hall | `town_hall` | Central building; gates access to all others | 20 | None | 0 |
-| Iron Mine | `iron_mine` | Produces Iron per hour | 20 | None | 0 |
-| Lumber Mill | `lumber_mill` | Produces Wood per hour | 20 | None | 0 |
-| Quarry | `quarry` | Produces Stone per hour | 20 | None | 0 |
-| Farm | `farm` | Produces Food per hour; determines population cap | 20 | None | 0 |
-| Warehouse | `warehouse` | Stores resources; level sets max storage | 20 | None | 0 |
+| Town Hall | `town_hall` | Central building; gates access to all others | 20 | None | 1 |
+| Food Fields | `food_1`, `food_2`, `food_3` | 3 buildings that produce Food per second. Display names admin-configurable per kingdom. | 20 | None | 1 |
+| Water Fields | `water_1`, `water_2`, `water_3` | 3 buildings that produce Water per second. | 20 | None | 1 |
+| Lumber Fields | `lumber_1`, `lumber_2`, `lumber_3` | 3 buildings that produce Lumber per second. | 20 | None | 1 |
+| Stone Fields | `stone_1`, `stone_2`, `stone_3` | 3 buildings that produce Stone per second. | 20 | None | 1 |
+| Warehouse | `warehouse` | Stores resources; level sets max storage | 20 | None | 1 |
 | Barracks | `barracks` | Trains infantry troops | 20 | town_hall 3 | 0 |
 | Stable | `stable` | Trains mounted/fast troops | 15 | town_hall 5, barracks 5 | 0 |
 | Forge | `forge` | Crafts weapons from resources + runes | 10 | town_hall 5, barracks 3 | 0 |
@@ -128,22 +128,19 @@ All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) use the same 
 
 ### B2. Base Costs (Level 1) — All Buildings
 
-| Building | Iron | Wood | Stone | Food | Build Time | Scaling Factor | Time Factor |
-|----------|------|------|-------|------|-----------|----------------|-------------|
-| Town Hall | 200 | 200 | 200 | 100 | 5 min | 1.7 | 1.7 |
-| Iron Mine | 100 | 80 | 50 | 30 | 2 min | 1.5 | 1.5 |
-| Lumber Mill | 80 | 100 | 50 | 30 | 2 min | 1.5 | 1.5 |
-| Quarry | 80 | 50 | 100 | 30 | 2 min | 1.5 | 1.5 |
-| Farm | 50 | 80 | 50 | 20 | 2 min | 1.5 | 1.5 |
-| Warehouse | 120 | 120 | 100 | 50 | 3 min | 1.6 | 1.6 |
-| Barracks | 200 | 150 | 100 | 80 | 5 min | 1.8 | 1.8 |
-| Stable | 300 | 200 | 150 | 120 | 8 min | 1.8 | 1.8 |
-| Forge | 250 | 180 | 200 | 100 | 8 min | 1.8 | 1.8 |
-| Rune Altar | 300 | 250 | 250 | 150 | 10 min | 1.9 | 1.9 |
-| Walls | 150 | 100 | 200 | 50 | 4 min | 1.6 | 1.6 |
-| Marketplace | 180 | 180 | 120 | 80 | 5 min | 1.6 | 1.6 |
-| Embassy | 200 | 200 | 200 | 100 | 8 min | 1.7 | 1.7 |
-| Watchtower | 150 | 100 | 150 | 60 | 4 min | 1.6 | 1.6 |
+| Building | Food | Water | Lumber | Stone | Build Time | Scaling Factor | Time Factor |
+|----------|------|-------|--------|-------|-----------|----------------|-------------|
+| Town Hall | 100 | 200 | 200 | 200 | 5 min | 1.7 | 1.7 |
+| Resource Fields (all 12) | 60 | 40 | 80 | 50 | 2 min | 1.5 | 1.5 |
+| Warehouse | 50 | 120 | 120 | 100 | 3 min | 1.6 | 1.6 |
+| Barracks | 80 | 200 | 150 | 100 | 5 min | 1.8 | 1.8 |
+| Stable | 120 | 300 | 200 | 150 | 8 min | 1.8 | 1.8 |
+| Forge | 100 | 250 | 180 | 200 | 8 min | 1.8 | 1.8 |
+| Rune Altar | 150 | 300 | 250 | 250 | 10 min | 1.9 | 1.9 |
+| Walls | 50 | 150 | 100 | 200 | 4 min | 1.6 | 1.6 |
+| Marketplace | 80 | 180 | 180 | 120 | 5 min | 1.6 | 1.6 |
+| Embassy | 100 | 200 | 200 | 200 | 8 min | 1.7 | 1.7 |
+| Watchtower | 60 | 150 | 100 | 150 | 4 min | 1.6 | 1.6 |
 
 > **Cost formula**: `cost(level) = base_cost × (scaling_factor ^ (level - 1))`
 > **Time formula**: `time(level) = base_time × (time_factor ^ (level - 1))`

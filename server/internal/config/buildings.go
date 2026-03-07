@@ -3,14 +3,16 @@ package config
 import (
 	"fmt"
 	"math"
+	"strings"
 )
 
 // ResourceCost represents the resource cost for an action.
+// The four base resources are: Food, Water, Lumber, Stone.
 type ResourceCost struct {
-	Iron  float64
-	Wood  float64
-	Stone float64
-	Food  float64
+	Food   float64
+	Water  float64
+	Lumber float64
+	Stone  float64
 }
 
 // BuildingPrerequisite describes a required building type and minimum level.
@@ -31,53 +33,35 @@ type BuildingConfig struct {
 	KingdomOnly   string                 // empty = all kingdoms, otherwise kingdom slug
 }
 
+// resourceBuildingCost is the shared base cost for all 12 resource field buildings.
+var resourceBuildingCost = ResourceCost{Food: 60, Water: 40, Lumber: 80, Stone: 50}
+
+// newResourceBuilding returns a BuildingConfig for a resource-producing building slot.
+func newResourceBuilding(displayName string) BuildingConfig {
+	return BuildingConfig{
+		DisplayName:   displayName,
+		BaseCost:      resourceBuildingCost,
+		BaseTimeSec:   120, // 2 min
+		ScalingFactor: 1.5,
+		TimeFactor:    1.5,
+		MaxLevel:      20,
+	}
+}
+
 // BuildingConfigs is the authoritative registry of all building types and their stats.
-// Values are draft from docs/01-game-design/progression-and-scaling.md until
-// game-template.md is finalized.
 var BuildingConfigs = map[string]BuildingConfig{
+	// --- Village buildings ---
 	"town_hall": {
 		DisplayName:   "Town Hall",
-		BaseCost:      ResourceCost{Iron: 200, Wood: 200, Stone: 200, Food: 100},
+		BaseCost:      ResourceCost{Food: 100, Water: 200, Lumber: 200, Stone: 200},
 		BaseTimeSec:   300, // 5 min
 		ScalingFactor: 1.7,
 		TimeFactor:    1.7,
 		MaxLevel:      20,
 	},
-	"iron_mine": {
-		DisplayName:   "Iron Mine",
-		BaseCost:      ResourceCost{Iron: 100, Wood: 80, Stone: 50, Food: 30},
-		BaseTimeSec:   120, // 2 min
-		ScalingFactor: 1.5,
-		TimeFactor:    1.5,
-		MaxLevel:      20,
-	},
-	"lumber_mill": {
-		DisplayName:   "Lumber Mill",
-		BaseCost:      ResourceCost{Iron: 80, Wood: 100, Stone: 50, Food: 30},
-		BaseTimeSec:   120,
-		ScalingFactor: 1.5,
-		TimeFactor:    1.5,
-		MaxLevel:      20,
-	},
-	"quarry": {
-		DisplayName:   "Quarry",
-		BaseCost:      ResourceCost{Iron: 80, Wood: 50, Stone: 100, Food: 30},
-		BaseTimeSec:   120,
-		ScalingFactor: 1.5,
-		TimeFactor:    1.5,
-		MaxLevel:      20,
-	},
-	"farm": {
-		DisplayName:   "Farm",
-		BaseCost:      ResourceCost{Iron: 50, Wood: 80, Stone: 50, Food: 20},
-		BaseTimeSec:   120,
-		ScalingFactor: 1.5,
-		TimeFactor:    1.5,
-		MaxLevel:      20,
-	},
 	"warehouse": {
 		DisplayName:   "Warehouse",
-		BaseCost:      ResourceCost{Iron: 120, Wood: 120, Stone: 100, Food: 50},
+		BaseCost:      ResourceCost{Food: 50, Water: 120, Lumber: 120, Stone: 100},
 		BaseTimeSec:   180, // 3 min
 		ScalingFactor: 1.6,
 		TimeFactor:    1.6,
@@ -85,7 +69,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"barracks": {
 		DisplayName:   "Barracks",
-		BaseCost:      ResourceCost{Iron: 200, Wood: 150, Stone: 100, Food: 80},
+		BaseCost:      ResourceCost{Food: 80, Water: 200, Lumber: 150, Stone: 100},
 		BaseTimeSec:   300,
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
@@ -96,7 +80,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"stable": {
 		DisplayName:   "Stable",
-		BaseCost:      ResourceCost{Iron: 300, Wood: 200, Stone: 150, Food: 120},
+		BaseCost:      ResourceCost{Food: 120, Water: 300, Lumber: 200, Stone: 150},
 		BaseTimeSec:   480, // 8 min
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
@@ -108,7 +92,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"forge": {
 		DisplayName:   "Forge",
-		BaseCost:      ResourceCost{Iron: 250, Wood: 180, Stone: 200, Food: 100},
+		BaseCost:      ResourceCost{Food: 100, Water: 250, Lumber: 180, Stone: 200},
 		BaseTimeSec:   480,
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
@@ -120,7 +104,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"rune_altar": {
 		DisplayName:   "Rune Altar",
-		BaseCost:      ResourceCost{Iron: 300, Wood: 250, Stone: 250, Food: 150},
+		BaseCost:      ResourceCost{Food: 150, Water: 300, Lumber: 250, Stone: 250},
 		BaseTimeSec:   600, // 10 min
 		ScalingFactor: 1.9,
 		TimeFactor:    1.9,
@@ -132,7 +116,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"walls": {
 		DisplayName:   "Walls",
-		BaseCost:      ResourceCost{Iron: 150, Wood: 100, Stone: 200, Food: 50},
+		BaseCost:      ResourceCost{Food: 50, Water: 150, Lumber: 100, Stone: 200},
 		BaseTimeSec:   240, // 4 min
 		ScalingFactor: 1.6,
 		TimeFactor:    1.6,
@@ -143,7 +127,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"marketplace": {
 		DisplayName:   "Marketplace",
-		BaseCost:      ResourceCost{Iron: 180, Wood: 180, Stone: 120, Food: 80},
+		BaseCost:      ResourceCost{Food: 80, Water: 180, Lumber: 180, Stone: 120},
 		BaseTimeSec:   300,
 		ScalingFactor: 1.6,
 		TimeFactor:    1.6,
@@ -155,7 +139,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"embassy": {
 		DisplayName:   "Embassy",
-		BaseCost:      ResourceCost{Iron: 200, Wood: 200, Stone: 200, Food: 100},
+		BaseCost:      ResourceCost{Food: 100, Water: 200, Lumber: 200, Stone: 200},
 		BaseTimeSec:   480,
 		ScalingFactor: 1.7,
 		TimeFactor:    1.7,
@@ -166,7 +150,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"watchtower": {
 		DisplayName:   "Watchtower",
-		BaseCost:      ResourceCost{Iron: 150, Wood: 100, Stone: 150, Food: 60},
+		BaseCost:      ResourceCost{Food: 60, Water: 150, Lumber: 100, Stone: 150},
 		BaseTimeSec:   240,
 		ScalingFactor: 1.6,
 		TimeFactor:    1.6,
@@ -178,7 +162,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"dock": {
 		DisplayName:   "Dock",
-		BaseCost:      ResourceCost{Iron: 250, Wood: 300, Stone: 150, Food: 100},
+		BaseCost:      ResourceCost{Food: 100, Water: 250, Lumber: 300, Stone: 150},
 		BaseTimeSec:   480,
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
@@ -190,7 +174,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"grove_sanctum": {
 		DisplayName:   "Grove Sanctum",
-		BaseCost:      ResourceCost{Iron: 200, Wood: 300, Stone: 200, Food: 150},
+		BaseCost:      ResourceCost{Food: 150, Water: 200, Lumber: 300, Stone: 200},
 		BaseTimeSec:   480,
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
@@ -202,7 +186,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"colosseum": {
 		DisplayName:   "Colosseum",
-		BaseCost:      ResourceCost{Iron: 300, Wood: 200, Stone: 300, Food: 100},
+		BaseCost:      ResourceCost{Food: 100, Water: 300, Lumber: 200, Stone: 300},
 		BaseTimeSec:   480,
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
@@ -212,15 +196,55 @@ var BuildingConfigs = map[string]BuildingConfig{
 			{BuildingType: "town_hall", MinLevel: 6},
 		},
 	},
+
+	// --- Resource field buildings (3 per resource type) ---
+	"food_1":   newResourceBuilding("Food Field I"),
+	"food_2":   newResourceBuilding("Food Field II"),
+	"food_3":   newResourceBuilding("Food Field III"),
+	"water_1":  newResourceBuilding("Water Field I"),
+	"water_2":  newResourceBuilding("Water Field II"),
+	"water_3":  newResourceBuilding("Water Field III"),
+	"lumber_1": newResourceBuilding("Lumber Field I"),
+	"lumber_2": newResourceBuilding("Lumber Field II"),
+	"lumber_3": newResourceBuilding("Lumber Field III"),
+	"stone_1":  newResourceBuilding("Stone Field I"),
+	"stone_2":  newResourceBuilding("Stone Field II"),
+	"stone_3":  newResourceBuilding("Stone Field III"),
+}
+
+// ResourceTypeForBuilding returns the resource type a building produces, or "" if not a resource building.
+// Mapping: food_1/2/3 → "food", water_1/2/3 → "water", lumber_1/2/3 → "lumber", stone_1/2/3 → "stone".
+func ResourceTypeForBuilding(buildingType string) string {
+	for _, res := range []string{"food", "water", "lumber", "stone"} {
+		if strings.HasPrefix(buildingType, res+"_") {
+			return res
+		}
+	}
+	return ""
+}
+
+// IsResourceBuilding returns true if the building type produces resources.
+func IsResourceBuilding(buildingType string) bool {
+	return ResourceTypeForBuilding(buildingType) != ""
+}
+
+// ResourceBuildingTypes returns all 12 resource building type IDs.
+func ResourceBuildingTypes() []string {
+	return []string{
+		"food_1", "food_2", "food_3",
+		"water_1", "water_2", "water_3",
+		"lumber_1", "lumber_2", "lumber_3",
+		"stone_1", "stone_2", "stone_3",
+	}
 }
 
 // ResourceRatePerLevel defines how much each resource building produces per second per level.
-// Rate = base_rate + (level * rate_per_level)
+// Rate = base_rate + (total_level_sum * rate_per_level)
+// total_level_sum is the sum of levels from all 3 buildings of the same resource type.
 const BaseResourceRate = 1.0 // rate at level 0 (idle) — per second
 const RatePerLevel = 2.0     // additional rate per level — per second
 
 // StoragePerLevel defines warehouse capacity scaling.
-// NOTE: storage is temporarily hardcoded to 1200 while warehouse logic is not wired up.
 const BaseStorage = 1200.0  // fixed cap for now
 const StoragePerLevel = 0.0 // disabled — warehouse does not affect cap yet
 
@@ -237,10 +261,10 @@ func CostAtLevel(buildingType string, level int) (ResourceCost, error) {
 
 	mult := math.Pow(cfg.ScalingFactor, float64(level-1))
 	return ResourceCost{
-		Iron:  math.Round(cfg.BaseCost.Iron * mult),
-		Wood:  math.Round(cfg.BaseCost.Wood * mult),
-		Stone: math.Round(cfg.BaseCost.Stone * mult),
-		Food:  math.Round(cfg.BaseCost.Food * mult),
+		Food:   math.Round(cfg.BaseCost.Food * mult),
+		Water:  math.Round(cfg.BaseCost.Water * mult),
+		Lumber: math.Round(cfg.BaseCost.Lumber * mult),
+		Stone:  math.Round(cfg.BaseCost.Stone * mult),
 	}, nil
 }
 

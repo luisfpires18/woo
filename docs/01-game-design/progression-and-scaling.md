@@ -30,35 +30,35 @@ time(level) = base_time × (time_factor ^ (level - 1))
 | `time_factor` | 1.4 – 1.7 | Construction time scaling |
 | `max_level` | 20 (most buildings) | Town Hall caps at 20. Some buildings cap at 10 or 15. |
 
-### Example: Iron Mine Scaling
+### Example: Food Field Scaling
 
-| Level | Iron | Wood | Stone | Food | Time |
-|-------|------|------|-------|------|------|
-| 1 | 100 | 80 | 50 | 30 | 2 min |
-| 2 | 150 | 120 | 75 | 45 | 3 min |
-| 3 | 225 | 180 | 112 | 68 | 5 min |
-| 5 | 506 | 405 | 253 | 152 | 12 min |
-| 10 | 3,844 | 3,075 | 1,922 | 1,153 | 1.5 hr |
-| 15 | 29,192 | 23,354 | 14,596 | 8,758 | 12 hr |
-| 20 | 221,713 | 177,370 | 110,856 | 66,514 | 4 days |
+| Level | Food | Water | Lumber | Stone | Time |
+|-------|------|-------|--------|-------|------|
+| 1 | 60 | 40 | 80 | 50 | 2 min |
+| 2 | 90 | 60 | 120 | 75 | 3 min |
+| 3 | 135 | 90 | 180 | 112 | 5 min |
+| 5 | 304 | 202 | 405 | 253 | 12 min |
+| 10 | 2,307 | 1,538 | 3,075 | 1,922 | 1.5 hr |
+| 15 | 17,515 | 11,677 | 23,354 | 14,596 | 12 hr |
+| 20 | 133,028 | 88,685 | 177,370 | 110,856 | 4 days |
 
 > These are **draft values**. Will be tuned during playtesting. The principle is clear: early levels are quick and cheap, late levels are a major investment.
 
 ### Production Rates — All Resource Buildings
 
-All four resource buildings (Iron Mine, Lumber Mill, Quarry, Farm) share the same production curve:
+All 12 resource buildings (3 per resource type: food_1/2/3, water_1/2/3, lumber_1/2/3, stone_1/2/3) share the same production curve. Production rate = `BaseResourceRate(1.0) + RatePerLevel(2.0) × sum(levels of all 3 buildings for that resource)`:
 
-| Level | Resources/Hour |
-|-------|---------------|
-| 1 | 30 |
-| 2 | 40 |
-| 3 | 50 |
-| 5 | 60 |
-| 10 | 110 |
-| 15 | 170 |
-| 20 | 240 |
+| Level | Resources/Second |
+|-------|------------------|
+| 1 | 3 |
+| 2 | 5 |
+| 3 | 7 |
+| 5 | 11 |
+| 10 | 21 |
+| 15 | 31 |
+| 20 | 41 |
 
-> The column name matches the building output — Iron/Hour for Iron Mine, Wood/Hour for Lumber Mill, etc. They use the same numbers.
+> Each resource has 3 building slots. The rate shown is for a single slot at that level. Total rate for a resource is the base rate (1.0/s) plus 2.0 × the combined levels of all 3 slots.
 
 Production increases roughly linearly to keep late-game upgrades worthwhile but not game-breaking.
 
@@ -76,23 +76,20 @@ Production increases roughly linearly to keep late-game upgrades worthwhile but 
 
 ### Base Costs — All Buildings (Level 1)
 
-| Building | Iron | Wood | Stone | Food | Build Time | Scaling Factor |
-|----------|------|------|-------|------|-----------|----------------|
-| Town Hall | 200 | 200 | 200 | 100 | 5 min | 1.7 |
-| Iron Mine | 100 | 80 | 50 | 30 | 2 min | 1.5 |
-| Lumber Mill | 80 | 100 | 50 | 30 | 2 min | 1.5 |
-| Quarry | 80 | 50 | 100 | 30 | 2 min | 1.5 |
-| Farm | 50 | 80 | 50 | 20 | 2 min | 1.5 |
-| Warehouse | 120 | 120 | 100 | 50 | 3 min | 1.6 |
-| Barracks | 200 | 150 | 100 | 80 | 5 min | 1.8 |
-| Stable | 300 | 200 | 150 | 120 | 8 min | 1.8 |
-| Forge | 250 | 180 | 200 | 100 | 8 min | 1.8 |
-| Rune Altar | 300 | 250 | 250 | 150 | 10 min | 1.9 |
-| Walls | 150 | 100 | 200 | 50 | 4 min | 1.6 |
-| Marketplace | 180 | 180 | 120 | 80 | 5 min | 1.6 |
-| Embassy | 200 | 200 | 200 | 100 | 8 min | 1.7 |
-| Watchtower | 150 | 100 | 150 | 60 | 4 min | 1.6 |
-| Dock | 250 | 300 | 150 | 100 | 8 min | 1.8 |
+| Building | Food | Water | Lumber | Stone | Build Time | Scaling Factor |
+|----------|------|-------|--------|-------|-----------|----------------|
+| Town Hall | 100 | 200 | 200 | 200 | 5 min | 1.7 |
+| Resource Fields (all 12) | 60 | 40 | 80 | 50 | 2 min | 1.5 |
+| Warehouse | 50 | 120 | 120 | 100 | 3 min | 1.6 |
+| Barracks | 80 | 200 | 150 | 100 | 5 min | 1.8 |
+| Stable | 120 | 300 | 200 | 150 | 8 min | 1.8 |
+| Forge | 100 | 250 | 180 | 200 | 8 min | 1.8 |
+| Rune Altar | 150 | 300 | 250 | 250 | 10 min | 1.9 |
+| Walls | 50 | 150 | 100 | 200 | 4 min | 1.6 |
+| Marketplace | 80 | 180 | 180 | 120 | 5 min | 1.6 |
+| Embassy | 100 | 200 | 200 | 200 | 8 min | 1.7 |
+| Watchtower | 60 | 150 | 100 | 150 | 4 min | 1.6 |
+| Dock | 100 | 250 | 300 | 150 | 8 min | 1.8 |
 
 > Apply the cost formula: `cost(level) = base_cost × (scaling_factor ^ (level - 1))`. Scaling factor varies per building (resource buildings 1.5×, military 1.8×, etc.).
 

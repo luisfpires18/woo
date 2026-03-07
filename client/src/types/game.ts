@@ -2,6 +2,9 @@
 
 export type Kingdom = 'veridor' | 'sylvara' | 'arkazia' | 'draxys' | 'zandres' | 'lumus' | 'nordalh' | 'drakanith';
 
+/** Kingdoms that players can currently select during registration. */
+export type PlayableKingdom = 'veridor' | 'sylvara' | 'arkazia' | 'draxys' | 'nordalh';
+
 export interface Player {
   id: number;
   username: string;
@@ -30,10 +33,18 @@ export interface Building {
 
 export type BuildingType =
   | 'town_hall'
-  | 'iron_mine'
-  | 'lumber_mill'
-  | 'quarry'
-  | 'farm'
+  | 'food_1'
+  | 'food_2'
+  | 'food_3'
+  | 'water_1'
+  | 'water_2'
+  | 'water_3'
+  | 'lumber_1'
+  | 'lumber_2'
+  | 'lumber_3'
+  | 'stone_1'
+  | 'stone_2'
+  | 'stone_3'
   | 'warehouse'
   | 'barracks'
   | 'stable'
@@ -49,14 +60,14 @@ export type BuildingType =
 
 export interface Resources {
   village_id: number;
-  iron: number;
-  wood: number;
-  stone: number;
   food: number;
-  iron_rate: number;
-  wood_rate: number;
-  stone_rate: number;
+  water: number;
+  lumber: number;
+  stone: number;
   food_rate: number;
+  water_rate: number;
+  lumber_rate: number;
+  stone_rate: number;
   food_consumption: number;
   max_storage: number;
   last_updated: string;

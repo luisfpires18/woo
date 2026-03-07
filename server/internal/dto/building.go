@@ -21,9 +21,9 @@ type BuildingCostResponse struct {
 	BuildingType string  `json:"building_type"`
 	CurrentLevel int     `json:"current_level"`
 	TargetLevel  int     `json:"target_level"`
-	Iron         float64 `json:"iron"`
-	Wood         float64 `json:"wood"`
-	Stone        float64 `json:"stone"`
 	Food         float64 `json:"food"`
+	Water        float64 `json:"water"`
+	Lumber       float64 `json:"lumber"`
+	Stone        float64 `json:"stone"`
 	TimeSec      int     `json:"time_seconds"`
 }

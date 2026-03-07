@@ -28,7 +28,7 @@ interface BuildOption {
   building: BuildingInfo;
   type: BuildingType;
   displayName: string;
-  cost: { iron: number; wood: number; stone: number; food: number };
+  cost: { food: number; water: number; lumber: number; stone: number };
   timeSec: number;
   prereqs: { allMet: boolean; checks: PrerequisiteCheck[] };
   canAfford: boolean;
@@ -69,10 +69,10 @@ export function BuildModal({
         timeSec: timeAtLevel(type, 1),
         prereqs,
         canAfford:
-          resources.iron >= cost.iron &&
-          resources.wood >= cost.wood &&
-          resources.stone >= cost.stone &&
-          resources.food >= cost.food,
+          resources.food >= cost.food &&
+          resources.water >= cost.water &&
+          resources.lumber >= cost.lumber &&
+          resources.stone >= cost.stone,
       };
     });
 
@@ -109,10 +109,10 @@ export function BuildModal({
                     </div>
 
                     <div className={styles.costs}>
-                      <CostItem label="Iron" value={o.cost.iron} available={resources.iron} />
-                      <CostItem label="Wood" value={o.cost.wood} available={resources.wood} />
-                      <CostItem label="Stone" value={o.cost.stone} available={resources.stone} />
                       <CostItem label="Food" value={o.cost.food} available={resources.food} />
+                      <CostItem label="Water" value={o.cost.water} available={resources.water} />
+                      <CostItem label="Lumber" value={o.cost.lumber} available={resources.lumber} />
+                      <CostItem label="Stone" value={o.cost.stone} available={resources.stone} />
                       <span className={styles.timeValue}>⏱ {formatDuration(o.timeSec)}</span>
                     </div>
 

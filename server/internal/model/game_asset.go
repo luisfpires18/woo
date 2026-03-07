@@ -17,21 +17,24 @@ type GameAsset struct {
 
 // Category constants for game assets.
 const (
-	AssetCategoryBuilding = "building"
-	AssetCategoryResource = "resource"
-	AssetCategoryUnit     = "unit"
+	AssetCategoryBuilding    = "building"
+	AssetCategoryResource    = "resource"
+	AssetCategoryUnit        = "unit"
+	AssetCategoryKingdomFlag = "kingdom_flag"
 )
 
 // Expected sprite dimensions per category.
 var AssetSpriteDimensions = map[string][2]int{
-	AssetCategoryBuilding: {96, 96},
-	AssetCategoryResource: {32, 32},
-	AssetCategoryUnit:     {64, 64},
+	AssetCategoryBuilding:    {96, 96},
+	AssetCategoryResource:    {32, 32},
+	AssetCategoryUnit:        {64, 64},
+	AssetCategoryKingdomFlag: {256, 256},
 }
 
 // MaxSpriteBytes per category.
 var AssetMaxSpriteBytes = map[string]int64{
-	AssetCategoryBuilding: 512 * 1024, // 512 KB
-	AssetCategoryResource: 128 * 1024, // 128 KB
-	AssetCategoryUnit:     256 * 1024, // 256 KB
+	AssetCategoryBuilding:    512 * 1024,  // 512 KB
+	AssetCategoryResource:    128 * 1024,  // 128 KB
+	AssetCategoryUnit:        256 * 1024,  // 256 KB
+	AssetCategoryKingdomFlag: 1024 * 1024, // 1 MB
 }

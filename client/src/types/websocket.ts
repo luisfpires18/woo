@@ -19,9 +19,9 @@ export interface WSResourceUpdate extends WSMessage {
   type: 'resource_update';
   data: {
     village_id: number;
-    iron: number;
-    wood: number;
-    stone: number;
     food: number;
+    water: number;
+    lumber: number;
+    stone: number;
   };
 }

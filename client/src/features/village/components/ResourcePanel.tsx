@@ -14,10 +14,10 @@ const RESOURCE_ROWS: {
   assetId: string;
   fallbackIcon: string;
 }[] = [
-  { key: 'iron', rateKey: 'iron_rate', label: 'Iron', assetId: 'iron', fallbackIcon: '⛏️' },
-  { key: 'wood', rateKey: 'wood_rate', label: 'Wood', assetId: 'wood', fallbackIcon: '🪵' },
-  { key: 'stone', rateKey: 'stone_rate', label: 'Stone', assetId: 'stone', fallbackIcon: '🪨' },
   { key: 'food', rateKey: 'food_rate', label: 'Food', assetId: 'food', fallbackIcon: '🌾' },
+  { key: 'water', rateKey: 'water_rate', label: 'Water', assetId: 'water', fallbackIcon: '💧' },
+  { key: 'lumber', rateKey: 'lumber_rate', label: 'Lumber', assetId: 'lumber', fallbackIcon: '🪵' },
+  { key: 'stone', rateKey: 'stone_rate', label: 'Stone', assetId: 'stone', fallbackIcon: '🪨' },
 ];
 
 export function ResourcePanel({ resources }: ResourcePanelProps) {

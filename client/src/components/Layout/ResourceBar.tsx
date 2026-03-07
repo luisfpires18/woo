@@ -7,10 +7,10 @@ interface ResourceBarProps {
 }
 
 const RESOURCE_CONFIG = [
-  { key: 'iron' as const, label: 'Iron', emoji: '\u2692\uFE0F' },
-  { key: 'wood' as const, label: 'Wood', emoji: '\uD83E\uDEB5' },
-  { key: 'stone' as const, label: 'Stone', emoji: '\uD83E\uDEA8' },
   { key: 'food' as const, label: 'Food', emoji: '\uD83C\uDF3E' },
+  { key: 'water' as const, label: 'Water', emoji: '\uD83D\uDCA7' },
+  { key: 'lumber' as const, label: 'Lumber', emoji: '\uD83E\uDEB5' },
+  { key: 'stone' as const, label: 'Stone', emoji: '\uD83E\uDEA8' },
 ];
 
 export function ResourceBar({ resources }: ResourceBarProps) {

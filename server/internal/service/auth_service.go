@@ -31,14 +31,15 @@ var (
 )
 
 var validKingdoms = map[string]bool{
-	"veridor":   true,
-	"sylvara":   true,
-	"arkazia":   true,
-	"draxys":    true,
-	"zandres":   true,
-	"lumus":     true,
-	"nordalh":   true,
-	"drakanith": true,
+	"veridor":  true,
+	"sylvara":  true,
+	"arkazia":  true,
+	"draxys":   true,
+	"nordalh":  true,
+	// NPC-only kingdoms (not selectable by players):
+	// "zandres"   — underground realm, requires unique mechanics
+	// "lumus"     — island kingdom, requires Docks for all factions
+	// "drakanith"  — draconic bloodline, future expansion
 }
 
 // IsValidKingdom checks if the given kingdom string is a valid playable kingdom.

@@ -5,15 +5,17 @@ import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinne
 import { useAssetStore } from '../../../stores/assetStore';
 import styles from './AdminAssetsPage.module.css';
 
-const CATEGORY_ORDER: AssetCategory[] = ['building', 'resource', 'unit'];
+const CATEGORY_ORDER: AssetCategory[] = ['kingdom_flag', 'building', 'resource', 'unit'];
 
 const CATEGORY_LABELS: Record<AssetCategory, string> = {
+  kingdom_flag: 'Kingdom Flags',
   building: 'Buildings',
   resource: 'Resources',
   unit: 'Units',
 };
 
 const SPRITE_DIMENSIONS: Record<AssetCategory, { w: number; h: number }> = {
+  kingdom_flag: { w: 256, h: 256 },
   building: { w: 96, h: 96 },
   resource: { w: 32, h: 32 },
   unit: { w: 64, h: 64 },

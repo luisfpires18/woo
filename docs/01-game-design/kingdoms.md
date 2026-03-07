@@ -2,7 +2,33 @@
 
 > **Superseded**: Definitive tunable values (troop stats, bonuses, costs, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
 
-> Complete reference for all three playable kingdoms. Cross-reference with `docs/02-lore/kingdom-lore.md` for backstory.
+> Complete reference for playable kingdoms. Cross-reference with `docs/02-lore/kingdom-lore.md` for backstory.
+
+---
+
+## Playable vs NPC-Only Kingdoms
+
+The game world has **8 kingdoms**. Currently **5 are playable** and **3 are NPC-only** (present in quests, lore, and world events but not selectable by players).
+
+### Playable Kingdoms
+
+| Kingdom | Theme |
+|---------|-------|
+| Veridor | Naval / Ocean / Coastal |
+| Sylvara | Forest / Jungle / Nature |
+| Arkazia | Mountain / Gladiator / Forge |
+| Draxys | Desert / Sand / Frontier |
+| Nordalh | Frost / Northern / Smithing |
+
+### NPC-Only Kingdoms (Coming Soon)
+
+| Kingdom | Theme | Reason Locked |
+|---------|-------|---------------|
+| Zandres | Underground / Technic | Underground realm requires unique mechanics (vertical map layers, cave systems) |
+| Lumus | Island / Solar / Ritual | Island kingdom requires Docks building for all factions to enable cross-sea attacks |
+| Drakanith | Volcanic / Draconic | Draconic bloodline with physical traits gives inherent advantages — needs careful balancing |
+
+These kingdoms may become playable in future expansions if the game succeeds. Their data (themes, building configs, resource configs) is already seeded in the database for NPC village use.
 
 ---
 
@@ -165,4 +191,4 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 |------|--------|
 | 2026-03-03 | Initial creation of kingdoms reference |
 | 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
-| 2026-03-06 | Updated kingdom color specs to match implemented kingdom themes |
+| 2026-03-06 | Updated kingdom color specs to match implemented kingdom themes |\n| 2026-03-07 | Split kingdoms into 5 playable + 3 NPC-only (Zandres, Lumus, Drakanith). Added rationale for each locked kingdom |

@@ -63,22 +63,11 @@ Migrations are numbered SQL files in `server/migrations/`:
 
 ```
 migrations/
-├── 001_create_players.sql
-├── 002_create_villages.sql
-├── 003_create_buildings.sql
-├── 004_create_building_queue.sql
-├── 005_create_resources.sql
-├── 006_create_troops.sql
-├── 007_create_training_queue.sql
-├── 008_create_weapons.sql
-├── 009_create_runes.sql
-├── 010_create_alliances.sql
-├── 011_create_alliance_members.sql
-├── 012_create_world_map.sql
-├── 013_create_attacks.sql
-├── 014_create_weapons_of_chaos.sql
-└── 015_create_refresh_tokens.sql
+├── 001_schema.sql          # All CREATE TABLE + CREATE INDEX statements
+└── 002_seed_data.sql        # World config, admin accounts, game assets, resource building configs
 ```
+
+> **Dev-phase approach**: While in active development, we keep a small set of consolidated baseline migrations. When the schema changes, edit the baseline files directly and delete `woo.db` to rebuild from scratch. Switch to append-only numbered migrations once the game reaches production with real player data.
 
 ### Migration Runner
 
@@ -129,7 +118,16 @@ func RunMigrations(db *sql.DB, migrationsDir string) error {
 
 ### Migration Rules
 
-1. **Never modify an existing migration.** Always create a new one.
+#### Development Phase (current)
+
+1. **Edit baseline files directly.** The schema is consolidated into `001_schema.sql` and `002_seed_data.sql`. Modify them as needed.
+2. **Delete `woo.db` to rebuild.** After changing baseline migrations, delete the database file and restart the server.
+3. **Each migration is a single transaction.** If it fails, it rolls back completely.
+4. **Test migrations**: Write a test that applies all migrations to an in-memory database to verify they work.
+
+#### Production Phase (future)
+
+1. **Never modify an existing migration.** Always create a new numbered file (e.g., `003_add_column.sql`).
 2. **Migrations are forward-only.** No down migrations (too risky for production data).
 3. **Each migration is a single transaction.** If it fails, it rolls back completely.
 4. **Test migrations**: Write a test that applies all migrations to an in-memory database to verify they work.
@@ -314,7 +312,7 @@ buildings, _ := buildingRepo.GetByVillageIDs(ctx, villageIDs)
 1. The `resources` table stores a **snapshot**: the last known resource values + production rates + timestamp.
 2. When reading resources (for display, for building, for anything):
    ```
-   current_iron = stored_iron + (iron_rate_per_hour × hours_since_last_update)
+   current_food = stored_food + (food_rate_per_second × seconds_since_last_update)
    ```
 3. The snapshot is **written** only when something changes the resources:
    - Player starts building (deducts resources)
@@ -446,3 +444,4 @@ func TestPlayerRepo_Create(t *testing.T) {
 |------|--------|
 | 2026-03-03 | Initial creation of database guide |
 | 2026-03-03 | Fixed import paths to github.com/luisfpires18/woo/internal/model, fixed buildings.type→building_type, expanded migration list to 15 files |
+| 2026-03-03 | Consolidated 22 migrations into 2 baseline files (001_schema.sql + 002_seed_data.sql). Updated migration rules with dev-phase vs production-phase guidance |
