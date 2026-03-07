@@ -74,6 +74,29 @@ INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width,
     ('flag_lumus',     'kingdom_flag', 'Lumus Flag',     '⚪', 256, 256),
     ('flag_drakanith', 'kingdom_flag', 'Drakanith Flag', '🟠', 256, 256);
 
+-- ── Game Assets: Village markers (8, one per kingdom) ────────────────────────
+INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height) VALUES
+    ('marker_veridor',   'village_marker', 'Veridor Village',   '🏘️', 256, 256),
+    ('marker_sylvara',   'village_marker', 'Sylvara Village',   '🏘️', 256, 256),
+    ('marker_arkazia',   'village_marker', 'Arkazia Village',   '🏘️', 256, 256),
+    ('marker_draxys',    'village_marker', 'Draxys Village',    '🏘️', 256, 256),
+    ('marker_nordalh',   'village_marker', 'Nordalh Village',   '🏘️', 256, 256),
+    ('marker_zandres',   'village_marker', 'Zandres Village',   '🏘️', 256, 256),
+    ('marker_lumus',     'village_marker', 'Lumus Village',     '🏘️', 256, 256),
+    ('marker_drakanith', 'village_marker', 'Drakanith Village', '🏘️', 256, 256);
+
+-- ── Game Assets: Zone tiles (8, one per kingdom + 1 default) ─────────────────
+INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height) VALUES
+    ('zone_default',   'zone_tile', 'Default Zone',     '🟩', 256, 256),
+    ('zone_veridor',   'zone_tile', 'Veridor Zone',     '🔵', 256, 256),
+    ('zone_sylvara',   'zone_tile', 'Sylvara Zone',     '🟢', 256, 256),
+    ('zone_arkazia',   'zone_tile', 'Arkazia Zone',     '🔴', 256, 256),
+    ('zone_draxys',    'zone_tile', 'Draxys Zone',      '🟡', 256, 256),
+    ('zone_nordalh',   'zone_tile', 'Nordalh Zone',     '🟣', 256, 256),
+    ('zone_zandres',   'zone_tile', 'Zandres Zone',     '🟤', 256, 256),
+    ('zone_lumus',     'zone_tile', 'Lumus Zone',       '⚪', 256, 256),
+    ('zone_drakanith', 'zone_tile', 'Drakanith Zone',   '🟠', 256, 256);
+
 -- ── Resource Building Configs (96 rows: 8 kingdoms × 4 resources × 3 slots) ─
 
 -- Food

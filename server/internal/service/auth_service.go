@@ -31,11 +31,11 @@ var (
 )
 
 var validKingdoms = map[string]bool{
-	"veridor":  true,
-	"sylvara":  true,
-	"arkazia":  true,
-	"draxys":   true,
-	"nordalh":  true,
+	"veridor": true,
+	"sylvara": true,
+	"arkazia": true,
+	"draxys":  true,
+	"nordalh": true,
 	// NPC-only kingdoms (not selectable by players):
 	// "zandres"   — underground realm, requires unique mechanics
 	// "lumus"     — island kingdom, requires Docks for all factions

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/luisfpires18/woo/internal/dto"
@@ -224,7 +225,7 @@ func (s *AdminService) ListGameAssets(ctx context.Context) (*dto.GameAssetListRe
 	for _, a := range assets {
 		var spriteURL *string
 		if a.SpritePath != nil {
-			u := "/uploads/" + *a.SpritePath
+			u := "/uploads/" + *a.SpritePath + "?v=" + strconv.FormatInt(a.UpdatedAt.Unix(), 10)
 			spriteURL = &u
 		}
 		items = append(items, &dto.GameAssetDTO{
@@ -271,7 +272,7 @@ func (s *AdminService) ListResourceBuildingConfigs(ctx context.Context, kingdom 
 	for _, c := range configs {
 		var spriteURL *string
 		if c.SpritePath != nil {
-			u := "/uploads/" + *c.SpritePath
+			u := "/uploads/" + *c.SpritePath + "?v=" + strconv.FormatInt(c.UpdatedAt.Unix(), 10)
 			spriteURL = &u
 		}
 		items = append(items, &dto.ResourceBuildingConfigDTO{

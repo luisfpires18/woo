@@ -132,6 +132,19 @@
 
 ---
 
+## 8. Dev Server Workflow
+
+After completing any development task:
+
+1. **Kill the running server**: `Get-Process -Name "server" -ErrorAction SilentlyContinue | Stop-Process -Force`
+2. **If migrations were added or changed**: Delete the database first: `Remove-Item "d:\Workspace\WOO\server\data\woo.db*" -Force -ErrorAction SilentlyContinue`
+3. **Rebuild and start the server**: `cd d:\Workspace\WOO\server; go build -o server.exe ./cmd/server; .\server.exe` (run in background)
+4. **Start the client dev server**: `cd d:\Workspace\WOO\client; npm run dev` (run in background)
+
+This ensures the latest code is always running and testable after every change.
+
+---
+
 ## Changelog
 
 | Date | Change |
@@ -139,3 +152,4 @@
 | 2026-03-03 | Initial creation of copilot instructions |
 | 2026-03-03 | Removed .mobile.css convention (responsive overrides in .module.css), removed mobile styles from file naming table, added configurable Weapons of Chaos count note |
 | 2026-03-03 | Resources refactored: Iron/Wood/Stone/Food → Food/Water/Lumber/Stone. 4 resource buildings → 12 (3 per resource). Added resource_building_configs table for admin customisation per kingdom |
+| 2026-03-07 | Added Section 8: Dev Server Workflow — mandatory kill/rebuild/restart after every dev task; delete woo.db when migrations change |

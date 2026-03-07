@@ -18,6 +18,7 @@ var (
 	ErrVillageNotFound = errors.New("village not found")
 	ErrNotOwner        = errors.New("you do not own this village")
 	ErrNoSpawnTile     = errors.New("no available spawn tile found")
+	ErrInvalidName     = errors.New("village name must be between 2 and 30 characters")
 )
 
 // Starting building types for every village. Kingdom-specific building is appended.
@@ -44,8 +45,6 @@ const (
 	startingResources = 500.0
 	startingRate      = 3.0    // per second
 	startingStorage   = 1200.0 // hardcoded cap for now
-	mapHalf           = 200    // map goes from -200 to +200
-	spawnMinDist      = 10     // don't spawn within 10 tiles of center (Moraphys)
 	maxSpawnAttempts  = 100
 )
 
@@ -54,6 +53,7 @@ type VillageService struct {
 	villageRepo  repository.VillageRepository
 	buildingRepo repository.BuildingRepository
 	resourceRepo repository.ResourceRepository
+	mapService   *MapService
 }
 
 // NewVillageService creates a new VillageService.
@@ -61,17 +61,19 @@ func NewVillageService(
 	villageRepo repository.VillageRepository,
 	buildingRepo repository.BuildingRepository,
 	resourceRepo repository.ResourceRepository,
+	mapService *MapService,
 ) *VillageService {
 	return &VillageService{
 		villageRepo:  villageRepo,
 		buildingRepo: buildingRepo,
 		resourceRepo: resourceRepo,
+		mapService:   mapService,
 	}
 }
 
 // CreateFirstVillage creates a player's first (capital) village with starter buildings and resources.
 func (s *VillageService) CreateFirstVillage(ctx context.Context, playerID int64, kingdom, username string) (*model.Village, error) {
-	x, y, err := s.findSpawnLocation(ctx)
+	x, y, err := s.findSpawnLocation(ctx, kingdom)
 	if err != nil {
 		return nil, fmt.Errorf("find spawn location: %w", err)
 	}
@@ -87,6 +89,13 @@ func (s *VillageService) CreateFirstVillage(ctx context.Context, playerID int64,
 	}
 	if err := s.villageRepo.Create(ctx, village); err != nil {
 		return nil, fmt.Errorf("create village: %w", err)
+	}
+
+	// Link the map tile to this village and player
+	if s.mapService != nil {
+		if err := s.mapService.UpdateTileOwner(ctx, x, y, playerID, village.ID); err != nil {
+			return nil, fmt.Errorf("link tile to village: %w", err)
+		}
 	}
 
 	// Create starter buildings (all at level 0 = slot exists but not built)
@@ -232,16 +241,17 @@ func (s *VillageService) getCalculatedResources(ctx context.Context, villageID i
 	return res, nil
 }
 
-// findSpawnLocation finds a random unoccupied tile on the world map for a new village.
-func (s *VillageService) findSpawnLocation(ctx context.Context) (int, int, error) {
-	for i := 0; i < maxSpawnAttempts; i++ {
-		x := rand.Intn(mapHalf*2+1) - mapHalf // -200 to 200
-		y := rand.Intn(mapHalf*2+1) - mapHalf
+// findSpawnLocation finds a suitable tile for a new village, preferring the player's kingdom zone.
+func (s *VillageService) findSpawnLocation(ctx context.Context, kingdom string) (int, int, error) {
+	// If map service is available, use zone-aware spawning (auto-places zone if needed)
+	if s.mapService != nil {
+		return s.mapService.FindSpawnTile(ctx, kingdom)
+	}
 
-		// Skip center zone (Moraphys stronghold area)
-		if abs(x) < spawnMinDist && abs(y) < spawnMinDist {
-			continue
-		}
+	// Fallback: random coordinate (pre-map-generation path)
+	for i := 0; i < maxSpawnAttempts; i++ {
+		x := rand.Intn(model.MapHalf*2+1) - model.MapHalf
+		y := rand.Intn(model.MapHalf*2+1) - model.MapHalf
 
 		_, err := s.villageRepo.GetByCoordinates(ctx, x, y)
 		if errors.Is(err, model.ErrNotFound) {
@@ -287,9 +297,34 @@ func (s *VillageService) buildVillageResponse(village *model.Village, buildings 
 	}
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
+// RenameVillage changes the name of a village owned by the player.
+func (s *VillageService) RenameVillage(ctx context.Context, villageID, playerID int64, newName string) (*dto.VillageListItem, error) {
+	// Validate name length
+	if len(newName) < 2 || len(newName) > 30 {
+		return nil, ErrInvalidName
 	}
-	return x
+
+	village, err := s.villageRepo.GetByID(ctx, villageID)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			return nil, ErrVillageNotFound
+		}
+		return nil, fmt.Errorf("get village: %w", err)
+	}
+	if village.PlayerID != playerID {
+		return nil, ErrNotOwner
+	}
+
+	village.Name = newName
+	if err := s.villageRepo.Update(ctx, village); err != nil {
+		return nil, fmt.Errorf("update village name: %w", err)
+	}
+
+	return &dto.VillageListItem{
+		ID:        village.ID,
+		Name:      village.Name,
+		X:         village.X,
+		Y:         village.Y,
+		IsCapital: village.IsCapital,
+	}, nil
 }

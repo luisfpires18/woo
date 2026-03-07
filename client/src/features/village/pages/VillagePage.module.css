@@ -21,6 +21,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .title {
@@ -29,6 +30,76 @@
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
+}
+
+.renameBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 var(--spacing-xs);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.renameBtn:hover {
+  opacity: 1;
+}
+
+.renameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.renameInput {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  outline: none;
+  min-width: 12rem;
+}
+
+.renameInput:focus {
+  border-color: var(--accent-hover);
+}
+
+.renameSave,
+.renameCancel {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--text-primary);
+  transition: background 0.15s;
+}
+
+.renameSave:hover {
+  background: var(--success);
+  color: white;
+}
+
+.renameCancel:hover {
+  background: var(--error);
+  color: white;
+}
+
+.renameSave:disabled,
+.renameCancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.renameError {
+  font-size: 0.8rem;
+  color: var(--error);
 }
 
 .coords {

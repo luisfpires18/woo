@@ -1,0 +1,231 @@
+package service
+
+import (
+	"context"
+	"fmt"
+	"log/slog"
+	"math/rand"
+
+	"github.com/luisfpires18/woo/internal/model"
+	"github.com/luisfpires18/woo/internal/repository"
+)
+
+// Map generation errors.
+var (
+	ErrMapAlreadyGenerated = fmt.Errorf("world map already generated")
+	ErrNoDirectionLeft     = fmt.Errorf("all kingdom placement directions are taken")
+)
+
+// MapService handles world map generation, queries, and dynamic kingdom zone placement.
+type MapService struct {
+	mapRepo     repository.WorldMapRepository
+	villageRepo repository.VillageRepository
+}
+
+// NewMapService creates a new MapService.
+func NewMapService(mapRepo repository.WorldMapRepository, villageRepo repository.VillageRepository) *MapService {
+	return &MapService{
+		mapRepo:     mapRepo,
+		villageRepo: villageRepo,
+	}
+}
+
+// directionSlot defines a predefined placement position for a kingdom zone.
+type directionSlot struct {
+	CenterX int
+	CenterY int
+}
+
+// The 5 placement directions on a 51×51 grid (±25).
+// Radius 10 each — no overlaps at these distances.
+var directionSlots = []directionSlot{
+	{CenterX: 0, CenterY: 15},  // North
+	{CenterX: 0, CenterY: -15}, // South
+	{CenterX: 15, CenterY: 0},  // East
+	{CenterX: -15, CenterY: 0}, // West
+	{CenterX: 0, CenterY: 0},   // Center
+}
+
+// KingdomZoneRadius is the radius of each kingdom zone in tiles.
+const KingdomZoneRadius = 10
+
+// GenerateMap generates a flat all-plains world map. Idempotent — skips if already generated.
+// All tiles start as wilderness; kingdom zones are placed dynamically when the first player joins.
+func (s *MapService) GenerateMap(ctx context.Context) error {
+	count, err := s.mapRepo.Count(ctx)
+	if err != nil {
+		return fmt.Errorf("check map count: %w", err)
+	}
+	if count > 0 {
+		slog.Info("world map already generated", "tiles", count)
+		return nil
+	}
+
+	slog.Info("generating world map", "size", model.MapSize)
+
+	tiles := make([]*model.MapTile, 0, model.MapSize*model.MapSize)
+	for y := -model.MapHalf; y <= model.MapHalf; y++ {
+		for x := -model.MapHalf; x <= model.MapHalf; x++ {
+			tiles = append(tiles, &model.MapTile{
+				X:           x,
+				Y:           y,
+				TerrainType: model.TerrainPlains,
+				KingdomZone: model.ZoneWilderness,
+			})
+		}
+	}
+
+	if err := s.mapRepo.InsertBatch(ctx, tiles); err != nil {
+		return fmt.Errorf("insert map tiles: %w", err)
+	}
+
+	slog.Info("world map generated", "tiles", len(tiles))
+	return nil
+}
+
+// PlaceKingdomZone assigns a random available direction to a kingdom and updates all tiles
+// within the zone radius. Returns the zone center coordinates.
+func (s *MapService) PlaceKingdomZone(ctx context.Context, kingdom string) (int, int, error) {
+	// Check which zones are already placed
+	placedZones, err := s.mapRepo.GetDistinctZones(ctx)
+	if err != nil {
+		return 0, 0, fmt.Errorf("get placed zones: %w", err)
+	}
+
+	// Figure out which direction slots are already taken
+	takenSlots := make(map[int]bool) // index into directionSlots
+	for _, zone := range placedZones {
+		// Find the slot this zone occupies by checking existing tiles
+		zoneTiles, err := s.mapRepo.GetByZone(ctx, zone)
+		if err != nil || len(zoneTiles) == 0 {
+			continue
+		}
+		// Compute center of mass to identify which slot
+		var sumX, sumY int
+		for _, t := range zoneTiles {
+			sumX += t.X
+			sumY += t.Y
+		}
+		avgX := sumX / len(zoneTiles)
+		avgY := sumY / len(zoneTiles)
+
+		// Match to closest slot
+		bestIdx := -1
+		bestDist := 9999
+		for i, slot := range directionSlots {
+			dx := avgX - slot.CenterX
+			dy := avgY - slot.CenterY
+			dist := dx*dx + dy*dy
+			if dist < bestDist {
+				bestDist = dist
+				bestIdx = i
+			}
+		}
+		if bestIdx >= 0 {
+			takenSlots[bestIdx] = true
+		}
+	}
+
+	// Collect available slots
+	var available []int
+	for i := range directionSlots {
+		if !takenSlots[i] {
+			available = append(available, i)
+		}
+	}
+
+	if len(available) == 0 {
+		return 0, 0, ErrNoDirectionLeft
+	}
+
+	// Pick a random available slot
+	chosen := available[rand.Intn(len(available))]
+	slot := directionSlots[chosen]
+
+	// Update all tiles within the radius to this kingdom's zone
+	if err := s.mapRepo.UpdateTilesZone(ctx, slot.CenterX, slot.CenterY, KingdomZoneRadius, kingdom); err != nil {
+		return 0, 0, fmt.Errorf("place kingdom zone %s: %w", kingdom, err)
+	}
+
+	slog.Info("kingdom zone placed",
+		"kingdom", kingdom,
+		"center_x", slot.CenterX,
+		"center_y", slot.CenterY,
+		"radius", KingdomZoneRadius,
+		"slot", chosen,
+	)
+
+	return slot.CenterX, slot.CenterY, nil
+}
+
+// GetMapChunk returns a chunk of map tiles centered on (cx, cy) with the given radius.
+func (s *MapService) GetMapChunk(ctx context.Context, cx, cy, radius int) ([]*model.MapTile, error) {
+	if radius < 1 {
+		radius = 10
+	}
+	if radius > 40 {
+		radius = 40
+	}
+
+	tiles, err := s.mapRepo.GetChunk(ctx, cx, cy, radius)
+	if err != nil {
+		return nil, fmt.Errorf("get map chunk: %w", err)
+	}
+	return tiles, nil
+}
+
+// GetTile returns a single map tile.
+func (s *MapService) GetTile(ctx context.Context, x, y int) (*model.MapTile, error) {
+	return s.mapRepo.GetTile(ctx, x, y)
+}
+
+// FindSpawnTile finds a suitable tile for a new village spawn within a kingdom zone.
+// If the kingdom has no zone placed yet, it triggers PlaceKingdomZone first.
+func (s *MapService) FindSpawnTile(ctx context.Context, kingdom string) (int, int, error) {
+	// Check if kingdom zone exists by checking for tiles in that zone
+	tiles, err := s.mapRepo.GetByZone(ctx, kingdom)
+	if err != nil {
+		return 0, 0, fmt.Errorf("get zone tiles for %s: %w", kingdom, err)
+	}
+
+	// No zone placed yet — this is the first player of this kingdom
+	if len(tiles) == 0 {
+		_, _, err := s.PlaceKingdomZone(ctx, kingdom)
+		if err != nil {
+			return 0, 0, fmt.Errorf("auto-place kingdom zone %s: %w", kingdom, err)
+		}
+		// Re-fetch tiles after placement
+		tiles, err = s.mapRepo.GetByZone(ctx, kingdom)
+		if err != nil {
+			return 0, 0, fmt.Errorf("get zone tiles after placement for %s: %w", kingdom, err)
+		}
+	}
+
+	// Filter to spawnable tiles (plains, no village)
+	var candidates []*model.MapTile
+	for _, t := range tiles {
+		if t.VillageID != nil {
+			continue
+		}
+		if t.TerrainType != model.TerrainPlains {
+			continue
+		}
+		candidates = append(candidates, t)
+	}
+
+	if len(candidates) == 0 {
+		return 0, 0, ErrNoSpawnTile
+	}
+
+	// Shuffle and pick
+	rand.Shuffle(len(candidates), func(i, j int) {
+		candidates[i], candidates[j] = candidates[j], candidates[i]
+	})
+
+	return candidates[0].X, candidates[0].Y, nil
+}
+
+// UpdateTileOwner links a map tile to a village and player.
+func (s *MapService) UpdateTileOwner(ctx context.Context, x, y int, playerID, villageID int64) error {
+	return s.mapRepo.UpdateTileOwner(ctx, x, y, &playerID, &villageID)
+}

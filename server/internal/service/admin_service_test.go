@@ -20,8 +20,9 @@ func newTestAdminService(t *testing.T) (*service.AdminService, *service.AuthServ
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	refreshTokenRepo := sqlite.NewRefreshTokenRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
+	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
 
-	adminSvc := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo)
+	adminSvc := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo)
 	authSvc := service.NewAuthService(playerRepo, refreshTokenRepo, "test-secret", "woo-test")
 	return adminSvc, authSvc
 }

@@ -30,6 +30,7 @@ func NewVillageHandler(villageService *service.VillageService, buildingService *
 func (h *VillageHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/villages", h.ListVillages)
 	mux.HandleFunc("GET /api/villages/{id}", h.GetVillage)
+	mux.HandleFunc("PUT /api/villages/{id}/name", h.RenameVillage)
 	mux.HandleFunc("POST /api/villages/{id}/upgrade", h.StartUpgrade)
 	mux.HandleFunc("GET /api/villages/{id}/upgrade/cost", h.GetUpgradeCost)
 	mux.HandleFunc("DELETE /api/villages/{id}/upgrade/{queueId}", h.CancelUpgrade)
@@ -214,4 +215,41 @@ func (h *VillageHandler) CancelUpgrade(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, map[string]string{"message": "upgrade cancelled"})
+}
+
+// RenameVillage handles PUT /api/villages/{id}/name.
+func (h *VillageHandler) RenameVillage(w http.ResponseWriter, r *http.Request) {
+	playerID, ok := middleware.PlayerIDFromContext(r.Context())
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "not authenticated")
+		return
+	}
+
+	villageID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid village id")
+		return
+	}
+
+	var req dto.RenameVillageRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+
+	resp, err := h.villageService.RenameVillage(r.Context(), villageID, playerID, req.Name)
+	if err != nil {
+		switch {
+		case errors.Is(err, service.ErrVillageNotFound):
+			writeError(w, http.StatusNotFound, err.Error())
+		case errors.Is(err, service.ErrNotOwner):
+			writeError(w, http.StatusForbidden, err.Error())
+		case errors.Is(err, service.ErrInvalidName):
+			writeError(w, http.StatusBadRequest, err.Error())
+		default:
+			writeError(w, http.StatusInternalServerError, "failed to rename village")
+		}
+		return
+	}
+
+	writeJSON(w, http.StatusOK, resp)
 }

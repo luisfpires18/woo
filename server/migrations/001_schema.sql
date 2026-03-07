@@ -171,16 +171,26 @@ CREATE TABLE IF NOT EXISTS alliance_members (
 CREATE TABLE IF NOT EXISTS world_map (
     x                INTEGER NOT NULL,
     y                INTEGER NOT NULL,
-    terrain_type     TEXT    NOT NULL CHECK (terrain_type IN ('plains', 'forest', 'mountain', 'water', 'desert', 'swamp')),
+    terrain_type     TEXT    NOT NULL CHECK (terrain_type IN ('plains')),
+    kingdom_zone     TEXT    NOT NULL DEFAULT '' CHECK (kingdom_zone IN ('', 'veridor', 'sylvara', 'arkazia', 'draxys', 'nordalh', 'wilderness')),
     owner_player_id  INTEGER REFERENCES players(id),
     village_id       INTEGER REFERENCES villages(id),
-    has_oasis        INTEGER NOT NULL DEFAULT 0,
-    has_chaos_shrine INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (x, y)
 );
 
 CREATE INDEX IF NOT EXISTS idx_world_map_owner   ON world_map(owner_player_id);
 CREATE INDEX IF NOT EXISTS idx_world_map_village ON world_map(village_id);
+CREATE INDEX IF NOT EXISTS idx_world_map_zone    ON world_map(kingdom_zone);
+
+-- ── Kingdom Relations (diplomacy standings) ──────────────────────────────────
+CREATE TABLE IF NOT EXISTS kingdom_relations (
+    kingdom_a  TEXT    NOT NULL,
+    kingdom_b  TEXT    NOT NULL,
+    standing   INTEGER NOT NULL DEFAULT 0,
+    status     TEXT    NOT NULL DEFAULT 'neutral' CHECK (status IN ('allied', 'friendly', 'neutral', 'hostile', 'war')),
+    updated_at TEXT    NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (kingdom_a, kingdom_b)
+);
 
 -- ── Attacks ──────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS attacks (
@@ -240,7 +250,7 @@ CREATE TABLE IF NOT EXISTS announcements (
 -- ── Game Assets (sprites / icons lookup) ─────────────────────────────────────
 CREATE TABLE IF NOT EXISTS game_assets (
     id            TEXT PRIMARY KEY,
-    category      TEXT     NOT NULL CHECK (category IN ('building', 'resource', 'unit', 'kingdom_flag')),
+    category      TEXT     NOT NULL CHECK (category IN ('building', 'resource', 'unit', 'kingdom_flag', 'village_marker', 'zone_tile')),
     display_name  TEXT     NOT NULL,
     default_icon  TEXT     NOT NULL,
     sprite_path   TEXT,

@@ -50,9 +50,12 @@ func main() {
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
+	worldMapRepo := sqlite.NewWorldMapRepo(db)
+	kingdomRelationRepo := sqlite.NewKingdomRelationRepo(db)
+	_ = kingdomRelationRepo // used later for diplomacy features
 
 	// Ensure uploads directory exists
-	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/resource", "uploads/sprites/unit"} {
+	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/resource", "uploads/sprites/unit", "uploads/sprites/kingdom_flag", "uploads/sprites/village_marker", "uploads/sprites/zone_tile"} {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			slog.Error("failed to create uploads directory", "dir", dir, "error", err)
 			os.Exit(1)
@@ -61,13 +64,21 @@ func main() {
 
 	// Wire up services
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
-	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+	mapService := service.NewMapService(worldMapRepo, villageRepo)
+	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, mapService)
 	buildingService := service.NewBuildingService(db, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo)
 	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo)
+
+	// Generate world map on startup (idempotent — skips if already done)
+	if err := mapService.GenerateMap(context.Background()); err != nil {
+		slog.Error("failed to generate world map", "error", err)
+		os.Exit(1)
+	}
 
 	// Wire up handlers
 	authHandler := handler.NewAuthHandler(authService, villageService)
 	villageHandler := handler.NewVillageHandler(villageService, buildingService)
+	mapHandler := handler.NewMapHandler(mapService)
 	adminHandler := handler.NewAdminHandler(adminService)
 	playerHandler := handler.NewPlayerHandler(playerRepo, authService, villageService)
 
@@ -93,6 +104,12 @@ func main() {
 	// Mount protected routes under the auth middleware
 	mux.Handle("/api/villages", authMiddleware(protectedMux))
 	mux.Handle("/api/villages/", authMiddleware(protectedMux))
+
+	// Map routes (protected)
+	mapMux := http.NewServeMux()
+	mapHandler.RegisterRoutes(mapMux)
+	mux.Handle("/api/map", authMiddleware(mapMux))
+	mux.Handle("/api/map/", authMiddleware(mapMux))
 
 	// Player routes (protected)
 	mux.Handle("PUT /api/player/kingdom", authMiddleware(http.HandlerFunc(playerHandler.ChooseKingdom)))

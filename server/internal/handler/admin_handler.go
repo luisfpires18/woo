@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/luisfpires18/woo/internal/dto"
 	"github.com/luisfpires18/woo/internal/middleware"
@@ -317,10 +318,22 @@ func (h *AdminHandler) UploadSprite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	spriteURL := "/uploads/" + dbPath
-	writeJSON(w, http.StatusOK, map[string]string{
-		"message":    "sprite uploaded",
-		"sprite_url": spriteURL,
+	// Re-fetch the asset so we return the full DTO (frontend needs all fields).
+	updated, err := h.adminService.GetGameAsset(r.Context(), assetID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to refetch asset")
+		return
+	}
+	spriteURL := "/uploads/" + dbPath + "?v=" + strconv.FormatInt(updated.UpdatedAt.Unix(), 10)
+	writeJSON(w, http.StatusOK, dto.GameAssetDTO{
+		ID:           updated.ID,
+		Category:     updated.Category,
+		DisplayName:  updated.DisplayName,
+		DefaultIcon:  updated.DefaultIcon,
+		SpriteURL:    &spriteURL,
+		SpriteWidth:  updated.SpriteWidth,
+		SpriteHeight: updated.SpriteHeight,
+		UpdatedAt:    updated.UpdatedAt,
 	})
 }
 
@@ -355,7 +368,22 @@ func (h *AdminHandler) DeleteSprite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]string{"message": "sprite deleted"})
+	// Re-fetch the asset so we return the full DTO.
+	updated, err := h.adminService.GetGameAsset(r.Context(), assetID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to refetch asset")
+		return
+	}
+	writeJSON(w, http.StatusOK, dto.GameAssetDTO{
+		ID:           updated.ID,
+		Category:     updated.Category,
+		DisplayName:  updated.DisplayName,
+		DefaultIcon:  updated.DefaultIcon,
+		SpriteURL:    nil,
+		SpriteWidth:  updated.SpriteWidth,
+		SpriteHeight: updated.SpriteHeight,
+		UpdatedAt:    updated.UpdatedAt,
+	})
 }
 
 // --- Resource building configs ---
@@ -531,7 +559,7 @@ func (h *AdminHandler) UploadResourceBuildingSprite(w http.ResponseWriter, r *ht
 		return
 	}
 
-	spriteURL := "/uploads/" + dbPath
+	spriteURL := "/uploads/" + dbPath + "?v=" + strconv.FormatInt(time.Now().Unix(), 10)
 	writeJSON(w, http.StatusOK, map[string]string{
 		"message":    "sprite uploaded",
 		"sprite_url": spriteURL,

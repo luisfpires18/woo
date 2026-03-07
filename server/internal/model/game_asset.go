@@ -17,24 +17,30 @@ type GameAsset struct {
 
 // Category constants for game assets.
 const (
-	AssetCategoryBuilding    = "building"
-	AssetCategoryResource    = "resource"
-	AssetCategoryUnit        = "unit"
-	AssetCategoryKingdomFlag = "kingdom_flag"
+	AssetCategoryBuilding      = "building"
+	AssetCategoryResource      = "resource"
+	AssetCategoryUnit          = "unit"
+	AssetCategoryKingdomFlag   = "kingdom_flag"
+	AssetCategoryVillageMarker = "village_marker"
+	AssetCategoryZoneTile      = "zone_tile"
 )
 
 // Expected sprite dimensions per category.
 var AssetSpriteDimensions = map[string][2]int{
-	AssetCategoryBuilding:    {96, 96},
-	AssetCategoryResource:    {32, 32},
-	AssetCategoryUnit:        {64, 64},
-	AssetCategoryKingdomFlag: {256, 256},
+	AssetCategoryBuilding:      {96, 96},
+	AssetCategoryResource:      {32, 32},
+	AssetCategoryUnit:          {64, 64},
+	AssetCategoryKingdomFlag:   {256, 256},
+	AssetCategoryVillageMarker: {256, 256},
+	AssetCategoryZoneTile:      {256, 256},
 }
 
 // MaxSpriteBytes per category.
 var AssetMaxSpriteBytes = map[string]int64{
-	AssetCategoryBuilding:    512 * 1024,  // 512 KB
-	AssetCategoryResource:    128 * 1024,  // 128 KB
-	AssetCategoryUnit:        256 * 1024,  // 256 KB
-	AssetCategoryKingdomFlag: 1024 * 1024, // 1 MB
+	AssetCategoryBuilding:      512 * 1024,  // 512 KB
+	AssetCategoryResource:      128 * 1024,  // 128 KB
+	AssetCategoryUnit:          256 * 1024,  // 256 KB
+	AssetCategoryKingdomFlag:   1024 * 1024, // 1 MB
+	AssetCategoryVillageMarker: 512 * 1024,  // 512 KB
+	AssetCategoryZoneTile:      512 * 1024,  // 512 KB
 }

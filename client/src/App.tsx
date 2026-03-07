@@ -28,6 +28,11 @@ const KingdomSelectionPage = lazy(() =>
     default: m.KingdomSelectionPage,
   })),
 );
+const WorldMapPage = lazy(() =>
+  import('./features/map/pages/WorldMapPage').then((m) => ({
+    default: m.WorldMapPage,
+  })),
+);
 
 // Admin (lazy-loaded)
 const AdminLayout = lazy(() =>
@@ -140,6 +145,7 @@ function App() {
           <Route element={<ProtectedLayout />}>
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/village/:id" element={<VillagePage />} />
+            <Route path="/map" element={<WorldMapPage />} />
             <Route path="/choose-kingdom" element={<KingdomSelectionPage />} />
           </Route>
 

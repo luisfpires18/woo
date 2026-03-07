@@ -1,0 +1,144 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px); /* subtract header/nav height */
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.coords {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.loading {
+  font-size: 0.85rem;
+  color: var(--accent);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.gotoForm {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.gotoInput {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  width: 100px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.gotoInput:focus {
+  border-color: var(--accent);
+}
+
+.gotoBtn {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.gotoBtn:hover {
+  opacity: 0.85;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.mapContainer {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .page {
+    height: calc(100vh - 56px);
+    padding: var(--spacing-xs);
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .legend {
+    gap: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .legendItem {
+    font-size: 0.65rem;
+  }
+
+  .gotoInput {
+    width: 80px;
+    font-size: 0.7rem;
+  }
+
+  .gotoBtn {
+    font-size: 0.65rem;
+  }
+}

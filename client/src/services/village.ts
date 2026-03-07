@@ -40,3 +40,10 @@ export async function cancelUpgrade(
 ): Promise<void> {
   await api.delete(`/villages/${villageId}/upgrade/${queueId}`);
 }
+
+export async function renameVillage(
+  villageId: number,
+  name: string,
+): Promise<VillageListItem> {
+  return api.put<VillageListItem>(`/villages/${villageId}/name`, { name });
+}

@@ -1,0 +1,3 @@
+-- Legacy migration: game_assets table and seed data have been consolidated into
+-- 001_schema.sql and 002_seed_data.sql. This file is kept as a no-op for
+-- ordering compatibility.

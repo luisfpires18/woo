@@ -43,3 +43,8 @@ type VillageListItem struct {
 	Y         int    `json:"y"`
 	IsCapital bool   `json:"is_capital"`
 }
+
+// RenameVillageRequest is the payload for renaming a village.
+type RenameVillageRequest struct {
+	Name string `json:"name"`
+}

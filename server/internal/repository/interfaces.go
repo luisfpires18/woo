@@ -93,3 +93,30 @@ type ResourceBuildingConfigRepository interface {
 	Update(ctx context.Context, cfg *model.ResourceBuildingConfig) error
 	UpdateSprite(ctx context.Context, id int64, spritePath *string) error
 }
+
+// WorldMapRepository defines data access operations for the world map tile grid.
+type WorldMapRepository interface {
+	// InsertBatch inserts multiple map tiles in a single transaction.
+	InsertBatch(ctx context.Context, tiles []*model.MapTile) error
+	// GetChunk returns tiles within a rectangular region centered on (cx, cy) with the given radius.
+	GetChunk(ctx context.Context, cx, cy, radius int) ([]*model.MapTile, error)
+	// GetTile returns a single tile at the given coordinates.
+	GetTile(ctx context.Context, x, y int) (*model.MapTile, error)
+	// UpdateTileOwner sets the owner and village for a tile.
+	UpdateTileOwner(ctx context.Context, x, y int, playerID, villageID *int64) error
+	// Count returns the total number of tiles in the world map.
+	Count(ctx context.Context) (int64, error)
+	// GetByZone returns all tiles belonging to a specific kingdom zone.
+	GetByZone(ctx context.Context, zone string) ([]*model.MapTile, error)
+	// GetDistinctZones returns all distinct non-empty, non-wilderness kingdom zones currently placed.
+	GetDistinctZones(ctx context.Context) ([]string, error)
+	// UpdateTilesZone sets the kingdom_zone for all tiles within a circular radius of (cx, cy).
+	UpdateTilesZone(ctx context.Context, cx, cy, radius int, zone string) error
+}
+
+// KingdomRelationRepository defines data access operations for kingdom diplomacy.
+type KingdomRelationRepository interface {
+	GetAll(ctx context.Context) ([]*model.KingdomRelation, error)
+	Get(ctx context.Context, kingdomA, kingdomB string) (*model.KingdomRelation, error)
+	Upsert(ctx context.Context, rel *model.KingdomRelation) error
+}

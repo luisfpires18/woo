@@ -183,7 +183,7 @@ export interface AnnouncementResponse {
 
 // Game asset types — mirrors server/internal/dto/admin.go
 
-export type AssetCategory = 'building' | 'resource' | 'unit' | 'kingdom_flag';
+export type AssetCategory = 'building' | 'resource' | 'unit' | 'kingdom_flag' | 'village_marker' | 'zone_tile';
 
 export interface GameAsset {
   id: string;

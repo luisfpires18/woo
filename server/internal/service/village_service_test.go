@@ -32,7 +32,7 @@ func newTestVillageService(t *testing.T) (*service.VillageService, *model.Player
 		t.Fatalf("create test player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
 	return svc, player
 }
 
@@ -81,9 +81,10 @@ func TestGetVillage_Success(t *testing.T) {
 		t.Error("expected buildings to be created")
 	}
 
-	// Veridor should have 15 buildings (14 common + dock)
-	if len(resp.Buildings) != 15 {
-		t.Errorf("expected 15 buildings for veridor, got %d", len(resp.Buildings))
+	// Veridor should have 23 buildings (town_hall, warehouse, barracks, rally_point, wall,
+	// embassy, market, forge, academy, dock + 1 kingdom-specific + 12 resource fields)
+	if len(resp.Buildings) != 23 {
+		t.Errorf("expected 23 buildings for veridor, got %d", len(resp.Buildings))
 	}
 
 	// Check that dock exists (Veridor-specific)
@@ -102,8 +103,8 @@ func TestGetVillage_Success(t *testing.T) {
 	if resp.Resources == nil {
 		t.Fatal("expected resources")
 	}
-	if resp.Resources.Iron < 499 || resp.Resources.Iron > 510 {
-		t.Errorf("expected ~500 iron, got %f", resp.Resources.Iron)
+	if resp.Resources.Food < 499 || resp.Resources.Food > 510 {
+		t.Errorf("expected ~500 food, got %f", resp.Resources.Food)
 	}
 	if resp.Resources.MaxStorage != 1200 {
 		t.Errorf("expected 1200 max storage, got %f", resp.Resources.MaxStorage)
@@ -176,7 +177,7 @@ func TestCreateFirstVillage_Sylvara(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
 	village, err := svc.CreateFirstVillage(ctx, player.ID, player.Kingdom, player.Username)
 	if err != nil {
 		t.Fatalf("create village: %v", err)
@@ -219,7 +220,7 @@ func TestCreateFirstVillage_Arkazia(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo)
+	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
 	village, err := svc.CreateFirstVillage(ctx, player.ID, player.Kingdom, player.Username)
 	if err != nil {
 		t.Fatalf("create village: %v", err)
