@@ -73,7 +73,7 @@ Each kingdom has unique troops, bonuses, buildings, and lore. See `docs/01-game-
 ## Core Game Loop
 
 1. **Settle** — Found your first village, choose your kingdom
-2. **Gather** — Produce Iron, Wood, Stone, and Food through resource buildings
+2. **Gather** — Produce Food, Water, Lumber, and Stone through resource buildings
 3. **Build** — Construct and upgrade buildings (Town Hall, Barracks, Forge, Rune Altar, Walls, etc.)
 4. **Train** — Recruit kingdom-specific troops
 5. **Forge** — Craft weapons using resources + runes in the Forge
@@ -124,9 +124,14 @@ Everything else (troops, combat, weapons, runes, forges, endgame) comes in later
 
 ## Current State
 
-- **Phase**: Documentation & Planning
-- **Code**: Not yet started
-- **Next step**: Complete docs, then scaffold the monorepo with basic project configuration
+- **Phase**: Active Development (MVP)
+- **Backend**: Go server fully operational — auth (register/login/refresh/logout), village CRUD, building upgrades with queue, lazy resource calculation, world map (51×51 configurable), admin panel (players, config, stats, announcements, game assets, resource building configs), map template system (create/edit/resize/apply), game loop (building completion tick). SQLite with WAL mode.
+- **Frontend**: React 19 + TypeScript + Vite — auth pages, kingdom selection, village view with building upgrades and resource ticker, Canvas 2D world map renderer with cel-shaded terrain, admin panel (players, config, stats, announcements, assets, map editor with template painting), theme system (dark/light + kingdom themes). Zustand stores, TanStack Query, CSS Modules.
+- **Database**: 2 consolidated migrations (001_schema.sql + 002_seed_data.sql), SQLite with repository pattern + UnitOfWork for atomic multi-table operations. Tables: players, villages, buildings, building_queue, resources, resource_building_configs, troops, training_queue, weapons, runes, alliances, alliance_members, world_map, kingdom_relations, attacks, weapons_of_chaos, refresh_tokens, world_config, announcements, game_assets, seasons, season_players.
+- **Not yet implemented**: Combat, weapons/runes crafting, alliances, Weapons of Chaos/Order, Moraphys NPC, marketplace, fog of war, hero system, OAuth, chat.
+- **WebSocket**: Foundation implemented — Hub (single-session per player, topic pub/sub, broadcast), Client (read/write pumps, ping/pong), Handler (HTTP upgrade with JWT auth via `?token=`), Messages (all type constants + typed data structs). Game loop broadcasts `build_complete` and `train_complete` events via Hub.
+- **Architecture**: UnitOfWork interface encapsulates transactions — services never see `*sql.Tx`. Shared helpers: `FlushResources` (resource_calc.go), `IsValidKingdom` (kingdoms.go). Frontend uses union types (`BuildingType`, `TroopType`, `Kingdom`) for compile-time safety. Map utilities deduplicated into `mapUtils.ts`.
+- **Next step**: Combat system.
 
 ---
 
@@ -135,3 +140,6 @@ Everything else (troops, combat, weapons, runes, forges, endgame) comes in later
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of project overview |
+| 2026-03-07 | Updated Current State to reflect actual implementation status (auth, villages, buildings, map, admin panel, templates, game assets all implemented). Fixed resource names from Iron/Wood to Food/Water/Lumber/Stone. |
+| 2026-03-08 | Updated Current State: WebSocket foundation implemented, consolidation complete (docs, tests, architecture, WebSocket). 163 backend tests. Next step: Troops & Training. |
+| 2026-03-10 | Full codebase audit applied: migrations consolidated (001+002), UnitOfWork pattern, .Hours()→.Seconds() bug fix, shared FlushResources/IsValidKingdom, frontend union types, CSS modules + responsive, map utils extracted. |

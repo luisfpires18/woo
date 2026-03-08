@@ -7,26 +7,13 @@ import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 
 import { useMapStore } from '../../../stores/mapStore';
 import { useAssetStore } from '../../../stores/assetStore';
 import type { MapTile } from '../../../types/map';
-import { TERRAIN_CONFIG, ZONE_COLORS } from '../../../types/map';
+import { TERRAIN_CONFIG } from '../../../types/map';
+import { TILE_SIZE, hexColor, screenToTile, tileHash, extractBaseName } from '../mapUtils';
 
-const TILE_SIZE = 128;
 /** Maximum range the server accepts */
 const MAX_SERVER_RANGE = 40;
 /** Minimum tile distance the viewport center must move before re-loading during drag */
 const DRAG_LOAD_THRESHOLD = 5;
-
-/** Convert a 0xRRGGBB number to a CSS hex string */
-function hexColor(n: number): string {
-  return `#${n.toString(16).padStart(6, '0')}`;
-}
-
-/** Convert a 0xRRGGBB number + alpha (0-1) to an rgba() string */
-function hexColorAlpha(n: number, alpha: number): string {
-  const r = (n >> 16) & 0xff;
-  const g = (n >> 8) & 0xff;
-  const b = n & 0xff;
-  return `rgba(${r},${g},${b},${alpha})`;
-}
 
 
 
@@ -44,22 +31,6 @@ function computeAdaptiveRange(
   // Use the larger dimension, halved to get radius, + a buffer of 3 tiles
   const radius = Math.ceil(Math.max(tilesAcross, tilesDown) / 2) + 3;
   return Math.min(radius, MAX_SERVER_RANGE);
-}
-
-/** Convert screen coordinates to map tile coordinates */
-function screenToTile(
-  screenX: number,
-  screenY: number,
-  ox: number,
-  oy: number,
-  scale: number,
-): { tileX: number; tileY: number } {
-  const worldX = (screenX - ox) / scale;
-  const worldY = (screenY - oy) / scale;
-  return {
-    tileX: Math.floor(worldX / TILE_SIZE),
-    tileY: -Math.floor(worldY / TILE_SIZE),
-  };
 }
 
 interface MapRendererProps {
@@ -179,16 +150,21 @@ export const MapRenderer = forwardRef<MapRendererHandle, MapRendererProps>(funct
 
   // Image cache for village marker sprites: maps zone name → HTMLImageElement
   const markerImagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
-  // Image cache for zone tile sprites: maps zone name → HTMLImageElement
-  const zoneTileImagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
+  // Image cache for zone tile sprites: maps base zone name → array of variant images
+  const zoneTileImagesRef = useRef<Map<string, HTMLImageElement[]>>(new Map());
+  // Image cache for terrain tile sprites: maps base terrain name → array of variant images
+  const terrainTileImagesRef = useRef<Map<string, HTMLImageElement[]>>(new Map());
+  // Track which asset IDs are already loading/loaded to avoid duplicate Image() creations
+  const loadedSpriteIdsRef = useRef<Set<string>>(new Set());
 
-  // Preload village marker + zone tile sprites when asset store is ready
+  // Preload village marker + zone tile + terrain tile sprites when asset store is ready
   useEffect(() => {
     if (!assetStoreLoaded) {
       assetStoreLoad();
       return;
     }
 
+    // --- Village markers (single image per zone, unchanged) ---
     const markerAssets = assetStoreAssets.filter((a) => a.category === 'village_marker' && a.sprite_url);
     const markerCache = markerImagesRef.current;
 
@@ -206,23 +182,60 @@ export const MapRenderer = forwardRef<MapRendererHandle, MapRendererProps>(funct
       };
     }
 
+    // --- Zone tiles (multi-variant: group by base zone name) ---
     const zoneTileAssets = assetStoreAssets.filter((a) => a.category === 'zone_tile' && a.sprite_url);
     const zoneCache = zoneTileImagesRef.current;
+    const loadedIds = loadedSpriteIdsRef.current;
+
+    // Build a temporary map to collect new images per base name
+    const zonePending = new Map<string, HTMLImageElement[]>();
+    // Start with existing images
+    zoneCache.forEach((imgs, key) => zonePending.set(key, [...imgs]));
 
     for (const asset of zoneTileAssets) {
-      // Extract zone from id: "zone_veridor" → "veridor", "zone_default" → "default"
-      const zone = asset.id.replace('zone_', '');
-      const cached = zoneCache.get(zone);
-      if (cached && cached.src === new URL(asset.sprite_url!, window.location.origin).href) continue;
-
+      if (loadedIds.has(asset.id + '|' + asset.sprite_url)) continue;
+      const baseName = extractBaseName(asset.id, 'zone_');
       const img = new Image();
       img.src = asset.sprite_url!;
+      loadedIds.add(asset.id + '|' + asset.sprite_url);
+
+      // Add to pending array
+      const arr = zonePending.get(baseName) || [];
+      arr.push(img);
+      zonePending.set(baseName, arr);
+
       img.onload = () => {
-        zoneCache.set(zone, img);
         cancelAnimationFrame(rafRef.current);
         rafRef.current = requestAnimationFrame(drawMapRef.current);
       };
     }
+    // Update the ref cache
+    zonePending.forEach((imgs, key) => zoneCache.set(key, imgs));
+
+    // --- Terrain tiles (multi-variant: group by base terrain name) ---
+    const terrainTileAssets = assetStoreAssets.filter((a) => a.category === 'terrain_tile' && a.sprite_url);
+    const terrainCache = terrainTileImagesRef.current;
+
+    const terrainPending = new Map<string, HTMLImageElement[]>();
+    terrainCache.forEach((imgs, key) => terrainPending.set(key, [...imgs]));
+
+    for (const asset of terrainTileAssets) {
+      if (loadedIds.has(asset.id + '|' + asset.sprite_url)) continue;
+      const baseName = extractBaseName(asset.id, 'terrain_');
+      const img = new Image();
+      img.src = asset.sprite_url!;
+      loadedIds.add(asset.id + '|' + asset.sprite_url);
+
+      const arr = terrainPending.get(baseName) || [];
+      arr.push(img);
+      terrainPending.set(baseName, arr);
+
+      img.onload = () => {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(drawMapRef.current);
+      };
+    }
+    terrainPending.forEach((imgs, key) => terrainCache.set(key, imgs));
   }, [assetStoreAssets, assetStoreLoaded, assetStoreLoad]);
 
   // We need a stable ref to drawMap so the sprite onload can call it
@@ -262,79 +275,67 @@ export const MapRenderer = forwardRef<MapRendererHandle, MapRendererProps>(funct
 
     const currentTiles = tilesRef.current;
 
-    // --- Layer 1: Terrain fills + zone tile sprites ---
+    // --- Layer 1: Terrain fills + zone tile sprites + terrain tile sprites ---
+    // To eliminate sub-pixel seam gaps, we draw tiles in screen-space with pixel snapping.
+    // Reset to identity * dpr, then manually compute each tile's screen position.
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+
     const zoneCache = zoneTileImagesRef.current;
+    const terrainCache = terrainTileImagesRef.current;
     currentTiles.forEach((tile) => {
-      const px = tile.x * TILE_SIZE;
-      const py = -tile.y * TILE_SIZE; // Invert Y: map-Y-up → screen-Y-down
+      const wx = tile.x * TILE_SIZE;
+      const wy = -tile.y * TILE_SIZE;
 
-      // Frustum cull
-      if (px + TILE_SIZE < worldLeft || px > worldRight) return;
-      if (py + TILE_SIZE < worldTop || py > worldBottom) return;
+      // Frustum cull in world coords
+      if (wx + TILE_SIZE < worldLeft || wx > worldRight) return;
+      if (wy + TILE_SIZE < worldTop || wy > worldBottom) return;
 
-      // Try zone-specific tile sprite first, then 'default' tile sprite, then flat color fallback
+      // Convert world coords → screen coords and snap to pixels
+      const sx0 = Math.floor(wx * scale + ox);
+      const sy0 = Math.floor(wy * scale + oy);
+      const sx1 = Math.ceil((wx + TILE_SIZE) * scale + ox);
+      const sy1 = Math.ceil((wy + TILE_SIZE) * scale + oy);
+      const sw = sx1 - sx0;
+      const sh = sy1 - sy0;
+
+      const hash = tileHash(tile.x, tile.y);
+
+      // Helper: pick a loaded image from an array of variants using tile hash
+      const pickVariant = (imgs: HTMLImageElement[] | undefined): HTMLImageElement | undefined => {
+        if (!imgs || imgs.length === 0) return undefined;
+        // Filter to only fully loaded images
+        const ready = imgs.filter((i) => i.complete && i.naturalWidth > 0);
+        if (ready.length === 0) return undefined;
+        return ready[hash % ready.length];
+      };
+
+      // Rendering order:
+      // 1. Terrain tile (base layer — always rendered)
+      // 2. Zone tile overlay (rendered on top, useful for semi-transparent zone indicators)
       const zone = tile.zone || '';
-      const zoneTileImg = zoneCache.get(zone) || (zone ? zoneCache.get('default') : undefined);
-      if (zoneTileImg && zoneTileImg.complete && zoneTileImg.naturalWidth > 0) {
-        ctx.drawImage(zoneTileImg, px, py, TILE_SIZE, TILE_SIZE);
+
+      // Base layer: terrain tile or flat color
+      const terrainImg = pickVariant(terrainCache.get(tile.terrain || 'plains'));
+      if (terrainImg) {
+        ctx.drawImage(terrainImg, sx0, sy0, sw, sh);
       } else {
         const cfg = TERRAIN_CONFIG[tile.terrain] ?? TERRAIN_CONFIG.plains;
         ctx.fillStyle = hexColor(cfg.color);
-        ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+        ctx.fillRect(sx0, sy0, sw, sh);
+      }
 
-        // Subtle zone tint overlay
-        const zoneColor = tile.zone ? ZONE_COLORS[tile.zone] : undefined;
-        if (zoneColor !== undefined) {
-          ctx.fillStyle = hexColorAlpha(zoneColor, 0.08);
-          ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
-        }
+      // Zone overlay on top (only if zone tile sprite is uploaded)
+      const zoneImg = pickVariant(zoneCache.get(zone)) || (zone ? pickVariant(zoneCache.get('default')) : undefined);
+      if (zoneImg) {
+        ctx.drawImage(zoneImg, sx0, sy0, sw, sh);
       }
     });
 
-    // --- Layer 2: Terrain-edge outlines + zone borders (cel-shaded style) ---
-    currentTiles.forEach((tile) => {
-      const px = tile.x * TILE_SIZE;
-      const py = -tile.y * TILE_SIZE;
-      if (px + TILE_SIZE < worldLeft || px > worldRight) return;
-      if (py + TILE_SIZE < worldTop || py > worldBottom) return;
-
-      const terrain = tile.terrain || 'plains';
-      const zone = tile.zone || '';
-
-      // Check all 4 neighbors for terrain and zone boundaries
-      const edges = [
-        { dx: 1, dy: 0, x1: px + TILE_SIZE, y1: py, x2: px + TILE_SIZE, y2: py + TILE_SIZE },  // right
-        { dx: -1, dy: 0, x1: px, y1: py, x2: px, y2: py + TILE_SIZE },                          // left
-        { dx: 0, dy: 1, x1: px, y1: py, x2: px + TILE_SIZE, y2: py },                            // top (map-up)
-        { dx: 0, dy: -1, x1: px, y1: py + TILE_SIZE, x2: px + TILE_SIZE, y2: py + TILE_SIZE },  // bottom (map-down)
-      ];
-
-      for (const { dx, dy, x1, y1, x2, y2 } of edges) {
-        const nKey = `${tile.x + dx},${tile.y + dy}`;
-        const neighbor = currentTiles.get(nKey);
-        const nTerrain = neighbor?.terrain || '';
-        const nZone = neighbor?.zone || '';
-
-        // Terrain edge: thick dark outline where biome changes
-        if (neighbor && nTerrain !== terrain) {
-          ctx.strokeStyle = '#1a1a2e';
-          ctx.lineWidth = 2.5;
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
-        }
-        // Zone border: white line where kingdom changes (on top of terrain outlines)
-        else if (neighbor && nZone !== zone) {
-          ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
-        }
-      }
-    });
+    // --- Layer 2: (borders only shown on hover/selection — see Layers 4 & 5) ---
+    // Restore world-space transform for remaining layers
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
+    ctx.imageSmoothingEnabled = true;
 
     // --- Layer 3: Village markers + labels (all inside the tile) ---
     const markerCache = markerImagesRef.current;
@@ -386,16 +387,22 @@ export const MapRenderer = forwardRef<MapRendererHandle, MapRendererProps>(funct
         }
         if (displayName !== tile.village_name) displayName += '\u2026';
 
-        // Text shadow for readability on any background
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 1;
+        // Dark outline + glow for readability on any background
+        ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+        ctx.shadowBlur = 6;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#000000';
+        ctx.lineJoin = 'round';
+        ctx.strokeText(displayName, cx, textY);
         ctx.fillStyle = '#f0e6d2';
         ctx.fillText(displayName, cx, textY);
 
         // Coordinates
         ctx.font = coordFont;
+        ctx.lineWidth = 2;
+        ctx.strokeText(coordText, cx, textY + 16);
         ctx.fillStyle = '#cccccc';
         ctx.fillText(coordText, cx, textY + 16);
 

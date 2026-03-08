@@ -11,6 +11,7 @@ import {
   formatDuration,
   type PrerequisiteCheck,
 } from '../../../config/buildings';
+import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import { useStartUpgrade } from '../hooks/useBuildingUpgrade';
 import styles from './BuildModal.module.css';
 
@@ -20,7 +21,7 @@ interface BuildModalProps {
   buildings: BuildingInfo[];
   villageId: number;
   resources: ResourcesResponse;
-  playerKingdom: string;
+
   queue: BuildingQueueResponse[];
 }
 
@@ -40,10 +41,10 @@ export function BuildModal({
   buildings,
   villageId,
   resources,
-  playerKingdom,
   queue,
 }: BuildModalProps) {
   const upgradeMutation = useStartUpgrade(villageId);
+  const { getDisplayName } = useBuildingDisplayNames();
   const queueActive = queue.length > 0;
 
   // Get all village buildings at level 0, excluding resource fields and wrong-kingdom buildings
@@ -51,20 +52,18 @@ export function BuildModal({
     .filter((b) => {
       if (b.level > 0) return false;
       if (RESOURCE_BUILDING_TYPES.has(b.building_type)) return false;
-      const cfg = BUILDING_CONFIGS[b.building_type as BuildingType];
+      const cfg = BUILDING_CONFIGS[b.building_type];
       if (!cfg) return false;
-      if (cfg.kingdomOnly && cfg.kingdomOnly !== playerKingdom) return false;
       return true;
     })
     .map((b) => {
-      const type = b.building_type as BuildingType;
-      const cfg = BUILDING_CONFIGS[type];
+      const type = b.building_type;
       const cost = costAtLevel(type, 1);
-      const prereqs = checkPrerequisites(type, buildings);
+      const prereqs = checkPrerequisites(type, buildings, getDisplayName);
       return {
         building: b,
         type,
-        displayName: cfg.displayName,
+        displayName: getDisplayName(type),
         cost,
         timeSec: timeAtLevel(type, 1),
         prereqs,

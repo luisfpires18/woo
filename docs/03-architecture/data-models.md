@@ -254,13 +254,17 @@ Admin-managed display metadata for the 12 resource building slots, configurable 
 | x | INTEGER | NOT NULL | X coordinate |
 | y | INTEGER | NOT NULL | Y coordinate |
 | terrain_type | TEXT | NOT NULL | 'plains', 'forest', 'mountain', 'water', 'desert', 'swamp' |
+| kingdom_zone | TEXT | NOT NULL, DEFAULT '' | Kingdom zone assignment. Empty string means unzoned. Valid values: '', 'veridor', 'sylvara', 'arkazia', 'draxys', 'nordalh', 'zandres', 'lumus', 'drakanith', 'moraphys', 'dark_reach', 'wilderness' |
 | owner_player_id | INTEGER | FK → players.id, NULL | Player who controls this tile (NULL if unclaimed) |
 | village_id | INTEGER | FK → villages.id, NULL | Village on this tile (NULL if no village) |
-| has_oasis | INTEGER | NOT NULL, DEFAULT 0 | Whether this tile is an oasis (resource bonus) |
-| has_chaos_shrine | INTEGER | NOT NULL, DEFAULT 0 | Whether this tile has a Chaos Shrine |
 
-**Primary Key**: `(x, y)`  
-**Indexes**: `owner_player_id`, `village_id`, `terrain_type`
+**Primary Key**: `(x, y)`
+**Indexes**: `owner_player_id`, `village_id`, `kingdom_zone`
+
+**Notes**:
+- The `kingdom_zone` column replaced the old `has_oasis` and `has_chaos_shrine` columns. Zones are painted via the admin map editor / template system.
+- Map size is configurable (default 51×51, i.e. -25 to +25). Templates support sizes from 3×3 to 201×201 (odd numbers only).
+- `FindSpawnTile` first looks for plains tiles within the player's kingdom zone, then falls back to any plains tile with no village if no zones are painted.
 
 ---
 
@@ -332,6 +336,69 @@ Used by the migration system to track which migrations have been applied.
 
 ---
 
+### world_config
+
+Admin-managed key-value store for runtime game parameters.
+
+| Column | Type | Constraints | Description |
+|--------|------|------------|-------------|
+| key | TEXT | PK | Configuration key |
+| value | TEXT | NOT NULL | Configuration value |
+| description | TEXT | NULL | Human-readable description |
+| updated_at | TEXT | NOT NULL, DEFAULT now | Last update timestamp |
+
+**Seed data**: `game_speed` (1.0), `resource_multiplier` (1.0), `map_width` (200), `map_height` (200), `weapons_of_chaos_count` (7), `max_villages_per_player` (5).
+
+---
+
+### announcements
+
+Server-wide announcements posted by admins.
+
+| Column | Type | Constraints | Description |
+|--------|------|------------|-------------|
+| id | INTEGER | PK, AUTOINCREMENT | Announcement ID |
+| title | TEXT | NOT NULL | Announcement title |
+| content | TEXT | NOT NULL | Announcement body |
+| author_id | INTEGER | FK → players.id, NOT NULL | Admin who posted it |
+| created_at | TEXT | NOT NULL, DEFAULT now | Creation timestamp |
+| expires_at | TEXT | NULL | Optional expiry timestamp |
+
+---
+
+### game_assets
+
+Visual asset metadata for buildings, resources, units, etc. Used by the admin panel for sprite management.
+
+| Column | Type | Constraints | Description |
+|--------|------|------------|-------------|
+| id | TEXT | PK | Asset identifier (e.g. 'building_town_hall', 'village_marker_veridor') |
+| category | TEXT | NOT NULL | 'building', 'resource', 'troop', 'village_marker', etc. |
+| display_name | TEXT | NOT NULL | Human-readable name |
+| default_icon | TEXT | NOT NULL, DEFAULT '' | Emoji/icon fallback |
+| sprite_path | TEXT | NULL | Path to uploaded sprite file |
+| created_at | TEXT | NOT NULL | Creation timestamp |
+
+**Indexes**: `category`
+
+---
+
+### kingdom_relations
+
+Diplomacy standings between kingdom pairs.
+
+| Column | Type | Constraints | Description |
+|--------|------|------------|-------------|
+| kingdom_a | TEXT | NOT NULL | First kingdom |
+| kingdom_b | TEXT | NOT NULL | Second kingdom |
+| standing | INTEGER | NOT NULL, DEFAULT 0 | Numeric standing value |
+| status | TEXT | NOT NULL, DEFAULT 'neutral' | 'allied', 'friendly', 'neutral', 'hostile', 'war' |
+| updated_at | TEXT | NOT NULL, DEFAULT now | Last update timestamp |
+
+**Primary Key**: `(kingdom_a, kingdom_b)`
+
+---
+
 ## Notes for Implementation
 
 1. **SQLite → PostgreSQL**: When migrating, change `INTEGER AUTOINCREMENT` to `SERIAL`, `TEXT` timestamps to `TIMESTAMPTZ`, and `TEXT` JSON columns to `JSONB`. The Go repository interface stays the same.
@@ -348,3 +415,4 @@ Used by the migration system to track which migrations have been applied.
 |------|--------|
 | 2026-03-03 | Initial creation of data models |
 | 2026-03-03 | Added max_storage and food_consumption to resources, added training_queue table, renamed buildings.type to building_type, made weapons_of_chaos configurable, added column naming note |
+| 2026-03-07 | Updated world_map schema: replaced has_oasis/has_chaos_shrine with kingdom_zone column. Added missing tables: world_config, announcements, game_assets, kingdom_relations. Documented FindSpawnTile fallback behavior. |

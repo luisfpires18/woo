@@ -1,0 +1,15 @@
+.layout {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.content {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    min-height: 100dvh;
+  }
+}

@@ -94,6 +94,52 @@ type GameAssetListResponse struct {
 	Assets []*GameAssetDTO `json:"assets"`
 }
 
+// CreateGameAssetRequest is the payload for POST /api/admin/assets.
+type CreateGameAssetRequest struct {
+	ID          string `json:"id"`
+	Category    string `json:"category"`
+	DisplayName string `json:"display_name"`
+	DefaultIcon string `json:"default_icon,omitempty"`
+}
+
+// UpdateTerrainRequest is the payload for PUT /api/admin/map/terrain.
+type UpdateTerrainRequest struct {
+	Tiles []TileTerrainPaint `json:"tiles"`
+}
+
+// TileTerrainPaint describes a single tile terrain change.
+type TileTerrainPaint struct {
+	X           int    `json:"x"`
+	Y           int    `json:"y"`
+	TerrainType string `json:"terrain_type"`
+}
+
+// --- Building display configs ---
+
+// BuildingDisplayConfigDTO is a single building display config in API responses.
+type BuildingDisplayConfigDTO struct {
+	ID           int64   `json:"id"`
+	BuildingType string  `json:"building_type"`
+	Kingdom      string  `json:"kingdom"`
+	DisplayName  string  `json:"display_name"`
+	Description  string  `json:"description"`
+	DefaultIcon  string  `json:"default_icon"`
+	SpriteURL    *string `json:"sprite_url"`
+	UpdatedAt    string  `json:"updated_at"`
+}
+
+// BuildingDisplayConfigListResponse is the response for GET /api/admin/building-displays.
+type BuildingDisplayConfigListResponse struct {
+	Configs []*BuildingDisplayConfigDTO `json:"configs"`
+}
+
+// UpdateBuildingDisplayConfigRequest is the payload for PUT /api/admin/building-displays/{id}.
+type UpdateBuildingDisplayConfigRequest struct {
+	DisplayName string `json:"display_name"`
+	Description string `json:"description"`
+	DefaultIcon string `json:"default_icon"`
+}
+
 // --- Resource building configs ---
 
 // ResourceBuildingConfigDTO is a single resource building config in API responses.
@@ -119,4 +165,40 @@ type UpdateResourceBuildingConfigRequest struct {
 	DisplayName string `json:"display_name"`
 	Description string `json:"description"`
 	DefaultIcon string `json:"default_icon"`
+}
+
+// --- Map templates ---
+
+// CreateTemplateRequest is the payload for POST /api/admin/templates.
+type CreateTemplateRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	MapSize     int    `json:"map_size"` // odd number, e.g. 51 means -25..+25. 0 = default (51).
+}
+
+// ResizeTemplateRequest is the payload for PUT /api/admin/templates/{name}/resize.
+type ResizeTemplateRequest struct {
+	MapSize int `json:"map_size"` // new odd size, e.g. 21, 51, 101
+}
+
+// UpdateTemplateTerrainRequest is the payload for PUT /api/admin/templates/{name}/terrain.
+type UpdateTemplateTerrainRequest struct {
+	Tiles []TileTerrainPaint `json:"tiles"`
+}
+
+// UpdateTemplateZonesRequest is the payload for PUT /api/admin/templates/{name}/zones.
+type UpdateTemplateZonesRequest struct {
+	Tiles []TileZonePaint `json:"tiles"`
+}
+
+// TileZonePaint describes a single tile zone change.
+type TileZonePaint struct {
+	X           int    `json:"x"`
+	Y           int    `json:"y"`
+	KingdomZone string `json:"kingdom_zone"`
+}
+
+// ApplyTemplateRequest is the payload for POST /api/admin/templates/{name}/apply.
+type ApplyTemplateRequest struct {
+	Confirm bool `json:"confirm"`
 }

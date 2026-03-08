@@ -2,15 +2,17 @@ package dto
 
 // VillageResponse is returned for village detail endpoints.
 type VillageResponse struct {
-	ID         int64                   `json:"id"`
-	PlayerID   int64                   `json:"player_id"`
-	Name       string                  `json:"name"`
-	X          int                     `json:"x"`
-	Y          int                     `json:"y"`
-	IsCapital  bool                    `json:"is_capital"`
-	Buildings  []BuildingInfo          `json:"buildings"`
-	Resources  *ResourcesResponse      `json:"resources"`
-	BuildQueue []BuildingQueueResponse `json:"build_queue"`
+	ID            int64                   `json:"id"`
+	PlayerID      int64                   `json:"player_id"`
+	Name          string                  `json:"name"`
+	X             int                     `json:"x"`
+	Y             int                     `json:"y"`
+	IsCapital     bool                    `json:"is_capital"`
+	Buildings     []BuildingInfo          `json:"buildings"`
+	Resources     *ResourcesResponse      `json:"resources"`
+	BuildQueue    []BuildingQueueResponse `json:"build_queue"`
+	Troops        []TroopInfo             `json:"troops"`
+	TrainingQueue []TrainingQueueResponse `json:"training_queue"`
 }
 
 // BuildingInfo represents a building in API responses.

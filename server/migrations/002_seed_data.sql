@@ -25,21 +25,14 @@ VALUES
     ('hawkes',   'hawkes@woo.local',   '$2a$12$qh1rnZcYztG9ZjSA2xqOveVy4To13dV.eVRWnLs6Du0HhUJAj4zzC', '', 'admin', datetime('now')),
     ('drakt',    'drakt@woo.local',    '$2a$12$qh1rnZcYztG9ZjSA2xqOveVy4To13dV.eVRWnLs6Du0HhUJAj4zzC', '', 'admin', datetime('now'));
 
--- ── Game Assets: Village buildings (13 non-resource) ─────────────────────────
+-- ── Game Assets: Village buildings (6 non-resource) ──────────────────────────
 INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height) VALUES
-    ('town_hall',     'building', 'Town Hall',     '🏛️',  96, 96),
-    ('warehouse',     'building', 'Warehouse',     '📦',  96, 96),
-    ('barracks',      'building', 'Barracks',      '⚔️',  96, 96),
-    ('stable',        'building', 'Stable',        '🐴',  96, 96),
-    ('forge',         'building', 'Forge',         '🔨',  96, 96),
-    ('rune_altar',    'building', 'Rune Altar',    '🔮',  96, 96),
-    ('walls',         'building', 'Walls',         '🏰',  96, 96),
-    ('marketplace',   'building', 'Marketplace',   '🏪',  96, 96),
-    ('embassy',       'building', 'Embassy',       '📜',  96, 96),
-    ('watchtower',    'building', 'Watchtower',    '👁️',  96, 96),
-    ('dock',          'building', 'Dock',          '⚓',  96, 96),
-    ('grove_sanctum', 'building', 'Grove Sanctum', '🌿',  96, 96),
-    ('colosseum',     'building', 'Colosseum',     '🏟️',  96, 96);
+    ('town_hall',  'building', 'Town Hall',  '🏛️',  96, 96),
+    ('barracks',   'building', 'Barracks',   '⚔️',  96, 96),
+    ('stable',     'building', 'Stable',     '🐴',  96, 96),
+    ('archery',    'building', 'Archery',    '🏹',  96, 96),
+    ('workshop',   'building', 'Workshop',   '🔨',  96, 96),
+    ('special',    'building', 'Special',    '⭐',  96, 96);
 
 -- ── Game Assets: Resource buildings (12 = 3 per resource) ────────────────────
 INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height) VALUES
@@ -85,17 +78,29 @@ INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width,
     ('marker_lumus',     'village_marker', 'Lumus Village',     '🏘️', 256, 256),
     ('marker_drakanith', 'village_marker', 'Drakanith Village', '🏘️', 256, 256);
 
--- ── Game Assets: Zone tiles (8, one per kingdom + 1 default) ─────────────────
+-- ── Game Assets: Zone tiles (8, one per kingdom + 1 default + wilderness/moraphys/dark_reach) ─
 INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height) VALUES
-    ('zone_default',   'zone_tile', 'Default Zone',     '🟩', 256, 256),
-    ('zone_veridor',   'zone_tile', 'Veridor Zone',     '🔵', 256, 256),
-    ('zone_sylvara',   'zone_tile', 'Sylvara Zone',     '🟢', 256, 256),
-    ('zone_arkazia',   'zone_tile', 'Arkazia Zone',     '🔴', 256, 256),
-    ('zone_draxys',    'zone_tile', 'Draxys Zone',      '🟡', 256, 256),
-    ('zone_nordalh',   'zone_tile', 'Nordalh Zone',     '🟣', 256, 256),
-    ('zone_zandres',   'zone_tile', 'Zandres Zone',     '🟤', 256, 256),
-    ('zone_lumus',     'zone_tile', 'Lumus Zone',       '⚪', 256, 256),
-    ('zone_drakanith', 'zone_tile', 'Drakanith Zone',   '🟠', 256, 256);
+    ('zone_default',    'zone_tile', 'Default Zone',    '🟩', 256, 256),
+    ('zone_veridor',    'zone_tile', 'Veridor Zone',    '🔵', 256, 256),
+    ('zone_sylvara',    'zone_tile', 'Sylvara Zone',    '🟢', 256, 256),
+    ('zone_arkazia',    'zone_tile', 'Arkazia Zone',    '🔴', 256, 256),
+    ('zone_draxys',     'zone_tile', 'Draxys Zone',     '🟡', 256, 256),
+    ('zone_nordalh',    'zone_tile', 'Nordalh Zone',    '🟣', 256, 256),
+    ('zone_zandres',    'zone_tile', 'Zandres Zone',    '🟤', 256, 256),
+    ('zone_lumus',      'zone_tile', 'Lumus Zone',      '⚪', 256, 256),
+    ('zone_drakanith',  'zone_tile', 'Drakanith Zone',  '🟠', 256, 256),
+    ('zone_wilderness', 'zone_tile', 'Wilderness Zone', '🌿', 256, 256),
+    ('zone_moraphys',   'zone_tile', 'Moraphys Zone',   '💀', 256, 256),
+    ('zone_dark_reach', 'zone_tile', 'Dark Reach Zone', '🖤', 256, 256);
+
+-- ── Game Assets: Terrain tiles (6, one per terrain type) ─────────────────────
+INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height) VALUES
+    ('terrain_plains',   'terrain_tile', 'Plains',   '🟩', 256, 256),
+    ('terrain_forest',   'terrain_tile', 'Forest',   '🌲', 256, 256),
+    ('terrain_mountain', 'terrain_tile', 'Mountain', '⛰️', 256, 256),
+    ('terrain_water',    'terrain_tile', 'Water',    '🌊', 256, 256),
+    ('terrain_desert',   'terrain_tile', 'Desert',   '🏜️', 256, 256),
+    ('terrain_swamp',    'terrain_tile', 'Swamp',    '🐊', 256, 256);
 
 -- ── Resource Building Configs (96 rows: 8 kingdoms × 4 resources × 3 slots) ─
 
@@ -206,3 +211,92 @@ INSERT INTO resource_building_configs (resource_type, slot, kingdom, display_nam
     ('stone', 1, 'drakanith', 'Quarry',    'Extracts stone from rock.',  '⛏️'),
     ('stone', 2, 'drakanith', 'Stone Pit', 'Digs stone from the earth.', '🪨'),
     ('stone', 3, 'drakanith', 'Mine',      'Mines deep for stone.',      '⛰️');
+
+-- ── Season Seeds ───────────────────────────────────────────────────────────────
+
+-- dev_season: Always active, unlimited time — used for day-to-day development.
+INSERT OR IGNORE INTO seasons (name, description, status, game_speed, resource_multiplier, max_villages_per_player, weapons_of_chaos_count, map_width, map_height, started_at)
+VALUES (
+    'dev_season',
+    'Permanent development server. No time limit — play at your own pace.',
+    'active',
+    1.0,
+    1.0,
+    5,
+    7,
+    51,
+    51,
+    datetime('now')
+);
+
+-- alpha_season: Upcoming — TBA.
+INSERT OR IGNORE INTO seasons (name, description, status, game_speed, resource_multiplier, max_villages_per_player, weapons_of_chaos_count, map_width, map_height)
+VALUES (
+    'alpha_season',
+    'First competitive season. Details to be announced.',
+    'upcoming',
+    1.0,
+    1.0,
+    5,
+    7,
+    101,
+    101
+);
+
+-- ── Building Display Configs (48 rows: 6 building types × 8 kingdoms) ────────
+-- Kingdom-specific display names sourced from docs/01-game-design/kingdoms_units_buildlings.md
+
+INSERT INTO building_display_configs (building_type, kingdom, display_name, description, default_icon) VALUES
+    ('town_hall', 'veridor',   'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'sylvara',   'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'arkazia',   'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'draxys',    'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'nordalh',   'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'zandres',   'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'lumus',     'Town Hall',     'The seat of power in your village.',  '🏛️'),
+    ('town_hall', 'drakanith', 'Town Hall',     'The seat of power in your village.',  '🏛️'),
+
+    ('barracks', 'veridor',   'Road Barracks',      'Practical infantry hall mixing inland soldiery with disciplined port and trade-route warfare.',  '⚔️'),
+    ('barracks', 'sylvara',   'Roothall',           'Infantry lodge where forest warbands train for close fighting, ambush defense, and shielded woodland warfare.',  '⚔️'),
+    ('barracks', 'arkazia',   'Red Bastion',        'Infantry stronghold focused on fortress discipline, shield warfare, and mountain-line defense.',  '⚔️'),
+    ('barracks', 'draxys',    'Sandwall Barracks',  'Infantry training ground for hard desert warfare, fast brutality, and shielded survival fighting.',  '⚔️'),
+    ('barracks', 'nordalh',   'Hearth Barracks',    'Infantry hall where hard northern warriors train for brutal close combat and shielded endurance.',  '⚔️'),
+    ('barracks', 'zandres',   'Doorwarden Hall',    'Infantry center built around tunnel defense, pressure control, and precise close-order combat.',  '⚔️'),
+    ('barracks', 'lumus',     'Prism Barracks',     'Infantry hall focused on disciplined sacred warfare, radiant order, and defensive grace.',  '⚔️'),
+    ('barracks', 'drakanith', 'Barracks',           'Trains infantry units.',  '⚔️'),
+
+    ('stable', 'veridor',   'River Cavalry Yard',  'Cavalry stables built for mobility across roads, marshlands, and river trade territory.',  '🐴'),
+    ('stable', 'sylvara',   'Beast Hall',          'Mount-yard where riders bond with woodland beasts instead of standard cavalry horses.',  '🐴'),
+    ('stable', 'arkazia',   'Arknight Stables',    'Cavalry yard where disciplined riders train for fortress support and decisive charges.',  '🐴'),
+    ('stable', 'draxys',    'Scorpion Pens',       'Beast and mount yard favoring desert creatures over noble cavalry tradition.',  '🐴'),
+    ('stable', 'nordalh',   'Wolf Kennels',        'Cavalry and beast-rider yard centered on savage mobility and northern hunt traditions.',  '🐴'),
+    ('stable', 'zandres',   'Crawler Pens',        'Stable-yard for specialized underground and engineered mounts.',  '🐴'),
+    ('stable', 'lumus',     'Sun Court Stables',   'Cavalry yard where speed, ceremony, and holy discipline meet.',  '🐴'),
+    ('stable', 'drakanith', 'Stable',              'Trains cavalry units.',  '🐴'),
+
+    ('archery', 'veridor',   'Chart Range',       'Ranged corps blending port defense, ship warfare, and inland marksman traditions.',  '🏹'),
+    ('archery', 'sylvara',   'Grove Range',       'Long-range training grounds blending hunting skill with battlefield marksmanship.',  '🏹'),
+    ('archery', 'arkazia',   'Ridge Range',       'Missile training for mountain and fortress warfare, favoring reliable ranged support.',  '🏹'),
+    ('archery', 'draxys',    'Oasis Range',       'Missile grounds focused on mobility, heat tolerance, and arena-style ranged skill.',  '🏹'),
+    ('archery', 'nordalh',   'Ice Loom Range',    'Missile hall for harsh-weather hunters and long-distance northern marksmen.',  '🏹'),
+    ('archery', 'zandres',   'Crystal Range',     'Ranged corps using precise mechanical launchers and resonance-based projectile methods.',  '🏹'),
+    ('archery', 'lumus',     'Sunshot Range',     'Ranged school mixing traditional missile training with ceremonial and radiant weapons.',  '🏹'),
+    ('archery', 'drakanith', 'Archery Range',     'Trains ranged units.',  '🏹'),
+
+    ('workshop', 'veridor',   'Shipwright Siegeyard',  'Siege dockyard where artillery is built with strong naval and coastal influence.',  '🔨'),
+    ('workshop', 'sylvara',   'Tree-Sapper Yard',     'Forest siege workshop using woodcraft, roots, sap, and natural pressure weapons.',  '🔨'),
+    ('workshop', 'arkazia',   'Stonecaller Yard',     'Siege and engineering yard built around stone, ramps, walls, and heavy siege utility.',  '🔨'),
+    ('workshop', 'draxys',    'Sandwall Foundry',     'Siege workshop producing heat-tough engines, traps, fire weapons, and desert assault tools.',  '🔨'),
+    ('workshop', 'nordalh',   'Long Forge Siegeyard', 'Siege foundry emphasizing rugged artillery, brute-force rams, and forge-crafted war engines.',  '🔨'),
+    ('workshop', 'zandres',   'Resonance Works',      'Advanced siege and engineering workshop built on pressure, drilling, and charged mechanisms.',  '🔨'),
+    ('workshop', 'lumus',     'Heliostat Works',      'Siege yard using mirrors, radiant arrays, and formalized support engines.',  '🔨'),
+    ('workshop', 'drakanith', 'Workshop',             'Trains siege units.',  '🔨'),
+
+    ('special', 'veridor',   'Admiralty Hall',      'Special command building for naval elites, captains, and exotic maritime fighters.',  '⭐'),
+    ('special', 'sylvara',   'Spirit Glade',        'Sacred special building for rare bonded, mystical, and druidic elites.',  '⭐'),
+    ('special', 'arkazia',   'Chapter Fortress',    'Special order hall where elite sworn units, commanders, and prestige warriors are raised.',  '⭐'),
+    ('special', 'draxys',    'Grand Arena',         'Signature special building where spectacle fighters, slave champions, and blood elites are trained.',  '⭐'),
+    ('special', 'nordalh',   'Long Forge Hall',     'Special elite building, home to champions, smith-warriors, and rune-forged retinues.',  '⭐'),
+    ('special', 'zandres',   'Circuit Archive',     'Elite technical hall for power-tech adepts, charged guards, and battlefield specialists.',  '⭐'),
+    ('special', 'lumus',     'Heliostat Sanctum',   'Special hall for sacred elites, radiant adepts, and ceremonial champions.',  '⭐'),
+    ('special', 'drakanith', 'Special Hall',        'Trains elite units.',  '⭐');

@@ -24,7 +24,6 @@ export interface BuildingConfig {
   timeFactor: number;
   maxLevel: number;
   prerequisites: BuildingPrerequisite[];
-  kingdomOnly?: string; // empty = all kingdoms
 }
 
 /** Shared base cost for all 12 resource field buildings. */
@@ -53,15 +52,6 @@ export const BUILDING_CONFIGS: Record<BuildingType, BuildingConfig> = {
     maxLevel: 20,
     prerequisites: [],
   },
-  warehouse: {
-    displayName: 'Warehouse',
-    baseCost: { food: 50, water: 120, lumber: 120, stone: 100 },
-    baseTimeSec: 180,
-    scalingFactor: 1.6,
-    timeFactor: 1.6,
-    maxLevel: 20,
-    prerequisites: [],
-  },
   barracks: {
     displayName: 'Barracks',
     baseCost: { food: 80, water: 200, lumber: 150, stone: 100 },
@@ -83,101 +73,39 @@ export const BUILDING_CONFIGS: Record<BuildingType, BuildingConfig> = {
       { buildingType: 'barracks', minLevel: 5 },
     ],
   },
-  forge: {
-    displayName: 'Forge',
-    baseCost: { food: 100, water: 250, lumber: 180, stone: 200 },
-    baseTimeSec: 480,
+  archery: {
+    displayName: 'Archery',
+    baseCost: { food: 80, water: 150, lumber: 200, stone: 80 },
+    baseTimeSec: 300,
     scalingFactor: 1.8,
     timeFactor: 1.8,
-    maxLevel: 10,
-    prerequisites: [
-      { buildingType: 'town_hall', minLevel: 5 },
-      { buildingType: 'barracks', minLevel: 3 },
-    ],
+    maxLevel: 15,
+    prerequisites: [{ buildingType: 'town_hall', minLevel: 3 }],
   },
-  rune_altar: {
-    displayName: 'Rune Altar',
-    baseCost: { food: 150, water: 300, lumber: 250, stone: 250 },
+  workshop: {
+    displayName: 'Workshop',
+    baseCost: { food: 100, water: 200, lumber: 300, stone: 250 },
     baseTimeSec: 600,
-    scalingFactor: 1.9,
-    timeFactor: 1.9,
-    maxLevel: 10,
+    scalingFactor: 1.8,
+    timeFactor: 1.8,
+    maxLevel: 15,
     prerequisites: [
       { buildingType: 'town_hall', minLevel: 7 },
-      { buildingType: 'forge', minLevel: 3 },
+      { buildingType: 'barracks', minLevel: 5 },
     ],
   },
-  walls: {
-    displayName: 'Walls',
-    baseCost: { food: 50, water: 150, lumber: 100, stone: 200 },
-    baseTimeSec: 240,
-    scalingFactor: 1.6,
-    timeFactor: 1.6,
-    maxLevel: 20,
-    prerequisites: [{ buildingType: 'town_hall', minLevel: 2 }],
-  },
-  marketplace: {
-    displayName: 'Marketplace',
-    baseCost: { food: 80, water: 180, lumber: 180, stone: 120 },
-    baseTimeSec: 300,
-    scalingFactor: 1.6,
-    timeFactor: 1.6,
+  special: {
+    displayName: 'Special',
+    baseCost: { food: 200, water: 300, lumber: 250, stone: 300 },
+    baseTimeSec: 900,
+    scalingFactor: 1.8,
+    timeFactor: 1.8,
     maxLevel: 15,
     prerequisites: [
-      { buildingType: 'town_hall', minLevel: 5 },
-      { buildingType: 'warehouse', minLevel: 3 },
+      { buildingType: 'town_hall', minLevel: 10 },
+      { buildingType: 'barracks', minLevel: 7 },
+      { buildingType: 'stable', minLevel: 5 },
     ],
-  },
-  embassy: {
-    displayName: 'Embassy',
-    baseCost: { food: 100, water: 200, lumber: 200, stone: 200 },
-    baseTimeSec: 480,
-    scalingFactor: 1.7,
-    timeFactor: 1.7,
-    maxLevel: 10,
-    prerequisites: [{ buildingType: 'town_hall', minLevel: 8 }],
-  },
-  watchtower: {
-    displayName: 'Watchtower',
-    baseCost: { food: 60, water: 150, lumber: 100, stone: 150 },
-    baseTimeSec: 240,
-    scalingFactor: 1.6,
-    timeFactor: 1.6,
-    maxLevel: 10,
-    prerequisites: [
-      { buildingType: 'town_hall', minLevel: 3 },
-      { buildingType: 'walls', minLevel: 1 },
-    ],
-  },
-  dock: {
-    displayName: 'Dock',
-    baseCost: { food: 100, water: 250, lumber: 300, stone: 150 },
-    baseTimeSec: 480,
-    scalingFactor: 1.8,
-    timeFactor: 1.8,
-    maxLevel: 15,
-    kingdomOnly: 'veridor',
-    prerequisites: [{ buildingType: 'town_hall', minLevel: 6 }],
-  },
-  grove_sanctum: {
-    displayName: 'Grove Sanctum',
-    baseCost: { food: 150, water: 200, lumber: 300, stone: 200 },
-    baseTimeSec: 480,
-    scalingFactor: 1.8,
-    timeFactor: 1.8,
-    maxLevel: 15,
-    kingdomOnly: 'sylvara',
-    prerequisites: [{ buildingType: 'town_hall', minLevel: 6 }],
-  },
-  colosseum: {
-    displayName: 'Colosseum',
-    baseCost: { food: 100, water: 300, lumber: 200, stone: 300 },
-    baseTimeSec: 480,
-    scalingFactor: 1.8,
-    timeFactor: 1.8,
-    maxLevel: 15,
-    kingdomOnly: 'arkazia',
-    prerequisites: [{ buildingType: 'town_hall', minLevel: 6 }],
   },
 
   // --- Resource field buildings (3 per resource type) ---
@@ -253,10 +181,13 @@ export interface PrerequisiteCheck {
 /**
  * Check whether all prerequisites for a building are satisfied.
  * Returns per-prerequisite details plus an overall `allMet` flag.
+ * Pass an optional `displayNameFn` to resolve admin-configured kingdom display names;
+ * otherwise falls back to the hardcoded BUILDING_CONFIGS names.
  */
 export function checkPrerequisites(
   buildingType: BuildingType,
   buildings: BuildingInfo[],
+  displayNameFn?: (type: string) => string,
 ): { allMet: boolean; checks: PrerequisiteCheck[] } {
   const cfg = BUILDING_CONFIGS[buildingType];
   const levelMap = new Map<string, number>();
@@ -264,11 +195,13 @@ export function checkPrerequisites(
     levelMap.set(b.building_type, b.level);
   }
 
+  const resolve = displayNameFn ?? ((t: string) => BUILDING_CONFIGS[t as BuildingType]?.displayName ?? t);
+
   const checks: PrerequisiteCheck[] = cfg.prerequisites.map((prereq) => {
     const current = levelMap.get(prereq.buildingType) ?? 0;
     return {
       buildingType: prereq.buildingType,
-      displayName: BUILDING_CONFIGS[prereq.buildingType].displayName,
+      displayName: resolve(prereq.buildingType),
       minLevel: prereq.minLevel,
       currentLevel: current,
       met: current >= prereq.minLevel,

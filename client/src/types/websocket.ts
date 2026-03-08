@@ -25,3 +25,12 @@ export interface WSResourceUpdate extends WSMessage {
     stone: number;
   };
 }
+
+export interface WSTrainComplete extends WSMessage {
+  type: 'train_complete';
+  data: {
+    village_id: number;
+    troop_type: string;
+    new_total: number;
+  };
+}

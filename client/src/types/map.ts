@@ -79,3 +79,63 @@ export const ZONE_COLORS: Record<string, number> = {
   dark_reach: 0x110022,
   wilderness: 0x444444,
 };
+
+/** All paintable kingdom zones */
+export const KINGDOM_ZONES: string[] = [
+  'wilderness',
+  'moraphys',
+  'veridor',
+  'sylvara',
+  'arkazia',
+  'draxys',
+  'zandres',
+  'lumus',
+  'nordalh',
+  'drakanith',
+  'dark_reach',
+];
+
+/** Zone rendering config — color + label */
+export const ZONE_CONFIG: Record<string, { color: number; label: string }> = {
+  moraphys:   { color: 0x330000, label: 'Moraphys' },
+  veridor:    { color: 0x004488, label: 'Veridor' },
+  sylvara:    { color: 0x006622, label: 'Sylvara' },
+  arkazia:    { color: 0x664400, label: 'Arkazia' },
+  draxys:     { color: 0x880000, label: 'Draxys' },
+  zandres:    { color: 0x886600, label: 'Zandres' },
+  lumus:      { color: 0x446688, label: 'Lumus' },
+  nordalh:    { color: 0x225544, label: 'Nordalh' },
+  drakanith:  { color: 0x662200, label: 'Drakanith' },
+  dark_reach: { color: 0x110022, label: 'Dark Reach' },
+  wilderness: { color: 0x444444, label: 'Wilderness' },
+};
+
+// --- Map template types ---
+
+/** Metadata for a map template (no tiles) */
+export interface TemplateInfo {
+  name: string;
+  description: string;
+  map_size: number;
+  tile_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+/** A single tile in a map template */
+export interface TemplateTile {
+  x: number;
+  y: number;
+  terrain_type: string;
+  kingdom_zone: string;
+}
+
+/** Full map template with tiles */
+export interface MapTemplate {
+  name: string;
+  description: string;
+  map_size: number;
+  tiles: TemplateTile[];
+  created_at: string;
+  updated_at: string;
+}

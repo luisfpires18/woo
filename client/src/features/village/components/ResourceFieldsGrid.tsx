@@ -1,7 +1,7 @@
 import type { BuildingInfo } from '../../../types/api';
-import type { BuildingType } from '../../../types/game';
 import { GameIcon } from '../../../components/GameIcon/GameIcon';
-import { BUILDING_CONFIGS, RESOURCE_BUILDING_GROUPS } from '../../../config/buildings';
+import { RESOURCE_BUILDING_GROUPS } from '../../../config/buildings';
+import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import styles from './ResourceFieldsGrid.module.css';
 
 interface ResourceFieldsGridProps {
@@ -10,6 +10,7 @@ interface ResourceFieldsGridProps {
 }
 
 export function ResourceFieldsGrid({ buildings, onBuildingClick }: ResourceFieldsGridProps) {
+  const { getDisplayName } = useBuildingDisplayNames();
   const buildingMap = new Map<string, BuildingInfo>();
   for (const b of buildings) {
     buildingMap.set(b.building_type, b);
@@ -26,7 +27,6 @@ export function ResourceFieldsGrid({ buildings, onBuildingClick }: ResourceField
             {group.types.map((type) => {
               const b = buildingMap.get(type);
               if (!b) return null;
-              const cfg = BUILDING_CONFIGS[type as BuildingType];
               const isBuilt = b.level > 0;
 
               return (
@@ -42,7 +42,7 @@ export function ResourceFieldsGrid({ buildings, onBuildingClick }: ResourceField
                     size={28}
                     className={styles.icon}
                   />
-                  <span className={styles.name}>{cfg.displayName}</span>
+                  <span className={styles.name}>{getDisplayName(type)}</span>
                   <span className={styles.level}>
                     {isBuilt ? `Lv ${b.level}` : 'Not built'}
                   </span>

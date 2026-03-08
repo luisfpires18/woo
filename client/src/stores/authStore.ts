@@ -5,6 +5,7 @@ import {
   loginPlayer,
   logoutPlayer,
 } from '../services/auth';
+import { getMe } from '../services/player';
 
 interface AuthState {
   accessToken: string | null;
@@ -37,8 +38,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     if (accessToken && playerStr) {
       try {
-        const player = JSON.parse(playerStr) as PlayerInfo;
-        set({ accessToken, refreshToken, player, isAuthenticated: true, hydrated: true });
+        const cachedPlayer = JSON.parse(playerStr) as PlayerInfo;
+        // Set tokens immediately so API calls work, but don't mark hydrated yet
+        set({ accessToken, refreshToken, player: cachedPlayer, isAuthenticated: true });
+
+        // Refresh player data from server to avoid stale localStorage
+        getMe()
+          .then((freshPlayer) => {
+            localStorage.setItem('player', JSON.stringify(freshPlayer));
+            set({ player: freshPlayer, hydrated: true });
+          })
+          .catch(() => {
+            // Token invalid or server unreachable — clear session
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('player');
+            set({
+              accessToken: null,
+              refreshToken: null,
+              player: null,
+              isAuthenticated: false,
+              hydrated: true,
+            });
+          });
         return;
       } catch {
         // Corrupted data — clear it

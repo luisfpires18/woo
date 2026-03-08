@@ -1,11 +1,7 @@
 import { create } from 'zustand';
 import type { Kingdom } from '../types/game';
+import { VALID_KINGDOMS } from '../utils/constants';
 import { useAuthStore } from './authStore';
-
-const VALID_KINGDOMS: readonly Kingdom[] = [
-  'veridor', 'sylvara', 'arkazia', 'draxys',
-  'zandres', 'lumus', 'nordalh', 'drakanith',
-];
 
 function isValidKingdom(v: string | undefined | null): v is Kingdom {
   return !!v && (VALID_KINGDOMS as readonly string[]).includes(v);

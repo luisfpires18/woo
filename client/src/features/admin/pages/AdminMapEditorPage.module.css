@@ -1,0 +1,363 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.error {
+  background-color: rgba(220, 20, 60, 0.15);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--accent);
+  font-size: 0.875rem;
+}
+
+.status {
+  background-color: rgba(46, 204, 113, 0.15);
+  border: 1px solid #2ecc71;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: #2ecc71;
+  font-size: 0.875rem;
+}
+
+/* --- Toolbar --- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* --- Template selector --- */
+
+.templateSelector {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.templateSelect {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.templateInput {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  min-width: 140px;
+}
+
+.templateInput::placeholder {
+  color: var(--text-muted);
+}
+
+/* --- Size control --- */
+
+.sizeControl {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.sizeInput {
+  width: 60px;
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+/* --- Apply to Game button --- */
+
+.applyBtn {
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  background-color: #e67e22;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-left: auto;
+  transition: background-color 0.15s;
+  white-space: nowrap;
+}
+
+.applyBtn:hover {
+  background-color: #d35400;
+}
+
+/* --- Mode toggle (Terrain / Zone) --- */
+
+.modeToggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.modeBtn {
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.modeBtn:hover {
+  color: var(--text-primary);
+}
+
+.modeBtnActive {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+
+/* --- Terrain / zone picker --- */
+
+.terrainPicker {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.terrainBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.terrainBtn:hover {
+  border-color: var(--terrain-color);
+  color: var(--text-primary);
+}
+
+.terrainBtnActive {
+  border-color: var(--terrain-color);
+  color: var(--text-primary);
+  background-color: color-mix(in srgb, var(--terrain-color) 20%, var(--bg-tertiary));
+}
+
+.terrainSwatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  background-color: var(--terrain-color);
+}
+
+.terrainLabel {
+  font-family: var(--font-heading);
+}
+
+/* --- Brush control --- */
+
+.brushControl {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.brushLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.brushSlider {
+  width: 80px;
+  accent-color: var(--accent);
+}
+
+/* --- Save controls --- */
+
+.saveControls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-left: auto;
+}
+
+.pendingCount {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.clearBtn {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.clearBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.clearBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saveBtn {
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.saveBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Canvas wrapper --- */
+
+.canvasWrapper {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: #111122;
+}
+
+.canvasWrapper canvas {
+  display: block;
+}
+
+.coords {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+/* --- Loading overlay --- */
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(17, 17, 34, 0.8);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* --- Empty state --- */
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .templateSelector {
+    flex-direction: column;
+  }
+
+  .templateSelect {
+    min-width: 100%;
+  }
+
+  .applyBtn {
+    margin-left: 0;
+  }
+
+  .saveControls {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .modeToggle {
+    align-self: flex-start;
+  }
+}

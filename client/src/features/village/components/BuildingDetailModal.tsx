@@ -1,5 +1,4 @@
 import type { BuildingInfo, ResourcesResponse, BuildingQueueResponse } from '../../../types/api';
-import type { BuildingType } from '../../../types/game';
 import { Modal } from '../../../components/Modal';
 import { GameIcon } from '../../../components/GameIcon/GameIcon';
 import {
@@ -9,6 +8,7 @@ import {
   checkPrerequisites,
   formatDuration,
 } from '../../../config/buildings';
+import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import { useStartUpgrade } from '../hooks/useBuildingUpgrade';
 import styles from './BuildingDetailModal.module.css';
 
@@ -32,9 +32,10 @@ export function BuildingDetailModal({
   queue,
 }: BuildingDetailModalProps) {
   const upgradeMutation = useStartUpgrade(villageId);
-  const type = building.building_type as BuildingType;
+  const { getDisplayName } = useBuildingDisplayNames();
+  const type = building.building_type;
   const cfg = BUILDING_CONFIGS[type];
-  const displayName = cfg?.displayName ?? building.building_type;
+  const displayName = getDisplayName(type);
 
   const isMaxLevel = building.level >= (cfg?.maxLevel ?? 0);
   const targetLevel = building.level + 1;
@@ -47,7 +48,7 @@ export function BuildingDetailModal({
 
   const cost = !isMaxLevel ? costAtLevel(type, effectiveTarget) : null;
   const timeSec = !isMaxLevel ? timeAtLevel(type, effectiveTarget) : 0;
-  const prereqs = checkPrerequisites(type, allBuildings);
+  const prereqs = checkPrerequisites(type, allBuildings, getDisplayName);
 
   const canAfford = cost
     ? resources.food >= cost.food &&

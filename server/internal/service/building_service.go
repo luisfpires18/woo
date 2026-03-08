@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -12,7 +11,6 @@ import (
 	"github.com/luisfpires18/woo/internal/dto"
 	"github.com/luisfpires18/woo/internal/model"
 	"github.com/luisfpires18/woo/internal/repository"
-	sqlt "github.com/luisfpires18/woo/internal/repository/sqlite"
 )
 
 // Building service errors.
@@ -20,44 +18,33 @@ var (
 	ErrUnknownBuilding = errors.New("unknown building type")
 )
 
-// QueueTxInserter is an optional interface for queue repos that support transactional inserts.
-type QueueTxInserter interface {
-	InsertTx(ctx context.Context, tx *sql.Tx, item *model.BuildingQueue) error
-}
-
 // BuildingService handles building construction business logic.
 type BuildingService struct {
-	db           *sql.DB
+	uow          repository.UnitOfWork
 	villageRepo  repository.VillageRepository
 	buildingRepo repository.BuildingRepository
 	resourceRepo repository.ResourceRepository
 	queueRepo    repository.BuildingQueueRepository
-	queueTx      QueueTxInserter
 	playerRepo   repository.PlayerRepository
 }
 
 // NewBuildingService creates a new BuildingService.
 func NewBuildingService(
-	db *sql.DB,
+	uow repository.UnitOfWork,
 	villageRepo repository.VillageRepository,
 	buildingRepo repository.BuildingRepository,
 	resourceRepo repository.ResourceRepository,
 	queueRepo repository.BuildingQueueRepository,
 	playerRepo repository.PlayerRepository,
 ) *BuildingService {
-	svc := &BuildingService{
-		db:           db,
+	return &BuildingService{
+		uow:          uow,
 		villageRepo:  villageRepo,
 		buildingRepo: buildingRepo,
 		resourceRepo: resourceRepo,
 		queueRepo:    queueRepo,
 		playerRepo:   playerRepo,
 	}
-	// If the queue repo supports transactional inserts, save a reference.
-	if txRepo, ok := queueRepo.(QueueTxInserter); ok {
-		svc.queueTx = txRepo
-	}
-	return svc
 }
 
 // StartUpgrade begins a building upgrade for the given village.
@@ -80,18 +67,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		return nil, ErrNotOwner
 	}
 
-	// 3. Check kingdom restriction
-	if bldCfg.KingdomOnly != "" {
-		player, err := s.playerRepo.GetByID(ctx, playerID)
-		if err != nil {
-			return nil, fmt.Errorf("get player: %w", err)
-		}
-		if player.Kingdom != bldCfg.KingdomOnly {
-			return nil, fmt.Errorf("building %s is only available to %s kingdom", buildingType, bldCfg.KingdomOnly)
-		}
-	}
-
-	// 4. Check no build already in progress
+	// 3. Check no build already in progress
 	queue, err := s.queueRepo.GetByVillageID(ctx, villageID)
 	if err != nil {
 		return nil, fmt.Errorf("get build queue: %w", err)
@@ -100,7 +76,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		return nil, model.ErrBuildingInProgress
 	}
 
-	// 5. Get current buildings
+	// 4. Get current buildings
 	buildings, err := s.buildingRepo.GetByVillageID(ctx, villageID)
 	if err != nil {
 		return nil, fmt.Errorf("get buildings: %w", err)
@@ -111,7 +87,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		buildingMap[b.BuildingType] = b
 	}
 
-	// 6. Find the target building and check max level
+	// 5. Find the target building and check max level
 	building, exists := buildingMap[buildingType]
 	if !exists {
 		return nil, fmt.Errorf("building type %s not found in this village", buildingType)
@@ -121,7 +97,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		return nil, model.ErrMaxLevelReached
 	}
 
-	// 7. Check prerequisites
+	// 6. Check prerequisites
 	for _, prereq := range bldCfg.Prerequisites {
 		prereqBuilding, ok := buildingMap[prereq.BuildingType]
 		if !ok || prereqBuilding.Level < prereq.MinLevel {
@@ -130,7 +106,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		}
 	}
 
-	// 8. Calculate cost
+	// 7. Calculate cost
 	cost, err := config.CostAtLevel(buildingType, targetLevel)
 	if err != nil {
 		return nil, fmt.Errorf("calculate cost: %w", err)
@@ -140,29 +116,20 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		return nil, fmt.Errorf("calculate time: %w", err)
 	}
 
-	// 9. Flush lazy resources (calculate current amounts)
+	// 8. Flush lazy resources (calculate current amounts)
 	res, err := s.resourceRepo.Get(ctx, villageID)
 	if err != nil {
 		return nil, fmt.Errorf("get resources: %w", err)
 	}
 	now := time.Now().UTC()
-	elapsed := now.Sub(res.LastUpdated).Hours()
-	if elapsed > 0 {
-		res.Food = clampStorage(res.Food+(res.FoodRate-res.FoodConsumption)*elapsed, res.MaxStorage)
-		if res.Food < 0 {
-			res.Food = 0
-		}
-		res.Water = clampStorage(res.Water+res.WaterRate*elapsed, res.MaxStorage)
-		res.Lumber = clampStorage(res.Lumber+res.LumberRate*elapsed, res.MaxStorage)
-		res.Stone = clampStorage(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
-	}
+	FlushResources(res, now)
 
-	// 10. Check sufficient resources
+	// 9. Check sufficient resources
 	if res.Food < cost.Food || res.Water < cost.Water || res.Lumber < cost.Lumber || res.Stone < cost.Stone {
 		return nil, model.ErrInsufficientResources
 	}
 
-	// 11. Deduct resources + insert queue atomically
+	// 10. Deduct resources + insert queue atomically
 	res.Food -= cost.Food
 	res.Water -= cost.Water
 	res.Lumber -= cost.Lumber
@@ -178,17 +145,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		CompletesAt:  completesAt,
 	}
 
-	err = sqlt.WithTx(ctx, s.db, func(tx *sql.Tx) error {
-		if err := sqlt.UpdateResourcesTx(ctx, tx, villageID,
-			res.Food, res.Water, res.Lumber, res.Stone,
-			res.FoodRate, res.WaterRate, res.LumberRate, res.StoneRate,
-			res.FoodConsumption, res.MaxStorage,
-			res.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
-		); err != nil {
-			return err
-		}
-		return s.queueTx.InsertTx(ctx, tx, queueItem)
-	})
+	err = s.uow.DeductResourcesAndInsertBuildQueue(ctx, villageID, res, queueItem)
 	if err != nil {
 		return nil, fmt.Errorf("execute upgrade transaction: %w", err)
 	}
@@ -291,15 +248,25 @@ func (s *BuildingService) CancelUpgrade(ctx context.Context, playerID, villageID
 	return s.queueRepo.Delete(ctx, queueID)
 }
 
+// BuildCompletionEvent describes a single completed building upgrade.
+type BuildCompletionEvent struct {
+	PlayerID     int64
+	VillageID    int64
+	BuildingType string
+	NewLevel     int
+}
+
 // CompleteBuilds processes all building queue items whose completes_at has passed.
+// Returns the list of successfully completed events for notification purposes.
 // Called by the game tick loop.
-func (s *BuildingService) CompleteBuilds(ctx context.Context) error {
+func (s *BuildingService) CompleteBuilds(ctx context.Context) ([]BuildCompletionEvent, error) {
 	now := time.Now().UTC()
 	completed, err := s.queueRepo.GetCompleted(ctx, now)
 	if err != nil {
-		return fmt.Errorf("get completed builds: %w", err)
+		return nil, fmt.Errorf("get completed builds: %w", err)
 	}
 
+	var events []BuildCompletionEvent
 	for _, item := range completed {
 		if err := s.completeBuild(ctx, item); err != nil {
 			slog.Error("failed to complete build",
@@ -311,13 +278,28 @@ func (s *BuildingService) CompleteBuilds(ctx context.Context) error {
 			// Continue processing other items even if one fails
 			continue
 		}
+
+		// Look up player owning this village for WS notification.
+		village, err := s.villageRepo.GetByID(ctx, item.VillageID)
+		if err != nil {
+			slog.Warn("could not look up village owner for notification",
+				"village_id", item.VillageID, "error", err)
+		} else {
+			events = append(events, BuildCompletionEvent{
+				PlayerID:     village.PlayerID,
+				VillageID:    item.VillageID,
+				BuildingType: item.BuildingType,
+				NewLevel:     item.TargetLevel,
+			})
+		}
+
 		slog.Info("building upgrade completed",
 			"village_id", item.VillageID,
 			"building_type", item.BuildingType,
 			"level", item.TargetLevel,
 		)
 	}
-	return nil
+	return events, nil
 }
 
 // completeBuild applies a single completed build: levels up the building,
@@ -393,17 +375,6 @@ func (s *BuildingService) updateResourceRates(ctx context.Context, villageID int
 		changed = true
 	}
 
-	// Warehouse still affects storage
-	if buildingType == "warehouse" {
-		for _, b := range buildings {
-			if b.BuildingType == "warehouse" {
-				res.MaxStorage = config.BaseStorage + config.StoragePerLevel*float64(b.Level)
-				break
-			}
-		}
-		changed = true
-	}
-
 	if changed {
 		if err := s.resourceRepo.Update(ctx, villageID, res); err != nil {
 			return fmt.Errorf("update resource rates: %w", err)
@@ -430,11 +401,4 @@ func (s *BuildingService) GetBuildQueue(ctx context.Context, villageID int64) ([
 		})
 	}
 	return result, nil
-}
-
-func clampStorage(val, max float64) float64 {
-	if val > max {
-		return max
-	}
-	return val
 }

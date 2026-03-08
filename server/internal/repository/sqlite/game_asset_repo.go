@@ -21,9 +21,10 @@ func NewGameAssetRepo(db *sql.DB) *GameAssetRepo {
 func scanGameAsset(row interface{ Scan(dest ...any) error }) (*model.GameAsset, error) {
 	var a model.GameAsset
 	var spritePath sql.NullString
+	var updatedAtStr string
 	err := row.Scan(
 		&a.ID, &a.Category, &a.DisplayName, &a.DefaultIcon,
-		&spritePath, &a.SpriteWidth, &a.SpriteHeight, &a.UpdatedAt,
+		&spritePath, &a.SpriteWidth, &a.SpriteHeight, &updatedAtStr,
 	)
 	if err != nil {
 		return nil, err
@@ -31,6 +32,7 @@ func scanGameAsset(row interface{ Scan(dest ...any) error }) (*model.GameAsset, 
 	if spritePath.Valid {
 		a.SpritePath = &spritePath.String
 	}
+	a.UpdatedAt, _ = parseTime(updatedAtStr)
 	return &a, nil
 }
 
@@ -111,6 +113,19 @@ func (r *GameAssetRepo) Create(ctx context.Context, a *model.GameAsset) error {
 		a.ID, a.Category, a.DisplayName, a.DefaultIcon, a.SpriteWidth, a.SpriteHeight)
 	if err != nil {
 		return fmt.Errorf("create game_asset: %w", err)
+	}
+	return nil
+}
+
+// Delete removes a game asset row by ID.
+func (r *GameAssetRepo) Delete(ctx context.Context, id string) error {
+	res, err := r.db.ExecContext(ctx, `DELETE FROM game_assets WHERE id = ?`, id)
+	if err != nil {
+		return fmt.Errorf("delete game_asset: %w", err)
+	}
+	n, _ := res.RowsAffected()
+	if n == 0 {
+		return model.ErrNotFound
 	}
 	return nil
 }

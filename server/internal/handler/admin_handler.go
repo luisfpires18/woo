@@ -21,11 +21,12 @@ import (
 // AdminHandler handles admin HTTP endpoints.
 type AdminHandler struct {
 	adminService *service.AdminService
+	mapService   *service.MapService
 }
 
 // NewAdminHandler creates a new AdminHandler.
-func NewAdminHandler(adminService *service.AdminService) *AdminHandler {
-	return &AdminHandler{adminService: adminService}
+func NewAdminHandler(adminService *service.AdminService, mapService *service.MapService) *AdminHandler {
+	return &AdminHandler{adminService: adminService, mapService: mapService}
 }
 
 // RegisterRoutes registers admin routes on the given mux.
@@ -40,6 +41,8 @@ func (h *AdminHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /announcements", h.CreateAnnouncement)
 	mux.HandleFunc("DELETE /announcements/{id}", h.DeleteAnnouncement)
 	mux.HandleFunc("GET /assets", h.ListAssets)
+	mux.HandleFunc("POST /assets", h.CreateAsset)
+	mux.HandleFunc("DELETE /assets/{id}", h.DeleteAsset)
 	mux.HandleFunc("POST /assets/{id}/sprite", h.UploadSprite)
 	mux.HandleFunc("DELETE /assets/{id}/sprite", h.DeleteSprite)
 	mux.HandleFunc("GET /resource-buildings", h.ListResourceBuildingConfigs)
@@ -47,6 +50,11 @@ func (h *AdminHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("PUT /resource-buildings/{id}", h.UpdateResourceBuildingConfig)
 	mux.HandleFunc("POST /resource-buildings/{id}/sprite", h.UploadResourceBuildingSprite)
 	mux.HandleFunc("DELETE /resource-buildings/{id}/sprite", h.DeleteResourceBuildingSprite)
+	mux.HandleFunc("GET /building-displays", h.ListBuildingDisplayConfigs)
+	mux.HandleFunc("GET /building-displays/{id}", h.GetBuildingDisplayConfig)
+	mux.HandleFunc("PUT /building-displays/{id}", h.UpdateBuildingDisplayConfig)
+	mux.HandleFunc("POST /building-displays/{id}/sprite", h.UploadBuildingDisplaySprite)
+	mux.HandleFunc("DELETE /building-displays/{id}/sprite", h.DeleteBuildingDisplaySprite)
 }
 
 // ListPlayers handles GET /api/admin/players?offset=0&limit=20.
@@ -205,6 +213,88 @@ func (h *AdminHandler) ListAssets(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, resp)
 }
 
+// CreateAsset handles POST /api/admin/assets.
+// Creates a new game asset row (used for adding variants of zone/terrain tiles).
+func (h *AdminHandler) CreateAsset(w http.ResponseWriter, r *http.Request) {
+	var req dto.CreateGameAssetRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+
+	asset := &model.GameAsset{
+		ID:          req.ID,
+		Category:    req.Category,
+		DisplayName: req.DisplayName,
+		DefaultIcon: req.DefaultIcon,
+	}
+
+	if err := h.adminService.CreateGameAsset(r.Context(), asset); err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, err.Error())
+			return
+		}
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// Fetch the created asset for full DTO response.
+	created, err := h.adminService.GetGameAsset(r.Context(), req.ID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to refetch asset")
+		return
+	}
+
+	writeJSON(w, http.StatusCreated, dto.GameAssetDTO{
+		ID:           created.ID,
+		Category:     created.Category,
+		DisplayName:  created.DisplayName,
+		DefaultIcon:  created.DefaultIcon,
+		SpriteURL:    nil,
+		SpriteWidth:  created.SpriteWidth,
+		SpriteHeight: created.SpriteHeight,
+		UpdatedAt:    created.UpdatedAt,
+	})
+}
+
+// DeleteAsset handles DELETE /api/admin/assets/{id}.
+// Removes a game asset row and its sprite file from disk.
+func (h *AdminHandler) DeleteAsset(w http.ResponseWriter, r *http.Request) {
+	assetID := r.PathValue("id")
+	if assetID == "" {
+		writeError(w, http.StatusBadRequest, "missing asset id")
+		return
+	}
+
+	// Fetch asset to delete sprite file from disk.
+	asset, err := h.adminService.GetGameAsset(r.Context(), assetID)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "asset not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get asset")
+		return
+	}
+
+	// Delete sprite file from disk if it exists.
+	if asset.SpritePath != nil {
+		absPath := filepath.Join("uploads", *asset.SpritePath)
+		os.Remove(absPath)
+	}
+
+	// Delete the DB row.
+	if err := h.adminService.DeleteGameAsset(r.Context(), assetID); err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "asset not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to delete asset")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"message": "asset deleted"})
+}
+
 // UploadSprite handles POST /api/admin/assets/{id}/sprite.
 // Expects multipart/form-data with a "file" field containing a PNG image.
 func (h *AdminHandler) UploadSprite(w http.ResponseWriter, r *http.Request) {
@@ -312,7 +402,7 @@ func (h *AdminHandler) UploadSprite(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Use forward slashes in DB path for URL compatibility.
-	dbPath := relDir + "/" + filename
+	dbPath := "sprites/" + asset.Category + "/" + filename
 	if err := h.adminService.UpdateGameAssetSprite(r.Context(), assetID, &dbPath); err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to update asset")
 		return
@@ -521,8 +611,7 @@ func (h *AdminHandler) UploadResourceBuildingSprite(w http.ResponseWriter, r *ht
 		return
 	}
 
-	relDir := filepath.Join("sprites", "resource_building")
-	absDir := filepath.Join("uploads", relDir)
+	absDir := filepath.Join("uploads", "sprites", "resource_building")
 	if err := os.MkdirAll(absDir, 0o755); err != nil {
 		slog.Error("failed to create sprite directory", "error", err)
 		writeError(w, http.StatusInternalServerError, "failed to save file")
@@ -553,7 +642,7 @@ func (h *AdminHandler) UploadResourceBuildingSprite(w http.ResponseWriter, r *ht
 		return
 	}
 
-	dbPath := relDir + "/" + filename
+	dbPath := "sprites/resource_building/" + filename
 	if err := h.adminService.UpdateResourceBuildingConfigSprite(r.Context(), id, &dbPath); err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to update config sprite")
 		return
@@ -590,6 +679,215 @@ func (h *AdminHandler) DeleteResourceBuildingSprite(w http.ResponseWriter, r *ht
 	}
 
 	if err := h.adminService.UpdateResourceBuildingConfigSprite(r.Context(), id, nil); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to update config sprite")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"message": "sprite deleted"})
+}
+
+// --- Building display configs ---
+
+// ListBuildingDisplayConfigs handles GET /api/admin/building-displays?kingdom=X.
+func (h *AdminHandler) ListBuildingDisplayConfigs(w http.ResponseWriter, r *http.Request) {
+	kingdom := r.URL.Query().Get("kingdom")
+
+	resp, err := h.adminService.ListBuildingDisplayConfigs(r.Context(), kingdom)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to list building display configs")
+		return
+	}
+	writeJSON(w, http.StatusOK, resp)
+}
+
+// GetBuildingDisplayConfig handles GET /api/admin/building-displays/{id}.
+func (h *AdminHandler) GetBuildingDisplayConfig(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid building display config id")
+		return
+	}
+
+	cfg, err := h.adminService.GetBuildingDisplayConfig(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "building display config not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get building display config")
+		return
+	}
+
+	var spriteURL *string
+	if cfg.SpritePath != nil {
+		u := "/uploads/" + *cfg.SpritePath
+		spriteURL = &u
+	}
+	writeJSON(w, http.StatusOK, &dto.BuildingDisplayConfigDTO{
+		ID:           cfg.ID,
+		BuildingType: cfg.BuildingType,
+		Kingdom:      cfg.Kingdom,
+		DisplayName:  cfg.DisplayName,
+		Description:  cfg.Description,
+		DefaultIcon:  cfg.DefaultIcon,
+		SpriteURL:    spriteURL,
+		UpdatedAt:    cfg.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+	})
+}
+
+// UpdateBuildingDisplayConfig handles PUT /api/admin/building-displays/{id}.
+func (h *AdminHandler) UpdateBuildingDisplayConfig(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid building display config id")
+		return
+	}
+
+	var req dto.UpdateBuildingDisplayConfigRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+
+	if err := h.adminService.UpdateBuildingDisplayConfig(r.Context(), id, &req); err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "building display config not found")
+			return
+		}
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"message": "config updated"})
+}
+
+// UploadBuildingDisplaySprite handles POST /api/admin/building-displays/{id}/sprite.
+func (h *AdminHandler) UploadBuildingDisplaySprite(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid building display config id")
+		return
+	}
+
+	cfg, err := h.adminService.GetBuildingDisplayConfig(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "building display config not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get config")
+		return
+	}
+
+	// Same dimensions / limits as building sprites.
+	expectedDims := model.AssetSpriteDimensions["building"]
+	maxBytes := model.AssetMaxSpriteBytes["building"]
+
+	if err := r.ParseMultipartForm(maxBytes + 4096); err != nil {
+		writeError(w, http.StatusBadRequest, "file too large or invalid multipart")
+		return
+	}
+
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "missing file field")
+		return
+	}
+	defer file.Close()
+
+	ct := header.Header.Get("Content-Type")
+	if ct != "image/png" {
+		writeError(w, http.StatusBadRequest, "only PNG images are accepted")
+		return
+	}
+
+	if header.Size > maxBytes {
+		writeError(w, http.StatusBadRequest, fmt.Sprintf("file exceeds max size of %d KB", maxBytes/1024))
+		return
+	}
+
+	img, err := png.Decode(file)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid PNG image")
+		return
+	}
+
+	bounds := img.Bounds()
+	if bounds.Dx() != expectedDims[0] || bounds.Dy() != expectedDims[1] {
+		writeError(w, http.StatusBadRequest, fmt.Sprintf(
+			"image must be %dx%d pixels, got %dx%d",
+			expectedDims[0], expectedDims[1], bounds.Dx(), bounds.Dy(),
+		))
+		return
+	}
+
+	absDir := filepath.Join("uploads", "sprites", "building_display")
+	if err := os.MkdirAll(absDir, 0o755); err != nil {
+		slog.Error("failed to create sprite directory", "error", err)
+		writeError(w, http.StatusInternalServerError, "failed to save file")
+		return
+	}
+
+	filename := fmt.Sprintf("%s_%s.png", cfg.BuildingType, cfg.Kingdom)
+	absPath := filepath.Join(absDir, filename)
+
+	if seeker, ok := file.(io.Seeker); ok {
+		seeker.Seek(0, io.SeekStart)
+	} else {
+		writeError(w, http.StatusInternalServerError, "cannot re-read file")
+		return
+	}
+
+	dst, err := os.Create(absPath)
+	if err != nil {
+		slog.Error("failed to create sprite file", "error", err)
+		writeError(w, http.StatusInternalServerError, "failed to save file")
+		return
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, file); err != nil {
+		slog.Error("failed to write sprite file", "error", err)
+		writeError(w, http.StatusInternalServerError, "failed to save file")
+		return
+	}
+
+	dbPath := "sprites/building_display/" + filename
+	if err := h.adminService.UpdateBuildingDisplayConfigSprite(r.Context(), id, &dbPath); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to update config sprite")
+		return
+	}
+
+	spriteURL := "/uploads/" + dbPath + "?v=" + strconv.FormatInt(time.Now().Unix(), 10)
+	writeJSON(w, http.StatusOK, map[string]string{
+		"message":    "sprite uploaded",
+		"sprite_url": spriteURL,
+	})
+}
+
+// DeleteBuildingDisplaySprite handles DELETE /api/admin/building-displays/{id}/sprite.
+func (h *AdminHandler) DeleteBuildingDisplaySprite(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid building display config id")
+		return
+	}
+
+	cfg, err := h.adminService.GetBuildingDisplayConfig(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "building display config not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to get config")
+		return
+	}
+
+	if cfg.SpritePath != nil {
+		absPath := filepath.Join("uploads", *cfg.SpritePath)
+		os.Remove(absPath)
+	}
+
+	if err := h.adminService.UpdateBuildingDisplayConfigSprite(r.Context(), id, nil); err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to update config sprite")
 		return
 	}

@@ -1,6 +1,14 @@
 // Client-side constants
 
-/** Map dimensions: 401×401, coords -200 to +200 */
+import type { Kingdom } from '../types/game';
+
+/** All kingdoms (playable + NPC). Used for theme and validation. */
+export const VALID_KINGDOMS: readonly Kingdom[] = [
+  'veridor', 'sylvara', 'arkazia', 'draxys',
+  'zandres', 'lumus', 'nordalh', 'drakanith',
+];
+
+/** Map dimensions: 401x401, coords -200 to +200 */
 export const MAP_SIZE = 401;
 export const MAP_MIN = -200;
 export const MAP_MAX = 200;

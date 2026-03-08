@@ -10,5 +10,6 @@ type Village struct {
 	X         int       `json:"x"`
 	Y         int       `json:"y"`
 	IsCapital bool      `json:"is_capital"`
+	SeasonID  *int64    `json:"season_id,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 }

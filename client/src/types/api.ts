@@ -1,5 +1,8 @@
 // API response and request types
 
+import type { BuildingType, Kingdom } from './game';
+import type { TroopType } from '../config/troops';
+
 export interface ApiResponse<T> {
   data: T;
   error?: string;
@@ -44,7 +47,7 @@ export interface PlayerInfo {
   id: number;
   username: string;
   email: string;
-  kingdom: string; // empty string means kingdom not yet chosen
+  kingdom: Kingdom | ''; // empty string means kingdom not yet chosen
   role: 'player' | 'admin';
 }
 
@@ -69,11 +72,13 @@ export interface VillageResponse {
   buildings: BuildingInfo[];
   resources: ResourcesResponse;
   build_queue: BuildingQueueResponse[];
+  troops: TroopInfo[];
+  training_queue: TrainingQueueResponse[];
 }
 
 export interface BuildingInfo {
   id: number;
-  building_type: string;
+  building_type: BuildingType;
   level: number;
 }
 
@@ -98,7 +103,7 @@ export interface StartUpgradeRequest {
 
 export interface BuildingQueueResponse {
   id: number;
-  building_type: string;
+  building_type: BuildingType;
   target_level: number;
   started_at: string;
   completes_at: string;
@@ -115,6 +120,39 @@ export interface BuildingCostResponse {
   time_seconds: number;
 }
 
+// Training types — mirrors server/internal/dto/training.go
+
+export interface StartTrainingRequest {
+  troop_type: string;
+  quantity: number;
+}
+
+export interface TrainingQueueResponse {
+  id: number;
+  troop_type: TroopType;
+  quantity: number;
+  each_duration_sec: number;
+  started_at: string;
+  completes_at: string;
+}
+
+export interface TrainingCostResponse {
+  troop_type: string;
+  quantity: number;
+  total_food: number;
+  total_water: number;
+  total_lumber: number;
+  total_stone: number;
+  each_time_sec: number;
+  total_time_sec: number;
+}
+
+export interface TroopInfo {
+  type: TroopType;
+  quantity: number;
+  status: string;
+}
+
 export interface VillageListItem {
   id: number;
   name: string;
@@ -129,7 +167,7 @@ export interface PlayerListItem {
   id: number;
   username: string;
   email: string;
-  kingdom: string;
+  kingdom: Kingdom | '';
   role: 'player' | 'admin';
   created_at: string;
   last_login_at?: string;
@@ -183,7 +221,7 @@ export interface AnnouncementResponse {
 
 // Game asset types — mirrors server/internal/dto/admin.go
 
-export type AssetCategory = 'building' | 'resource' | 'unit' | 'kingdom_flag' | 'village_marker' | 'zone_tile';
+export type AssetCategory = 'building' | 'resource' | 'unit' | 'kingdom_flag' | 'village_marker' | 'zone_tile' | 'terrain_tile';
 
 export interface GameAsset {
   id: string;
@@ -198,6 +236,104 @@ export interface GameAsset {
 
 export interface GameAssetListResponse {
   assets: GameAsset[];
+}
+
+// Season types — mirrors server/internal/dto/season.go
+
+export interface SeasonResponse {
+  id: number;
+  name: string;
+  description: string;
+  status: 'upcoming' | 'active' | 'ended' | 'archived';
+  start_date?: string;
+  started_at?: string;
+  ended_at?: string;
+  player_count: number;
+  map_template_name: string;
+  game_speed: number;
+  resource_multiplier: number;
+  max_villages_per_player: number;
+  weapons_of_chaos_count: number;
+  map_width: number;
+  map_height: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SeasonDetailResponse extends SeasonResponse {
+  joined: boolean;
+  kingdom?: string;
+}
+
+export interface CreateSeasonRequest {
+  name: string;
+  description?: string;
+  start_date?: string;
+  map_template_name?: string;
+  game_speed?: number;
+  resource_multiplier?: number;
+  max_villages_per_player?: number;
+  weapons_of_chaos_count?: number;
+  map_width: number;
+  map_height: number;
+}
+
+export interface UpdateSeasonRequest {
+  name?: string;
+  description?: string;
+  start_date?: string;
+  map_template_name?: string;
+  game_speed?: number;
+  resource_multiplier?: number;
+  max_villages_per_player?: number;
+  weapons_of_chaos_count?: number;
+  map_width?: number;
+  map_height?: number;
+}
+
+export interface JoinSeasonRequest {
+  kingdom: string;
+}
+
+export interface JoinSeasonResponse {
+  season: SeasonDetailResponse;
+  village_id: number;
+}
+
+export interface PlayerProfileResponse {
+  id: number;
+  username: string;
+  email: string;
+  role: 'player' | 'admin';
+  created_at: string;
+  total_seasons: number;
+  season_history: SeasonHistoryEntry[];
+}
+
+export interface SeasonHistoryEntry {
+  season_id: number;
+  season_name: string;
+  season_status: string;
+  kingdom: string;
+  joined_at: string;
+  village_count: number;
+}
+
+// Building display config types — mirrors server/internal/dto/admin.go
+
+export interface BuildingDisplayConfig {
+  id: number;
+  building_type: string;
+  kingdom: string;
+  display_name: string;
+  description: string;
+  default_icon: string;
+  sprite_url: string | null;
+  updated_at: string;
+}
+
+export interface BuildingDisplayConfigListResponse {
+  configs: BuildingDisplayConfig[];
 }
 
 // Resource building config types — mirrors server/internal/dto/admin.go

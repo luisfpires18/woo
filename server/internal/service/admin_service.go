@@ -19,12 +19,13 @@ var (
 
 // AdminService handles admin-only business logic.
 type AdminService struct {
-	playerRepo            repository.PlayerRepository
-	villageRepo           repository.VillageRepository
-	worldConfigRepo       repository.WorldConfigRepository
-	announcementRepo      repository.AnnouncementRepository
-	gameAssetRepo         repository.GameAssetRepository
-	resBuildingConfigRepo repository.ResourceBuildingConfigRepository
+	playerRepo                repository.PlayerRepository
+	villageRepo               repository.VillageRepository
+	worldConfigRepo           repository.WorldConfigRepository
+	announcementRepo          repository.AnnouncementRepository
+	gameAssetRepo             repository.GameAssetRepository
+	resBuildingConfigRepo     repository.ResourceBuildingConfigRepository
+	buildingDisplayConfigRepo repository.BuildingDisplayConfigRepository
 }
 
 // NewAdminService creates a new AdminService.
@@ -35,14 +36,16 @@ func NewAdminService(
 	announcementRepo repository.AnnouncementRepository,
 	gameAssetRepo repository.GameAssetRepository,
 	resBuildingConfigRepo repository.ResourceBuildingConfigRepository,
+	buildingDisplayConfigRepo repository.BuildingDisplayConfigRepository,
 ) *AdminService {
 	return &AdminService{
-		playerRepo:            playerRepo,
-		villageRepo:           villageRepo,
-		worldConfigRepo:       worldConfigRepo,
-		announcementRepo:      announcementRepo,
-		gameAssetRepo:         gameAssetRepo,
-		resBuildingConfigRepo: resBuildingConfigRepo,
+		playerRepo:                playerRepo,
+		villageRepo:               villageRepo,
+		worldConfigRepo:           worldConfigRepo,
+		announcementRepo:          announcementRepo,
+		gameAssetRepo:             gameAssetRepo,
+		resBuildingConfigRepo:     resBuildingConfigRepo,
+		buildingDisplayConfigRepo: buildingDisplayConfigRepo,
 	}
 }
 
@@ -253,6 +256,36 @@ func (s *AdminService) UpdateGameAssetSprite(ctx context.Context, id string, spr
 	return s.gameAssetRepo.UpdateSprite(ctx, id, spritePath)
 }
 
+// CreateGameAsset inserts a new game asset row (used for adding variants of zone/terrain tiles).
+func (s *AdminService) CreateGameAsset(ctx context.Context, asset *model.GameAsset) error {
+	if asset.ID == "" {
+		return errors.New("id is required")
+	}
+	if asset.Category == "" {
+		return errors.New("category is required")
+	}
+	if asset.DisplayName == "" {
+		return errors.New("display_name is required")
+	}
+	// Validate category is known
+	if _, ok := model.AssetSpriteDimensions[asset.Category]; !ok {
+		return fmt.Errorf("unknown category: %s", asset.Category)
+	}
+	// Set default dimensions from category
+	dims := model.AssetSpriteDimensions[asset.Category]
+	asset.SpriteWidth = dims[0]
+	asset.SpriteHeight = dims[1]
+	if asset.DefaultIcon == "" {
+		asset.DefaultIcon = "🖼️"
+	}
+	return s.gameAssetRepo.Create(ctx, asset)
+}
+
+// DeleteGameAsset removes a game asset row by ID (used for removing variants).
+func (s *AdminService) DeleteGameAsset(ctx context.Context, id string) error {
+	return s.gameAssetRepo.Delete(ctx, id)
+}
+
 // --- Resource building configs ---
 
 // ListResourceBuildingConfigs returns all resource building configs, optionally filtered by kingdom.
@@ -316,4 +349,68 @@ func (s *AdminService) UpdateResourceBuildingConfig(ctx context.Context, id int6
 // UpdateResourceBuildingConfigSprite sets the sprite_path for a resource building config.
 func (s *AdminService) UpdateResourceBuildingConfigSprite(ctx context.Context, id int64, spritePath *string) error {
 	return s.resBuildingConfigRepo.UpdateSprite(ctx, id, spritePath)
+}
+
+// --- Building display configs ---
+
+// ListBuildingDisplayConfigs returns all building display configs, optionally filtered by kingdom.
+func (s *AdminService) ListBuildingDisplayConfigs(ctx context.Context, kingdom string) (*dto.BuildingDisplayConfigListResponse, error) {
+	var configs []*model.BuildingDisplayConfig
+	var err error
+	if kingdom != "" {
+		configs, err = s.buildingDisplayConfigRepo.GetByKingdom(ctx, kingdom)
+	} else {
+		configs, err = s.buildingDisplayConfigRepo.GetAll(ctx)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("list building display configs: %w", err)
+	}
+
+	items := make([]*dto.BuildingDisplayConfigDTO, 0, len(configs))
+	for _, c := range configs {
+		var spriteURL *string
+		if c.SpritePath != nil {
+			u := "/uploads/" + *c.SpritePath + "?v=" + strconv.FormatInt(c.UpdatedAt.Unix(), 10)
+			spriteURL = &u
+		}
+		items = append(items, &dto.BuildingDisplayConfigDTO{
+			ID:           c.ID,
+			BuildingType: c.BuildingType,
+			Kingdom:      c.Kingdom,
+			DisplayName:  c.DisplayName,
+			Description:  c.Description,
+			DefaultIcon:  c.DefaultIcon,
+			SpriteURL:    spriteURL,
+			UpdatedAt:    c.UpdatedAt.Format(time.RFC3339),
+		})
+	}
+
+	return &dto.BuildingDisplayConfigListResponse{Configs: items}, nil
+}
+
+// GetBuildingDisplayConfig returns a single building display config by ID.
+func (s *AdminService) GetBuildingDisplayConfig(ctx context.Context, id int64) (*model.BuildingDisplayConfig, error) {
+	return s.buildingDisplayConfigRepo.GetByID(ctx, id)
+}
+
+// UpdateBuildingDisplayConfig updates display_name, description, and default_icon for a config.
+func (s *AdminService) UpdateBuildingDisplayConfig(ctx context.Context, id int64, req *dto.UpdateBuildingDisplayConfigRequest) error {
+	if req.DisplayName == "" {
+		return errors.New("display_name is required")
+	}
+	cfg, err := s.buildingDisplayConfigRepo.GetByID(ctx, id)
+	if err != nil {
+		return fmt.Errorf("get building display config: %w", err)
+	}
+	cfg.DisplayName = req.DisplayName
+	cfg.Description = req.Description
+	if req.DefaultIcon != "" {
+		cfg.DefaultIcon = req.DefaultIcon
+	}
+	return s.buildingDisplayConfigRepo.Update(ctx, cfg)
+}
+
+// UpdateBuildingDisplayConfigSprite sets the sprite_path for a building display config.
+func (s *AdminService) UpdateBuildingDisplayConfigSprite(ctx context.Context, id int64, spritePath *string) error {
+	return s.buildingDisplayConfigRepo.UpdateSprite(ctx, id, spritePath)
 }

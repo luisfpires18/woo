@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { BuildingQueueResponse } from '../../../types/api';
-import { BUILDING_CONFIGS, formatDuration } from '../../../config/buildings';
-import type { BuildingType } from '../../../types/game';
+import { formatDuration } from '../../../config/buildings';
+import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import { useCancelUpgrade } from '../hooks/useBuildingUpgrade';
 import styles from './ConstructionQueue.module.css';
 
@@ -13,6 +13,7 @@ interface ConstructionQueueProps {
 
 export function ConstructionQueue({ queue, villageId }: ConstructionQueueProps) {
   const cancelMutation = useCancelUpgrade(villageId);
+  const { getDisplayName } = useBuildingDisplayNames();
   const queryClient = useQueryClient();
   const [now, setNow] = useState(() => Date.now());
   const refetchScheduled = useRef(false);
@@ -58,8 +59,7 @@ export function ConstructionQueue({ queue, villageId }: ConstructionQueueProps) 
     <div className={styles.container}>
       <h3 className={styles.heading}>Construction Queue</h3>
       {queue.map((item) => {
-        const cfg = BUILDING_CONFIGS[item.building_type as BuildingType];
-        const displayName = cfg?.displayName ?? item.building_type;
+        const displayName = getDisplayName(item.building_type);
         const startMs = new Date(item.started_at).getTime();
         const endMs = new Date(item.completes_at).getTime();
         const totalMs = endMs - startMs;

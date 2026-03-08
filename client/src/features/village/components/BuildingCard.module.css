@@ -37,3 +37,51 @@
   color: var(--text-muted);
   font-weight: 700;
 }
+
+.military {
+  position: relative;
+  border-color: var(--accent-subtle, var(--border));
+}
+
+.upgradeIcon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+
+.upgradeIcon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-sm);
+    gap: 2px;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+  }
+
+  .name {
+    font-size: 0.75rem;
+  }
+
+  .level {
+    font-size: 0.6875rem;
+  }
+}

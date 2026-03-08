@@ -73,16 +73,42 @@ async function request<T>(
     }
   }
 
+  // Guard against non-JSON responses (e.g. HTML fallback when backend is down)
+  const contentType = response.headers.get('content-type') ?? '';
+  const isJson = contentType.includes('application/json');
+
   if (!response.ok) {
-    const body = await response.json().catch(() => ({ error: 'Unknown error' }));
+    if (isJson) {
+      const body = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new ApiRequestError(
+        body.error || `HTTP ${response.status}`,
+        response.status,
+      );
+    }
     throw new ApiRequestError(
-      body.error || `HTTP ${response.status}`,
+      response.status === 404
+        ? 'Server not reachable — please try again in a moment'
+        : `HTTP ${response.status}`,
       response.status,
     );
   }
 
-  const result: ApiResponse<T> = await response.json();
-  return result.data;
+  // Read the body once as text so we can inspect it on failure
+  const bodyText = await response.text();
+
+  try {
+    const result: ApiResponse<T> = JSON.parse(bodyText);
+    return result.data;
+  } catch {
+    // Log the actual response for debugging
+    console.error(
+      `[api] Non-JSON response for ${path}`,
+      `status=${response.status}`,
+      `content-type=${contentType}`,
+      `body=${bodyText.substring(0, 300)}`,
+    );
+    throw new ApiRequestError('Server returned an unexpected response', 502);
+  }
 }
 
 /** Typed API error with status code */
@@ -97,7 +123,7 @@ export class ApiRequestError extends Error {
 }
 
 export const api = {
-  get: <T>(path: string) => request<T>(path),
+  get: <T>(path: string, skipAuth = false) => request<T>(path, undefined, skipAuth),
 
   post: <T>(path: string, body: unknown, skipAuth = false) =>
     request<T>(path, { method: 'POST', body: JSON.stringify(body) }, skipAuth),

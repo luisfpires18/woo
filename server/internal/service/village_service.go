@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math"
 	"math/rand"
 	"time"
 
@@ -21,23 +20,14 @@ var (
 	ErrInvalidName     = errors.New("village name must be between 2 and 30 characters")
 )
 
-// Starting building types for every village. Kingdom-specific building is appended.
+// Starting building types for every village.
 var commonBuildings = []string{
 	"town_hall",
 	"food_1", "food_2", "food_3",
 	"water_1", "water_2", "water_3",
 	"lumber_1", "lumber_2", "lumber_3",
 	"stone_1", "stone_2", "stone_3",
-	"warehouse",
-	"barracks", "stable", "forge", "rune_altar", "walls", "marketplace",
-	"embassy", "watchtower",
-}
-
-// Kingdom-specific bonus building.
-var kingdomBuilding = map[string]string{
-	"veridor": "dock",
-	"sylvara": "grove_sanctum",
-	"arkazia": "colosseum",
+	"barracks", "stable", "archery", "workshop", "special",
 }
 
 // Starting resource config.
@@ -73,6 +63,17 @@ func NewVillageService(
 
 // CreateFirstVillage creates a player's first (capital) village with starter buildings and resources.
 func (s *VillageService) CreateFirstVillage(ctx context.Context, playerID int64, kingdom, username string) (*model.Village, error) {
+	return s.createVillageCore(ctx, playerID, kingdom, username, nil)
+}
+
+// CreateFirstVillageForSeason creates a player's first village in a specific season.
+func (s *VillageService) CreateFirstVillageForSeason(ctx context.Context, playerID int64, kingdom, username string, seasonID int64) (*model.Village, error) {
+	return s.createVillageCore(ctx, playerID, kingdom, username, &seasonID)
+}
+
+// createVillageCore is the shared implementation for village creation. If seasonID is non-nil
+// the village is scoped to that season.
+func (s *VillageService) createVillageCore(ctx context.Context, playerID int64, kingdom, username string, seasonID *int64) (*model.Village, error) {
 	x, y, err := s.findSpawnLocation(ctx, kingdom)
 	if err != nil {
 		return nil, fmt.Errorf("find spawn location: %w", err)
@@ -85,6 +86,7 @@ func (s *VillageService) CreateFirstVillage(ctx context.Context, playerID int64,
 		X:         x,
 		Y:         y,
 		IsCapital: true,
+		SeasonID:  seasonID,
 		CreatedAt: now,
 	}
 	if err := s.villageRepo.Create(ctx, village); err != nil {
@@ -104,14 +106,6 @@ func (s *VillageService) CreateFirstVillage(ctx context.Context, playerID int64,
 		buildings = append(buildings, &model.Building{
 			VillageID:    village.ID,
 			BuildingType: bt,
-			Level:        0,
-		})
-	}
-	// Add kingdom-specific building
-	if kb, ok := kingdomBuilding[kingdom]; ok {
-		buildings = append(buildings, &model.Building{
-			VillageID:    village.ID,
-			BuildingType: kb,
 			Level:        0,
 		})
 	}
@@ -218,20 +212,9 @@ func (s *VillageService) getCalculatedResources(ctx context.Context, villageID i
 	}
 
 	now := time.Now().UTC()
-	elapsed := now.Sub(res.LastUpdated).Seconds()
-	if elapsed <= 0 {
+	if !FlushResources(res, now) {
 		return res, nil
 	}
-
-	// Calculate current resources: stored + rate*seconds, capped at max_storage
-	res.Food = math.Min(res.Food+(res.FoodRate-res.FoodConsumption)*elapsed, res.MaxStorage)
-	if res.Food < 0 {
-		res.Food = 0
-	}
-	res.Water = math.Min(res.Water+res.WaterRate*elapsed, res.MaxStorage)
-	res.Lumber = math.Min(res.Lumber+res.LumberRate*elapsed, res.MaxStorage)
-	res.Stone = math.Min(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
-	res.LastUpdated = now
 
 	// Persist the recalculated snapshot
 	if err := s.resourceRepo.Update(ctx, villageID, res); err != nil {

@@ -81,22 +81,22 @@ func TestGetVillage_Success(t *testing.T) {
 		t.Error("expected buildings to be created")
 	}
 
-	// Veridor should have 23 buildings (town_hall, warehouse, barracks, rally_point, wall,
-	// embassy, market, forge, academy, dock + 1 kingdom-specific + 12 resource fields)
-	if len(resp.Buildings) != 23 {
-		t.Errorf("expected 23 buildings for veridor, got %d", len(resp.Buildings))
+	// Veridor should have 18 buildings (town_hall + barracks + stable + archery + workshop + special + 12 resource fields)
+	if len(resp.Buildings) != 18 {
+		t.Errorf("expected 18 buildings for veridor, got %d", len(resp.Buildings))
 	}
 
-	// Check that dock exists (Veridor-specific)
-	hasDock := false
+	// Check that archery, workshop, special exist (universal military buildings)
+	wantTypes := map[string]bool{"archery": false, "workshop": false, "special": false}
 	for _, b := range resp.Buildings {
-		if b.BuildingType == "dock" {
-			hasDock = true
-			break
+		if _, ok := wantTypes[b.BuildingType]; ok {
+			wantTypes[b.BuildingType] = true
 		}
 	}
-	if !hasDock {
-		t.Error("veridor village should have a dock building")
+	for bt, found := range wantTypes {
+		if !found {
+			t.Errorf("village should have %s building", bt)
+		}
 	}
 
 	// Check resources (allow small delta due to lazy calculation — rates are per-second now)
@@ -188,16 +188,9 @@ func TestCreateFirstVillage_Sylvara(t *testing.T) {
 		t.Fatalf("get village: %v", err)
 	}
 
-	// Sylvara should have grove_sanctum
-	hasGrove := false
-	for _, b := range resp.Buildings {
-		if b.BuildingType == "grove_sanctum" {
-			hasGrove = true
-			break
-		}
-	}
-	if !hasGrove {
-		t.Error("sylvara village should have grove_sanctum building")
+	// Sylvara gets same 18 buildings as every kingdom (no kingdom-specific buildings)
+	if len(resp.Buildings) != 18 {
+		t.Errorf("expected 18 buildings for sylvara, got %d", len(resp.Buildings))
 	}
 }
 
@@ -231,15 +224,8 @@ func TestCreateFirstVillage_Arkazia(t *testing.T) {
 		t.Fatalf("get village: %v", err)
 	}
 
-	// Arkazia should have colosseum
-	hasColosseum := false
-	for _, b := range resp.Buildings {
-		if b.BuildingType == "colosseum" {
-			hasColosseum = true
-			break
-		}
-	}
-	if !hasColosseum {
-		t.Error("arkazia village should have colosseum building")
+	// Arkazia gets same 18 buildings as every kingdom (no kingdom-specific buildings)
+	if len(resp.Buildings) != 18 {
+		t.Errorf("expected 18 buildings for arkazia, got %d", len(resp.Buildings))
 	}
 }

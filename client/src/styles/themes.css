@@ -17,6 +17,7 @@
   --accent: #DC143C;          /* Crimson */
   --accent-hover: #B22222;
   --accent-light: #FF6B6B;
+  --accent-muted: #2A1520;
   --text-on-accent: #FFFFFF;
 
   /* Borders */
@@ -63,24 +64,25 @@
    KINGDOM THEMES — dark-background kingdoms
    ═══════════════════════════════════════════════════════════ */
 
-/* Arkazia — Red / Black / White text */
+/* Arkazia — Red accent, near-neutral dark surfaces */
 [data-kingdom="arkazia"] {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #2a2a2a;
-  --bg-elevated: #1e1e1e;
-  --text-primary: #f0f0f0;
-  --text-secondary: #e0e0e0;
-  --text-muted: #b0b0b0;
-  --accent: #DC143C;
-  --accent-hover: #B22222;
+  --bg-primary: #100808;           /* nearly black, very subtle red warmth */
+  --bg-secondary: #181010;         /* slightly lighter warm black */
+  --bg-tertiary: #201414;          /* cards, field slots */
+  --bg-elevated: #140C0C;          /* modals */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E8D8D8;
+  --text-muted: #A08888;
+  --accent: #FF3030;
+  --accent-hover: #E01818;
   --accent-light: #FF6B6B;
+  --accent-muted: #2A1010;
   --text-on-accent: #FFFFFF;
-  --border: #3a1a1a;
-  --border-light: #4a2a2a;
-  --shadow-sm: 0 1px 3px rgba(220, 20, 60, 0.15);
-  --shadow-md: 0 4px 6px rgba(220, 20, 60, 0.2);
-  --shadow-lg: 0 10px 25px rgba(220, 20, 60, 0.25);
+  --border: #3A1818;
+  --border-light: #4A2424;
+  --shadow-sm: 0 1px 3px rgba(255, 48, 48, 0.15);
+  --shadow-md: 0 4px 6px rgba(255, 48, 48, 0.2);
+  --shadow-lg: 0 10px 25px rgba(255, 48, 48, 0.25);
 }
 
 /* Draxys — Yellow / Black / White text */
@@ -95,6 +97,7 @@
   --accent: #F9A825;
   --accent-hover: #F57F17;
   --accent-light: #FDD835;
+  --accent-muted: #2A2210;
   --text-on-accent: #000000;
   --border: #3a3520;
   --border-light: #4a4530;
@@ -115,6 +118,7 @@
   --accent: #FF6D00;
   --accent-hover: #E65100;
   --accent-light: #FF9E40;
+  --accent-muted: #2A1A0A;
   --text-on-accent: #FFFFFF;
   --border: #3a2a1a;
   --border-light: #4a3a2a;
@@ -135,6 +139,7 @@
   --accent: #795548;
   --accent-hover: #5D4037;
   --accent-light: #A1887F;
+  --accent-muted: #201814;
   --text-on-accent: #FFFFFF;
   --border: #3a302a;
   --border-light: #4a403a;
@@ -144,27 +149,28 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   KINGDOM THEMES — light-background kingdoms
+   KINGDOM THEMES — light-background kingdoms (non-playable)
    ═══════════════════════════════════════════════════════════ */
 
-/* Veridor — Blue / White / Black text */
+/* Veridor — Blue accent, near-neutral dark surfaces */
 [data-kingdom="veridor"] {
-  --bg-primary: #F5F8FC;
-  --bg-secondary: #E8EFF7;
-  --bg-tertiary: #D6E3F0;
-  --bg-elevated: #FFFFFF;
-  --text-primary: #1a1a1a;
-  --text-secondary: #3a3a3a;
-  --text-muted: #6a6a6a;
-  --accent: #2196F3;
-  --accent-hover: #1976D2;
-  --accent-light: #64B5F6;
+  --bg-primary: #0A0E18;           /* nearly black, very subtle blue coolness */
+  --bg-secondary: #101420;         /* slightly lighter cool black */
+  --bg-tertiary: #161A28;          /* cards, field slots */
+  --bg-elevated: #0C1018;          /* modals */
+  --text-primary: #FFFFFF;
+  --text-secondary: #D8D8E8;
+  --text-muted: #8888A0;
+  --accent: #4A90D9;
+  --accent-hover: #3570B8;
+  --accent-light: #6AB0F0;
+  --accent-muted: #0E1A2A;
   --text-on-accent: #FFFFFF;
-  --border: #B8D0E8;
-  --border-light: #D0E0F0;
-  --shadow-sm: 0 1px 3px rgba(33, 150, 243, 0.1);
-  --shadow-md: 0 4px 6px rgba(33, 150, 243, 0.15);
-  --shadow-lg: 0 10px 25px rgba(33, 150, 243, 0.2);
+  --border: #1E2A40;
+  --border-light: #2A3650;
+  --shadow-sm: 0 1px 3px rgba(74, 144, 217, 0.15);
+  --shadow-md: 0 4px 6px rgba(74, 144, 217, 0.2);
+  --shadow-lg: 0 10px 25px rgba(74, 144, 217, 0.25);
 }
 
 /* Nordalh — Purple / White / Black text */
@@ -179,6 +185,7 @@
   --accent: #7B1FA2;
   --accent-hover: #6A1B9A;
   --accent-light: #BA68C8;
+  --accent-muted: #E8D8F4;
   --text-on-accent: #FFFFFF;
   --border: #D0B8E8;
   --border-light: #E0D0F0;
@@ -199,6 +206,7 @@
   --accent: #FBC02D;
   --accent-hover: #F9A825;
   --accent-light: #FFF176;
+  --accent-muted: #FFF3D0;
   --text-on-accent: #000000;
   --border: #E8D8A0;
   --border-light: #F0E8C0;
@@ -208,25 +216,26 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   KINGDOM THEMES — golden-background kingdom
+   Sylvara — playable, dark-background
    ═══════════════════════════════════════════════════════════ */
 
-/* Sylvara — Green / Golden / Black text */
+/* Sylvara — Green accent with gold, near-neutral dark surfaces */
 [data-kingdom="sylvara"] {
-  --bg-primary: #F5F0E0;
-  --bg-secondary: #FFF8E7;
-  --bg-tertiary: #E8DCC8;
-  --bg-elevated: #FFFDF5;
-  --text-primary: #1a1a1a;
-  --text-secondary: #3a3a3a;
-  --text-muted: #6a6a6a;
-  --accent: #2E7D32;
-  --accent-hover: #1B5E20;
-  --accent-light: #66BB6A;
-  --text-on-accent: #FFFFFF;
-  --border: #D4C5A0;
-  --border-light: #E0D5B5;
-  --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.1);
-  --shadow-md: 0 4px 6px rgba(46, 125, 50, 0.15);
-  --shadow-lg: 0 10px 25px rgba(46, 125, 50, 0.2);
+  --bg-primary: #0A100A;           /* nearly black, very subtle green warmth */
+  --bg-secondary: #101810;         /* slightly lighter warm green-black */
+  --bg-tertiary: #162016;          /* cards, field slots */
+  --bg-elevated: #0C140C;          /* modals */
+  --text-primary: #FFFFFF;
+  --text-secondary: #D8E8D0;
+  --text-muted: #88A080;
+  --accent: #DAA520;
+  --accent-hover: #C09018;
+  --accent-light: #F0C848;
+  --accent-muted: #1A2A10;
+  --text-on-accent: #000000;
+  --border: #1E3418;
+  --border-light: #2A4422;
+  --shadow-sm: 0 1px 3px rgba(218, 165, 32, 0.15);
+  --shadow-md: 0 4px 6px rgba(218, 165, 32, 0.2);
+  --shadow-lg: 0 10px 25px rgba(218, 165, 32, 0.25);
 }

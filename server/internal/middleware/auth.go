@@ -60,6 +60,28 @@ func RequireAdmin(next http.Handler) http.Handler {
 	})
 }
 
+// OptionalAuth returns middleware that attempts JWT validation but does NOT reject
+// unauthenticated requests. If a valid token is present, player ID and role are
+// injected into context. Otherwise the request proceeds with an unenriched context.
+func OptionalAuth(validate TokenValidator) Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			authHeader := r.Header.Get("Authorization")
+			if authHeader != "" {
+				parts := strings.SplitN(authHeader, " ", 2)
+				if len(parts) == 2 && strings.EqualFold(parts[0], "Bearer") {
+					if playerID, role, err := validate(parts[1]); err == nil {
+						ctx := context.WithValue(r.Context(), playerIDKey, playerID)
+						ctx = context.WithValue(ctx, roleKey, role)
+						r = r.WithContext(ctx)
+					}
+				}
+			}
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
 // PlayerIDFromContext extracts the authenticated player ID from the request context.
 func PlayerIDFromContext(ctx context.Context) (int64, bool) {
 	id, ok := ctx.Value(playerIDKey).(int64)
@@ -70,4 +92,12 @@ func PlayerIDFromContext(ctx context.Context) (int64, bool) {
 func RoleFromContext(ctx context.Context) (string, bool) {
 	role, ok := ctx.Value(roleKey).(string)
 	return role, ok
+}
+
+// NewPlayerContext returns a context with player authentication values set.
+// Useful for testing handlers that expect Auth middleware to have run.
+func NewPlayerContext(ctx context.Context, playerID int64, role string) context.Context {
+	ctx = context.WithValue(ctx, playerIDKey, playerID)
+	ctx = context.WithValue(ctx, roleKey, role)
+	return ctx
 }

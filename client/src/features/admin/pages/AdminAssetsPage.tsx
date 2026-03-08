@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { fetchGameAssets, uploadSprite, deleteSprite } from '../../../services/admin';
+import { fetchGameAssets, uploadSprite, deleteSprite, createGameAsset, deleteGameAsset } from '../../../services/admin';
 import type { GameAsset, AssetCategory } from '../../../types/api';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { useAssetStore } from '../../../stores/assetStore';
 import styles from './AdminAssetsPage.module.css';
 
-const CATEGORY_ORDER: AssetCategory[] = ['kingdom_flag', 'village_marker', 'zone_tile', 'building', 'resource', 'unit'];
+const CATEGORY_ORDER: AssetCategory[] = ['kingdom_flag', 'village_marker', 'zone_tile', 'terrain_tile', 'building', 'resource', 'unit'];
 
 const CATEGORY_LABELS: Record<AssetCategory, string> = {
   kingdom_flag: 'Kingdom Flags',
   village_marker: 'Village Markers',
   zone_tile: 'Zone Tiles',
+  terrain_tile: 'Terrain Tiles',
   building: 'Buildings',
   resource: 'Resources',
   unit: 'Units',
@@ -20,10 +21,14 @@ const SPRITE_DIMENSIONS: Record<AssetCategory, { w: number; h: number }> = {
   kingdom_flag: { w: 256, h: 256 },
   village_marker: { w: 256, h: 256 },
   zone_tile: { w: 256, h: 256 },
+  terrain_tile: { w: 256, h: 256 },
   building: { w: 96, h: 96 },
   resource: { w: 32, h: 32 },
   unit: { w: 64, h: 64 },
 };
+
+/** Categories that support adding / removing variants */
+const VARIANT_CATEGORIES: Set<AssetCategory> = new Set(['zone_tile', 'terrain_tile']);
 
 export function AdminAssetsPage() {
   const [assets, setAssets] = useState<GameAsset[]>([]);
@@ -35,6 +40,8 @@ export function AdminAssetsPage() {
 
   const upsertStore = useAssetStore((s) => s.upsert);
   const clearSpriteStore = useAssetStore((s) => s.clearSprite);
+  const addAssetStore = useAssetStore((s) => s.addAsset);
+  const removeAssetStore = useAssetStore((s) => s.removeAsset);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -94,6 +101,64 @@ export function AdminAssetsPage() {
       setUploading(null);
     }
   };
+
+  /**
+   * Add a new variant for a zone_tile or terrain_tile.
+   * Auto-generates the next variant ID: e.g. zone_veridor → zone_veridor_v2, zone_veridor_v3 …
+   */
+  const handleAddVariant = async (baseAsset: GameAsset) => {
+    setError(null);
+    // Find existing variants: base ID + _v\d+
+    const baseId = baseAsset.id;
+    const existing = assets.filter(
+      (a) => a.id === baseId || (a.id.startsWith(baseId + '_v') && a.category === baseAsset.category),
+    );
+    // Next variant number
+    let maxV = 1;
+    for (const a of existing) {
+      const match = a.id.match(/_v(\d+)$/);
+      if (match) {
+        maxV = Math.max(maxV, parseInt(match[1]!, 10));
+      }
+    }
+    const newId = `${baseId}_v${maxV + 1}`;
+    const newName = `${baseAsset.display_name} v${maxV + 1}`;
+
+    try {
+      const created = await createGameAsset({
+        id: newId,
+        category: baseAsset.category,
+        display_name: newName,
+        default_icon: baseAsset.default_icon,
+      });
+      setAssets((prev) => [...prev, created]);
+      addAssetStore(created);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create variant.');
+    }
+  };
+
+  /**
+   * Delete a variant asset entirely (row + sprite).
+   * Only allowed for variant IDs (those with _v\d+ suffix).
+   */
+  const handleDeleteAsset = async (id: string) => {
+    if (!confirm(`Delete asset "${id}" permanently?`)) return;
+    setUploading(id);
+    setError(null);
+    try {
+      await deleteGameAsset(id);
+      setAssets((prev) => prev.filter((a) => a.id !== id));
+      removeAssetStore(id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete asset.');
+    } finally {
+      setUploading(null);
+    }
+  };
+
+  /** Check if an asset is a variant (has _v\d+ suffix) — only variants can be deleted */
+  const isVariant = (id: string) => /_v\d+$/.test(id);
 
   if (loading) {
     return (
@@ -174,6 +239,26 @@ export function AdminAssetsPage() {
                       onClick={() => handleDelete(asset.id)}
                     >
                       Remove
+                    </button>
+                  )}
+                  {/* Variant management for zone_tile / terrain_tile */}
+                  {VARIANT_CATEGORIES.has(group.category) && !isVariant(asset.id) && (
+                    <button
+                      className={styles.variantBtn}
+                      onClick={() => handleAddVariant(asset)}
+                      title="Add a new sprite variant for this tile"
+                    >
+                      + Variant
+                    </button>
+                  )}
+                  {VARIANT_CATEGORIES.has(group.category) && isVariant(asset.id) && (
+                    <button
+                      className={styles.deleteAssetBtn}
+                      disabled={uploading === asset.id}
+                      onClick={() => handleDeleteAsset(asset.id)}
+                      title="Delete this variant permanently"
+                    >
+                      Delete
                     </button>
                   )}
                 </div>

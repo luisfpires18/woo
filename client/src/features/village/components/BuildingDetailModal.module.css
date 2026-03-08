@@ -160,3 +160,26 @@
   text-align: center;
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .content {
+    gap: var(--spacing-sm);
+  }
+
+  .currentLevel {
+    font-size: 1rem;
+  }
+
+  .costGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 0.8125rem;
+  }
+
+  .upgradeBtn {
+    padding: var(--spacing-sm);
+    font-size: 0.8125rem;
+  }
+}

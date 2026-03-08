@@ -45,18 +45,11 @@ export type BuildingType =
   | 'stone_1'
   | 'stone_2'
   | 'stone_3'
-  | 'warehouse'
   | 'barracks'
   | 'stable'
-  | 'forge'
-  | 'rune_altar'
-  | 'walls'
-  | 'marketplace'
-  | 'embassy'
-  | 'watchtower'
-  | 'dock'
-  | 'grove_sanctum'
-  | 'colosseum';
+  | 'archery'
+  | 'workshop'
+  | 'special';
 
 export interface Resources {
   village_id: number;

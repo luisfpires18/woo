@@ -30,23 +30,6 @@ var (
 	ErrInvalidUsername     = errors.New("username must be 3-20 characters, alphanumeric and underscores only")
 )
 
-var validKingdoms = map[string]bool{
-	"veridor": true,
-	"sylvara": true,
-	"arkazia": true,
-	"draxys":  true,
-	"nordalh": true,
-	// NPC-only kingdoms (not selectable by players):
-	// "zandres"   — underground realm, requires unique mechanics
-	// "lumus"     — island kingdom, requires Docks for all factions
-	// "drakanith"  — draconic bloodline, future expansion
-}
-
-// IsValidKingdom checks if the given kingdom string is a valid playable kingdom.
-func IsValidKingdom(kingdom string) bool {
-	return validKingdoms[kingdom]
-}
-
 const (
 	accessTokenDuration  = 15 * time.Minute
 	refreshTokenDuration = 7 * 24 * time.Hour

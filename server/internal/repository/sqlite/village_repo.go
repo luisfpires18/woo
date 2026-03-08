@@ -19,9 +19,9 @@ func NewVillageRepo(db *sql.DB) *villageRepo {
 
 func (r *villageRepo) Create(ctx context.Context, village *model.Village) error {
 	result, err := r.db.ExecContext(ctx,
-		`INSERT INTO villages (player_id, name, x, y, is_capital, created_at)
-		 VALUES (?, ?, ?, ?, ?, ?)`,
-		village.PlayerID, village.Name, village.X, village.Y, village.IsCapital, village.CreatedAt,
+		`INSERT INTO villages (player_id, name, x, y, is_capital, season_id, created_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		village.PlayerID, village.Name, village.X, village.Y, village.IsCapital, village.SeasonID, village.CreatedAt,
 	)
 	if err != nil {
 		return fmt.Errorf("insert village: %w", err)
@@ -100,6 +100,40 @@ func (r *villageRepo) Count(ctx context.Context) (int64, error) {
 	err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM villages`).Scan(&count)
 	if err != nil {
 		return 0, fmt.Errorf("count villages: %w", err)
+	}
+	return count, nil
+}
+
+func (r *villageRepo) ListByPlayerAndSeason(ctx context.Context, playerID int64, seasonID int64) ([]*model.Village, error) {
+	rows, err := r.db.QueryContext(ctx,
+		`SELECT id, player_id, name, x, y, is_capital, created_at
+		 FROM villages WHERE player_id = ? AND season_id = ? ORDER BY created_at ASC`, playerID, seasonID,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("list villages for player %d season %d: %w", playerID, seasonID, err)
+	}
+	defer rows.Close()
+
+	var villages []*model.Village
+	for rows.Next() {
+		var v model.Village
+		var createdAtStr string
+		if err := rows.Scan(&v.ID, &v.PlayerID, &v.Name, &v.X, &v.Y, &v.IsCapital, &createdAtStr); err != nil {
+			return nil, fmt.Errorf("scan village row: %w", err)
+		}
+		v.SeasonID = &seasonID
+		v.CreatedAt, _ = parseTime(createdAtStr)
+		villages = append(villages, &v)
+	}
+	return villages, rows.Err()
+}
+
+func (r *villageRepo) CountByPlayerAndSeason(ctx context.Context, playerID int64, seasonID int64) (int64, error) {
+	var count int64
+	err := r.db.QueryRowContext(ctx,
+		`SELECT COUNT(*) FROM villages WHERE player_id = ? AND season_id = ?`, playerID, seasonID).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("count villages for player season: %w", err)
 	}
 	return count, nil
 }

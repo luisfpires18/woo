@@ -223,7 +223,7 @@ func TestPlaceKingdomZone_SixthKingdomFails(t *testing.T) {
 
 // --- FindSpawnTile tests ---
 
-func TestFindSpawnTile_AutoPlacesZone(t *testing.T) {
+func TestFindSpawnTile_WithZone(t *testing.T) {
 	svc := newTestMapService(t)
 	ctx := context.Background()
 
@@ -231,7 +231,11 @@ func TestFindSpawnTile_AutoPlacesZone(t *testing.T) {
 		t.Fatalf("GenerateMap: %v", err)
 	}
 
-	// FindSpawnTile should auto-place the kingdom zone if not yet placed
+	// Pre-place the kingdom zone so FindSpawnTile can find it
+	if _, _, err := svc.PlaceKingdomZone(ctx, model.ZoneArkazia); err != nil {
+		t.Fatalf("PlaceKingdomZone(arkazia): %v", err)
+	}
+
 	x, y, err := svc.FindSpawnTile(ctx, model.ZoneArkazia)
 	if err != nil {
 		t.Fatalf("FindSpawnTile(arkazia): %v", err)
@@ -251,6 +255,29 @@ func TestFindSpawnTile_AutoPlacesZone(t *testing.T) {
 	}
 }
 
+func TestFindSpawnTile_FallbackNoZone(t *testing.T) {
+	svc := newTestMapService(t)
+	ctx := context.Background()
+
+	if err := svc.GenerateMap(ctx); err != nil {
+		t.Fatalf("GenerateMap: %v", err)
+	}
+
+	// No zones placed — FindSpawnTile should fall back to any plains tile
+	x, y, err := svc.FindSpawnTile(ctx, model.ZoneVeridor)
+	if err != nil {
+		t.Fatalf("FindSpawnTile(veridor) with no zones should fallback, got: %v", err)
+	}
+
+	tile, err := svc.GetTile(ctx, x, y)
+	if err != nil {
+		t.Fatalf("GetTile(%d,%d): %v", x, y, err)
+	}
+	if tile.TerrainType != model.TerrainPlains {
+		t.Errorf("fallback spawn tile terrain: got %q, want %q", tile.TerrainType, model.TerrainPlains)
+	}
+}
+
 func TestFindSpawnTile_MultipleKingdoms(t *testing.T) {
 	svc := newTestMapService(t)
 	ctx := context.Background()
@@ -262,6 +289,13 @@ func TestFindSpawnTile_MultipleKingdoms(t *testing.T) {
 	kingdoms := []string{
 		model.ZoneVeridor, model.ZoneSylvara, model.ZoneArkazia,
 		model.ZoneDraxys, model.ZoneNordalh,
+	}
+
+	// Pre-place all kingdom zones
+	for _, k := range kingdoms {
+		if _, _, err := svc.PlaceKingdomZone(ctx, k); err != nil {
+			t.Fatalf("PlaceKingdomZone(%s): %v", k, err)
+		}
 	}
 
 	for _, k := range kingdoms {

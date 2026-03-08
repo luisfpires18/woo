@@ -200,10 +200,10 @@ server/
 │   │   ├── logging.go          # Request logging
 │   │   └── cors.go             # CORS headers
 │   ├── websocket/
-│   │   ├── hub.go              # Central WebSocket hub
-│   │   ├── client.go           # Individual client connection
-│   │   ├── messages.go         # Message type definitions
-│   │   └── handlers.go         # WebSocket message handlers│   ├── dto/                    # Data Transfer Objects (request/response structs)
+│   │   ├── hub.go              # Central WebSocket hub (manages clients, broadcast)
+│   │   ├── client.go           # Individual client connection (read/write pumps)
+│   │   ├── messages.go         # Message type definitions & data structs
+│   │   └── handler.go          # HTTP upgrade handler with JWT auth via ?token=│   ├── dto/                    # Data Transfer Objects (request/response structs)
 │   │   ├── auth.go
 │   │   ├── village.go
 │   │   └── map.go│   └── gameloop/
@@ -385,12 +385,100 @@ func (g *GameLoop) Run(ctx context.Context) {
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/villages` | List player's villages |
-| GET | `/api/villages/{id}` | Get village details (buildings, resources) |
+| GET | `/api/villages/{id}` | Get village details (buildings, resources, troops, training queue) |
+| PUT | `/api/villages/{id}` | Update village (e.g. rename) |
 | POST | `/api/villages/{id}/build` | Start building construction |
-| POST | `/api/villages/{id}/train` | Start troop training |
+| DELETE | `/api/villages/{id}/build/{queueId}` | Cancel queued build |
+| POST | `/api/villages/{id}/train` | Start troop training (troop_type, quantity) |
+| GET | `/api/villages/{id}/train/cost` | Preview training cost (?troop_type=X&quantity=N) |
+| DELETE | `/api/villages/{id}/train/{queueId}` | Cancel queued training |
+| GET | `/api/villages/{id}/troops` | List troops stationed in a village |
 | GET | `/api/map?x={x}&y={y}&range={r}` | Get map tiles (default range 10 = 21×21 chunk, max 20) |
-| GET | `/api/player/profile` | Get current player profile |
-| WS | `/ws` | WebSocket connection (with JWT auth) |
+| GET | `/api/map/tile?x={x}&y={y}` | Get single map tile details |
+| GET | `/api/player/me` | Get current player profile (used to refresh cached data) |
+| PUT | `/api/player/kingdom` | Choose kingdom (post-registration, creates first village) |
+| WS | `/ws` | WebSocket connection (JWT via `?token=` query param). Hub manages clients, topic subscriptions, single-session per player. Game loop pushes `build_complete` and `train_complete` events. |
+
+### Admin
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/admin/players` | List all players (paginated) |
+| PUT | `/api/admin/players/{id}/role` | Update player role |
+| GET | `/api/admin/config` | Get all world config key-value pairs |
+| PUT | `/api/admin/config/{key}` | Set a world config value |
+| GET | `/api/admin/stats` | Get server statistics (player/village/tile counts) |
+| GET | `/api/admin/announcements` | List active announcements |
+| POST | `/api/admin/announcements` | Create an announcement |
+| DELETE | `/api/admin/announcements/{id}` | Delete an announcement |
+| GET | `/api/admin/assets` | List all game assets |
+| POST | `/api/admin/assets` | Create a game asset |
+| DELETE | `/api/admin/assets/{id}` | Delete a game asset |
+| POST | `/api/admin/assets/{id}/sprite` | Upload sprite for a game asset |
+| DELETE | `/api/admin/assets/{id}/sprite` | Remove sprite from a game asset |
+| GET | `/api/admin/resource-buildings` | List resource building configs |
+| GET | `/api/admin/resource-buildings/{id}` | Get single resource building config |
+| PUT | `/api/admin/resource-buildings/{id}` | Update resource building config |
+| POST | `/api/admin/resource-buildings/{id}/sprite` | Upload resource building sprite |
+| DELETE | `/api/admin/resource-buildings/{id}/sprite` | Remove resource building sprite |
+| PUT | `/api/admin/map/terrain` | Paint terrain on the live world map |
+| PUT | `/api/admin/map/zones` | Paint kingdom zones on the live world map |
+
+### Map Templates
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/admin/templates` | Create a new map template (name, size) |
+| GET | `/api/admin/templates` | List all templates |
+| GET | `/api/admin/templates/{name}` | Get template (full tile data) |
+| DELETE | `/api/admin/templates/{name}` | Delete a template |
+| PUT | `/api/admin/templates/{name}/terrain` | Paint terrain on a template |
+| PUT | `/api/admin/templates/{name}/zones` | Paint zones on a template |
+| POST | `/api/admin/templates/{name}/apply` | Apply template to the live world map (delete all + reinsert) |
+| POST | `/api/admin/templates/{name}/resize` | Resize a template (preserves existing tiles within bounds) |
+| GET | `/api/admin/templates/{name}/export` | Export template as JSON |
+
+---
+
+## Map Template System
+
+Templates decouple map editing from the live game. Admins create, paint, and preview templates before applying them.
+
+### Architecture
+
+- **Storage**: Templates are stored as JSON files at `server/data/templates/{sanitized_name}.json`. Each file contains the template metadata (name, size) and the full tile grid.
+- **TemplateRepository**: File-based repository (not SQLite). Handles JSON read/write with file locking.
+- **TemplateService**: Business logic for template CRUD, terrain/zone painting, resize, and apply-to-game.
+- **TemplateHandler**: HTTP endpoints for all template operations, admin-only.
+- **Apply flow**: `ApplyTemplate` does a DELETE ALL on `world_map` then INSERT of all template tiles. This handles size mismatches between the template and the existing map.
+
+### Template Model
+
+```go
+type MapTemplate struct {
+    Name  string         `json:"name"`
+    Size  int            `json:"size"`  // odd number 3-201
+    Tiles []TemplateTile `json:"tiles"`
+}
+
+type TemplateTile struct {
+    X           int    `json:"x"`
+    Y           int    `json:"y"`
+    TerrainType string `json:"terrain_type"`
+    KingdomZone string `json:"kingdom_zone"`
+}
+```
+
+---
+
+## Game Asset System
+
+The admin panel supports uploading sprite images for game entities (buildings, resources, troops, village markers).
+
+- **Upload**: Sprites are stored in `server/uploads/sprites/` with hashed filenames.
+- **GameAssetRepository**: Tracks asset metadata (id, category, display_name, default_icon, sprite_path).
+- **Seed data**: Default game assets are seeded on first run (building icons, resource icons, village markers per kingdom).
+- **Admin UI**: Asset management page allows uploading/removing sprites, creating/deleting asset entries.
 
 ---
 
@@ -463,3 +551,6 @@ All endpoints live under `/api/` with no version prefix. If breaking changes are
 | 2026-03-03 | Initial creation of system architecture |
 | 2026-03-03 | Fixed golang-jwt to v5, added dto/ package to server folder structure |
 | 2026-03-03 | Replaced gorilla/websocket with coder/websocket, added missing WS messages (connection_ready, build_started, train_started/complete, village_state, subscription_confirmed), added API response envelope, error code catalog, pagination convention, map chunk spec, API versioning note |
+| 2026-03-07 | Added all actually-implemented REST routes (admin panel, player, map templates). Added Map Template System section (TemplateRepository, TemplateService, template model, apply flow). Added Game Asset System section. Marked WebSocket /ws as not yet implemented. |
+| 2026-03-08 | WebSocket foundation implemented: Hub (single-session, topic pub/sub, broadcast), Client (read/write pumps, ping/pong), Handler (HTTP upgrade + JWT auth via ?token=), Messages (all type constants + data structs). Game loop notification bridge: CompleteBuilds returns BuildCompletionEvent slice, tick() broadcasts build_complete via hub. 8 WebSocket tests added. PlayerService extracted (Stage 3). 163 total backend tests. |
+| 2026-03-08 | Troops & Training feature: Added 4 REST endpoints (train, cost, cancel, list troops). Game loop extended with TrainCompleter + TrainCompletionNotifier for train_complete WebSocket events. Village response now includes troops + training_queue. 18 new backend tests (12 service + 6 handler). Frontend: TrainingPanel, TrainingQueue, TroopRoster components integrated into VillagePage. Arkazia kingdom (7 troop types). |

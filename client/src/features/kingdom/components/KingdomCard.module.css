@@ -185,6 +185,20 @@
   text-align: center;
 }
 
+/* ── Display Only (non-interactive showcase) ───────────────────────────────── */
+
+.card.displayOnly {
+  cursor: default;
+  pointer-events: none;
+}
+
+.card.displayOnly:hover {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+  background-color: var(--bg-secondary);
+}
+
 /* ── Responsive ────────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {

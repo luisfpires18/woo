@@ -22,7 +22,7 @@ func setupBuildingTest(t *testing.T) (*BuildingService, int64, int64) {
 	resourceRepo := sqlite.NewResourceRepo(db)
 	queueRepo := sqlite.NewBuildingQueueRepo(db)
 
-	svc := NewBuildingService(db, villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo)
+	svc := NewBuildingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo)
 
 	// Create a test player
 	player := &model.Player{
@@ -81,7 +81,7 @@ func TestStartUpgrade_InsufficientResources(t *testing.T) {
 	}
 
 	// Complete the first build manually so we can attempt another
-	if err := svc.CompleteBuilds(ctx); err != nil {
+	if _, err := svc.CompleteBuilds(ctx); err != nil {
 		// won't complete yet (time hasn't passed), cancel instead
 	}
 	// Cancel the upgrade so we can start another
@@ -246,7 +246,7 @@ func TestCompleteBuilds_PromotesLevel(t *testing.T) {
 	_ = svc.queueRepo.Insert(ctx, pastItem)
 
 	// Run complete builds
-	err = svc.CompleteBuilds(ctx)
+	_, err = svc.CompleteBuilds(ctx)
 	if err != nil {
 		t.Fatalf("CompleteBuilds failed: %v", err)
 	}
@@ -283,7 +283,7 @@ func TestCompleteBuilds_UpdatesResourceRates(t *testing.T) {
 	}
 	_ = svc.queueRepo.Insert(ctx, pastItem)
 
-	err := svc.CompleteBuilds(ctx)
+	_, err := svc.CompleteBuilds(ctx)
 	if err != nil {
 		t.Fatalf("CompleteBuilds failed: %v", err)
 	}

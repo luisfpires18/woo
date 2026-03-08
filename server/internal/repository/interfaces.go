@@ -26,9 +26,11 @@ type VillageRepository interface {
 	Create(ctx context.Context, village *model.Village) error
 	GetByID(ctx context.Context, id int64) (*model.Village, error)
 	ListByPlayerID(ctx context.Context, playerID int64) ([]*model.Village, error)
+	ListByPlayerAndSeason(ctx context.Context, playerID int64, seasonID int64) ([]*model.Village, error)
 	Update(ctx context.Context, village *model.Village) error
 	GetByCoordinates(ctx context.Context, x, y int) (*model.Village, error)
 	Count(ctx context.Context) (int64, error)
+	CountByPlayerAndSeason(ctx context.Context, playerID int64, seasonID int64) (int64, error)
 }
 
 // BuildingRepository defines data access operations for buildings.
@@ -83,6 +85,7 @@ type GameAssetRepository interface {
 	GetByCategory(ctx context.Context, category string) ([]*model.GameAsset, error)
 	UpdateSprite(ctx context.Context, id string, spritePath *string) error
 	Create(ctx context.Context, asset *model.GameAsset) error
+	Delete(ctx context.Context, id string) error
 }
 
 // ResourceBuildingConfigRepository defines data access operations for per-kingdom resource building cosmetics.
@@ -94,10 +97,21 @@ type ResourceBuildingConfigRepository interface {
 	UpdateSprite(ctx context.Context, id int64, spritePath *string) error
 }
 
+// BuildingDisplayConfigRepository defines data access operations for per-kingdom village building cosmetics.
+type BuildingDisplayConfigRepository interface {
+	GetAll(ctx context.Context) ([]*model.BuildingDisplayConfig, error)
+	GetByKingdom(ctx context.Context, kingdom string) ([]*model.BuildingDisplayConfig, error)
+	GetByID(ctx context.Context, id int64) (*model.BuildingDisplayConfig, error)
+	Update(ctx context.Context, cfg *model.BuildingDisplayConfig) error
+	UpdateSprite(ctx context.Context, id int64, spritePath *string) error
+}
+
 // WorldMapRepository defines data access operations for the world map tile grid.
 type WorldMapRepository interface {
 	// InsertBatch inserts multiple map tiles in a single transaction.
 	InsertBatch(ctx context.Context, tiles []*model.MapTile) error
+	// DeleteAll removes all tiles from the world map.
+	DeleteAll(ctx context.Context) error
 	// GetChunk returns tiles within a rectangular region centered on (cx, cy) with the given radius.
 	GetChunk(ctx context.Context, cx, cy, radius int) ([]*model.MapTile, error)
 	// GetTile returns a single tile at the given coordinates.
@@ -112,6 +126,13 @@ type WorldMapRepository interface {
 	GetDistinctZones(ctx context.Context) ([]string, error)
 	// UpdateTilesZone sets the kingdom_zone for all tiles within a circular radius of (cx, cy).
 	UpdateTilesZone(ctx context.Context, cx, cy, radius int, zone string) error
+	// UpdateTerrain updates the terrain_type for a batch of tiles.
+	UpdateTerrain(ctx context.Context, tiles []model.TileTerrainUpdate) error
+	// UpdateTilesZoneBatch updates the kingdom_zone for each tile individually (for template apply).
+	UpdateTilesZoneBatch(ctx context.Context, tiles []model.TemplateTile) error
+	// GetSpawnCandidates returns plains tiles with no village, optionally filtered by zone.
+	// If zone is empty, returns candidates from the entire map.
+	GetSpawnCandidates(ctx context.Context, zone string) ([]*model.MapTile, error)
 }
 
 // KingdomRelationRepository defines data access operations for kingdom diplomacy.
@@ -119,4 +140,55 @@ type KingdomRelationRepository interface {
 	GetAll(ctx context.Context) ([]*model.KingdomRelation, error)
 	Get(ctx context.Context, kingdomA, kingdomB string) (*model.KingdomRelation, error)
 	Upsert(ctx context.Context, rel *model.KingdomRelation) error
+}
+
+// TroopRepository defines data access operations for troops stationed in villages.
+type TroopRepository interface {
+	GetByVillageID(ctx context.Context, villageID int64) ([]*model.Troop, error)
+	GetByVillageAndType(ctx context.Context, villageID int64, troopType string) (*model.Troop, error)
+	Upsert(ctx context.Context, troop *model.Troop) error
+}
+
+// TrainingQueueRepository defines data access operations for the troop training queue.
+type TrainingQueueRepository interface {
+	Insert(ctx context.Context, item *model.TrainingQueue) error
+	GetByID(ctx context.Context, id int64) (*model.TrainingQueue, error)
+	GetByVillageID(ctx context.Context, villageID int64) ([]*model.TrainingQueue, error)
+	GetNextCompleted(ctx context.Context, now time.Time) ([]*model.TrainingQueue, error)
+	Update(ctx context.Context, item *model.TrainingQueue) error
+	Delete(ctx context.Context, id int64) error
+}
+
+// SeasonRepository defines data access operations for seasons.
+type SeasonRepository interface {
+	Create(ctx context.Context, season *model.Season) error
+	GetByID(ctx context.Context, id int64) (*model.Season, error)
+	List(ctx context.Context, statusFilter string) ([]*model.Season, error)
+	Update(ctx context.Context, season *model.Season) error
+	UpdateStatus(ctx context.Context, id int64, status string) error
+	Delete(ctx context.Context, id int64) error
+
+	// Season players
+	AddPlayer(ctx context.Context, sp *model.SeasonPlayer) error
+	RemovePlayer(ctx context.Context, seasonID, playerID int64) error
+	GetSeasonPlayer(ctx context.Context, seasonID, playerID int64) (*model.SeasonPlayer, error)
+	ListSeasonPlayers(ctx context.Context, seasonID int64) ([]*model.SeasonPlayer, error)
+	ListPlayerSeasons(ctx context.Context, playerID int64) ([]*model.SeasonPlayer, error)
+	GetSeasonPlayerCount(ctx context.Context, seasonID int64) (int, error)
+
+	// Season player history with season info (for profile)
+	GetPlayerSeasonHistory(ctx context.Context, playerID int64) ([]model.SeasonHistoryRow, error)
+}
+
+// UnitOfWork encapsulates multi-table transactional operations.
+// Keeps database transaction details behind the repository abstraction boundary.
+type UnitOfWork interface {
+	// DeductResourcesAndInsertBuildQueue atomically deducts resources and inserts a build queue item.
+	DeductResourcesAndInsertBuildQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.BuildingQueue) error
+
+	// DeductResourcesAndInsertTrainQueue atomically deducts resources and inserts a training queue item.
+	DeductResourcesAndInsertTrainQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.TrainingQueue) error
+
+	// CompleteTrainingUnit atomically adds troops, updates resources (food consumption), and advances/deletes the queue item.
+	CompleteTrainingUnit(ctx context.Context, villageID int64, troopType string, addQty int, res *model.Resources, queueItem *model.TrainingQueue, deleteQueue bool) error
 }

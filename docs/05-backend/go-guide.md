@@ -312,9 +312,28 @@ func (s *VillageService) StartBuilding(ctx context.Context, villageID int64, bui
 
 ### Rules
 
-- Repositories that need transaction support expose `*WithTx` variants accepting `*sql.Tx`
-- Services orchestrate transactions; repositories provide the atomic operations
-- Never nest transactions (SQLite does not support savepoints via `database/sql`)
+- **Services never import `database/sql` or `*sql.Tx`.** Transactions are encapsulated inside the `UnitOfWork` interface.
+- Services orchestrate transactions via `UnitOfWork` methods; repositories provide the atomic operations.
+- Never nest transactions (SQLite does not support savepoints via `database/sql`).
+
+### UnitOfWork Pattern
+
+For multi-step operations that must be atomic (e.g., deduct resources + insert queue entry), use the `UnitOfWork` interface defined in `repository/interfaces.go`:
+
+```go
+type UnitOfWork interface {
+    DeductResourcesAndInsertBuildQueue(ctx context.Context, res *model.Resources, entry *model.BuildingQueueEntry) error
+    DeductResourcesAndInsertTrainQueue(ctx context.Context, res *model.Resources, entry *model.TrainingQueueEntry) error
+    CompleteTrainingUnit(ctx context.Context, villageID int64, troopType string, quantity int, res *model.Resources, queueID int64) error
+}
+```
+
+The SQLite implementation lives in `repository/sqlite/unit_of_work.go` and wraps each method in a single `BEGIN … COMMIT` transaction. Services receive the `UnitOfWork` via constructor injection — they never see `*sql.DB` or `*sql.Tx`.
+
+### Shared Helpers
+
+- **`resource_calc.go`**: `FlushResources(res, now)` advances a resource snapshot forward in time. Used by building, training, and village services to avoid triplicated flush logic.
+- **`kingdoms.go`**: `IsValidKingdom(k)` validates kingdom strings. Used by auth and any future kingdom-dependent logic.
 
 ---
 
@@ -662,3 +681,4 @@ migrate:
 |------|--------|
 | 2026-03-03 | Initial creation of Go guide |
 | 2026-03-03 | Added Go module path (github.com/luisfpires18/woo), replaced gorilla/websocket with coder/websocket, added SecurityHeaders middleware, DTO convention, transaction pattern, .env.example, unified API response envelope with error codes |
+| 2026-03-10 | Replaced WithTx-per-repo transaction pattern with UnitOfWork interface. Added resource_calc.go (FlushResources) and kingdoms.go (IsValidKingdom) shared helpers. Documented new architecture rules: services never import database/sql. |

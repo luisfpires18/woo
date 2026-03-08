@@ -16,6 +16,12 @@ interface AssetState {
   /** Replace a single asset in the cache (after upload / delete). */
   upsert: (asset: GameAsset) => void;
 
+  /** Add a new asset to the cache (after creating a variant). */
+  addAsset: (asset: GameAsset) => void;
+
+  /** Remove an asset from the cache by id. */
+  removeAsset: (id: string) => void;
+
   /** Clear sprite_url for a given asset id. */
   clearSprite: (id: string) => void;
 }
@@ -43,6 +49,16 @@ export const useAssetStore = create<AssetState>((set, get) => ({
   upsert: (asset: GameAsset) =>
     set((s) => ({
       assets: s.assets.map((a) => (a.id === asset.id ? asset : a)),
+    })),
+
+  addAsset: (asset: GameAsset) =>
+    set((s) => ({
+      assets: [...s.assets, asset],
+    })),
+
+  removeAsset: (id: string) =>
+    set((s) => ({
+      assets: s.assets.filter((a) => a.id !== id),
     })),
 
   clearSprite: (id: string) =>

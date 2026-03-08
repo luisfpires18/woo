@@ -1,0 +1,27 @@
+.fullPageLoader {
+  display: flex;
+  justify-content: center;
+  margin-top: 40vh;
+}
+
+.emptyState {
+  text-align: center;
+  margin-top: 20vh;
+  color: var(--text-muted);
+}
+
+.emptyStateTitle {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .fullPageLoader {
+    margin-top: 30vh;
+  }
+
+  .emptyState {
+    margin-top: 15vh;
+    padding: 0 1rem;
+  }
+}

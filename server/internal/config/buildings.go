@@ -30,7 +30,6 @@ type BuildingConfig struct {
 	TimeFactor    float64                // time multiplier per level
 	MaxLevel      int                    // maximum building level
 	Prerequisites []BuildingPrerequisite // required buildings
-	KingdomOnly   string                 // empty = all kingdoms, otherwise kingdom slug
 }
 
 // resourceBuildingCost is the shared base cost for all 12 resource field buildings.
@@ -59,14 +58,6 @@ var BuildingConfigs = map[string]BuildingConfig{
 		TimeFactor:    1.7,
 		MaxLevel:      20,
 	},
-	"warehouse": {
-		DisplayName:   "Warehouse",
-		BaseCost:      ResourceCost{Food: 50, Water: 120, Lumber: 120, Stone: 100},
-		BaseTimeSec:   180, // 3 min
-		ScalingFactor: 1.6,
-		TimeFactor:    1.6,
-		MaxLevel:      20,
-	},
 	"barracks": {
 		DisplayName:   "Barracks",
 		BaseCost:      ResourceCost{Food: 80, Water: 200, Lumber: 150, Stone: 100},
@@ -90,110 +81,40 @@ var BuildingConfigs = map[string]BuildingConfig{
 			{BuildingType: "barracks", MinLevel: 5},
 		},
 	},
-	"forge": {
-		DisplayName:   "Forge",
-		BaseCost:      ResourceCost{Food: 100, Water: 250, Lumber: 180, Stone: 200},
-		BaseTimeSec:   480,
+	"archery": {
+		DisplayName:   "Archery",
+		BaseCost:      ResourceCost{Food: 80, Water: 150, Lumber: 200, Stone: 80},
+		BaseTimeSec:   300, // 5 min
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
-		MaxLevel:      10,
-		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 5},
-			{BuildingType: "barracks", MinLevel: 3},
-		},
-	},
-	"rune_altar": {
-		DisplayName:   "Rune Altar",
-		BaseCost:      ResourceCost{Food: 150, Water: 300, Lumber: 250, Stone: 250},
-		BaseTimeSec:   600, // 10 min
-		ScalingFactor: 1.9,
-		TimeFactor:    1.9,
-		MaxLevel:      10,
-		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 7},
-			{BuildingType: "forge", MinLevel: 3},
-		},
-	},
-	"walls": {
-		DisplayName:   "Walls",
-		BaseCost:      ResourceCost{Food: 50, Water: 150, Lumber: 100, Stone: 200},
-		BaseTimeSec:   240, // 4 min
-		ScalingFactor: 1.6,
-		TimeFactor:    1.6,
-		MaxLevel:      20,
-		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 2},
-		},
-	},
-	"marketplace": {
-		DisplayName:   "Marketplace",
-		BaseCost:      ResourceCost{Food: 80, Water: 180, Lumber: 180, Stone: 120},
-		BaseTimeSec:   300,
-		ScalingFactor: 1.6,
-		TimeFactor:    1.6,
 		MaxLevel:      15,
-		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 5},
-			{BuildingType: "warehouse", MinLevel: 3},
-		},
-	},
-	"embassy": {
-		DisplayName:   "Embassy",
-		BaseCost:      ResourceCost{Food: 100, Water: 200, Lumber: 200, Stone: 200},
-		BaseTimeSec:   480,
-		ScalingFactor: 1.7,
-		TimeFactor:    1.7,
-		MaxLevel:      10,
-		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 8},
-		},
-	},
-	"watchtower": {
-		DisplayName:   "Watchtower",
-		BaseCost:      ResourceCost{Food: 60, Water: 150, Lumber: 100, Stone: 150},
-		BaseTimeSec:   240,
-		ScalingFactor: 1.6,
-		TimeFactor:    1.6,
-		MaxLevel:      10,
 		Prerequisites: []BuildingPrerequisite{
 			{BuildingType: "town_hall", MinLevel: 3},
-			{BuildingType: "walls", MinLevel: 1},
 		},
 	},
-	"dock": {
-		DisplayName:   "Dock",
-		BaseCost:      ResourceCost{Food: 100, Water: 250, Lumber: 300, Stone: 150},
-		BaseTimeSec:   480,
+	"workshop": {
+		DisplayName:   "Workshop",
+		BaseCost:      ResourceCost{Food: 100, Water: 200, Lumber: 300, Stone: 250},
+		BaseTimeSec:   600, // 10 min
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
 		MaxLevel:      15,
-		KingdomOnly:   "veridor",
 		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 6},
+			{BuildingType: "town_hall", MinLevel: 7},
+			{BuildingType: "barracks", MinLevel: 5},
 		},
 	},
-	"grove_sanctum": {
-		DisplayName:   "Grove Sanctum",
-		BaseCost:      ResourceCost{Food: 150, Water: 200, Lumber: 300, Stone: 200},
-		BaseTimeSec:   480,
+	"special": {
+		DisplayName:   "Special",
+		BaseCost:      ResourceCost{Food: 200, Water: 300, Lumber: 250, Stone: 300},
+		BaseTimeSec:   900, // 15 min
 		ScalingFactor: 1.8,
 		TimeFactor:    1.8,
 		MaxLevel:      15,
-		KingdomOnly:   "sylvara",
 		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 6},
-		},
-	},
-	"colosseum": {
-		DisplayName:   "Colosseum",
-		BaseCost:      ResourceCost{Food: 100, Water: 300, Lumber: 200, Stone: 300},
-		BaseTimeSec:   480,
-		ScalingFactor: 1.8,
-		TimeFactor:    1.8,
-		MaxLevel:      15,
-		KingdomOnly:   "arkazia",
-		Prerequisites: []BuildingPrerequisite{
-			{BuildingType: "town_hall", MinLevel: 6},
+			{BuildingType: "town_hall", MinLevel: 10},
+			{BuildingType: "barracks", MinLevel: 7},
+			{BuildingType: "stable", MinLevel: 5},
 		},
 	},
 
@@ -244,9 +165,8 @@ func ResourceBuildingTypes() []string {
 const BaseResourceRate = 1.0 // rate at level 0 (idle) — per second
 const RatePerLevel = 2.0     // additional rate per level — per second
 
-// StoragePerLevel defines warehouse capacity scaling.
-const BaseStorage = 1200.0  // fixed cap for now
-const StoragePerLevel = 0.0 // disabled — warehouse does not affect cap yet
+// BaseStorage defines the fixed storage capacity per village.
+const BaseStorage = 1200.0
 
 // CostAtLevel calculates the resource cost for upgrading a building to the given level.
 // Formula: base_cost × scaling_factor^(level-1)

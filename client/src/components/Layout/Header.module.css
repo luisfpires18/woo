@@ -4,7 +4,7 @@
   justify-content: space-between;
   padding: var(--spacing-sm) var(--spacing-lg);
   background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--accent);
   height: 3.5rem;
   gap: var(--spacing-md);
 }
@@ -52,6 +52,19 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.usernameLink {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.usernameLink:hover {
+  color: var(--accent);
 }
 
 .kingdom {

@@ -79,16 +79,11 @@ Buildings are constructed inside a village and provide various functions. Each b
 | **water_1 / water_2 / water_3** | 3 slots that produce Water per hour. | — |
 | **lumber_1 / lumber_2 / lumber_3** | 3 slots that produce Lumber per hour. | — |
 | **stone_1 / stone_2 / stone_3** | 3 slots that produce Stone per hour. | — |
-| **Warehouse** | Stores resources. Level determines max storage per resource. | — |
 | **Barracks** | Trains infantry troops. Higher level = faster training, more unit types. | Troop types by level |
-| **Stable** | Trains mounted/fast troops. | Advanced troop types |
-| **Forge** | Crafts weapons from resources + runes. Higher level = higher weapon tiers. | Weapon tiers |
-| **Rune Altar** | Combines, enhances, and stores runes. | Rune combinations |
-| **Walls** | Passive defense bonus for the village. Higher level = stronger defense. | — |
-| **Marketplace** | Trade resources with other players. Level affects trade capacity. | — |
-| **Embassy** | Required to form/join alliances. Level affects alliance size. | Alliance features |
-| **Watchtower** | Detects incoming attacks. Higher level = earlier warning + more detail. | — |
-| **Dock** | (Veridor-only) Builds naval units. Enables sea-based attacks and trade routes. | Naval troops |
+| **Stable** | Trains mounted/cavalry troops. | Advanced troop types |
+| **Archery** | Trains ranged troops (archers, crossbowmen, slingers). | Ranged troop types |
+| **Workshop** | Builds siege equipment (trebuchets, rams, ballistas). | Siege troop types |
+| **Special** | Trains kingdom-unique elite units. | Elite troop types |
 
 ### Building Type Constants
 
@@ -98,11 +93,10 @@ Canonical string identifiers used in the database `/buildings.building_type` col
 town_hall,
 food_1, food_2, food_3, water_1, water_2, water_3,
 lumber_1, lumber_2, lumber_3, stone_1, stone_2, stone_3,
-warehouse, barracks, stable, forge, rune_altar, walls,
-marketplace, embassy, watchtower, dock, grove_sanctum, colosseum
+barracks, stable, archery, workshop, special
 ```
 
-> `dock` is Veridor-only, `grove_sanctum` is Sylvara-only, `colosseum` is Arkazia-only.
+> All 5 military buildings are available to every kingdom. Display names are admin-configurable per kingdom via `building_display_configs`. See `docs/01-game-design/kingdoms_units_buildlings.md` for kingdom-specific names.
 
 ### Building Prerequisites & Max Levels
 
@@ -113,16 +107,11 @@ marketplace, embassy, watchtower, dock, grove_sanctum, colosseum
 | Water Fields | `water_1`, `water_2`, `water_3` | 20 | None |
 | Lumber Fields | `lumber_1`, `lumber_2`, `lumber_3` | 20 | None |
 | Stone Fields | `stone_1`, `stone_2`, `stone_3` | 20 | None |
-| Warehouse | `warehouse` | 20 | None |
 | Barracks | `barracks` | 20 | Town Hall 3 |
 | Stable | `stable` | 15 | Town Hall 5, Barracks 5 |
-| Forge | `forge` | 10 | Town Hall 5, Barracks 3 |
-| Rune Altar | `rune_altar` | 10 | Town Hall 7, Forge 3 |
-| Walls | `walls` | 20 | Town Hall 2 |
-| Marketplace | `marketplace` | 15 | Town Hall 5, Warehouse 3 |
-| Embassy | `embassy` | 10 | Town Hall 8 |
-| Watchtower | `watchtower` | 10 | Town Hall 3, Walls 1 |
-| Dock | `dock` | 15 | Town Hall 6 (Veridor only) |
+| Archery | `archery` | 15 | Town Hall 3 |
+| Workshop | `workshop` | 15 | Town Hall 7, Barracks 5 |
+| Special | `special` | 15 | Town Hall 10, Barracks 7, Stable 5 |
 
 ### Construction Rules
 
@@ -137,6 +126,16 @@ marketplace, embassy, watchtower, dock, grove_sanctum, colosseum
 ## Troops
 
 Each kingdom has a unique set of troop types. See `docs/01-game-design/kingdoms.md` for kingdom-specific unit rosters.
+
+### Implementation Status
+
+**Arkazia** troops are fully implemented (7 types). Training uses a **Travian-style one-unit-at-a-time queue**: a player queues N units, the server produces them one by one (each taking `each_duration_sec`), and the game loop advances the queue every tick. Higher training building levels grant a speed multiplier via linear interpolation (Lv1 = 1.0×, Lv5 = 1.25×, Lv10 = 1.6×, Lv15 = 2.0×, Lv20 = 2.5×).
+
+**Backend**: models, config, repository, service (`training_service.go`), handler (4 REST endpoints), game loop integration with WebSocket `train_complete` notifications.
+
+**Frontend**: troop config mirror, API service, `BuildingTrainingModal` (training UI inside military building modals), `TrainingQueue`, `TroopRoster` components integrated into `VillagePage`. Clicking a military building (barracks, stable, archery, workshop, special) opens the training modal filtered to that building's troop roster. Non-military buildings open the standard upgrade modal. Military buildings have a small upgrade icon (⬆) on the building card for accessing the upgrade modal separately.
+
+Remaining kingdoms (Veridor, Sylvara, Draxys, Nordalh) need their troop rosters added to `config/troops.go` + `config/troops.ts`.
 
 ### Universal Troop Properties
 
@@ -291,10 +290,11 @@ The multiplayer world is a **square tile-based grid map** (similar to Travian's 
 
 ### Map Dimensions
 
-- **Size**: 401 × 401 tiles
-- **Coordinates**: X and Y range from **-200 to +200**, centered at **(0, 0)**
-- **Total tiles**: 160,801
+- **Default size**: 51 × 51 tiles (configurable per template, odd numbers only, range 3–201)
+- **Default coordinates**: X and Y range from **-25 to +25**, centered at **(0, 0)**
+- **Default total tiles**: 2,601
 - **Center tile (0, 0)**: Moraphys Stronghold (always)
+- **Template system**: Admins create map templates with custom sizes and terrain/zone painting, then apply to the live game. See `docs/03-architecture/system-architecture.md` for template details.
 
 ### Terrain Types & Distribution
 
@@ -381,3 +381,6 @@ Players can form alliances for cooperative play.
 | 2026-03-03 | Added Initial Village Setup, building prerequisites/max levels, canonical constants, square grid map spec (401×401), map generation rules, Weapons of Chaos configurable count |
 | 2026-03-03 | Added grove_sanctum and colosseum to canonical building type constants |
 | 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
+| 2026-03-07 | Updated map dimensions from 401×401 to configurable (default 51×51). Added template system reference. |
+| 2026-03-08 | Added Troops implementation status section — Arkazia 7-troop roster fully implemented with Travian-style one-at-a-time queue, speed multiplier, full-stack (backend + frontend). |
+| 2026-03-08 | Buildings simplified to match kingdoms_units_buildlings.md: removed dock/grove_sanctum/colosseum, added archery/workshop/special. All 5 military buildings are universal (no KingdomOnly restriction). Display names per kingdom set via building_display_configs table with lore-accurate names. |

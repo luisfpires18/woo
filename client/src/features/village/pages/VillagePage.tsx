@@ -8,8 +8,12 @@ import { BuildingGrid } from '../components/BuildingGrid';
 import { ResourcePanel } from '../components/ResourcePanel';
 import { ResourceFieldsGrid } from '../components/ResourceFieldsGrid';
 import { ConstructionQueue } from '../components/ConstructionQueue';
+import { TrainingQueue } from '../components/TrainingQueue';
+import { TroopRoster } from '../components/TroopRoster';
 import { BuildModal } from '../components/BuildModal';
 import { BuildingDetailModal } from '../components/BuildingDetailModal';
+import { BuildingTrainingModal } from '../components/BuildingTrainingModal';
+import { isMilitaryBuilding } from '../../../config/troops';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import type { BuildingInfo } from '../../../types/api';
 import styles from './VillagePage.module.css';
@@ -24,6 +28,7 @@ export function VillagePage() {
   // Modal state
   const [buildModalOpen, setBuildModalOpen] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<BuildingInfo | null>(null);
+  const [trainingBuilding, setTrainingBuilding] = useState<BuildingInfo | null>(null);
 
   // Rename state
   const [isRenaming, setIsRenaming] = useState(false);
@@ -93,6 +98,16 @@ export function VillagePage() {
   }
 
   const buildQueue = village.build_queue ?? [];
+  const trainingQueue = village.training_queue ?? [];
+  const troops = village.troops ?? [];
+
+  const handleBuildingClick = (b: BuildingInfo) => {
+    if (isMilitaryBuilding(b.building_type)) {
+      setTrainingBuilding(b);
+    } else {
+      setSelectedBuilding(b);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -130,6 +145,7 @@ export function VillagePage() {
       </header>
 
       <ConstructionQueue queue={buildQueue} villageId={villageId} />
+      <TrainingQueue queue={trainingQueue} villageId={villageId} />
 
       <div className={styles.content}>
         <div className={styles.main}>
@@ -137,7 +153,7 @@ export function VillagePage() {
             <h2 className={styles.sectionTitle}>Resource Fields</h2>
             <ResourceFieldsGrid
               buildings={village.buildings}
-              onBuildingClick={(b) => setSelectedBuilding(b)}
+              onBuildingClick={(b) => handleBuildingClick(b)}
             />
           </section>
 
@@ -145,14 +161,16 @@ export function VillagePage() {
             <h2 className={styles.sectionTitle}>Buildings</h2>
             <BuildingGrid
               buildings={village.buildings}
-              onBuildingClick={(b) => setSelectedBuilding(b)}
+              onBuildingClick={(b) => handleBuildingClick(b)}
               onEmptySlotClick={() => setBuildModalOpen(true)}
+              onUpgradeClick={(b) => setSelectedBuilding(b)}
             />
           </section>
         </div>
 
         <aside className={styles.sidebar}>
           <ResourcePanel resources={village.resources} />
+          <TroopRoster troops={troops} />
         </aside>
       </div>
 
@@ -163,7 +181,6 @@ export function VillagePage() {
         buildings={village.buildings}
         villageId={villageId}
         resources={village.resources}
-        playerKingdom={player?.kingdom ?? ''}
         queue={buildQueue}
       />
 
@@ -177,6 +194,19 @@ export function VillagePage() {
           villageId={villageId}
           resources={village.resources}
           queue={buildQueue}
+        />
+      )}
+
+      {/* Military building training modal */}
+      {trainingBuilding && (
+        <BuildingTrainingModal
+          isOpen={true}
+          onClose={() => setTrainingBuilding(null)}
+          building={trainingBuilding}
+          villageId={villageId}
+          resources={village.resources}
+          kingdom={player?.kingdom ?? ''}
+          trainingQueue={trainingQueue}
         />
       )}
     </div>

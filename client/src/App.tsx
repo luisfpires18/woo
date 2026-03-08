@@ -7,6 +7,8 @@ import { PublicLayout } from './components/Layout/PublicLayout';
 import { ProtectedLayout } from './components/Layout/ProtectedLayout';
 import { LoadingSpinner } from './components/LoadingSpinner/LoadingSpinner';
 import type { Kingdom } from './types/game';
+import { VALID_KINGDOMS } from './utils/constants';
+import appStyles from './App.module.css';
 
 const LoginPage = lazy(() =>
   import('./features/auth/pages/LoginPage').then((m) => ({
@@ -31,6 +33,38 @@ const KingdomSelectionPage = lazy(() =>
 const WorldMapPage = lazy(() =>
   import('./features/map/pages/WorldMapPage').then((m) => ({
     default: m.WorldMapPage,
+  })),
+);
+const ProfilePage = lazy(() =>
+  import('./features/profile/pages/ProfilePage').then((m) => ({
+    default: m.ProfilePage,
+  })),
+);
+
+// Landing sub-pages
+const LandingLayout = lazy(() =>
+  import('./features/landing/components/LandingLayout').then((m) => ({
+    default: m.LandingLayout,
+  })),
+);
+const LandingHeroPage = lazy(() =>
+  import('./features/landing/pages/LandingHeroPage').then((m) => ({
+    default: m.LandingHeroPage,
+  })),
+);
+const SeasonsPublicPage = lazy(() =>
+  import('./features/landing/pages/SeasonsPublicPage').then((m) => ({
+    default: m.SeasonsPublicPage,
+  })),
+);
+const KingdomsShowcasePage = lazy(() =>
+  import('./features/landing/pages/KingdomsShowcasePage').then((m) => ({
+    default: m.KingdomsShowcasePage,
+  })),
+);
+const LeaderboardsPage = lazy(() =>
+  import('./features/landing/pages/LeaderboardsPage').then((m) => ({
+    default: m.LeaderboardsPage,
   })),
 );
 
@@ -65,17 +99,32 @@ const AdminAssetsPage = lazy(() =>
     default: m.AdminAssetsPage,
   })),
 );
+const AdminBuildingsPage = lazy(() =>
+  import('./features/admin/pages/AdminBuildingsPage').then((m) => ({
+    default: m.AdminBuildingsPage,
+  })),
+);
+const AdminMapEditorPage = lazy(() =>
+  import('./features/admin/pages/AdminMapEditorPage').then((m) => ({
+    default: m.AdminMapEditorPage,
+  })),
+);
+const AdminSeasonsPage = lazy(() =>
+  import('./features/admin/pages/AdminSeasonsPage').then((m) => ({
+    default: m.AdminSeasonsPage,
+  })),
+);
 
 function FullPageLoader() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40vh' }}>
+    <div className={appStyles.fullPageLoader}>
       <LoadingSpinner size="lg" />
     </div>
   );
 }
 
-/** Redirect / to the first village or show empty state */
-function HomeRedirect() {
+/** Redirect /game to the first village or show empty state */
+function GameRedirect() {
   const player = useAuthStore((s) => s.player);
   const villages = useGameStore((s) => s.villages);
   const villagesLoaded = useGameStore((s) => s.villagesLoaded);
@@ -93,8 +142,8 @@ function HomeRedirect() {
   if (villagesLoaded) {
     // Villages fetched but list is empty
     return (
-      <div style={{ textAlign: 'center', marginTop: '20vh', color: 'var(--text-muted)' }}>
-        <h2 style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>
+      <div className={appStyles.emptyState}>
+        <h2 className={appStyles.emptyStateTitle}>
           No Village Yet
         </h2>
         <p>Your empire awaits. A village will be created for you shortly.</p>
@@ -105,11 +154,6 @@ function HomeRedirect() {
   // Still loading
   return <FullPageLoader />;
 }
-
-const VALID_KINGDOMS: readonly string[] = [
-  'veridor', 'sylvara', 'arkazia', 'draxys',
-  'zandres', 'lumus', 'nordalh', 'drakanith',
-];
 
 function App() {
   const restore = useAuthStore((s) => s.restore);
@@ -124,7 +168,7 @@ function App() {
 
   // Sync kingdom theme whenever player.kingdom changes (login, restore, kingdom selection)
   useEffect(() => {
-    if (playerKingdom && VALID_KINGDOMS.includes(playerKingdom)) {
+    if (playerKingdom && (VALID_KINGDOMS as readonly string[]).includes(playerKingdom)) {
       setKingdom(playerKingdom as Kingdom);
     } else {
       setKingdom(null);
@@ -135,15 +179,24 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<FullPageLoader />}>
         <Routes>
-          {/* Public routes */}
+          {/* Landing layout — public, works for both guests and logged-in users */}
+          <Route element={<LandingLayout />}>
+            <Route path="/" element={<LandingHeroPage />} />
+            <Route path="/seasons" element={<SeasonsPublicPage />} />
+            <Route path="/kingdoms" element={<KingdomsShowcasePage />} />
+            <Route path="/leaderboards" element={<LeaderboardsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+
+          {/* Public routes (auth forms) */}
           <Route element={<PublicLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Route>
 
-          {/* Protected routes */}
+          {/* Protected routes (in-game) */}
           <Route element={<ProtectedLayout />}>
-            <Route path="/" element={<HomeRedirect />} />
+            <Route path="/game" element={<GameRedirect />} />
             <Route path="/village/:id" element={<VillagePage />} />
             <Route path="/map" element={<WorldMapPage />} />
             <Route path="/choose-kingdom" element={<KingdomSelectionPage />} />
@@ -157,6 +210,9 @@ function App() {
             <Route path="stats" element={<AdminStatsPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
             <Route path="assets" element={<AdminAssetsPage />} />
+            <Route path="buildings" element={<AdminBuildingsPage />} />
+            <Route path="seasons" element={<AdminSeasonsPage />} />
+            <Route path="map-editor" element={<AdminMapEditorPage />} />
           </Route>
         </Routes>
       </Suspense>

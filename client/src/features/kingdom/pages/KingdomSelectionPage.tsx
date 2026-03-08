@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../../stores/authStore';
 import { useThemeStore } from '../../../stores/themeStore';
 import { useAssetStore } from '../../../stores/assetStore';
@@ -29,9 +29,9 @@ export function KingdomSelectionPage() {
     loadAssets();
   }, [loadAssets]);
 
-  // If somehow the player already has a kingdom, redirect
+  // If somehow the player already has a kingdom, redirect to game
   if (player?.kingdom) {
-    navigate('/', { replace: true });
+    navigate('/game', { replace: true });
     return null;
   }
 
@@ -45,7 +45,7 @@ export function KingdomSelectionPage() {
       // Update player in authStore with the new kingdom & apply theme immediately
       setPlayer(resp.player);
       setKingdom(selected);
-      navigate('/', { replace: true });
+      navigate('/game', { replace: true });
     } catch (err) {
       if (err instanceof ApiRequestError) {
         setError(err.message);
@@ -57,8 +57,15 @@ export function KingdomSelectionPage() {
     }
   };
 
+  const isAdmin = player?.role === 'admin';
+
   return (
     <div className={styles.page}>
+      {isAdmin && (
+        <Link to="/admin" className={styles.adminLink}>
+          Admin Panel →
+        </Link>
+      )}
       <div className={styles.container}>
         <header className={styles.header}>
           <h1 className={styles.title}>Choose Your Kingdom</h1>

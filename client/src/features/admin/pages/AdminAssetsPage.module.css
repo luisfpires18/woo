@@ -190,6 +190,45 @@
   cursor: not-allowed;
 }
 
+.variantBtn {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.variantBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.deleteAssetBtn {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.deleteAssetBtn:hover:not(:disabled) {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.deleteAssetBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* --- Responsive --- */
 
 @media (max-width: 768px) {

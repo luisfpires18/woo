@@ -49,6 +49,15 @@ func (r *worldMapRepo) InsertBatch(ctx context.Context, tiles []*model.MapTile) 
 	})
 }
 
+// DeleteAll removes all tiles from the world map.
+func (r *worldMapRepo) DeleteAll(ctx context.Context) error {
+	_, err := r.db.ExecContext(ctx, `DELETE FROM world_map`)
+	if err != nil {
+		return fmt.Errorf("delete all map tiles: %w", err)
+	}
+	return nil
+}
+
 // GetChunk retrieves map tiles in a square region centered on (cx, cy) with the given radius.
 // Returns a (2*radius+1)^2 grid of tiles. Includes village name and owner name via JOINs.
 func (r *worldMapRepo) GetChunk(ctx context.Context, cx, cy, radius int) ([]*model.MapTile, error) {
@@ -201,4 +210,79 @@ func (r *worldMapRepo) UpdateTilesZone(ctx context.Context, cx, cy, radius int, 
 		return fmt.Errorf("update tiles zone (%d,%d r=%d): %w", cx, cy, radius, err)
 	}
 	return nil
+}
+
+// UpdateTerrain updates the terrain_type for a batch of tiles in a single transaction.
+func (r *worldMapRepo) UpdateTerrain(ctx context.Context, tiles []model.TileTerrainUpdate) error {
+	return WithTx(ctx, r.db, func(tx *sql.Tx) error {
+		stmt, err := tx.PrepareContext(ctx,
+			`UPDATE world_map SET terrain_type = ? WHERE x = ? AND y = ?`)
+		if err != nil {
+			return fmt.Errorf("prepare terrain update: %w", err)
+		}
+		defer stmt.Close()
+
+		for _, t := range tiles {
+			if _, err := stmt.ExecContext(ctx, t.TerrainType, t.X, t.Y); err != nil {
+				return fmt.Errorf("update terrain (%d,%d): %w", t.X, t.Y, err)
+			}
+		}
+		return nil
+	})
+}
+
+// GetSpawnCandidates returns plains tiles with no village, optionally filtering by zone.
+func (r *worldMapRepo) GetSpawnCandidates(ctx context.Context, zone string) ([]*model.MapTile, error) {
+	var query string
+	var args []any
+	if zone != "" {
+		query = `SELECT x, y, terrain_type, kingdom_zone, owner_player_id, village_id
+		         FROM world_map WHERE terrain_type = 'plains' AND village_id IS NULL AND kingdom_zone = ?`
+		args = []any{zone}
+	} else {
+		query = `SELECT x, y, terrain_type, kingdom_zone, owner_player_id, village_id
+		         FROM world_map WHERE terrain_type = 'plains' AND village_id IS NULL`
+	}
+
+	rows, err := r.db.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("query spawn candidates: %w", err)
+	}
+	defer rows.Close()
+
+	var tiles []*model.MapTile
+	for rows.Next() {
+		t := &model.MapTile{}
+		var ownerID, villageID sql.NullInt64
+		if err := rows.Scan(&t.X, &t.Y, &t.TerrainType, &t.KingdomZone, &ownerID, &villageID); err != nil {
+			return nil, fmt.Errorf("scan spawn candidate: %w", err)
+		}
+		if ownerID.Valid {
+			t.OwnerPlayerID = &ownerID.Int64
+		}
+		if villageID.Valid {
+			t.VillageID = &villageID.Int64
+		}
+		tiles = append(tiles, t)
+	}
+	return tiles, rows.Err()
+}
+
+// UpdateTilesZoneBatch updates the kingdom_zone for each tile individually in a single transaction.
+func (r *worldMapRepo) UpdateTilesZoneBatch(ctx context.Context, tiles []model.TemplateTile) error {
+	return WithTx(ctx, r.db, func(tx *sql.Tx) error {
+		stmt, err := tx.PrepareContext(ctx,
+			`UPDATE world_map SET kingdom_zone = ? WHERE x = ? AND y = ?`)
+		if err != nil {
+			return fmt.Errorf("prepare zone batch update: %w", err)
+		}
+		defer stmt.Close()
+
+		for _, t := range tiles {
+			if _, err := stmt.ExecContext(ctx, t.KingdomZone, t.X, t.Y); err != nil {
+				return fmt.Errorf("update zone (%d,%d): %w", t.X, t.Y, err)
+			}
+		}
+		return nil
+	})
 }

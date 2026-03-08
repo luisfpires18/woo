@@ -49,8 +49,10 @@ var directionSlots = []directionSlot{
 // KingdomZoneRadius is the radius of each kingdom zone in tiles.
 const KingdomZoneRadius = 10
 
-// GenerateMap generates a flat all-plains world map. Idempotent — skips if already generated.
-// All tiles start as wilderness; kingdom zones are placed dynamically when the first player joins.
+// GenerateMap generates a procedural world map using simplex noise.
+// Idempotent — skips if already generated.
+// All tiles default to plains. Terrain is painted manually via the admin map editor.
+// Kingdom zones are placed dynamically when the first player joins.
 func (s *MapService) GenerateMap(ctx context.Context) error {
 	count, err := s.mapRepo.Count(ctx)
 	if err != nil {
@@ -179,38 +181,23 @@ func (s *MapService) GetTile(ctx context.Context, x, y int) (*model.MapTile, err
 	return s.mapRepo.GetTile(ctx, x, y)
 }
 
-// FindSpawnTile finds a suitable tile for a new village spawn within a kingdom zone.
-// If the kingdom has no zone placed yet, it triggers PlaceKingdomZone first.
+// FindSpawnTile finds a suitable tile for a new village spawn.
+// Prefers tiles within the player's kingdom zone. Falls back to any plains tile
+// if no zone-specific tiles exist (e.g. zones not yet painted on the template).
 func (s *MapService) FindSpawnTile(ctx context.Context, kingdom string) (int, int, error) {
-	// Check if kingdom zone exists by checking for tiles in that zone
-	tiles, err := s.mapRepo.GetByZone(ctx, kingdom)
+	// Try kingdom zone first
+	candidates, err := s.mapRepo.GetSpawnCandidates(ctx, kingdom)
 	if err != nil {
-		return 0, 0, fmt.Errorf("get zone tiles for %s: %w", kingdom, err)
+		return 0, 0, fmt.Errorf("get zone spawn candidates for %s: %w", kingdom, err)
 	}
 
-	// No zone placed yet — this is the first player of this kingdom
-	if len(tiles) == 0 {
-		_, _, err := s.PlaceKingdomZone(ctx, kingdom)
+	// Fallback: any plains tile on the map
+	if len(candidates) == 0 {
+		slog.Warn("no zone tiles for kingdom, falling back to any plains tile", "kingdom", kingdom)
+		candidates, err = s.mapRepo.GetSpawnCandidates(ctx, "")
 		if err != nil {
-			return 0, 0, fmt.Errorf("auto-place kingdom zone %s: %w", kingdom, err)
+			return 0, 0, fmt.Errorf("get fallback spawn candidates: %w", err)
 		}
-		// Re-fetch tiles after placement
-		tiles, err = s.mapRepo.GetByZone(ctx, kingdom)
-		if err != nil {
-			return 0, 0, fmt.Errorf("get zone tiles after placement for %s: %w", kingdom, err)
-		}
-	}
-
-	// Filter to spawnable tiles (plains, no village)
-	var candidates []*model.MapTile
-	for _, t := range tiles {
-		if t.VillageID != nil {
-			continue
-		}
-		if t.TerrainType != model.TerrainPlains {
-			continue
-		}
-		candidates = append(candidates, t)
 	}
 
 	if len(candidates) == 0 {
@@ -228,4 +215,33 @@ func (s *MapService) FindSpawnTile(ctx context.Context, kingdom string) (int, in
 // UpdateTileOwner links a map tile to a village and player.
 func (s *MapService) UpdateTileOwner(ctx context.Context, x, y int, playerID, villageID int64) error {
 	return s.mapRepo.UpdateTileOwner(ctx, x, y, &playerID, &villageID)
+}
+
+// ValidTerrainTypes is the set of terrain types allowed for painting.
+var ValidTerrainTypes = map[string]bool{
+	model.TerrainPlains:   true,
+	model.TerrainForest:   true,
+	model.TerrainMountain: true,
+	model.TerrainWater:    true,
+	model.TerrainDesert:   true,
+	model.TerrainSwamp:    true,
+}
+
+// UpdateTerrain validates and applies terrain changes for the admin paint tool.
+func (s *MapService) UpdateTerrain(ctx context.Context, tiles []model.TileTerrainUpdate) error {
+	if len(tiles) == 0 {
+		return fmt.Errorf("no tiles provided")
+	}
+	if len(tiles) > 500 {
+		return fmt.Errorf("too many tiles in one request (max 500)")
+	}
+	for _, t := range tiles {
+		if !ValidTerrainTypes[t.TerrainType] {
+			return fmt.Errorf("invalid terrain type: %s", t.TerrainType)
+		}
+		if t.X < -model.MapHalf || t.X > model.MapHalf || t.Y < -model.MapHalf || t.Y > model.MapHalf {
+			return fmt.Errorf("tile (%d,%d) out of map bounds", t.X, t.Y)
+		}
+	}
+	return s.mapRepo.UpdateTerrain(ctx, tiles)
 }

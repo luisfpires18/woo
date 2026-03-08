@@ -34,22 +34,6 @@ func (r *buildingQueueRepo) Insert(ctx context.Context, item *model.BuildingQueu
 	return nil
 }
 
-func (r *buildingQueueRepo) InsertTx(ctx context.Context, tx *sql.Tx, item *model.BuildingQueue) error {
-	result, err := tx.ExecContext(ctx,
-		`INSERT INTO building_queue (village_id, building_type, target_level, started_at, completes_at)
-		 VALUES (?, ?, ?, ?, ?)`,
-		item.VillageID, item.BuildingType, item.TargetLevel,
-		item.StartedAt.UTC().Format("2006-01-02 15:04:05"),
-		item.CompletesAt.UTC().Format("2006-01-02 15:04:05"),
-	)
-	if err != nil {
-		return fmt.Errorf("insert building queue item (tx): %w", err)
-	}
-	id, _ := result.LastInsertId()
-	item.ID = id
-	return nil
-}
-
 func (r *buildingQueueRepo) GetByVillageID(ctx context.Context, villageID int64) ([]*model.BuildingQueue, error) {
 	rows, err := r.db.QueryContext(ctx,
 		`SELECT id, village_id, building_type, target_level, started_at, completes_at

@@ -15,13 +15,15 @@ import (
 type VillageHandler struct {
 	villageService  *service.VillageService
 	buildingService *service.BuildingService
+	trainingService *service.TrainingService
 }
 
 // NewVillageHandler creates a new VillageHandler.
-func NewVillageHandler(villageService *service.VillageService, buildingService *service.BuildingService) *VillageHandler {
+func NewVillageHandler(villageService *service.VillageService, buildingService *service.BuildingService, trainingService *service.TrainingService) *VillageHandler {
 	return &VillageHandler{
 		villageService:  villageService,
 		buildingService: buildingService,
+		trainingService: trainingService,
 	}
 }
 
@@ -85,6 +87,18 @@ func (h *VillageHandler) GetVillage(w http.ResponseWriter, r *http.Request) {
 	queue, err := h.buildingService.GetBuildQueue(r.Context(), villageID)
 	if err == nil {
 		resp.BuildQueue = queue
+	}
+
+	// Attach troops
+	troops, err := h.trainingService.GetTroops(r.Context(), villageID)
+	if err == nil {
+		resp.Troops = troops
+	}
+
+	// Attach training queue
+	trainQueue, err := h.trainingService.GetTrainingQueue(r.Context(), villageID)
+	if err == nil {
+		resp.TrainingQueue = trainQueue
 	}
 
 	writeJSON(w, http.StatusOK, resp)

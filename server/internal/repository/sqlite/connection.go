@@ -27,16 +27,24 @@ func NewConnection(dbPath string) *sql.DB {
 	}
 
 	// Enable WAL mode for concurrent reads
-	db.Exec("PRAGMA journal_mode=WAL")
+	if _, err := db.Exec("PRAGMA journal_mode=WAL"); err != nil {
+		panic(fmt.Sprintf("failed to set WAL mode: %v", err))
+	}
 
 	// Enable foreign key enforcement
-	db.Exec("PRAGMA foreign_keys=ON")
+	if _, err := db.Exec("PRAGMA foreign_keys=ON"); err != nil {
+		panic(fmt.Sprintf("failed to enable foreign keys: %v", err))
+	}
 
 	// Increase cache size for better performance (64 MB)
-	db.Exec("PRAGMA cache_size=-64000")
+	if _, err := db.Exec("PRAGMA cache_size=-64000"); err != nil {
+		panic(fmt.Sprintf("failed to set cache size: %v", err))
+	}
 
 	// Synchronous mode: NORMAL is safe with WAL
-	db.Exec("PRAGMA synchronous=NORMAL")
+	if _, err := db.Exec("PRAGMA synchronous=NORMAL"); err != nil {
+		panic(fmt.Sprintf("failed to set synchronous mode: %v", err))
+	}
 
 	// SQLite only supports 1 writer
 	db.SetMaxOpenConns(1)

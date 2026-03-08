@@ -44,3 +44,10 @@ const (
 	MapHalf = 25            // map ranges from -25 to +25
 	MapSize = MapHalf*2 + 1 // 51
 )
+
+// TileTerrainUpdate describes a terrain change for a single tile.
+type TileTerrainUpdate struct {
+	X           int    `json:"x"`
+	Y           int    `json:"y"`
+	TerrainType string `json:"terrain_type"`
+}

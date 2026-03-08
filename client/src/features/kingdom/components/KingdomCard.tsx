@@ -29,7 +29,7 @@ export const KINGDOMS: KingdomInfo[] = [
     id: 'arkazia',
     name: 'Arkazia',
     tagline: 'Champions of the Arena',
-    description: 'Mountain strongholds ruled by warlords. Steel, honour, and the glory of the Colosseum.',
+    description: 'Mountain strongholds ruled by warlords. Steel, honour, and the Chapter Fortress.',
     traits: ['Heavy Cavalry & Pikemen', 'Iron / Obsidian Runes', 'Fortress & Arena Culture'],
     colorVar: '#DC143C',
     glowVar: 'rgba(220, 20, 60, 0.35)',
@@ -53,7 +53,8 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Desert Infantry & Scorpion Riders', 'Scale / Swarm Runes', 'Arena & Frontier Culture'],
     colorVar: '#FDD835',
     glowVar: 'rgba(253, 216, 53, 0.35)',
-    playable: true,
+    playable: false,
+    lockReason: 'Desert frontier — coming in a future update',
   },
   {
     id: 'zandres',
@@ -75,7 +76,7 @@ export const KINGDOMS: KingdomInfo[] = [
     colorVar: '#FFFFFF',
     glowVar: 'rgba(255, 255, 255, 0.35)',
     playable: false,
-    lockReason: 'Island kingdom — requires Docks for all factions',
+    lockReason: 'Island kingdom — coming in a future update',
   },
   {
     id: 'nordalh',
@@ -85,7 +86,8 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Direwolf Cavalry & Smiths', 'Frost / Beast Runes', 'Clan Endurance & Hearth Law'],
     colorVar: '#7B1FA2',
     glowVar: 'rgba(123, 31, 162, 0.35)',
-    playable: true,
+    playable: false,
+    lockReason: 'Northern colony — coming in a future update',
   },
   {
     id: 'drakanith',
@@ -105,9 +107,10 @@ interface KingdomCardProps {
   selected: boolean;
   onSelect: () => void;
   locked?: boolean;
+  displayOnly?: boolean;
 }
 
-export function KingdomCard({ kingdom, selected, onSelect, locked = false }: KingdomCardProps) {
+export function KingdomCard({ kingdom, selected, onSelect, locked = false, displayOnly = false }: KingdomCardProps) {
   const flagAsset = useAssetStore((s) => s.getById(`flag_${kingdom.id}`));
   const flagUrl = flagAsset?.sprite_url;
 
@@ -115,7 +118,43 @@ export function KingdomCard({ kingdom, selected, onSelect, locked = false }: Kin
     styles.card,
     selected ? styles.selected : '',
     locked ? styles.locked : '',
+    displayOnly ? styles.displayOnly : '',
   ].filter(Boolean).join(' ');
+
+  if (displayOnly) {
+    return (
+      <div
+        className={cardClass}
+        style={{
+          '--kingdom-color': kingdom.colorVar,
+          '--kingdom-glow': kingdom.glowVar,
+        } as React.CSSProperties}
+      >
+        <div className={styles.flagArea}>
+          {flagUrl ? (
+            <img src={flagUrl} alt={`${kingdom.name} flag`} className={styles.flagImg} />
+          ) : (
+            <div className={styles.flagPlaceholder}>
+              <span className={styles.flagInitial}>{kingdom.name[0]}</span>
+            </div>
+          )}
+        </div>
+        <div className={styles.header}>
+          <span className={styles.name}>{kingdom.name}</span>
+          <span className={styles.tagline}>{kingdom.tagline}</span>
+        </div>
+        <p className={styles.description}>{kingdom.description}</p>
+        <ul className={styles.traits}>
+          {kingdom.traits.map((trait) => (
+            <li key={trait} className={styles.trait}>{trait}</li>
+          ))}
+        </ul>
+        {locked && kingdom.lockReason && (
+          <p className={styles.lockReason}>{kingdom.lockReason}</p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <button

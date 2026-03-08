@@ -1,5 +1,5 @@
 -- 001_schema.sql — Baseline schema for all WOO tables.
--- Consolidates the original 001–018 + 022 migration files.
+-- Consolidated from all prior migrations (001–024).
 -- During development, edit this file freely and delete woo.db to rebuild.
 -- Once production launches, freeze this file and add new numbered migrations.
 
@@ -43,11 +43,13 @@ CREATE TABLE IF NOT EXISTS villages (
     x          INTEGER NOT NULL,
     y          INTEGER NOT NULL,
     is_capital INTEGER NOT NULL DEFAULT 0,
+    season_id  INTEGER REFERENCES seasons(id),
     created_at TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE        INDEX IF NOT EXISTS idx_villages_player_id ON villages(player_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_villages_coords    ON villages(x, y);
+CREATE        INDEX IF NOT EXISTS idx_villages_season     ON villages(season_id);
 
 -- ── Buildings ────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS buildings (
@@ -103,12 +105,13 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_troops_village_type ON troops(village_id, 
 
 -- ── Training Queue ───────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS training_queue (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    village_id   INTEGER NOT NULL REFERENCES villages(id),
-    troop_type   TEXT    NOT NULL,
-    quantity     INTEGER NOT NULL,
-    started_at   TEXT    NOT NULL DEFAULT (datetime('now')),
-    completes_at TEXT    NOT NULL
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    village_id        INTEGER NOT NULL REFERENCES villages(id),
+    troop_type        TEXT    NOT NULL,
+    quantity          INTEGER NOT NULL,
+    each_duration_sec INTEGER NOT NULL DEFAULT 60,
+    started_at        TEXT    NOT NULL DEFAULT (datetime('now')),
+    completes_at      TEXT    NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_training_queue_village_id   ON training_queue(village_id);
@@ -171,16 +174,18 @@ CREATE TABLE IF NOT EXISTS alliance_members (
 CREATE TABLE IF NOT EXISTS world_map (
     x                INTEGER NOT NULL,
     y                INTEGER NOT NULL,
-    terrain_type     TEXT    NOT NULL CHECK (terrain_type IN ('plains')),
-    kingdom_zone     TEXT    NOT NULL DEFAULT '' CHECK (kingdom_zone IN ('', 'veridor', 'sylvara', 'arkazia', 'draxys', 'nordalh', 'wilderness')),
+    terrain_type     TEXT    NOT NULL CHECK (terrain_type IN ('plains', 'forest', 'mountain', 'water', 'desert', 'swamp')),
+    kingdom_zone     TEXT    NOT NULL DEFAULT '' CHECK (kingdom_zone IN ('', 'veridor', 'sylvara', 'arkazia', 'draxys', 'nordalh', 'zandres', 'lumus', 'drakanith', 'moraphys', 'dark_reach', 'wilderness')),
     owner_player_id  INTEGER REFERENCES players(id),
     village_id       INTEGER REFERENCES villages(id),
+    season_id        INTEGER REFERENCES seasons(id),
     PRIMARY KEY (x, y)
 );
 
 CREATE INDEX IF NOT EXISTS idx_world_map_owner   ON world_map(owner_player_id);
 CREATE INDEX IF NOT EXISTS idx_world_map_village ON world_map(village_id);
 CREATE INDEX IF NOT EXISTS idx_world_map_zone    ON world_map(kingdom_zone);
+CREATE INDEX IF NOT EXISTS idx_world_map_season  ON world_map(season_id);
 
 -- ── Kingdom Relations (diplomacy standings) ──────────────────────────────────
 CREATE TABLE IF NOT EXISTS kingdom_relations (
@@ -250,25 +255,71 @@ CREATE TABLE IF NOT EXISTS announcements (
 -- ── Game Assets (sprites / icons lookup) ─────────────────────────────────────
 CREATE TABLE IF NOT EXISTS game_assets (
     id            TEXT PRIMARY KEY,
-    category      TEXT     NOT NULL CHECK (category IN ('building', 'resource', 'unit', 'kingdom_flag', 'village_marker', 'zone_tile')),
-    display_name  TEXT     NOT NULL,
-    default_icon  TEXT     NOT NULL,
+    category      TEXT    NOT NULL CHECK (category IN ('building', 'resource', 'unit', 'kingdom_flag', 'village_marker', 'zone_tile', 'terrain_tile')),
+    display_name  TEXT    NOT NULL,
+    default_icon  TEXT    NOT NULL,
     sprite_path   TEXT,
-    sprite_width  INTEGER  NOT NULL DEFAULT 0,
-    sprite_height INTEGER  NOT NULL DEFAULT 0,
-    updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    sprite_width  INTEGER NOT NULL DEFAULT 0,
+    sprite_height INTEGER NOT NULL DEFAULT 0,
+    updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
 -- ── Resource Building Configs (admin-customisable per kingdom) ───────────────
 CREATE TABLE IF NOT EXISTS resource_building_configs (
-    id            INTEGER  PRIMARY KEY AUTOINCREMENT,
-    resource_type TEXT     NOT NULL CHECK (resource_type IN ('food', 'water', 'lumber', 'stone')),
-    slot          INTEGER  NOT NULL CHECK (slot BETWEEN 1 AND 3),
-    kingdom       TEXT     NOT NULL,
-    display_name  TEXT     NOT NULL,
-    description   TEXT     NOT NULL DEFAULT '',
-    default_icon  TEXT     NOT NULL DEFAULT '🏗️',
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    resource_type TEXT    NOT NULL CHECK (resource_type IN ('food', 'water', 'lumber', 'stone')),
+    slot          INTEGER NOT NULL CHECK (slot BETWEEN 1 AND 3),
+    kingdom       TEXT    NOT NULL,
+    display_name  TEXT    NOT NULL,
+    description   TEXT    NOT NULL DEFAULT '',
+    default_icon  TEXT    NOT NULL DEFAULT '🏗️',
     sprite_path   TEXT,
-    updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TEXT    NOT NULL DEFAULT (datetime('now')),
     UNIQUE(resource_type, slot, kingdom)
+);
+
+-- ── Seasons (game worlds with timed lifecycles) ──────────────────────────────
+CREATE TABLE IF NOT EXISTS seasons (
+    id                      INTEGER PRIMARY KEY AUTOINCREMENT,
+    name                    TEXT    NOT NULL UNIQUE,
+    description             TEXT    NOT NULL DEFAULT '',
+    status                  TEXT    NOT NULL DEFAULT 'upcoming' CHECK (status IN ('upcoming', 'active', 'ended', 'archived')),
+    start_date              TEXT,
+    started_at              TEXT,
+    ended_at                TEXT,
+    map_template_name       TEXT    NOT NULL DEFAULT '',
+    game_speed              REAL    NOT NULL DEFAULT 1.0,
+    resource_multiplier     REAL    NOT NULL DEFAULT 1.0,
+    max_villages_per_player INTEGER NOT NULL DEFAULT 5,
+    weapons_of_chaos_count  INTEGER NOT NULL DEFAULT 7,
+    map_width               INTEGER NOT NULL DEFAULT 51,
+    map_height              INTEGER NOT NULL DEFAULT 51,
+    created_at              TEXT    NOT NULL DEFAULT (datetime('now')),
+    updated_at              TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+-- ── Season Players (per-season kingdom choice) ───────────────────────────────
+CREATE TABLE IF NOT EXISTS season_players (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    season_id  INTEGER NOT NULL REFERENCES seasons(id),
+    player_id  INTEGER NOT NULL REFERENCES players(id),
+    kingdom    TEXT    NOT NULL CHECK (kingdom IN ('veridor', 'sylvara', 'arkazia', 'draxys', 'zandres', 'lumus', 'nordalh', 'drakanith')),
+    joined_at  TEXT    NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(season_id, player_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_season_players_season ON season_players(season_id);
+CREATE INDEX IF NOT EXISTS idx_season_players_player ON season_players(player_id);
+
+-- ── Building Display Configs (admin-customisable per kingdom) ───────────────
+CREATE TABLE IF NOT EXISTS building_display_configs (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    building_type TEXT    NOT NULL,
+    kingdom       TEXT    NOT NULL,
+    display_name  TEXT    NOT NULL,
+    description   TEXT    NOT NULL DEFAULT '',
+    default_icon  TEXT    NOT NULL DEFAULT '🏛️',
+    sprite_path   TEXT,
+    updated_at    TEXT    NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(building_type, kingdom)
 );

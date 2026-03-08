@@ -1,5 +1,6 @@
 import type { BuildingInfo } from '../../../types/api';
 import { RESOURCE_BUILDING_TYPES } from '../../../config/buildings';
+import { isMilitaryBuilding } from '../../../config/troops';
 import { BuildingCard } from './BuildingCard';
 import styles from './BuildingGrid.module.css';
 
@@ -7,9 +8,10 @@ interface BuildingGridProps {
   buildings: BuildingInfo[];
   onBuildingClick: (building: BuildingInfo) => void;
   onEmptySlotClick: () => void;
+  onUpgradeClick?: (building: BuildingInfo) => void;
 }
 
-export function BuildingGrid({ buildings, onBuildingClick, onEmptySlotClick }: BuildingGridProps) {
+export function BuildingGrid({ buildings, onBuildingClick, onEmptySlotClick, onUpgradeClick }: BuildingGridProps) {
   // Filter out resource field buildings (they go in ResourceFieldsGrid)
   const villageBuildings = buildings.filter(
     (b) => !RESOURCE_BUILDING_TYPES.has(b.building_type),
@@ -24,9 +26,18 @@ export function BuildingGrid({ buildings, onBuildingClick, onEmptySlotClick }: B
 
   return (
     <div className={styles.grid}>
-      {built.map((b) => (
-        <BuildingCard key={b.id} building={b} onClick={() => onBuildingClick(b)} />
-      ))}
+      {built.map((b) => {
+        const military = isMilitaryBuilding(b.building_type);
+        return (
+          <BuildingCard
+            key={b.id}
+            building={b}
+            onClick={() => onBuildingClick(b)}
+            isMilitary={military}
+            onUpgradeClick={military && onUpgradeClick ? () => onUpgradeClick(b) : undefined}
+          />
+        );
+      })}
       {unbuiltCount > 0 && (
         <button
           type="button"

@@ -2,34 +2,22 @@ package handler
 
 import (
 	"errors"
-	"log/slog"
 	"net/http"
 
-	"github.com/luisfpires18/woo/internal/dto"
 	"github.com/luisfpires18/woo/internal/middleware"
 	"github.com/luisfpires18/woo/internal/model"
-	"github.com/luisfpires18/woo/internal/repository"
 	"github.com/luisfpires18/woo/internal/service"
 )
 
 // PlayerHandler handles player-related HTTP endpoints.
 type PlayerHandler struct {
-	playerRepo     repository.PlayerRepository
-	authService    *service.AuthService
-	villageService *service.VillageService
+	playerService *service.PlayerService
+	seasonService *service.SeasonService
 }
 
 // NewPlayerHandler creates a new PlayerHandler.
-func NewPlayerHandler(
-	playerRepo repository.PlayerRepository,
-	authService *service.AuthService,
-	villageService *service.VillageService,
-) *PlayerHandler {
-	return &PlayerHandler{
-		playerRepo:     playerRepo,
-		authService:    authService,
-		villageService: villageService,
-	}
+func NewPlayerHandler(playerService *service.PlayerService, seasonService *service.SeasonService) *PlayerHandler {
+	return &PlayerHandler{playerService: playerService, seasonService: seasonService}
 }
 
 // ChooseKingdom handles PUT /api/player/kingdom.
@@ -41,19 +29,43 @@ func (h *PlayerHandler) ChooseKingdom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req dto.ChooseKingdomRequest
+	var req struct {
+		Kingdom string `json:"kingdom"`
+	}
 	if !decodeJSON(w, r, &req) {
 		return
 	}
 
-	// Validate kingdom value
-	if !service.IsValidKingdom(req.Kingdom) {
-		writeError(w, http.StatusBadRequest, "invalid kingdom")
+	playerInfo, villageID, err := h.playerService.ChooseKingdom(r.Context(), playerID, req.Kingdom)
+	if err != nil {
+		switch {
+		case errors.Is(err, service.ErrInvalidKingdom):
+			writeError(w, http.StatusBadRequest, "invalid kingdom")
+		case errors.Is(err, service.ErrKingdomAlreadyChosen):
+			writeError(w, http.StatusConflict, "kingdom already chosen")
+		case errors.Is(err, model.ErrNotFound):
+			writeError(w, http.StatusNotFound, "player not found")
+		default:
+			writeError(w, http.StatusInternalServerError, "village creation failed — is a map template applied?")
+		}
 		return
 	}
 
-	// Get current player
-	player, err := h.playerRepo.GetByID(r.Context(), playerID)
+	writeJSON(w, http.StatusOK, map[string]any{
+		"player":     playerInfo,
+		"village_id": villageID,
+	})
+}
+
+// GetMe handles GET /api/player/me — returns the current player's info.
+func (h *PlayerHandler) GetMe(w http.ResponseWriter, r *http.Request) {
+	playerID, ok := middleware.PlayerIDFromContext(r.Context())
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "not authenticated")
+		return
+	}
+
+	playerInfo, err := h.playerService.GetMe(r.Context(), playerID)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
 			writeError(w, http.StatusNotFound, "player not found")
@@ -63,34 +75,30 @@ func (h *PlayerHandler) ChooseKingdom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Reject if kingdom already set
-	if player.Kingdom != "" {
-		writeError(w, http.StatusConflict, "kingdom already chosen")
+	writeJSON(w, http.StatusOK, map[string]any{
+		"player": playerInfo,
+	})
+}
+
+// GetProfile handles GET /api/player/profile — returns cross-season profile data.
+func (h *PlayerHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
+	playerID, ok := middleware.PlayerIDFromContext(r.Context())
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "not authenticated")
 		return
 	}
 
-	// Set kingdom
-	if err := h.playerRepo.UpdateKingdom(r.Context(), playerID, req.Kingdom); err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to update kingdom")
-		return
-	}
-
-	// Create first village
-	village, err := h.villageService.CreateFirstVillage(r.Context(), playerID, req.Kingdom, player.Username)
+	profile, err := h.seasonService.GetPlayerProfile(r.Context(), playerID)
 	if err != nil {
-		slog.Error("failed to create first village after kingdom selection", "player_id", playerID, "error", err)
-		writeError(w, http.StatusInternalServerError, "kingdom set but village creation failed")
+		if errors.Is(err, model.ErrNotFound) {
+			writeError(w, http.StatusNotFound, "player not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to fetch profile")
 		return
 	}
 
 	writeJSON(w, http.StatusOK, map[string]any{
-		"player": &dto.PlayerInfo{
-			ID:       player.ID,
-			Username: player.Username,
-			Email:    player.Email,
-			Kingdom:  req.Kingdom,
-			Role:     player.Role,
-		},
-		"village_id": village.ID,
+		"profile": profile,
 	})
 }

@@ -23,6 +23,7 @@ const (
 	AssetCategoryKingdomFlag   = "kingdom_flag"
 	AssetCategoryVillageMarker = "village_marker"
 	AssetCategoryZoneTile      = "zone_tile"
+	AssetCategoryTerrainTile   = "terrain_tile"
 )
 
 // Expected sprite dimensions per category.
@@ -33,6 +34,7 @@ var AssetSpriteDimensions = map[string][2]int{
 	AssetCategoryKingdomFlag:   {256, 256},
 	AssetCategoryVillageMarker: {256, 256},
 	AssetCategoryZoneTile:      {256, 256},
+	AssetCategoryTerrainTile:   {256, 256},
 }
 
 // MaxSpriteBytes per category.
@@ -43,4 +45,5 @@ var AssetMaxSpriteBytes = map[string]int64{
 	AssetCategoryKingdomFlag:   1024 * 1024, // 1 MB
 	AssetCategoryVillageMarker: 512 * 1024,  // 512 KB
 	AssetCategoryZoneTile:      512 * 1024,  // 512 KB
+	AssetCategoryTerrainTile:   512 * 1024,  // 512 KB
 }

@@ -6,6 +6,7 @@ import type {
   VillageListItem,
   BuildingQueueResponse,
   BuildingCostResponse,
+  BuildingDisplayConfigListResponse,
 } from '../types/api';
 
 export async function fetchVillages(): Promise<VillageListItem[]> {
@@ -46,4 +47,10 @@ export async function renameVillage(
   name: string,
 ): Promise<VillageListItem> {
   return api.put<VillageListItem>(`/villages/${villageId}/name`, { name });
+}
+
+/** Fetch building display configs, optionally filtered by kingdom. */
+export async function fetchBuildingDisplayConfigs(kingdom?: string): Promise<BuildingDisplayConfigListResponse> {
+  const qs = kingdom ? `?kingdom=${encodeURIComponent(kingdom)}` : '';
+  return api.get<BuildingDisplayConfigListResponse>(`/building-display-configs${qs}`);
 }
