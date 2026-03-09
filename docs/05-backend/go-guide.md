@@ -322,13 +322,43 @@ For multi-step operations that must be atomic (e.g., deduct resources + insert q
 
 ```go
 type UnitOfWork interface {
-    DeductResourcesAndInsertBuildQueue(ctx context.Context, res *model.Resources, entry *model.BuildingQueueEntry) error
-    DeductResourcesAndInsertTrainQueue(ctx context.Context, res *model.Resources, entry *model.TrainingQueueEntry) error
-    CompleteTrainingUnit(ctx context.Context, villageID int64, troopType string, quantity int, res *model.Resources, queueID int64) error
+    // DeductResourcesAndInsertBuildQueue atomically deducts resources and inserts a build queue item.
+    DeductResourcesAndInsertBuildQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.BuildingQueue) error
+
+    // DeductResourcesAndInsertTrainQueue atomically deducts resources and inserts a training queue item.
+    DeductResourcesAndInsertTrainQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.TrainingQueue) error
+
+    // CompleteTrainingUnit atomically adds troops, updates resources, and advances/deletes the queue item.
+    CompleteTrainingUnit(ctx context.Context, villageID int64, troopType string, addQty int, res *model.Resources, queueItem *model.TrainingQueue, deleteQueue bool) error
+
+    // CompleteBuildingUpgrade atomically updates building level, refreshes resource rates, and deletes the queue item.
+    CompleteBuildingUpgrade(ctx context.Context, villageID int64, building *model.Building, resources *model.Resources, queueID int64) error
 }
 ```
 
-The SQLite implementation lives in `repository/sqlite/unit_of_work.go` and wraps each method in a single `BEGIN … COMMIT` transaction. Services receive the `UnitOfWork` via constructor injection — they never see `*sql.DB` or `*sql.Tx`.
+The SQLite implementation lives in `repository/sqlite/unit_of_work.go` and wraps each method in a single `BEGIN … COMMIT` transaction using the `WithTx` helper. Services receive the `UnitOfWork` via constructor injection — they never see `*sql.DB` or `*sql.Tx`.
+
+**Example: Building Completion (Transactional)**
+
+```go
+// building_service.go
+func (s *BuildingService) completeBuild(ctx context.Context, item *model.BuildingQueue) error {
+    // 1. Fetch buildings and find the one to level up
+    buildings, _ := s.buildingRepo.GetByVillageID(ctx, item.VillageID)
+    targetBuilding := findBuilding(buildings, item.BuildingType)
+    targetBuilding.Level = item.TargetLevel
+
+    // 2. Fetch resources and calculate new rates
+    res, _ := s.resourceRepo.Get(ctx, item.VillageID)
+    FlushResources(res, time.Now().UTC())
+    recalculateRates(res, item.BuildingType, buildings)
+
+    // 3. Execute atomically in a single transaction
+    return s.uow.CompleteBuildingUpgrade(ctx, item.VillageID, targetBuilding, res, item.ID)
+}
+```
+
+All three operations (level up, update rates, delete queue) happen together or not at all. If the server crashes mid-operation, the database remains consistent.
 
 ### Shared Helpers
 

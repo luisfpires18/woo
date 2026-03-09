@@ -56,13 +56,6 @@ type RefreshTokenRepository interface {
 	DeleteAllByPlayerID(ctx context.Context, playerID int64) error
 }
 
-// WorldConfigRepository defines data access operations for world configuration.
-type WorldConfigRepository interface {
-	Get(ctx context.Context, key string) (*model.WorldConfig, error)
-	GetAll(ctx context.Context) ([]*model.WorldConfig, error)
-	Set(ctx context.Context, key, value string) error
-}
-
 // AnnouncementRepository defines data access operations for announcements.
 type AnnouncementRepository interface {
 	Create(ctx context.Context, announcement *model.Announcement) error
@@ -191,4 +184,7 @@ type UnitOfWork interface {
 
 	// CompleteTrainingUnit atomically adds troops, updates resources (food consumption), and advances/deletes the queue item.
 	CompleteTrainingUnit(ctx context.Context, villageID int64, troopType string, addQty int, res *model.Resources, queueItem *model.TrainingQueue, deleteQueue bool) error
+
+	// CompleteBuildingUpgrade atomically updates building level, refreshes resource rates, and deletes the queue item.
+	CompleteBuildingUpgrade(ctx context.Context, villageID int64, building *model.Building, resources *model.Resources, queueID int64) error
 }

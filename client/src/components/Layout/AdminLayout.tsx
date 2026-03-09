@@ -5,7 +5,6 @@ import styles from './AdminLayout.module.css';
 const ADMIN_TABS = [
   { label: 'Players', path: '/admin/players' },
   { label: 'Seasons', path: '/admin/seasons' },
-  { label: 'Config', path: '/admin/config' },
   { label: 'Stats', path: '/admin/stats' },
   { label: 'Announcements', path: '/admin/announcements' },
   { label: 'Assets', path: '/admin/assets' },

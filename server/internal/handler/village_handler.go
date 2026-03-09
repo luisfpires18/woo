@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -85,19 +86,25 @@ func (h *VillageHandler) GetVillage(w http.ResponseWriter, r *http.Request) {
 
 	// Attach build queue
 	queue, err := h.buildingService.GetBuildQueue(r.Context(), villageID)
-	if err == nil {
+	if err != nil {
+		slog.Warn("failed to fetch build queue for village", "village_id", villageID, "error", err)
+	} else {
 		resp.BuildQueue = queue
 	}
 
 	// Attach troops
-	troops, err := h.trainingService.GetTroops(r.Context(), villageID)
-	if err == nil {
+	troops, err := h.trainingService.GetTroops(r.Context(), playerID, villageID)
+	if err != nil {
+		slog.Warn("failed to fetch troops for village", "village_id", villageID, "error", err)
+	} else {
 		resp.Troops = troops
 	}
 
 	// Attach training queue
 	trainQueue, err := h.trainingService.GetTrainingQueue(r.Context(), villageID)
-	if err == nil {
+	if err != nil {
+		slog.Warn("failed to fetch training queue for village", "village_id", villageID, "error", err)
+	} else {
 		resp.TrainingQueue = trainQueue
 	}
 

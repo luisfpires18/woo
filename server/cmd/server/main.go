@@ -50,7 +50,6 @@ func main() {
 	buildingQueueRepo := sqlite.NewBuildingQueueRepo(db)
 	troopRepo := sqlite.NewTroopRepo(db)
 	trainingQueueRepo := sqlite.NewTrainingQueueRepo(db)
-	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
@@ -60,7 +59,7 @@ func main() {
 	_ = kingdomRelationRepo // used later for diplomacy features
 
 	// Ensure uploads directory exists
-	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/building_display", "uploads/sprites/resource", "uploads/sprites/unit", "uploads/sprites/kingdom_flag", "uploads/sprites/village_marker", "uploads/sprites/zone_tile", "uploads/sprites/terrain_tile"} {
+	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/building_display", "uploads/sprites/resource", "uploads/sprites/unit", "uploads/sprites/kingdom_flag", "uploads/sprites/village_marker", "uploads/sprites/zone_tile", "uploads/sprites/terrain_tile", "uploads/sprites/resource_building"} {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			slog.Error("failed to create uploads directory", "dir", dir, "error", err)
 			os.Exit(1)
@@ -83,7 +82,7 @@ func main() {
 	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, mapService)
 	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo)
 	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo)
-	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo)
+	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo)
 	templateService := service.NewTemplateService(templateRepo, worldMapRepo)
 
 	// Season repository + service
@@ -159,9 +158,6 @@ func main() {
 
 	// Game assets — read is auth-only (all players need icons), write is admin-only
 	mux.Handle("GET /api/assets", authMiddleware(http.HandlerFunc(adminHandler.ListAssets)))
-
-	// Resource building configs — read is auth-only (players need display names per kingdom)
-	mux.Handle("GET /api/resource-building-configs", authMiddleware(http.HandlerFunc(adminHandler.ListResourceBuildingConfigs)))
 
 	// Building display configs — read is auth-only (players need display names per kingdom)
 	mux.Handle("GET /api/building-display-configs", authMiddleware(http.HandlerFunc(adminHandler.ListBuildingDisplayConfigs)))

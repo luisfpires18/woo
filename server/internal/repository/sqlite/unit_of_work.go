@@ -57,6 +57,22 @@ func (u *unitOfWork) CompleteTrainingUnit(ctx context.Context, villageID int64, 
 	})
 }
 
+// CompleteBuildingUpgrade atomically updates building level, refreshes resource rates, and deletes the queue item.
+func (u *unitOfWork) CompleteBuildingUpgrade(ctx context.Context, villageID int64, building *model.Building, resources *model.Resources, queueID int64) error {
+	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
+		// 1. Level up the building
+		if err := updateBuildingLevelTx(ctx, tx, building); err != nil {
+			return err
+		}
+		// 2. Update resources (rates recalculated by caller)
+		if err := updateResourcesTx(ctx, tx, villageID, resources); err != nil {
+			return err
+		}
+		// 3. Delete completed queue entry
+		return deleteBuildQueueTx(ctx, tx, queueID)
+	})
+}
+
 // ── Internal transactional helpers (unexported, only used within this package) ─
 
 func updateResourcesTx(ctx context.Context, tx *sql.Tx, villageID int64, res *model.Resources) error {
@@ -139,6 +155,25 @@ func deleteTrainQueueTx(ctx context.Context, tx *sql.Tx, id int64) error {
 	_, err := tx.ExecContext(ctx, `DELETE FROM training_queue WHERE id = ?`, id)
 	if err != nil {
 		return fmt.Errorf("delete training queue item (tx) %d: %w", id, err)
+	}
+	return nil
+}
+
+func updateBuildingLevelTx(ctx context.Context, tx *sql.Tx, building *model.Building) error {
+	_, err := tx.ExecContext(ctx,
+		`UPDATE buildings SET level = ? WHERE id = ?`,
+		building.Level, building.ID,
+	)
+	if err != nil {
+		return fmt.Errorf("update building level (tx) for building %d: %w", building.ID, err)
+	}
+	return nil
+}
+
+func deleteBuildQueueTx(ctx context.Context, tx *sql.Tx, id int64) error {
+	_, err := tx.ExecContext(ctx, `DELETE FROM building_queue WHERE id = ?`, id)
+	if err != nil {
+		return fmt.Errorf("delete building queue item (tx) %d: %w", id, err)
 	}
 	return nil
 }

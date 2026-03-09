@@ -47,7 +47,6 @@ func newTestEnv(t *testing.T) *testEnv {
 	refreshTokenRepo := sqlite.NewRefreshTokenRepo(db)
 	worldMapRepo := sqlite.NewWorldMapRepo(db)
 	queueRepo := sqlite.NewBuildingQueueRepo(db)
-	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
@@ -61,7 +60,7 @@ func newTestEnv(t *testing.T) *testEnv {
 	troopRepo := sqlite.NewTroopRepo(db)
 	trainingQueueRepo := sqlite.NewTrainingQueueRepo(db)
 	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo)
-	adminService := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, sqlite.NewBuildingDisplayConfigRepo(db))
+	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, sqlite.NewBuildingDisplayConfigRepo(db))
 
 	// Template repo (file-based, uses temp dir)
 	templateRepo, err := repository.NewTemplateRepository(t.TempDir())

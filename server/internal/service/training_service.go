@@ -117,12 +117,18 @@ func (s *TrainingService) StartTraining(ctx context.Context, playerID, villageID
 	// 6. Calculate per-unit training time with speed multiplier
 	eachTimeSec, err := config.TrainingTime(troopType, trainingBuildingLevel)
 	if err != nil {
+		if errors.Is(err, config.ErrUnknownTroop) {
+			return nil, ErrUnknownTroop
+		}
 		return nil, fmt.Errorf("calculate training time: %w", err)
 	}
 
 	// 7. Calculate total cost
 	totalCost, err := config.TrainingCost(troopType, quantity)
 	if err != nil {
+		if errors.Is(err, config.ErrUnknownTroop) {
+			return nil, ErrUnknownTroop
+		}
 		return nil, fmt.Errorf("calculate training cost: %w", err)
 	}
 
@@ -314,11 +320,17 @@ func (s *TrainingService) GetTrainingCost(ctx context.Context, playerID, village
 
 	eachTimeSec, err := config.TrainingTime(troopType, buildingLevel)
 	if err != nil {
+		if errors.Is(err, config.ErrUnknownTroop) {
+			return nil, ErrUnknownTroop
+		}
 		return nil, fmt.Errorf("calculate training time: %w", err)
 	}
 
 	totalCost, err := config.TrainingCost(troopType, quantity)
 	if err != nil {
+		if errors.Is(err, config.ErrUnknownTroop) {
+			return nil, ErrUnknownTroop
+		}
 		return nil, fmt.Errorf("calculate cost: %w", err)
 	}
 
@@ -349,8 +361,20 @@ func (s *TrainingService) InstantCompleteTraining(ctx context.Context, queueID i
 	return nil
 }
 
-// GetTroops returns all troops stationed in a village.
-func (s *TrainingService) GetTroops(ctx context.Context, villageID int64) ([]dto.TroopInfo, error) {
+// GetTroops returns all troops stationed in a village. Requires ownership of the village.
+func (s *TrainingService) GetTroops(ctx context.Context, playerID, villageID int64) ([]dto.TroopInfo, error) {
+	// Verify village ownership
+	village, err := s.villageRepo.GetByID(ctx, villageID)
+	if err != nil {
+		if errors.Is(err, model.ErrNotFound) {
+			return nil, ErrVillageNotFound
+		}
+		return nil, fmt.Errorf("get village: %w", err)
+	}
+	if village.PlayerID != playerID {
+		return nil, ErrNotOwner
+	}
+
 	troops, err := s.troopRepo.GetByVillageID(ctx, villageID)
 	if err != nil {
 		return nil, fmt.Errorf("get troops: %w", err)

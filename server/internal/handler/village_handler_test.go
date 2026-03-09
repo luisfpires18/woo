@@ -201,3 +201,108 @@ func TestVillageHandler_RenameVillage_Success(t *testing.T) {
 		t.Fatalf("status: got %d, want %d. Body: %s", rec.Code, http.StatusOK, rec.Body.String())
 	}
 }
+
+// --- StartUpgrade ---
+
+func TestVillageHandler_StartUpgrade_Success(t *testing.T) {
+	env := newTestEnv(t)
+
+	playerID, _ := registerAndLogin(t, env, "upgradeuser", "upgrade@test.com", "Strong@123")
+	chooseKingdomForPlayer(t, env, playerID, "arkazia")
+
+	// Get village ID
+	listReq := httptest.NewRequest("GET", "/api/villages", nil)
+	listReq = listReq.WithContext(authCtx(playerID, "player"))
+	listRec := httptest.NewRecorder()
+	env.VillageHandler.ListVillages(listRec, listReq)
+
+	listData, _ := decodeEnvelope(t, listRec)
+	var villages []struct {
+		ID int64 `json:"id"`
+	}
+	json.Unmarshal(listData, &villages)
+	villageID := villages[0].ID
+
+	// Start upgrade
+	body := `{"building_type":"food_1"}`
+	req := httptest.NewRequest("POST", "/api/villages/"+strconv.Itoa(int(villageID))+"/upgrade", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.SetPathValue("id", strconv.Itoa(int(villageID)))
+	req = req.WithContext(authCtx(playerID, "player"))
+	rec := httptest.NewRecorder()
+	env.VillageHandler.StartUpgrade(rec, req)
+
+	if rec.Code != http.StatusCreated {
+		t.Fatalf("status: got %d, want %d. Body: %s", rec.Code, http.StatusCreated, rec.Body.String())
+	}
+
+	data, _ := decodeEnvelope(t, rec)
+	var resp dto.BuildingQueueResponse
+	json.Unmarshal(data, &resp)
+	if resp.TargetLevel != 1 {
+		t.Errorf("target_level: got %d, want 1", resp.TargetLevel)
+	}
+}
+
+func TestVillageHandler_StartUpgrade_Unauthenticated(t *testing.T) {
+	env := newTestEnv(t)
+
+	body := `{"building_type":"food_1"}`
+	req := httptest.NewRequest("POST", "/api/villages/1/upgrade", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.SetPathValue("id", "1")
+	rec := httptest.NewRecorder()
+	env.VillageHandler.StartUpgrade(rec, req)
+
+	if rec.Code != http.StatusUnauthorized {
+		t.Errorf("status: got %d, want %d", rec.Code, http.StatusUnauthorized)
+	}
+}
+
+// --- CancelUpgrade ---
+
+func TestVillageHandler_CancelUpgrade_Success(t *testing.T) {
+	env := newTestEnv(t)
+
+	playerID, _ := registerAndLogin(t, env, "canceluser", "cancel@test.com", "Strong@123")
+	chooseKingdomForPlayer(t, env, playerID, "arkazia")
+
+	// Get village ID and start upgrade
+	listReq := httptest.NewRequest("GET", "/api/villages", nil)
+	listReq = listReq.WithContext(authCtx(playerID, "player"))
+	listRec := httptest.NewRecorder()
+	env.VillageHandler.ListVillages(listRec, listReq)
+
+	listData, _ := decodeEnvelope(t, listRec)
+	var villages []struct {
+		ID int64 `json:"id"`
+	}
+	json.Unmarshal(listData, &villages)
+	villageID := villages[0].ID
+
+	// Start upgrade
+	body := `{"building_type":"food_1"}`
+	upgradeReq := httptest.NewRequest("POST", "/api/villages/"+strconv.Itoa(int(villageID))+"/upgrade", strings.NewReader(body))
+	upgradeReq.Header.Set("Content-Type", "application/json")
+	upgradeReq.SetPathValue("id", strconv.Itoa(int(villageID)))
+	upgradeReq = upgradeReq.WithContext(authCtx(playerID, "player"))
+	upgradeRec := httptest.NewRecorder()
+	env.VillageHandler.StartUpgrade(upgradeRec, upgradeReq)
+
+	upgradeData, _ := decodeEnvelope(t, upgradeRec)
+	var queueResp dto.BuildingQueueResponse
+	json.Unmarshal(upgradeData, &queueResp)
+	queueID := queueResp.ID
+
+	// Cancel upgrade
+	cancelReq := httptest.NewRequest("DELETE", "/api/villages/"+strconv.Itoa(int(villageID))+"/upgrade/"+strconv.Itoa(int(queueID)), nil)
+	cancelReq.SetPathValue("id", strconv.Itoa(int(villageID)))
+	cancelReq.SetPathValue("queueId", strconv.Itoa(int(queueID)))
+	cancelReq = cancelReq.WithContext(authCtx(playerID, "player"))
+	cancelRec := httptest.NewRecorder()
+	env.VillageHandler.CancelUpgrade(cancelRec, cancelReq)
+
+	if cancelRec.Code != http.StatusOK {
+		t.Errorf("status: got %d, want %d", cancelRec.Code, http.StatusOK)
+	}
+}

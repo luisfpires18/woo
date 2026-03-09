@@ -96,42 +96,94 @@ func TestResourceService_CalculateCurrent(t *testing.T) {
 }
 ```
 
-### Handler Tests
+### Handler Tests (Full-Stack with In-Memory DB)
 
-Use `httptest` to test HTTP handlers without starting a real server:
+**Do NOT mock services.** Instead, wire a full in-memory test environment with real services and SQLite:
 
 ```go
-func TestAuthHandler_Register(t *testing.T) {
-    // Setup mock service
-    mockService := &mockAuthService{
-        registerFn: func(ctx context.Context, req model.RegisterRequest) (*model.AuthResponse, error) {
-            return &model.AuthResponse{
-                AccessToken: "test-token",
-                Player:      model.Player{ID: 1, Username: req.Username},
-            }, nil
-        },
+// handler_test_helpers_test.go
+func newTestEnv(t *testing.T) *testEnv {
+    // Create in-memory SQLite DB and apply migrations
+    db := testutil.NewTestDB(t)
+
+    // Wire all repositories
+    playerRepo := sqlite.NewPlayerRepository(db)
+    villageRepo := sqlite.NewVillageRepository(db)
+    // ... wire all other repos
+
+    // Wire all services
+    authSvc := service.NewAuthService(playerRepo, tokenRepo)
+    villageSvc := service.NewVillageService(villageRepo, resourceRepo)
+    // ... wire all other services
+
+    // Wire all handlers
+    authHandler := handler.NewAuthHandler(authSvc)
+    villageHandler := handler.NewVillageHandler(villageSvc)
+    // ... wire all other handlers
+
+    return &testEnv{
+        DB: db,
+        AuthHandler: authHandler,
+        VillageHandler: villageHandler,
     }
+}
 
-    handler := handler.NewAuthHandler(mockService)
+// Use authCtx() helper to inject authenticated context without running JWT middleware
+func authCtx(playerID int64, role string) context.Context {
+    ctx := context.Background()
+    ctx = context.WithValue(ctx, middleware.ContextKeyPlayerID, playerID)
+    ctx = context.WithValue(ctx, middleware.ContextKeyRole, role)
+    return ctx
+}
 
-    body := `{"username":"testuser","email":"test@example.com","password":"SecurePass123!","kingdom":"arkazia"}`
-    req := httptest.NewRequest("POST", "/api/auth/register", strings.NewReader(body))
-    req.Header.Set("Content-Type", "application/json")
+// Use setupArkaziaPlayer() helper to quickly set up a test player
+func setupArkaziaPlayer(t *testing.T, env *testEnv) (int64, int64) {
+    playerID, _ := registerAndLogin(t, env, "testuser", "test@test.com", "Strong@123")
+    chooseKingdomForPlayer(t, env, playerID, "arkazia")
+
+    // Level up barracks to 1 for training tests
+    _, err := env.DB.ExecContext(context.Background(),
+        `UPDATE buildings SET level = 1 WHERE village_id = ? AND building_type = 'barracks'`, villageID)
+
+    return playerID, villageID
+}
+```
+
+**Test example:**
+
+```go
+func TestVillageHandler_ListVillages_Success(t *testing.T) {
+    env := newTestEnv(t)
+
+    // Register and setup player
+    playerID, _ := registerAndLogin(t, env, "viluser", "vil@test.com", "Strong@123")
+    chooseKingdomForPlayer(t, env, playerID, "veridor")
+
+    // Make HTTP request with authenticated context
+    req := httptest.NewRequest("GET", "/api/villages", nil)
+    req = req.WithContext(authCtx(playerID, "player"))
     rec := httptest.NewRecorder()
 
-    handler.Register(rec, req)
+    env.VillageHandler.ListVillages(rec, req)
 
-    if rec.Code != http.StatusCreated {
-        t.Errorf("status: got %d, want %d", rec.Code, http.StatusCreated)
+    if rec.Code != http.StatusOK {
+        t.Fatalf("status: got %d, want %d", rec.Code, http.StatusOK)
     }
 
-    var resp model.AuthResponse
-    json.NewDecoder(rec.Body).Decode(&resp)
-    if resp.AccessToken == "" {
-        t.Error("expected access token in response")
+    // Decode response and assert
+    var villages []json.RawMessage
+    json.Unmarshal(rec.Body.Bytes(), &villages)
+    if len(villages) != 1 {
+        t.Errorf("village count: got %d, want 1", len(villages))
     }
 }
 ```
+
+**Advantages:**
+- Tests the entire stack: HTTP parsing, handler logic, service logic, repository logic, DB state
+- No mocking = no mock-reality gap
+- Catches integration bugs early (e.g., SQL errors, transaction issues)
+- Real DB state between requests allows testing complex sequences
 
 ### Repository Tests
 

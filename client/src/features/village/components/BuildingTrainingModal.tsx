@@ -54,7 +54,7 @@ export function BuildingTrainingModal({
     setCostPreview(null);
   }, [building.id]);
 
-  // Fetch cost preview when selection changes
+  // Fetch cost preview when selection changes (debounced 300ms to reduce API calls)
   useEffect(() => {
     if (!selectedTroop || quantity < 1) {
       setCostPreview(null);
@@ -62,30 +62,36 @@ export function BuildingTrainingModal({
     }
 
     let cancelled = false;
-    setCostLoading(true);
+    let timeout: number;
 
-    getTrainingCost(villageId, selectedTroop, quantity)
-      .then((resp) => {
-        if (!cancelled) {
-          setCostPreview({
-            totalFood: resp.total_food,
-            totalWater: resp.total_water,
-            totalLumber: resp.total_lumber,
-            totalStone: resp.total_stone,
-            eachTimeSec: resp.each_time_sec,
-            totalTimeSec: resp.total_time_sec,
-          });
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setCostPreview(null);
-      })
-      .finally(() => {
-        if (!cancelled) setCostLoading(false);
-      });
+    // Debounce the API call by 300ms
+    timeout = setTimeout(() => {
+      setCostLoading(true);
+
+      getTrainingCost(villageId, selectedTroop, quantity)
+        .then((resp) => {
+          if (!cancelled) {
+            setCostPreview({
+              totalFood: resp.total_food,
+              totalWater: resp.total_water,
+              totalLumber: resp.total_lumber,
+              totalStone: resp.total_stone,
+              eachTimeSec: resp.each_time_sec,
+              totalTimeSec: resp.total_time_sec,
+            });
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setCostPreview(null);
+        })
+        .finally(() => {
+          if (!cancelled) setCostLoading(false);
+        });
+    }, 300);
 
     return () => {
       cancelled = true;
+      clearTimeout(timeout);
     };
   }, [villageId, selectedTroop, quantity]);
 

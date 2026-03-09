@@ -123,10 +123,20 @@ export function VillagePage() {
               maxLength={30}
               disabled={renameSaving}
             />
-            <button className={styles.renameSave} onClick={handleSaveRename} disabled={renameSaving}>
+            <button
+              className={styles.renameSave}
+              onClick={handleSaveRename}
+              disabled={renameSaving}
+              aria-label="Confirm rename"
+            >
               ✓
             </button>
-            <button className={styles.renameCancel} onClick={handleCancelRename} disabled={renameSaving}>
+            <button
+              className={styles.renameCancel}
+              onClick={handleCancelRename}
+              disabled={renameSaving}
+              aria-label="Cancel rename"
+            >
               ✗
             </button>
             {renameError && <span className={styles.renameError}>{renameError}</span>}
@@ -134,7 +144,12 @@ export function VillagePage() {
         ) : (
           <>
             <h1 className={styles.title}>{village.name}</h1>
-            <button className={styles.renameBtn} onClick={handleStartRename} title="Rename village">
+            <button
+              className={styles.renameBtn}
+              onClick={handleStartRename}
+              title="Rename village"
+              aria-label="Rename village"
+            >
               ✏️
             </button>
           </>

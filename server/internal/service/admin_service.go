@@ -21,7 +21,6 @@ var (
 type AdminService struct {
 	playerRepo                repository.PlayerRepository
 	villageRepo               repository.VillageRepository
-	worldConfigRepo           repository.WorldConfigRepository
 	announcementRepo          repository.AnnouncementRepository
 	gameAssetRepo             repository.GameAssetRepository
 	resBuildingConfigRepo     repository.ResourceBuildingConfigRepository
@@ -32,7 +31,6 @@ type AdminService struct {
 func NewAdminService(
 	playerRepo repository.PlayerRepository,
 	villageRepo repository.VillageRepository,
-	worldConfigRepo repository.WorldConfigRepository,
 	announcementRepo repository.AnnouncementRepository,
 	gameAssetRepo repository.GameAssetRepository,
 	resBuildingConfigRepo repository.ResourceBuildingConfigRepository,
@@ -41,7 +39,6 @@ func NewAdminService(
 	return &AdminService{
 		playerRepo:                playerRepo,
 		villageRepo:               villageRepo,
-		worldConfigRepo:           worldConfigRepo,
 		announcementRepo:          announcementRepo,
 		gameAssetRepo:             gameAssetRepo,
 		resBuildingConfigRepo:     resBuildingConfigRepo,
@@ -100,36 +97,6 @@ func (s *AdminService) UpdatePlayerRole(ctx context.Context, playerID int64, rol
 		return ErrInvalidRole
 	}
 	return s.playerRepo.UpdateRole(ctx, playerID, role)
-}
-
-// --- World config ---
-
-// GetWorldConfig returns all configuration entries.
-func (s *AdminService) GetWorldConfig(ctx context.Context) (*dto.WorldConfigResponse, error) {
-	configs, err := s.worldConfigRepo.GetAll(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("get world config: %w", err)
-	}
-
-	entries := make([]*dto.WorldConfigEntry, 0, len(configs))
-	for _, c := range configs {
-		entries = append(entries, &dto.WorldConfigEntry{
-			Key:         c.Key,
-			Value:       c.Value,
-			Description: c.Description,
-			UpdatedAt:   c.UpdatedAt,
-		})
-	}
-
-	return &dto.WorldConfigResponse{Configs: entries}, nil
-}
-
-// SetWorldConfig updates a single configuration value.
-func (s *AdminService) SetWorldConfig(ctx context.Context, key, value string) error {
-	if key == "" || value == "" {
-		return errors.New("key and value are required")
-	}
-	return s.worldConfigRepo.Set(ctx, key, value)
 }
 
 // --- Server stats ---

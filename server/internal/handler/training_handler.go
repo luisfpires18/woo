@@ -26,6 +26,7 @@ func NewTrainingHandler(trainingService *service.TrainingService) *TrainingHandl
 // These routes share the /api/villages/{id}/ prefix and require auth middleware externally.
 func (h *TrainingHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/villages/{id}/train", h.StartTraining)
+	mux.HandleFunc("GET /api/villages/{id}/train", h.GetTrainingQueue)
 	mux.HandleFunc("GET /api/villages/{id}/train/cost", h.GetTrainingCost)
 	mux.HandleFunc("DELETE /api/villages/{id}/train/{queueId}", h.CancelTraining)
 	mux.HandleFunc("GET /api/villages/{id}/troops", h.ListTroops)
@@ -128,6 +129,29 @@ func (h *TrainingHandler) GetTrainingCost(w http.ResponseWriter, r *http.Request
 	writeJSON(w, http.StatusOK, resp)
 }
 
+// GetTrainingQueue handles GET /api/villages/{id}/train.
+func (h *TrainingHandler) GetTrainingQueue(w http.ResponseWriter, r *http.Request) {
+	_, ok := middleware.PlayerIDFromContext(r.Context())
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "not authenticated")
+		return
+	}
+
+	villageID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid village id")
+		return
+	}
+
+	queue, err := h.trainingService.GetTrainingQueue(r.Context(), villageID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to get training queue")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]any{"queue": queue})
+}
+
 // CancelTraining handles DELETE /api/villages/{id}/train/{queueId}.
 func (h *TrainingHandler) CancelTraining(w http.ResponseWriter, r *http.Request) {
 	playerID, ok := middleware.PlayerIDFromContext(r.Context())
@@ -177,15 +201,20 @@ func (h *TrainingHandler) ListTroops(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Ownership check
-	village, err := h.trainingService.GetTroops(r.Context(), villageID)
-	_ = playerID // TODO: ownership check at service level for troop visibility
+	troops, err := h.trainingService.GetTroops(r.Context(), playerID, villageID)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to list troops")
+		switch {
+		case errors.Is(err, service.ErrVillageNotFound):
+			writeError(w, http.StatusNotFound, err.Error())
+		case errors.Is(err, service.ErrNotOwner):
+			writeError(w, http.StatusForbidden, err.Error())
+		default:
+			writeError(w, http.StatusInternalServerError, "failed to list troops")
+		}
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]any{"troops": village})
+	writeJSON(w, http.StatusOK, map[string]any{"troops": troops})
 }
 
 // InstantComplete handles POST /api/admin/training/{queueId}/complete.

@@ -79,11 +79,6 @@ const AdminPlayersPage = lazy(() =>
     default: m.AdminPlayersPage,
   })),
 );
-const AdminConfigPage = lazy(() =>
-  import('./features/admin/pages/AdminConfigPage').then((m) => ({
-    default: m.AdminConfigPage,
-  })),
-);
 const AdminStatsPage = lazy(() =>
   import('./features/admin/pages/AdminStatsPage').then((m) => ({
     default: m.AdminStatsPage,
@@ -206,7 +201,6 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="/admin/players" replace />} />
             <Route path="players" element={<AdminPlayersPage />} />
-            <Route path="config" element={<AdminConfigPage />} />
             <Route path="stats" element={<AdminStatsPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
             <Route path="assets" element={<AdminAssetsPage />} />

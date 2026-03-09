@@ -302,7 +302,7 @@ func (s *BuildingService) CompleteBuilds(ctx context.Context) ([]BuildCompletion
 	return events, nil
 }
 
-// completeBuild applies a single completed build: levels up the building,
+// completeBuild applies a single completed build: atomically levels up the building,
 // updates resource rates if applicable, and removes the queue entry.
 func (s *BuildingService) completeBuild(ctx context.Context, item *model.BuildingQueue) error {
 	// Get current buildings to find the one to upgrade
@@ -322,20 +322,48 @@ func (s *BuildingService) completeBuild(ctx context.Context, item *model.Buildin
 		return fmt.Errorf("building %s not found in village %d", item.BuildingType, item.VillageID)
 	}
 
-	// Level up
+	// Prepare building with new level
 	targetBuilding.Level = item.TargetLevel
-	if err := s.buildingRepo.Update(ctx, targetBuilding); err != nil {
-		return fmt.Errorf("update building level: %w", err)
+
+	// Get resources and recalculate rates based on the new building state
+	res, err := s.resourceRepo.Get(ctx, item.VillageID)
+	if err != nil {
+		return fmt.Errorf("get resources: %w", err)
+	}
+	now := time.Now().UTC()
+	FlushResources(res, now)
+	res.LastUpdated = now
+
+	// Update resource rates if it's a resource-producing building (inline calculation)
+	resType := config.ResourceTypeForBuilding(item.BuildingType)
+	if resType != "" {
+		// Sum levels of all buildings (including the newly leveled one) that produce this resource type
+		totalLevel := 0
+		for _, b := range buildings {
+			if config.ResourceTypeForBuilding(b.BuildingType) == resType {
+				if b.BuildingType == item.BuildingType {
+					totalLevel += targetBuilding.Level // Use the new level
+				} else {
+					totalLevel += b.Level
+				}
+			}
+		}
+		newRate := config.BaseResourceRate + config.RatePerLevel*float64(totalLevel)
+		switch resType {
+		case "food":
+			res.FoodRate = newRate
+		case "water":
+			res.WaterRate = newRate
+		case "lumber":
+			res.LumberRate = newRate
+		case "stone":
+			res.StoneRate = newRate
+		}
 	}
 
-	// Update resource rates if it's a resource-producing building
-	if err := s.updateResourceRates(ctx, item.VillageID, item.BuildingType, buildings); err != nil {
-		return fmt.Errorf("update resource rates: %w", err)
-	}
-
-	// Remove completed queue entry
-	if err := s.queueRepo.Delete(ctx, item.ID); err != nil {
-		return fmt.Errorf("delete queue item: %w", err)
+	// Atomically: level up building, update resources, and remove queue entry
+	if err := s.uow.CompleteBuildingUpgrade(ctx, item.VillageID, targetBuilding, res, item.ID); err != nil {
+		return fmt.Errorf("complete building upgrade transaction: %w", err)
 	}
 
 	return nil

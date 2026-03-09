@@ -293,7 +293,7 @@ func TestCompleteTraining_LastUnit(t *testing.T) {
 	}
 
 	// Verify troops
-	troops, err := svc.GetTroops(ctx, villageID)
+	troops, err := svc.GetTroops(ctx, playerID, villageID)
 	if err != nil {
 		t.Fatalf("get troops: %v", err)
 	}

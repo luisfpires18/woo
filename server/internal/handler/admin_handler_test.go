@@ -43,53 +43,6 @@ func TestAdminHandler_GetStats(t *testing.T) {
 	}
 }
 
-// --- GetWorldConfig ---
-
-func TestAdminHandler_GetWorldConfig(t *testing.T) {
-	env := newTestEnv(t)
-
-	req := httptest.NewRequest("GET", "/api/admin/config", nil)
-	req = req.WithContext(authCtx(1, "admin"))
-	rec := httptest.NewRecorder()
-	env.AdminHandler.GetWorldConfig(rec, req)
-
-	if rec.Code != http.StatusOK {
-		t.Fatalf("status: got %d, want %d", rec.Code, http.StatusOK)
-	}
-
-	data, errMsg := decodeEnvelope(t, rec)
-	if errMsg != "" {
-		t.Fatalf("unexpected error: %s", errMsg)
-	}
-
-	// Should have at least the default seed values
-	var configResp struct {
-		Configs []json.RawMessage `json:"configs"`
-	}
-	json.Unmarshal(data, &configResp)
-	if len(configResp.Configs) < 3 {
-		t.Errorf("expected at least 3 config entries, got %d", len(configResp.Configs))
-	}
-}
-
-// --- SetWorldConfig ---
-
-func TestAdminHandler_SetWorldConfig(t *testing.T) {
-	env := newTestEnv(t)
-
-	body := `{"value":"2.0"}`
-	req := httptest.NewRequest("PUT", "/api/admin/config/game_speed", strings.NewReader(body))
-	req.Header.Set("Content-Type", "application/json")
-	req.SetPathValue("key", "game_speed")
-	req = req.WithContext(authCtx(1, "admin"))
-	rec := httptest.NewRecorder()
-	env.AdminHandler.SetWorldConfig(rec, req)
-
-	if rec.Code != http.StatusOK {
-		t.Fatalf("status: got %d, want %d. Body: %s", rec.Code, http.StatusOK, rec.Body.String())
-	}
-}
-
 // --- Announcements CRUD ---
 
 func TestAdminHandler_Announcements_CRUD(t *testing.T) {

@@ -202,3 +202,48 @@ func TestTrainingHandler_ListTroops_Empty(t *testing.T) {
 		t.Errorf("expected 0 troops, got %d", len(result.Troops))
 	}
 }
+
+// --- GetTrainingQueue ---
+
+func TestTrainingHandler_GetTrainingQueue_Success(t *testing.T) {
+	env := newTestEnv(t)
+	playerID, villageID := setupArkaziaPlayer(t, env)
+
+	// Start training first
+	body := `{"troop_type":"iron_legionary","quantity":1}`
+	startReq := httptest.NewRequest("POST", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train", strings.NewReader(body))
+	startReq.Header.Set("Content-Type", "application/json")
+	startReq = startReq.WithContext(authCtx(playerID, "player"))
+	startReq.SetPathValue("id", strconv.FormatInt(villageID, 10))
+	startRec := httptest.NewRecorder()
+	env.TrainingHandler.StartTraining(startRec, startReq)
+
+	if startRec.Code != http.StatusCreated {
+		t.Fatalf("start training failed: %d", startRec.Code)
+	}
+
+	// Now fetch the training queue
+	queueReq := httptest.NewRequest("GET", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train", nil)
+	queueReq = queueReq.WithContext(authCtx(playerID, "player"))
+	queueReq.SetPathValue("id", strconv.FormatInt(villageID, 10))
+	queueRec := httptest.NewRecorder()
+
+	env.TrainingHandler.GetTrainingQueue(queueRec, queueReq)
+
+	if queueRec.Code != http.StatusOK {
+		t.Fatalf("status: got %d, want %d, body: %s", queueRec.Code, http.StatusOK, queueRec.Body.String())
+	}
+
+	data, _ := decodeEnvelope(t, queueRec)
+	var result struct {
+		Queue []dto.TrainingQueueResponse `json:"queue"`
+	}
+	json.Unmarshal(data, &result)
+
+	if len(result.Queue) != 1 {
+		t.Errorf("queue length: got %d, want 1", len(result.Queue))
+	}
+	if result.Queue[0].TroopType != "iron_legionary" {
+		t.Errorf("troop_type: got %q, want %q", result.Queue[0].TroopType, "iron_legionary")
+	}
+}

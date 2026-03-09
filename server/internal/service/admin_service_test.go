@@ -16,14 +16,13 @@ func newTestAdminService(t *testing.T) (*service.AdminService, *service.AuthServ
 	db := testutil.NewTestDB(t)
 	playerRepo := sqlite.NewPlayerRepo(db)
 	villageRepo := sqlite.NewVillageRepo(db)
-	worldConfigRepo := sqlite.NewWorldConfigRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	refreshTokenRepo := sqlite.NewRefreshTokenRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
 	buildingDisplayConfigRepo := sqlite.NewBuildingDisplayConfigRepo(db)
 
-	adminSvc := service.NewAdminService(playerRepo, villageRepo, worldConfigRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo)
+	adminSvc := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo)
 	authSvc := service.NewAuthService(playerRepo, refreshTokenRepo, "test-secret", "woo-test")
 	return adminSvc, authSvc
 }
@@ -107,63 +106,6 @@ func TestUpdatePlayerRole_InvalidRole(t *testing.T) {
 	err := adminSvc.UpdatePlayerRole(ctx, 1, "superadmin")
 	if err != service.ErrInvalidRole {
 		t.Errorf("expected ErrInvalidRole, got: %v", err)
-	}
-}
-
-func TestGetWorldConfig(t *testing.T) {
-	adminSvc, _ := newTestAdminService(t)
-	ctx := context.Background()
-
-	resp, err := adminSvc.GetWorldConfig(ctx)
-	if err != nil {
-		t.Fatalf("get world config: %v", err)
-	}
-
-	if len(resp.Configs) < 6 {
-		t.Errorf("expected at least 6 config entries, got %d", len(resp.Configs))
-	}
-
-	// Verify one known config
-	found := false
-	for _, c := range resp.Configs {
-		if c.Key == "game_speed" && c.Value == "1.0" {
-			found = true
-			break
-		}
-	}
-	if !found {
-		t.Error("expected game_speed config with value 1.0")
-	}
-}
-
-func TestSetWorldConfig(t *testing.T) {
-	adminSvc, _ := newTestAdminService(t)
-	ctx := context.Background()
-
-	if err := adminSvc.SetWorldConfig(ctx, "game_speed", "2.0"); err != nil {
-		t.Fatalf("set config: %v", err)
-	}
-
-	// Verify it changed
-	resp, _ := adminSvc.GetWorldConfig(ctx)
-	for _, c := range resp.Configs {
-		if c.Key == "game_speed" {
-			if c.Value != "2.0" {
-				t.Errorf("expected game_speed 2.0, got %q", c.Value)
-			}
-			return
-		}
-	}
-	t.Error("game_speed config not found after update")
-}
-
-func TestSetWorldConfig_NotFound(t *testing.T) {
-	adminSvc, _ := newTestAdminService(t)
-	ctx := context.Background()
-
-	err := adminSvc.SetWorldConfig(ctx, "nonexistent_key", "value")
-	if err == nil {
-		t.Error("expected error for nonexistent config key")
 	}
 }
 

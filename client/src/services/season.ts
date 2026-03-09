@@ -3,7 +3,6 @@ import type {
   SeasonResponse,
   SeasonDetailResponse,
   CreateSeasonRequest,
-  UpdateSeasonRequest,
   JoinSeasonResponse,
 } from '../types/api';
 
@@ -15,18 +14,7 @@ export async function fetchPublicSeasons(status?: string): Promise<SeasonRespons
   return res.seasons;
 }
 
-// ── Player-facing ────────────────────────────────────────────────────────────
-
-export async function fetchSeasons(status?: string): Promise<SeasonResponse[]> {
-  const query = status ? `?status=${status}` : '';
-  const res = await api.get<{ seasons: SeasonResponse[] }>(`/seasons${query}`);
-  return res.seasons;
-}
-
-export async function fetchSeason(id: number): Promise<SeasonDetailResponse> {
-  const res = await api.get<{ season: SeasonDetailResponse }>(`/seasons/${id}`);
-  return res.season;
-}
+// ── Player-facing (auth required) ─────────────────────────────────────────────
 
 export async function fetchMySeasons(): Promise<SeasonDetailResponse[]> {
   const res = await api.get<{ seasons: SeasonDetailResponse[] }>('/seasons/my');
@@ -45,18 +33,8 @@ export async function adminFetchSeasons(status?: string): Promise<SeasonResponse
   return res.seasons;
 }
 
-export async function adminFetchSeason(id: number): Promise<SeasonDetailResponse> {
-  const res = await api.get<{ season: SeasonDetailResponse }>(`/admin/seasons/${id}`);
-  return res.season;
-}
-
 export async function adminCreateSeason(data: CreateSeasonRequest): Promise<SeasonResponse> {
   const res = await api.post<{ season: SeasonResponse }>('/admin/seasons', data);
-  return res.season;
-}
-
-export async function adminUpdateSeason(id: number, data: UpdateSeasonRequest): Promise<SeasonResponse> {
-  const res = await api.put<{ season: SeasonResponse }>(`/admin/seasons/${id}`, data);
   return res.season;
 }
 
