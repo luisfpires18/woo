@@ -52,7 +52,7 @@ weapons_of_chaos (special singleton weapons on the map)
 | username | TEXT | NOT NULL, UNIQUE | Display name |
 | email | TEXT | NOT NULL, UNIQUE | Login email |
 | password_hash | TEXT | NULL | Bcrypt hash (NULL if OAuth-only) |
-| kingdom | TEXT | NOT NULL | 'veridor', 'sylvara', or 'arkazia' |
+| kingdom | TEXT | NOT NULL | 'veridor', 'sylvara', 'arkazia', 'draxys', 'nordalh', 'zandres', or 'lumus' |
 | oauth_provider | TEXT | NULL | 'google', 'discord', or NULL |
 | oauth_id | TEXT | NULL | Provider-specific user ID |
 | created_at | TEXT | NOT NULL | ISO 8601 timestamp |

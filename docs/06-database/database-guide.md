@@ -446,3 +446,5 @@ func TestPlayerRepo_Create(t *testing.T) {
 | 2026-03-03 | Fixed import paths to github.com/luisfpires18/woo/internal/model, fixed buildings.type→building_type, expanded migration list to 15 files |
 | 2026-03-03 | Consolidated 22 migrations into 2 baseline files (001_schema.sql + 002_seed_data.sql). Updated migration rules with dev-phase vs production-phase guidance |
 | 2026-03-10 | Removed stale migration files (020–024). All schema consolidated into 001_schema.sql (training_queue.each_duration_sec, seasons tables, season_id FKs). 002_seed_data.sql includes season seeds. UnitOfWork pattern replaces per-repo WithTx variants—services no longer see *sql.Tx. PRAGMA errors now checked and logged. |
+| 2026-03-09 | Added development seed for user wright: one capital village with all 21 building slots pre-built at level 1, and town_hall at level 3. |
+| 2026-03-10 | Updated wright seed: set kingdom='arkazia', enrolled in dev_season with Arkazia kingdom via season_players table. Wright now fully ready for season-based gameplay testing. |

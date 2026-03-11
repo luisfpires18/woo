@@ -20,17 +20,13 @@ func NewGameAssetRepo(db *sql.DB) *GameAssetRepo {
 
 func scanGameAsset(row interface{ Scan(dest ...any) error }) (*model.GameAsset, error) {
 	var a model.GameAsset
-	var spritePath sql.NullString
 	var updatedAtStr string
 	err := row.Scan(
 		&a.ID, &a.Category, &a.DisplayName, &a.DefaultIcon,
-		&spritePath, &a.SpriteWidth, &a.SpriteHeight, &updatedAtStr,
+		&updatedAtStr,
 	)
 	if err != nil {
 		return nil, err
-	}
-	if spritePath.Valid {
-		a.SpritePath = &spritePath.String
 	}
 	a.UpdatedAt, _ = parseTime(updatedAtStr)
 	return &a, nil
@@ -39,7 +35,7 @@ func scanGameAsset(row interface{ Scan(dest ...any) error }) (*model.GameAsset, 
 // GetAll returns every game asset ordered by category then ID.
 func (r *GameAssetRepo) GetAll(ctx context.Context) ([]*model.GameAsset, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, category, display_name, default_icon, sprite_path, sprite_width, sprite_height, updated_at
+		`SELECT id, category, display_name, default_icon, updated_at
 		 FROM game_assets ORDER BY category, id`)
 	if err != nil {
 		return nil, fmt.Errorf("query game_assets: %w", err)
@@ -60,7 +56,7 @@ func (r *GameAssetRepo) GetAll(ctx context.Context) ([]*model.GameAsset, error) 
 // GetByID returns a single game asset by its canonical ID.
 func (r *GameAssetRepo) GetByID(ctx context.Context, id string) (*model.GameAsset, error) {
 	row := r.db.QueryRowContext(ctx,
-		`SELECT id, category, display_name, default_icon, sprite_path, sprite_width, sprite_height, updated_at
+		`SELECT id, category, display_name, default_icon, updated_at
 		 FROM game_assets WHERE id = ?`, id)
 	a, err := scanGameAsset(row)
 	if err == sql.ErrNoRows {
@@ -72,7 +68,7 @@ func (r *GameAssetRepo) GetByID(ctx context.Context, id string) (*model.GameAsse
 // GetByCategory returns all game assets of the given category.
 func (r *GameAssetRepo) GetByCategory(ctx context.Context, category string) ([]*model.GameAsset, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, category, display_name, default_icon, sprite_path, sprite_width, sprite_height, updated_at
+		`SELECT id, category, display_name, default_icon, updated_at
 		 FROM game_assets WHERE category = ? ORDER BY id`, category)
 	if err != nil {
 		return nil, fmt.Errorf("query game_assets by category: %w", err)
@@ -90,27 +86,12 @@ func (r *GameAssetRepo) GetByCategory(ctx context.Context, category string) ([]*
 	return assets, rows.Err()
 }
 
-// UpdateSprite sets the sprite_path for the given asset.
-func (r *GameAssetRepo) UpdateSprite(ctx context.Context, id string, spritePath *string) error {
-	res, err := r.db.ExecContext(ctx,
-		`UPDATE game_assets SET sprite_path = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-		spritePath, id)
-	if err != nil {
-		return fmt.Errorf("update sprite: %w", err)
-	}
-	n, _ := res.RowsAffected()
-	if n == 0 {
-		return model.ErrNotFound
-	}
-	return nil
-}
-
 // Create inserts a new game asset (e.g., when adding units later).
 func (r *GameAssetRepo) Create(ctx context.Context, a *model.GameAsset) error {
 	_, err := r.db.ExecContext(ctx,
-		`INSERT INTO game_assets (id, category, display_name, default_icon, sprite_width, sprite_height)
-		 VALUES (?, ?, ?, ?, ?, ?)`,
-		a.ID, a.Category, a.DisplayName, a.DefaultIcon, a.SpriteWidth, a.SpriteHeight)
+		`INSERT INTO game_assets (id, category, display_name, default_icon)
+		 VALUES (?, ?, ?, ?)`,
+		a.ID, a.Category, a.DisplayName, a.DefaultIcon)
 	if err != nil {
 		return fmt.Errorf("create game_asset: %w", err)
 	}

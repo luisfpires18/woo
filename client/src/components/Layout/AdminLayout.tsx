@@ -7,8 +7,11 @@ const ADMIN_TABS = [
   { label: 'Seasons', path: '/admin/seasons' },
   { label: 'Stats', path: '/admin/stats' },
   { label: 'Announcements', path: '/admin/announcements' },
-  { label: 'Assets', path: '/admin/assets' },
+  { label: 'Kingdoms', path: '/admin/kingdoms' },
   { label: 'Buildings', path: '/admin/buildings' },
+  { label: 'Units', path: '/admin/units' },
+  { label: 'Resources', path: '/admin/resources' },
+  { label: 'Map Assets', path: '/admin/map-assets' },
   { label: 'Map Editor', path: '/admin/map-editor' },
 ];
 

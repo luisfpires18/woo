@@ -20,9 +20,9 @@ func NewTrainingQueueRepo(db *sql.DB) *trainingQueueRepo {
 
 func (r *trainingQueueRepo) Insert(ctx context.Context, item *model.TrainingQueue) error {
 	result, err := r.db.ExecContext(ctx,
-		`INSERT INTO training_queue (village_id, troop_type, quantity, each_duration_sec, started_at, completes_at)
-		 VALUES (?, ?, ?, ?, ?, ?)`,
-		item.VillageID, item.TroopType, item.Quantity, item.EachDurationSec,
+		`INSERT INTO training_queue (village_id, troop_type, quantity, original_quantity, each_duration_sec, started_at, completes_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		item.VillageID, item.TroopType, item.Quantity, item.OriginalQuantity, item.EachDurationSec,
 		item.StartedAt.UTC().Format("2006-01-02 15:04:05"),
 		item.CompletesAt.UTC().Format("2006-01-02 15:04:05"),
 	)
@@ -36,14 +36,14 @@ func (r *trainingQueueRepo) Insert(ctx context.Context, item *model.TrainingQueu
 
 func (r *trainingQueueRepo) GetByID(ctx context.Context, id int64) (*model.TrainingQueue, error) {
 	row := r.db.QueryRowContext(ctx,
-		`SELECT id, village_id, troop_type, quantity, each_duration_sec, started_at, completes_at
+		`SELECT id, village_id, troop_type, quantity, original_quantity, each_duration_sec, started_at, completes_at
 		 FROM training_queue WHERE id = ?`, id,
 	)
 	var item model.TrainingQueue
 	var startedStr, completesStr string
 	if err := row.Scan(
 		&item.ID, &item.VillageID, &item.TroopType,
-		&item.Quantity, &item.EachDurationSec,
+		&item.Quantity, &item.OriginalQuantity, &item.EachDurationSec,
 		&startedStr, &completesStr,
 	); err != nil {
 		if err == sql.ErrNoRows {
@@ -58,7 +58,7 @@ func (r *trainingQueueRepo) GetByID(ctx context.Context, id int64) (*model.Train
 
 func (r *trainingQueueRepo) GetByVillageID(ctx context.Context, villageID int64) ([]*model.TrainingQueue, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, village_id, troop_type, quantity, each_duration_sec, started_at, completes_at
+		`SELECT id, village_id, troop_type, quantity, original_quantity, each_duration_sec, started_at, completes_at
 		 FROM training_queue WHERE village_id = ? ORDER BY completes_at ASC`, villageID,
 	)
 	if err != nil {
@@ -71,7 +71,7 @@ func (r *trainingQueueRepo) GetByVillageID(ctx context.Context, villageID int64)
 
 func (r *trainingQueueRepo) GetNextCompleted(ctx context.Context, now time.Time) ([]*model.TrainingQueue, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, village_id, troop_type, quantity, each_duration_sec, started_at, completes_at
+		`SELECT id, village_id, troop_type, quantity, original_quantity, each_duration_sec, started_at, completes_at
 		 FROM training_queue WHERE completes_at <= ? ORDER BY completes_at ASC`,
 		now.UTC().Format("2006-01-02 15:04:05"),
 	)
@@ -111,7 +111,7 @@ func (r *trainingQueueRepo) scanRows(rows *sql.Rows) ([]*model.TrainingQueue, er
 		var startedStr, completesStr string
 		if err := rows.Scan(
 			&item.ID, &item.VillageID, &item.TroopType,
-			&item.Quantity, &item.EachDurationSec,
+			&item.Quantity, &item.OriginalQuantity, &item.EachDurationSec,
 			&startedStr, &completesStr,
 		); err != nil {
 			return nil, fmt.Errorf("scan training queue row: %w", err)

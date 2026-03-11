@@ -10,6 +10,14 @@
   gap: var(--spacing-md);
 }
 
+.headerSprite {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
 .headerInfo {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,4 @@
-package service
+﻿package service
 
 import (
 	"context"
@@ -69,13 +69,13 @@ func TestStartTraining_Success(t *testing.T) {
 	svc, playerID, villageID, _ := setupTrainingTest(t)
 	ctx := context.Background()
 
-	resp, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 2)
+	resp, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 2)
 	if err != nil {
 		t.Fatalf("expected success, got: %v", err)
 	}
 
-	if resp.TroopType != "iron_legionary" {
-		t.Errorf("troop_type: got %q, want %q", resp.TroopType, "iron_legionary")
+	if resp.TroopType != "arkazia_shield_guard" {
+		t.Errorf("troop_type: got %q, want %q", resp.TroopType, "arkazia_shield_guard")
 	}
 	if resp.Quantity != 2 {
 		t.Errorf("quantity: got %d, want 2", resp.Quantity)
@@ -91,7 +91,7 @@ func TestStartTraining_InsufficientResources(t *testing.T) {
 
 	// Iron legionary costs Food:100, Water:50, Lumber:60, Stone:40 per unit.
 	// Starting resources are 500 each. Training 100 units should exceed resources.
-	_, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 100)
+	_, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 100)
 	if err == nil {
 		t.Fatal("expected insufficient resources error")
 	}
@@ -117,7 +117,7 @@ func TestStartTraining_InvalidQuantity(t *testing.T) {
 	svc, playerID, villageID, _ := setupTrainingTest(t)
 	ctx := context.Background()
 
-	_, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 0)
+	_, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 0)
 	if err == nil {
 		t.Fatal("expected invalid quantity error")
 	}
@@ -130,7 +130,7 @@ func TestStartTraining_BuildingRequirement(t *testing.T) {
 	svc, playerID, villageID, buildingRepo := setupTrainingTest(t)
 	ctx := context.Background()
 
-	// Reset barracks to level 0 — training should fail
+	// Reset barracks to level 0 â€” training should fail
 	buildings, _ := buildingRepo.GetByVillageID(ctx, villageID)
 	for _, b := range buildings {
 		if b.BuildingType == "barracks" {
@@ -142,7 +142,7 @@ func TestStartTraining_BuildingRequirement(t *testing.T) {
 		}
 	}
 
-	_, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 1)
+	_, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 1)
 	if err == nil {
 		t.Fatal("expected building requirement error")
 	}
@@ -192,7 +192,7 @@ func TestStartTraining_WrongKingdom(t *testing.T) {
 		}
 	}
 
-	_, err = svc.StartTraining(context.Background(), player.ID, village.ID, "iron_legionary", 1)
+	_, err = svc.StartTraining(context.Background(), player.ID, village.ID, "arkazia_shield_guard", 1)
 	if err == nil {
 		t.Fatal("expected kingdom restriction error")
 	}
@@ -203,7 +203,7 @@ func TestStartTraining_NotOwner(t *testing.T) {
 	ctx := context.Background()
 
 	// Use a non-existent player ID
-	_, err := svc.StartTraining(ctx, 9999, villageID, "iron_legionary", 1)
+	_, err := svc.StartTraining(ctx, 9999, villageID, "arkazia_shield_guard", 1)
 	if err == nil {
 		t.Fatal("expected not-owner error")
 	}
@@ -217,7 +217,7 @@ func TestCompleteTraining_Success(t *testing.T) {
 	ctx := context.Background()
 
 	// Start training 2 iron legionaries
-	_, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 2)
+	_, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 2)
 	if err != nil {
 		t.Fatalf("start training: %v", err)
 	}
@@ -235,7 +235,7 @@ func TestCompleteTraining_Success(t *testing.T) {
 		t.Fatalf("update queue: %v", err)
 	}
 
-	// Complete training — should complete 1 unit
+	// Complete training â€” should complete 1 unit
 	events, err := svc.CompleteTraining(ctx)
 	if err != nil {
 		t.Fatalf("complete training: %v", err)
@@ -243,8 +243,8 @@ func TestCompleteTraining_Success(t *testing.T) {
 	if len(events) != 1 {
 		t.Fatalf("expected 1 event, got %d", len(events))
 	}
-	if events[0].TroopType != "iron_legionary" {
-		t.Errorf("troop_type: got %q, want %q", events[0].TroopType, "iron_legionary")
+	if events[0].TroopType != "arkazia_shield_guard" {
+		t.Errorf("troop_type: got %q, want %q", events[0].TroopType, "arkazia_shield_guard")
 	}
 	if events[0].NewTotal != 1 {
 		t.Errorf("new_total: got %d, want 1", events[0].NewTotal)
@@ -268,7 +268,7 @@ func TestCompleteTraining_LastUnit(t *testing.T) {
 	ctx := context.Background()
 
 	// Start training 1 iron legionary
-	_, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 1)
+	_, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 1)
 	if err != nil {
 		t.Fatalf("start training: %v", err)
 	}
@@ -300,8 +300,8 @@ func TestCompleteTraining_LastUnit(t *testing.T) {
 	if len(troops) != 1 {
 		t.Fatalf("expected 1 troop type, got %d", len(troops))
 	}
-	if troops[0].Type != "iron_legionary" || troops[0].Quantity != 1 {
-		t.Errorf("troop: got type=%q qty=%d, want iron_legionary qty=1", troops[0].Type, troops[0].Quantity)
+	if troops[0].Type != "arkazia_shield_guard" || troops[0].Quantity != 1 {
+		t.Errorf("troop: got type=%q qty=%d, want arkazia_shield_guard qty=1", troops[0].Type, troops[0].Quantity)
 	}
 }
 
@@ -309,7 +309,7 @@ func TestCancelTraining(t *testing.T) {
 	svc, playerID, villageID, _ := setupTrainingTest(t)
 	ctx := context.Background()
 
-	resp, err := svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 3)
+	resp, err := svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 3)
 	if err != nil {
 		t.Fatalf("start training: %v", err)
 	}
@@ -330,7 +330,7 @@ func TestGetTrainingCost(t *testing.T) {
 	svc, playerID, villageID, _ := setupTrainingTest(t)
 	ctx := context.Background()
 
-	costResp, err := svc.GetTrainingCost(ctx, playerID, villageID, "iron_legionary", 5)
+	costResp, err := svc.GetTrainingCost(ctx, playerID, villageID, "arkazia_shield_guard", 5)
 	if err != nil {
 		t.Fatalf("get training cost: %v", err)
 	}
@@ -367,7 +367,7 @@ func TestGetTrainingQueue(t *testing.T) {
 	}
 
 	// Train some units
-	svc.StartTraining(ctx, playerID, villageID, "iron_legionary", 1)
+	svc.StartTraining(ctx, playerID, villageID, "arkazia_shield_guard", 1)
 
 	queue, err = svc.GetTrainingQueue(ctx, villageID)
 	if err != nil {

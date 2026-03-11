@@ -18,6 +18,7 @@ var (
 	ErrUnknownTroop        = errors.New("unknown troop type")
 	ErrTrainingBuildingReq = errors.New("training building requirement not met")
 	ErrInvalidQuantity     = errors.New("quantity must be at least 1")
+	ErrInsufficientPop     = errors.New("not enough population capacity")
 )
 
 // TrainCompletionEvent describes a single unit completing training.
@@ -146,21 +147,30 @@ func (s *TrainingService) StartTraining(ctx context.Context, playerID, villageID
 		return nil, model.ErrInsufficientResources
 	}
 
+	// 9a. Check sufficient population capacity
+	popCost := config.TroopPopCost(troopType)
+	popCap := config.CalculatePopCap(buildings)
+	if res.PopUsed+popCost*quantity > popCap {
+		return nil, ErrInsufficientPop
+	}
+
 	// 10. Deduct resources + insert queue atomically
 	res.Food -= totalCost.Food
 	res.Water -= totalCost.Water
 	res.Lumber -= totalCost.Lumber
 	res.Stone -= totalCost.Stone
+	res.PopUsed += popCost * quantity
 	res.LastUpdated = now
 
 	completesAt := now.Add(time.Duration(eachTimeSec) * time.Second)
 	queueItem := &model.TrainingQueue{
-		VillageID:       villageID,
-		TroopType:       troopType,
-		Quantity:        quantity,
-		EachDurationSec: eachTimeSec,
-		StartedAt:       now,
-		CompletesAt:     completesAt,
+		VillageID:        villageID,
+		TroopType:        troopType,
+		Quantity:         quantity,
+		OriginalQuantity: quantity,
+		EachDurationSec:  eachTimeSec,
+		StartedAt:        now,
+		CompletesAt:      completesAt,
 	}
 
 	err = s.uow.DeductResourcesAndInsertTrainQueue(ctx, villageID, res, queueItem)
@@ -169,12 +179,13 @@ func (s *TrainingService) StartTraining(ctx context.Context, playerID, villageID
 	}
 
 	return &dto.TrainingQueueResponse{
-		ID:              queueItem.ID,
-		TroopType:       queueItem.TroopType,
-		Quantity:        queueItem.Quantity,
-		EachDurationSec: queueItem.EachDurationSec,
-		StartedAt:       queueItem.StartedAt,
-		CompletesAt:     queueItem.CompletesAt,
+		ID:               queueItem.ID,
+		TroopType:        queueItem.TroopType,
+		Quantity:         queueItem.Quantity,
+		OriginalQuantity: queueItem.OriginalQuantity,
+		EachDurationSec:  queueItem.EachDurationSec,
+		StartedAt:        queueItem.StartedAt,
+		CompletesAt:      queueItem.CompletesAt,
 	}, nil
 }
 
@@ -275,12 +286,13 @@ func (s *TrainingService) GetTrainingQueue(ctx context.Context, villageID int64)
 	result := make([]dto.TrainingQueueResponse, len(items))
 	for i, item := range items {
 		result[i] = dto.TrainingQueueResponse{
-			ID:              item.ID,
-			TroopType:       item.TroopType,
-			Quantity:        item.Quantity,
-			EachDurationSec: item.EachDurationSec,
-			StartedAt:       item.StartedAt,
-			CompletesAt:     item.CompletesAt,
+			ID:               item.ID,
+			TroopType:        item.TroopType,
+			Quantity:         item.Quantity,
+			OriginalQuantity: item.OriginalQuantity,
+			EachDurationSec:  item.EachDurationSec,
+			StartedAt:        item.StartedAt,
+			CompletesAt:      item.CompletesAt,
 		}
 	}
 	return result, nil

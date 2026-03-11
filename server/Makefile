@@ -1,4 +1,4 @@
-.PHONY: run build test lint clean
+.PHONY: run build test lint clean gen-config
 
 # Default target
 run:
@@ -33,3 +33,7 @@ clean:
 test-coverage:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -html=coverage.out -o coverage.html
+
+# Regenerate client JSON config from Go source of truth
+gen-config:
+	go run ./cmd/genconfig

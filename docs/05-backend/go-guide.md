@@ -8,7 +8,7 @@
 
 | Tool | Purpose |
 |------|---------|
-| **Go 1.22+** | Server language |
+| **Go 1.25+** | Server language |
 | **net/http** | HTTP server (standard library — avoid frameworks) |
 | **coder/websocket** | WebSocket library (maintained fork of nhooyr/websocket) |
 | **modernc.org/sqlite** | Pure Go SQLite driver (no CGO required) |
@@ -42,29 +42,54 @@ import (
 ```
 server/
 ├── cmd/
-│   └── server/
-│       └── main.go                 # Entry point — wires dependencies, starts server
+│   ├── server/
+│   │   └── main.go                 # Entry point — wires dependencies, starts server
+│   └── genconfig/
+│       └── main.go                 # Config codegen CLI (Go config → JSON)
 ├── internal/
 │   ├── config/
-│   │   └── config.go               # Load configuration from env vars / config file
+│   │   ├── config.go               # Load configuration from env vars / config file
+│   │   ├── buildings.go            # Building configs (costs, scaling, prerequisites)
+│   │   ├── troops.go               # Troop configs (stats, costs, kingdoms)
+│   │   ├── resources.go            # Resource economy constants
+│   │   ├── generated_types.go      # DTO types for genconfig + parity tests
+│   │   └── parity_test.go          # Verify committed JSON matches Go config
+│   ├── dto/                        # Data Transfer Objects (request/response structs)
+│   │   ├── auth.go
+│   │   ├── village.go
+│   │   ├── building.go
+│   │   ├── training.go
+│   │   ├── season.go
+│   │   ├── admin.go
+│   │   └── map.go
 │   ├── handler/
 │   │   ├── auth_handler.go          # HTTP handlers for auth endpoints
 │   │   ├── auth_handler_test.go
 │   │   ├── village_handler.go       # HTTP handlers for village endpoints
 │   │   ├── village_handler_test.go
+│   │   ├── training_handler.go      # Troop training endpoints
+│   │   ├── training_handler_test.go
 │   │   ├── map_handler.go
-│   │   ├── helpers.go               # writeJSON, writeError, response envelope
-│   │   ├── dto/                     # Data Transfer Objects (request/response structs)
-│   │   │   ├── village.go
-│   │   │   ├── auth.go
-│   │   │   └── building.go
-│   │   └── ...
+│   │   ├── map_handler_test.go
+│   │   ├── admin_handler.go
+│   │   ├── admin_handler_test.go
+│   │   ├── player_handler.go
+│   │   ├── player_handler_test.go
+│   │   ├── season_handler.go
+│   │   ├── season_handler_test.go
+│   │   └── helpers.go               # writeJSON, writeError, response envelope
 │   ├── service/
 │   │   ├── auth_service.go          # Auth business logic
 │   │   ├── auth_service_test.go
-│   │   ├── village_service.go       # Village business logic
+│   │   ├── village_service.go       # Village business logic (buildings, resources)
 │   │   ├── village_service_test.go
-│   │   ├── resource_service.go      # Resource calculation (lazy evaluation)
+│   │   ├── training_service.go      # Troop training business logic
+│   │   ├── training_service_test.go
+│   │   ├── map_service.go           # Map generation and queries
+│   │   ├── season_service.go        # Season/world management
+│   │   ├── admin_service.go         # Admin operations
+│   │   ├── resource_calc.go         # FlushResources() — shared lazy resource evaluation
+│   │   ├── kingdoms.go              # IsValidKingdom() validation helper
 │   │   └── ...
 │   ├── repository/
 │   │   ├── interfaces.go            # Repository interfaces (PlayerRepo, VillageRepo, etc.)
@@ -76,13 +101,11 @@ server/
 │   │   │   └── ...
 │   │   └── postgres/                # Future PostgreSQL implementations
 │   ├── model/
-│   │   ├── player.go                # Domain model structs (not DB models — no SQL tags)
+│   │   ├── player.go                # Domain model structs
 │   │   ├── village.go
 │   │   ├── building.go
 │   │   ├── resources.go
 │   │   ├── troop.go
-│   │   ├── weapon.go
-│   │   ├── rune.go
 │   │   └── errors.go               # Domain-specific error types
 │   ├── middleware/
 │   │   ├── auth.go                  # JWT validation middleware
@@ -95,14 +118,11 @@ server/
 │   │   ├── messages.go              # Message type definitions
 │   │   └── handlers.go              # WebSocket message handlers
 │   └── gameloop/
-│       ├── ticker.go                # Main game tick loop
-│       ├── resource_tick.go         # Resource production completion
-│       ├── building_tick.go         # Building queue completion
-│       └── combat_tick.go           # Troop movement and combat resolution
+│       ├── tick.go                  # Main game tick loop (building + training completion)
+│       └── tick_test.go
 ├── migrations/
-│   ├── 001_create_players.sql
-│   ├── 002_create_villages.sql
-│   └── ...
+│   ├── 001_schema.sql
+│   └── 002_seed_data.sql
 ├── go.mod
 ├── go.sum
 └── Makefile
@@ -259,7 +279,7 @@ func VillageFromModel(v *model.Village) VillageResponse {
 
 ### Rules
 
-- DTOs live in `internal/handler/dto/`
+- DTOs live in `internal/dto/` (top-level, not inside handler)
 - DTOs have `json:""` tags. Domain models in `internal/model/` do NOT.
 - Every handler converts between DTOs and domain models
 - Request DTOs validate input format (field presence, string length, etc.)
@@ -712,3 +732,4 @@ migrate:
 | 2026-03-03 | Initial creation of Go guide |
 | 2026-03-03 | Added Go module path (github.com/luisfpires18/woo), replaced gorilla/websocket with coder/websocket, added SecurityHeaders middleware, DTO convention, transaction pattern, .env.example, unified API response envelope with error codes |
 | 2026-03-10 | Replaced WithTx-per-repo transaction pattern with UnitOfWork interface. Added resource_calc.go (FlushResources) and kingdoms.go (IsValidKingdom) shared helpers. Documented new architecture rules: services never import database/sql. |
+| 2026-03-10 | Full docs sync: Go 1.22→Go 1.25+. Updated project structure: added `cmd/genconfig/`, `config/` files (buildings.go, troops.go, resources.go, generated_types.go, parity_test.go), moved `dto/` to `internal/dto/` (from `internal/handler/dto/`). Added training/admin/season/player handlers and services. Updated model list. Gameloop simplified to tick.go (building + training completion). Migration files: 001_schema.sql + 002_seed_data.sql. |

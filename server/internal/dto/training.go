@@ -12,12 +12,13 @@ type StartTrainingRequest struct {
 
 // TrainingQueueResponse represents a training queue item in API responses.
 type TrainingQueueResponse struct {
-	ID              int64     `json:"id"`
-	TroopType       string    `json:"troop_type"`
-	Quantity        int       `json:"quantity"`
-	EachDurationSec int       `json:"each_duration_sec"`
-	StartedAt       time.Time `json:"started_at"`
-	CompletesAt     time.Time `json:"completes_at"`
+	ID               int64     `json:"id"`
+	TroopType        string    `json:"troop_type"`
+	Quantity         int       `json:"quantity"`
+	OriginalQuantity int       `json:"original_quantity"`
+	EachDurationSec  int       `json:"each_duration_sec"`
+	StartedAt        time.Time `json:"started_at"`
+	CompletesAt      time.Time `json:"completes_at"`
 }
 
 // TrainingCostResponse is returned by the training cost preview endpoint.

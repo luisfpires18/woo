@@ -8,7 +8,7 @@
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| React | 18+ | UI framework |
+| React | 19 | UI framework |
 | TypeScript | 5+ | Type safety (strict mode enabled) |
 | Vite | 5+ | Build tool and dev server |
 | Zustand | 4+ | Global game state management |
@@ -38,44 +38,61 @@ client/src/
 │       ├── Header/
 │       ├── Sidebar/
 │       └── Footer/
+├── config/                 # Game config imports
+│   ├── generated/          # Auto-generated JSON from Go config (DO NOT EDIT)
+│   │   ├── buildings.json
+│   │   ├── troops.json
+│   │   └── resources.json
+│   ├── buildings.ts        # TS wrapper for buildings.json
+│   ├── troops.ts           # TS wrapper for troops.json
+│   └── resources.ts        # TS wrapper for resources.json
 ├── features/               # Feature modules (domain-specific)
 │   ├── auth/
 │   │   ├── components/     # Auth-specific components (LoginForm, RegisterForm)
 │   │   ├── hooks/          # Auth-specific hooks (useLogin, useRegister)
 │   │   └── pages/          # Auth pages (LoginPage, RegisterPage)
 │   ├── village/
-│   │   ├── components/     # VillageView, BuildingPanel, ResourcePanel
+│   │   ├── components/     # VillageView, BuildingPanel, ResourcePanel, etc.
 │   │   ├── hooks/          # useVillage, useBuilding, useResources
 │   │   └── pages/          # VillagePage
 │   ├── map/
-│   │   ├── components/     # MapGrid, MapTile, MapControls
-│   │   ├── hooks/          # useMapData, useMapNavigation
+│   │   ├── components/     # MapRenderer, MapControls
+│   │   ├── hooks/          # useMapData
 │   │   └── pages/          # MapPage
-│   ├── combat/
-│   ├── forge/
-│   └── lore/
+│   ├── kingdom/            # Kingdom selection
+│   ├── admin/              # Admin panel, map editor, template system
+│   ├── profile/            # Player profile
+│   ├── season/             # Season/world management
+│   └── landing/            # Landing page
 ├── hooks/                  # Shared custom hooks
-│   ├── useWebSocket.ts     # WebSocket connection management
-│   ├── useAuth.ts          # Auth state convenience hook
-│   └── useMediaQuery.ts    # Responsive breakpoint hook
+│   ├── useBuildingDisplayNames.ts  # Kingdom-specific building display names
+│   ├── useResourceTicker.ts        # Client-side resource tick interpolation
+│   └── ...
 ├── services/               # API and WebSocket layer
 │   ├── api.ts              # REST API client (typed fetch wrapper)
-│   ├── websocket.ts        # WebSocket connection singleton
-│   └── auth.ts             # Auth-specific API calls
+│   ├── auth.ts             # Auth-specific API calls
+│   ├── village.ts          # Village API calls
+│   ├── training.ts         # Troop training API calls
+│   ├── map.ts              # Map API calls
+│   ├── admin.ts            # Admin API calls
+│   ├── season.ts           # Season API calls
+│   ├── template.ts         # Map template API calls
+│   └── player.ts           # Player API calls
 ├── stores/                 # Zustand stores
 │   ├── authStore.ts        # Auth state (user, token, login status)
 │   ├── gameStore.ts        # Real-time game state (current resources tick)
-│   ├── villageStore.ts     # Active village state
-│   └── mapStore.ts         # Map viewport and visible tiles
+│   ├── mapStore.ts         # Map viewport and visible tiles
+│   ├── assetStore.ts       # Sprite/asset management
+│   └── themeStore.ts       # Kingdom theme management
 ├── styles/                 # Global styles
 │   ├── globals.css         # CSS reset, base styles, CSS variables
 │   ├── themes.css          # Kingdom theme variables
 │   └── typography.css      # Font imports and text styles
 ├── types/                  # TypeScript interfaces (shared)
-│   ├── api.ts              # API request/response types
+│   ├── api.ts              # API request/response types + union types (BuildingType, TroopType, Kingdom)
 │   ├── game.ts             # Game entity types (Village, Building, Troop, etc.)
 │   ├── websocket.ts        # WebSocket message types
-│   └── kingdom.ts          # Kingdom-specific types and constants
+│   └── map.ts              # Map-related types
 ├── utils/                  # Pure utility functions
 │   ├── format.ts           # Number formatting, date formatting, time-ago
 │   ├── calculations.ts     # Display-only calculations (resource ETA, countdown timers)
@@ -232,14 +249,14 @@ export function useVillage(villageId: number) {
 
 ```tsx
 // types/game.ts
-export type Kingdom = 'veridor' | 'sylvara' | 'arkazia';
-export type ResourceType = 'iron' | 'wood' | 'stone' | 'food';
+export type Kingdom = 'veridor' | 'sylvara' | 'arkazia' | 'draxys' | 'nordalh' | 'zandres' | 'lumus';
+export type ResourceType = 'food' | 'water' | 'lumber' | 'stone';
 
 export interface Resources {
-  iron: number;
-  wood: number;
-  stone: number;
   food: number;
+  water: number;
+  lumber: number;
+  stone: number;
 }
 
 export interface Village {
@@ -376,3 +393,4 @@ export function useWebSocketEvent<T>(type: string, handler: (data: T) => void) {
 | 2026-03-07 | Docs sync: noted that villageStore.ts doesn't exist (replaced by gameStore.ts), hooks/useWebSocket.ts and services/websocket.ts are planned but not yet implemented, ResourceBar/Tooltip/ErrorBoundary components are planned but not yet created. Vite config uses strictPort: true. Added assetStore.ts to stores list. Admin panel has map editor with template system. Kingdom selection page shows admin link for admin users. |
 | 2026-03-08 | Troops training UI refactored: removed sidebar `TrainingPanel` component. Training now happens inside `BuildingTrainingModal` — clicking a military building (barracks, stable, colosseum) opens a modal filtered to that building's trainable troops. Non-military buildings open the standard `BuildingDetailModal` for upgrades. `BuildingCard` gained `isMilitary` + `onUpgradeClick` props to show a small ⬆ upgrade icon on military cards. `BuildingGrid` passes `onUpgradeClick` for military buildings. Config helpers added: `getTroopsForBuilding()` and `isMilitaryBuilding()` in `config/troops.ts`. |
 | 2026-03-10 | API types strengthened: `BuildingType`, `TroopType`, `Kingdom` union types replace bare strings throughout `types/api.ts`, eliminating ~13 redundant `as` casts in components. App.tsx inline styles extracted to `App.module.css`. Mobile responsive `@media (max-width: 768px)` overrides added to 6 CSS module files (LoadingSpinner, LoginPage, RegisterPage, LandingLayout, BuildingCard, BuildingDetailModal). Shared map utilities extracted to `features/map/mapUtils.ts` (TILE_SIZE, hexColor, hexColorAlpha, screenToTile, tileHash, extractBaseName) — used by MapRenderer.tsx and AdminMapEditorPage.tsx. |
+| 2026-03-10 | Full docs sync: React 18→19. Folder structure updated: added `config/` + `config/generated/` for codegen pipeline, removed planned-but-unbuilt `combat/`, `forge/`, `lore/` features, added actual features (`kingdom/`, `admin/`, `profile/`, `season/`, `landing/`). Services updated to match real files (village.ts, training.ts, map.ts, admin.ts, season.ts, template.ts, player.ts). Stores: replaced villageStore with assetStore + themeStore. Hooks: replaced planned hooks with actual (useBuildingDisplayNames, useResourceTicker). Types: kingdom.ts → map.ts. Kingdom type expanded to all 7 playable kingdoms. ResourceType updated from iron/wood/stone/food to food/water/lumber/stone. |

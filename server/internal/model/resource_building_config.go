@@ -12,6 +12,5 @@ type ResourceBuildingConfig struct {
 	DisplayName  string    `json:"display_name"`
 	Description  string    `json:"description"`
 	DefaultIcon  string    `json:"default_icon"`
-	SpritePath   *string   `json:"sprite_path,omitempty"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }

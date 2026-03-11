@@ -12,8 +12,8 @@ func TestFlushResources_AdvancesTime(t *testing.T) {
 		Food: 100, Water: 100, Lumber: 100, Stone: 100,
 		FoodRate: 10, WaterRate: 10, LumberRate: 10, StoneRate: 10,
 		FoodConsumption: 2,
-		MaxStorage:      5000,
-		LastUpdated:     time.Now().UTC().Add(-10 * time.Second),
+		MaxFood: 5000, MaxWater: 5000, MaxLumber: 5000, MaxStone: 5000,
+		LastUpdated: time.Now().UTC().Add(-10 * time.Second),
 	}
 	now := time.Now().UTC()
 	changed := FlushResources(res, now)
@@ -39,7 +39,7 @@ func TestFlushResources_NoOpWhenNotAdvanced(t *testing.T) {
 	res := &model.Resources{
 		Food: 100, Water: 100, Lumber: 100, Stone: 100,
 		FoodRate: 10, WaterRate: 10, LumberRate: 10, StoneRate: 10,
-		MaxStorage:  5000,
+		MaxFood: 5000, MaxWater: 5000, MaxLumber: 5000, MaxStone: 5000,
 		LastUpdated: now,
 	}
 	changed := FlushResources(res, now)
@@ -55,7 +55,7 @@ func TestFlushResources_ClampsToMaxStorage(t *testing.T) {
 	res := &model.Resources{
 		Food: 990, Water: 990, Lumber: 990, Stone: 990,
 		FoodRate: 100, WaterRate: 100, LumberRate: 100, StoneRate: 100,
-		MaxStorage:  1000,
+		MaxFood: 1000, MaxWater: 1000, MaxLumber: 1000, MaxStone: 1000,
 		LastUpdated: time.Now().UTC().Add(-10 * time.Second),
 	}
 	FlushResources(res, time.Now().UTC())
@@ -73,8 +73,8 @@ func TestFlushResources_FoodFloorsAtZero(t *testing.T) {
 		Food:            10,
 		FoodRate:        1,
 		FoodConsumption: 100, // consumption >> rate
-		MaxStorage:      5000,
-		LastUpdated:     time.Now().UTC().Add(-10 * time.Second),
+		MaxFood: 5000, MaxWater: 5000, MaxLumber: 5000, MaxStone: 5000,
+		LastUpdated: time.Now().UTC().Add(-10 * time.Second),
 	}
 	FlushResources(res, time.Now().UTC())
 

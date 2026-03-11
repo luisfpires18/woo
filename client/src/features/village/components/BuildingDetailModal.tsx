@@ -1,14 +1,17 @@
+import { useState } from 'react';
 import type { BuildingInfo, ResourcesResponse, BuildingQueueResponse } from '../../../types/api';
 import { Modal } from '../../../components/Modal';
 import { GameIcon } from '../../../components/GameIcon/GameIcon';
 import {
   BUILDING_CONFIGS,
+  RESOURCE_BUILDING_TYPES,
   costAtLevel,
   timeAtLevel,
   checkPrerequisites,
   formatDuration,
 } from '../../../config/buildings';
 import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
+import { useResourceBuildingDisplay } from '../../../hooks/useResourceBuildingDisplay';
 import { useStartUpgrade } from '../hooks/useBuildingUpgrade';
 import styles from './BuildingDetailModal.module.css';
 
@@ -33,9 +36,13 @@ export function BuildingDetailModal({
 }: BuildingDetailModalProps) {
   const upgradeMutation = useStartUpgrade(villageId);
   const { getDisplayName } = useBuildingDisplayNames();
+  const { getDisplay } = useResourceBuildingDisplay();
+  const [spriteFailed, setSpriteFailed] = useState(false);
   const type = building.building_type;
   const cfg = BUILDING_CONFIGS[type];
-  const displayName = getDisplayName(type);
+  const isResourceBuilding = RESOURCE_BUILDING_TYPES.has(type);
+  const resourceDisplay = isResourceBuilding ? getDisplay(type) : null;
+  const displayName = isResourceBuilding ? resourceDisplay!.displayName : getDisplayName(type);
 
   const isMaxLevel = building.level >= (cfg?.maxLevel ?? 0);
   const targetLevel = building.level + 1;
@@ -72,7 +79,17 @@ export function BuildingDetailModal({
     <Modal isOpen={isOpen} onClose={onClose} title={displayName} size="sm">
       <div className={styles.content}>
         <div className={styles.headerSection}>
-          <GameIcon assetId={building.building_type} fallback="🏗️" size={40} />
+          {isResourceBuilding && resourceDisplay?.spriteUrl && !spriteFailed ? (
+            <img
+              src={resourceDisplay.spriteUrl}
+              alt={displayName}
+              className={styles.headerSprite}
+              onError={() => setSpriteFailed(true)}
+              draggable={false}
+            />
+          ) : (
+            <GameIcon assetId={building.building_type} fallback={resourceDisplay?.emoji ?? '🏗️'} size={64} />
+          )}
           <div className={styles.headerInfo}>
             <span className={styles.currentLevel}>
               {building.level > 0 ? `Level ${building.level}` : 'Not built'}
@@ -105,19 +122,14 @@ export function BuildingDetailModal({
               </div>
             </div>
 
-            {prereqs.checks.length > 0 && (
+            {prereqs.checks.some((p) => !p.met) && (
               <div className={styles.section}>
                 <h4 className={styles.sectionTitle}>Prerequisites</h4>
                 <div className={styles.prereqList}>
-                  {prereqs.checks.map((p) => (
-                    <span
-                      key={p.buildingType}
-                      className={p.met ? styles.prereqMet : styles.prereqUnmet}
-                    >
-                      {p.met ? '✓' : '✗'} {p.displayName} Lv {p.minLevel}
-                      {!p.met && (
-                        <span className={styles.prereqCurrent}> (current: {p.currentLevel})</span>
-                      )}
+                  {prereqs.checks.filter((p) => !p.met).map((p) => (
+                    <span key={p.buildingType} className={styles.prereqUnmet}>
+                      ✗ {p.displayName} Lv {p.minLevel}
+                      <span className={styles.prereqCurrent}> (current: {p.currentLevel})</span>
                     </span>
                   ))}
                 </div>
@@ -166,6 +178,7 @@ function CostRow({
   value: number;
   available: number;
 }) {
+  if (value === 0) return null;
   const enough = available >= value;
   return (
     <div className={styles.costRow}>

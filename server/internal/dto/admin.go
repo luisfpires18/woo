@@ -79,14 +79,11 @@ type AnnouncementResponse struct {
 
 // GameAssetDTO is a single game asset in the listing.
 type GameAssetDTO struct {
-	ID           string    `json:"id"`
-	Category     string    `json:"category"`
-	DisplayName  string    `json:"display_name"`
-	DefaultIcon  string    `json:"default_icon"`
-	SpriteURL    *string   `json:"sprite_url"`
-	SpriteWidth  int       `json:"sprite_width"`
-	SpriteHeight int       `json:"sprite_height"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	ID          string    `json:"id"`
+	Category    string    `json:"category"`
+	DisplayName string    `json:"display_name"`
+	DefaultIcon string    `json:"default_icon"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // GameAssetListResponse is the response for GET /api/admin/assets.
@@ -118,14 +115,13 @@ type TileTerrainPaint struct {
 
 // BuildingDisplayConfigDTO is a single building display config in API responses.
 type BuildingDisplayConfigDTO struct {
-	ID           int64   `json:"id"`
-	BuildingType string  `json:"building_type"`
-	Kingdom      string  `json:"kingdom"`
-	DisplayName  string  `json:"display_name"`
-	Description  string  `json:"description"`
-	DefaultIcon  string  `json:"default_icon"`
-	SpriteURL    *string `json:"sprite_url"`
-	UpdatedAt    string  `json:"updated_at"`
+	ID           int64  `json:"id"`
+	BuildingType string `json:"building_type"`
+	Kingdom      string `json:"kingdom"`
+	DisplayName  string `json:"display_name"`
+	Description  string `json:"description"`
+	DefaultIcon  string `json:"default_icon"`
+	UpdatedAt    string `json:"updated_at"`
 }
 
 // BuildingDisplayConfigListResponse is the response for GET /api/admin/building-displays.
@@ -140,19 +136,44 @@ type UpdateBuildingDisplayConfigRequest struct {
 	DefaultIcon string `json:"default_icon"`
 }
 
+// --- Troop display configs ---
+
+// TroopDisplayConfigDTO is a single troop display config in API responses.
+type TroopDisplayConfigDTO struct {
+	ID               int64  `json:"id"`
+	TroopType        string `json:"troop_type"`
+	Kingdom          string `json:"kingdom"`
+	TrainingBuilding string `json:"training_building"`
+	DisplayName      string `json:"display_name"`
+	Description      string `json:"description"`
+	DefaultIcon      string `json:"default_icon"`
+	UpdatedAt        string `json:"updated_at"`
+}
+
+// TroopDisplayConfigListResponse is the response for GET /api/admin/troop-displays.
+type TroopDisplayConfigListResponse struct {
+	Configs []*TroopDisplayConfigDTO `json:"configs"`
+}
+
+// UpdateTroopDisplayConfigRequest is the payload for PUT /api/admin/troop-displays/{id}.
+type UpdateTroopDisplayConfigRequest struct {
+	DisplayName string `json:"display_name"`
+	Description string `json:"description"`
+	DefaultIcon string `json:"default_icon"`
+}
+
 // --- Resource building configs ---
 
 // ResourceBuildingConfigDTO is a single resource building config in API responses.
 type ResourceBuildingConfigDTO struct {
-	ID           int64   `json:"id"`
-	ResourceType string  `json:"resource_type"`
-	Slot         int     `json:"slot"`
-	Kingdom      string  `json:"kingdom"`
-	DisplayName  string  `json:"display_name"`
-	Description  string  `json:"description"`
-	DefaultIcon  string  `json:"default_icon"`
-	SpriteURL    *string `json:"sprite_url"`
-	UpdatedAt    string  `json:"updated_at"`
+	ID           int64  `json:"id"`
+	ResourceType string `json:"resource_type"`
+	Slot         int    `json:"slot"`
+	Kingdom      string `json:"kingdom"`
+	DisplayName  string `json:"display_name"`
+	Description  string `json:"description"`
+	DefaultIcon  string `json:"default_icon"`
+	UpdatedAt    string `json:"updated_at"`
 }
 
 // ResourceBuildingConfigListResponse is the response for GET /api/admin/resource-buildings.

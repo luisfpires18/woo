@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "concurrently -n server,client -c green,blue \"cd server && go run ./cmd/server\" \"cd client && npm run dev\"",
     "dev:server": "cd server && go run ./cmd/server",
-    "dev:client": "cd client && npm run dev"
+    "dev:client": "cd client && npm run dev",
+    "gen-config": "cd server && go run ./cmd/genconfig"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

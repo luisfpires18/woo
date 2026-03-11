@@ -18,10 +18,10 @@ func FlushResources(res *model.Resources, now time.Time) bool {
 		return false
 	}
 
-	res.Food = clampResource(res.Food+(res.FoodRate-res.FoodConsumption)*elapsed, res.MaxStorage)
-	res.Water = clampResource(res.Water+res.WaterRate*elapsed, res.MaxStorage)
-	res.Lumber = clampResource(res.Lumber+res.LumberRate*elapsed, res.MaxStorage)
-	res.Stone = clampResource(res.Stone+res.StoneRate*elapsed, res.MaxStorage)
+	res.Food = clampResource(res.Food+(res.FoodRate-res.FoodConsumption)*elapsed, res.MaxFood)
+	res.Water = clampResource(res.Water+res.WaterRate*elapsed, res.MaxWater)
+	res.Lumber = clampResource(res.Lumber+res.LumberRate*elapsed, res.MaxLumber)
+	res.Stone = clampResource(res.Stone+res.StoneRate*elapsed, res.MaxStone)
 	res.LastUpdated = now
 
 	return true

@@ -22,7 +22,8 @@ func newTestAdminService(t *testing.T) (*service.AdminService, *service.AuthServ
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
 	buildingDisplayConfigRepo := sqlite.NewBuildingDisplayConfigRepo(db)
 
-	adminSvc := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo)
+	troopDisplayConfigRepo := sqlite.NewTroopDisplayConfigRepo(db)
+	adminSvc := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo, troopDisplayConfigRepo)
 	authSvc := service.NewAuthService(playerRepo, refreshTokenRepo, "test-secret", "woo-test")
 	return adminSvc, authSvc
 }

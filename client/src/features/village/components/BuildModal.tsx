@@ -176,6 +176,7 @@ export function BuildModal({
 }
 
 function CostItem({ label, value, available }: { label: string; value: number; available: number }) {
+  if (value === 0) return null;
   const enough = available >= value;
   return (
     <span className={enough ? styles.costOk : styles.costInsufficient}>

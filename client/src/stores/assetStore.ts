@@ -1,6 +1,31 @@
 import { create } from 'zustand';
-import type { GameAsset } from '../types/api';
-import { fetchGameAssets } from '../services/admin';
+import type { GameAsset, TroopDisplayConfig, BuildingDisplayConfig } from '../types/api';
+import { fetchGameAssets, fetchTroopDisplayConfigs, fetchBuildingDisplayConfigs } from '../services/admin';
+import { getSpriteUrl } from '../utils/spriteUrl';
+
+/** Convert a troop display config into a synthetic GameAsset so GameIcon works. */
+export function troopConfigToAsset(c: TroopDisplayConfig): GameAsset {
+  return {
+    id: c.troop_type,
+    category: 'unit',
+    display_name: c.display_name,
+    default_icon: c.default_icon,
+    sprite_url: getSpriteUrl({ kind: 'unit', id: c.troop_type, kingdom: c.kingdom }),
+    updated_at: c.updated_at,
+  };
+}
+
+/** Convert a building display config into a synthetic GameAsset so GameIcon works. */
+export function buildingConfigToAsset(c: BuildingDisplayConfig): GameAsset {
+  return {
+    id: `${c.building_type}_${c.kingdom}`,
+    category: 'building',
+    display_name: c.display_name,
+    default_icon: c.default_icon,
+    sprite_url: getSpriteUrl({ kind: 'building', id: c.building_type, kingdom: c.kingdom }),
+    updated_at: c.updated_at,
+  };
+}
 
 interface AssetState {
   assets: GameAsset[];
@@ -13,7 +38,7 @@ interface AssetState {
   /** Find an asset by its id (e.g. "iron_mine"). */
   getById: (id: string) => GameAsset | undefined;
 
-  /** Replace a single asset in the cache (after upload / delete). */
+  /** Replace a single asset in the cache (after update). */
   upsert: (asset: GameAsset) => void;
 
   /** Add a new asset to the cache (after creating a variant). */
@@ -21,9 +46,6 @@ interface AssetState {
 
   /** Remove an asset from the cache by id. */
   removeAsset: (id: string) => void;
-
-  /** Clear sprite_url for a given asset id. */
-  clearSprite: (id: string) => void;
 }
 
 export const useAssetStore = create<AssetState>((set, get) => ({
@@ -35,8 +57,20 @@ export const useAssetStore = create<AssetState>((set, get) => ({
     if (get().loaded || get().loading) return;
     set({ loading: true });
     try {
-      const resp = await fetchGameAssets();
-      set({ assets: resp.assets, loaded: true });
+      const [assetResp, troopResp, buildingResp] = await Promise.all([
+        fetchGameAssets(),
+        fetchTroopDisplayConfigs().catch(() => ({ configs: [] as TroopDisplayConfig[] })),
+        fetchBuildingDisplayConfigs().catch(() => ({ configs: [] as BuildingDisplayConfig[] })),
+      ]);
+      // Assign convention sprite URLs to game assets
+      const gameAssets = assetResp.assets.map((a) => ({
+        ...a,
+        sprite_url: getSpriteUrl({ kind: a.category as any, id: a.id }),
+      }));
+      // Merge game assets + troop display configs + building display configs
+      const troopAssets = troopResp.configs.map(troopConfigToAsset);
+      const buildingAssets = buildingResp.configs.map(buildingConfigToAsset);
+      set({ assets: [...gameAssets, ...troopAssets, ...buildingAssets], loaded: true });
     } catch {
       // Silently fail — components fall back to emoji
     } finally {
@@ -59,12 +93,5 @@ export const useAssetStore = create<AssetState>((set, get) => ({
   removeAsset: (id: string) =>
     set((s) => ({
       assets: s.assets.filter((a) => a.id !== id),
-    })),
-
-  clearSprite: (id: string) =>
-    set((s) => ({
-      assets: s.assets.map((a) =>
-        a.id === id ? { ...a, sprite_url: null } : a,
-      ),
     })),
 }));

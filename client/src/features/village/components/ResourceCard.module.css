@@ -1,0 +1,114 @@
+/* ResourceCard — individual resource box with kingdom theming */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-sm);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 0;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+/* Icon + name row */
+.iconRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.name {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Capacity numbers: "1200 / 1200" */
+.capacity {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25em;
+  font-variant-numeric: tabular-nums;
+}
+
+.current {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.separator {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.max {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Progress bar */
+.progressTrack {
+  width: 100%;
+  height: 4px;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.progressFill.warning {
+  background-color: var(--warning);
+}
+
+.progressFill.danger {
+  background-color: var(--error);
+}
+
+/* Production rate */
+.rate {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.rateNegative {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--error);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .current {
+    font-size: 0.875rem;
+  }
+
+  .name {
+    font-size: 0.625rem;
+  }
+}

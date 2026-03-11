@@ -15,6 +15,10 @@ type Resources struct {
 	LumberRate      float64   `json:"lumber_rate"`
 	StoneRate       float64   `json:"stone_rate"`
 	FoodConsumption float64   `json:"food_consumption"`
-	MaxStorage      float64   `json:"max_storage"`
+	PopUsed         int       `json:"pop_used"`
+	MaxFood         float64   `json:"max_food"`
+	MaxWater        float64   `json:"max_water"`
+	MaxLumber       float64   `json:"max_lumber"`
+	MaxStone        float64   `json:"max_stone"`
 	LastUpdated     time.Time `json:"last_updated"`
 }

@@ -34,6 +34,32 @@ func (r *buildingQueueRepo) Insert(ctx context.Context, item *model.BuildingQueu
 	return nil
 }
 
+func (r *buildingQueueRepo) GetByID(ctx context.Context, id int64) (*model.BuildingQueue, error) {
+	row := r.db.QueryRowContext(ctx,
+		`SELECT id, village_id, building_type, target_level, started_at, completes_at
+		 FROM building_queue WHERE id = ?`, id,
+	)
+	var item model.BuildingQueue
+	var startedStr, completesStr string
+	if err := row.Scan(&item.ID, &item.VillageID, &item.BuildingType, &item.TargetLevel, &startedStr, &completesStr); err != nil {
+		return nil, fmt.Errorf("get building queue item %d: %w", id, err)
+	}
+	item.StartedAt, _ = parseTime(startedStr)
+	item.CompletesAt, _ = parseTime(completesStr)
+	return &item, nil
+}
+
+func (r *buildingQueueRepo) Update(ctx context.Context, item *model.BuildingQueue) error {
+	_, err := r.db.ExecContext(ctx,
+		`UPDATE building_queue SET completes_at = ? WHERE id = ?`,
+		item.CompletesAt.UTC().Format("2006-01-02 15:04:05"), item.ID,
+	)
+	if err != nil {
+		return fmt.Errorf("update building queue item %d: %w", item.ID, err)
+	}
+	return nil
+}
+
 func (r *buildingQueueRepo) GetByVillageID(ctx context.Context, villageID int64) ([]*model.BuildingQueue, error) {
 	rows, err := r.db.QueryContext(ctx,
 		`SELECT id, village_id, building_type, target_level, started_at, completes_at

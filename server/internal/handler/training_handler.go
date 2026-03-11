@@ -72,6 +72,8 @@ func (h *TrainingHandler) StartTraining(w http.ResponseWriter, r *http.Request) 
 			writeError(w, http.StatusUnprocessableEntity, err.Error())
 		case errors.Is(err, model.ErrInsufficientResources):
 			writeError(w, http.StatusUnprocessableEntity, err.Error())
+		case errors.Is(err, service.ErrInsufficientPop):
+			writeError(w, http.StatusUnprocessableEntity, err.Error())
 		default:
 			writeError(w, http.StatusInternalServerError, "failed to start training")
 		}

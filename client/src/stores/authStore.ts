@@ -38,15 +38,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     if (accessToken && playerStr) {
       try {
-        const cachedPlayer = JSON.parse(playerStr) as PlayerInfo;
-        // Set tokens immediately so API calls work, but don't mark hydrated yet
-        set({ accessToken, refreshToken, player: cachedPlayer, isAuthenticated: true });
+        // Validate cached session with the server before marking as authenticated.
+        // This avoids firing protected queries with stale tokens after a backend/DB reset.
+        set({ accessToken, refreshToken, player: null, isAuthenticated: false, hydrated: false });
 
         // Refresh player data from server to avoid stale localStorage
         getMe()
           .then((freshPlayer) => {
             localStorage.setItem('player', JSON.stringify(freshPlayer));
-            set({ player: freshPlayer, hydrated: true });
+            set({
+              accessToken,
+              refreshToken,
+              player: freshPlayer,
+              isAuthenticated: true,
+              hydrated: true,
+            });
           })
           .catch(() => {
             // Token invalid or server unreachable — clear session

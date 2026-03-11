@@ -34,7 +34,12 @@ type ResourcesResponse struct {
 	LumberRate      float64 `json:"lumber_rate"`
 	StoneRate       float64 `json:"stone_rate"`
 	FoodConsumption float64 `json:"food_consumption"`
-	MaxStorage      float64 `json:"max_storage"`
+	MaxFood         float64 `json:"max_food"`
+	MaxWater        float64 `json:"max_water"`
+	MaxLumber       float64 `json:"max_lumber"`
+	MaxStone        float64 `json:"max_stone"`
+	PopCap          int     `json:"pop_cap"`
+	PopUsed         int     `json:"pop_used"`
 }
 
 // VillageListItem is a summary for village list endpoints.

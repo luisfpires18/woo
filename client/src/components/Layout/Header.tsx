@@ -1,12 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
-import { useGameStore } from '../../stores/gameStore';
-import { ResourceBar } from './ResourceBar';
 import styles from './Header.module.css';
 
 export function Header() {
   const { player, logout, isAuthenticated } = useAuthStore();
-  const currentVillage = useGameStore((s) => s.currentVillage);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -22,11 +19,7 @@ export function Header() {
         </Link>
       </div>
 
-      <div className={styles.center}>
-        {isAuthenticated && currentVillage?.resources && (
-          <ResourceBar resources={currentVillage.resources} />
-        )}
-      </div>
+      <div className={styles.center} />
 
       <div className={styles.right}>
         {isAuthenticated && player && (

@@ -53,8 +53,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Desert Infantry & Scorpion Riders', 'Scale / Swarm Runes', 'Arena & Frontier Culture'],
     colorVar: '#FDD835',
     glowVar: 'rgba(253, 216, 53, 0.35)',
-    playable: false,
-    lockReason: 'Desert frontier — coming in a future update',
+    playable: true,
   },
   {
     id: 'zandres',
@@ -64,8 +63,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Underground Mining & Stonework', 'Technic / Circuit Runes', 'Secrecy & Ancient Systems'],
     colorVar: '#795548',
     glowVar: 'rgba(121, 85, 72, 0.35)',
-    playable: false,
-    lockReason: 'Underground realm — requires unique mechanics',
+    playable: true,
   },
   {
     id: 'lumus',
@@ -75,8 +73,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Martial Artists & Staff Users', 'Physical / Solar Runes', 'Ritual & Discipline'],
     colorVar: '#FFFFFF',
     glowVar: 'rgba(255, 255, 255, 0.35)',
-    playable: false,
-    lockReason: 'Island kingdom — coming in a future update',
+    playable: true,
   },
   {
     id: 'nordalh',
@@ -86,8 +83,7 @@ export const KINGDOMS: KingdomInfo[] = [
     traits: ['Direwolf Cavalry & Smiths', 'Frost / Beast Runes', 'Clan Endurance & Hearth Law'],
     colorVar: '#7B1FA2',
     glowVar: 'rgba(123, 31, 162, 0.35)',
-    playable: false,
-    lockReason: 'Northern colony — coming in a future update',
+    playable: true,
   },
   {
     id: 'drakanith',

@@ -1,0 +1,21 @@
+{
+  "startingResources": 500,
+  "startingRate": 3,
+  "baseResourceRate": 1,
+  "ratePerLevel": 2,
+  "baseStorage": 1200,
+  "storagePerLevel": 400,
+  "storageBuildings": {
+    "provisions": [
+      "food"
+    ],
+    "reservoir": [
+      "water"
+    ],
+    "storage": [
+      "lumber",
+      "stone"
+    ]
+  },
+  "basePopulation": 20
+}

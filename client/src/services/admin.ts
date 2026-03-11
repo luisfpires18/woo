@@ -9,6 +9,10 @@ import type {
   GameAsset,
   BuildingDisplayConfig,
   BuildingDisplayConfigListResponse,
+  TroopDisplayConfig,
+  TroopDisplayConfigListResponse,
+  ResourceBuildingConfigListResponse,
+  BuildingSpriteListResponse,
 } from '../types/api';
 
 // --- Player management ---
@@ -48,30 +52,6 @@ export async function fetchGameAssets(): Promise<GameAssetListResponse> {
   return api.get<GameAssetListResponse>('/assets');
 }
 
-export async function uploadSprite(id: string, file: File): Promise<GameAsset> {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const token = localStorage.getItem('access_token');
-  const response = await fetch(`/api/admin/assets/${id}/sprite`, {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => ({ error: 'Upload failed' }));
-    throw new Error(body.error || `HTTP ${response.status}`);
-  }
-
-  const result = await response.json();
-  return result.data;
-}
-
-export async function deleteSprite(id: string): Promise<void> {
-  await api.delete<{ message: string }>(`/admin/assets/${id}/sprite`);
-}
-
 export async function createGameAsset(data: {
   id: string;
   category: string;
@@ -97,4 +77,41 @@ export async function updateBuildingDisplayConfig(
 ): Promise<BuildingDisplayConfig> {
   const res = await api.put<{ data: BuildingDisplayConfig }>(`/admin/building-displays/${id}`, data);
   return res.data;
+}
+
+// --- Troop display configs ---
+
+export async function fetchTroopDisplayConfigs(): Promise<TroopDisplayConfigListResponse> {
+  return api.get<TroopDisplayConfigListResponse>('/troop-display-configs');
+}
+
+export async function updateTroopDisplayConfig(
+  id: number,
+  data: { display_name: string; description: string; default_icon: string },
+): Promise<TroopDisplayConfig> {
+  const res = await api.put<{ data: TroopDisplayConfig }>(`/admin/troop-displays/${id}`, data);
+  return res.data;
+}
+
+// --- Building display config ---
+
+// --- Resource building configs ---
+
+export async function fetchResourceBuildingConfigs(): Promise<ResourceBuildingConfigListResponse> {
+  return api.get<ResourceBuildingConfigListResponse>('/resource-building-configs');
+}
+
+export async function updateResourceBuildingConfig(
+  id: number,
+  data: { display_name: string; description: string; default_icon: string },
+): Promise<void> {
+  await api.put<{ message: string }>(`/admin/resource-buildings/${id}`, data);
+}
+
+// --- Kingdom building sprites ---
+
+export async function fetchKingdomBuildingSprites(
+  kingdom: string,
+): Promise<BuildingSpriteListResponse> {
+  return api.get<BuildingSpriteListResponse>(`/admin/sprites/buildings/${kingdom}`);
 }

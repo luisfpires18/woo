@@ -94,9 +94,29 @@ const AdminAssetsPage = lazy(() =>
     default: m.AdminAssetsPage,
   })),
 );
+const AdminKingdomsPage = lazy(() =>
+  import('./features/admin/pages/AdminKingdomsPage').then((m) => ({
+    default: m.AdminKingdomsPage,
+  })),
+);
+const AdminMapAssetsPage = lazy(() =>
+  import('./features/admin/pages/AdminMapAssetsPage').then((m) => ({
+    default: m.AdminMapAssetsPage,
+  })),
+);
+const AdminResourcesPage = lazy(() =>
+  import('./features/admin/pages/AdminResourcesPage').then((m) => ({
+    default: m.AdminResourcesPage,
+  })),
+);
 const AdminBuildingsPage = lazy(() =>
   import('./features/admin/pages/AdminBuildingsPage').then((m) => ({
     default: m.AdminBuildingsPage,
+  })),
+);
+const AdminUnitsPage = lazy(() =>
+  import('./features/admin/pages/AdminUnitsPage').then((m) => ({
+    default: m.AdminUnitsPage,
   })),
 );
 const AdminMapEditorPage = lazy(() =>
@@ -204,7 +224,11 @@ function App() {
             <Route path="stats" element={<AdminStatsPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
             <Route path="assets" element={<AdminAssetsPage />} />
+            <Route path="kingdoms" element={<AdminKingdomsPage />} />
+            <Route path="map-assets" element={<AdminMapAssetsPage />} />
+            <Route path="resources" element={<AdminResourcesPage />} />
             <Route path="buildings" element={<AdminBuildingsPage />} />
+            <Route path="units" element={<AdminUnitsPage />} />
             <Route path="seasons" element={<AdminSeasonsPage />} />
             <Route path="map-editor" element={<AdminMapEditorPage />} />
           </Route>

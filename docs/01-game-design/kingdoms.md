@@ -1,84 +1,44 @@
 # Kingdoms
 
-> **Superseded**: Definitive tunable values (troop stats, bonuses, costs, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
-
-> Complete reference for playable kingdoms. Cross-reference with `docs/02-lore/kingdom-lore.md` for backstory.
+> Complete reference for all kingdoms in the game. For detailed troop roster descriptions and building names, see `docs/01-game-design/kingdoms_units_buildlings.md`. For exact troop stats, see `server/internal/config/troops.go`.
 
 ---
 
 ## Playable vs NPC-Only Kingdoms
 
-The game world has **8 kingdoms**. Currently **5 are playable** and **3 are NPC-only** (present in quests, lore, and world events but not selectable by players).
+The game world has **8 kingdoms**. **7 are playable** and **1 is NPC-only**.
 
-### Playable Kingdoms
+### Playable Kingdoms (7)
 
-| Kingdom | Theme |
-|---------|-------|
-| Veridor | Naval / Ocean / Coastal |
-| Sylvara | Forest / Jungle / Nature |
-| Arkazia | Mountain / Gladiator / Forge |
-| Draxys | Desert / Sand / Frontier |
-| Nordalh | Frost / Northern / Smithing |
+| Kingdom | Theme | Troop Count |
+|---------|-------|-------------|
+| Sylvara | Forest / Jungle / Nature | 19 |
+| Arkazia | Mountain / Gladiator / Forge | 20 |
+| Veridor | Naval / Ocean / Coastal | 20 |
+| Draxys | Desert / Sand / Arena | 21 |
+| Nordalh | Frost / Northern / Viking | 20 |
+| Zandres | Underground / Crystal / Tech | 20 |
+| Lumus | Light / Holy / Solar | 20 |
 
-### NPC-Only Kingdoms (Coming Soon)
+**Total**: 140 troop types across all 7 playable kingdoms.
 
-| Kingdom | Theme | Reason Locked |
-|---------|-------|---------------|
-| Zandres | Underground / Technic | Underground realm requires unique mechanics (vertical map layers, cave systems) |
-| Lumus | Island / Solar / Ritual | Island kingdom requires Docks building for all factions to enable cross-sea attacks |
-| Drakanith | Volcanic / Draconic | Draconic bloodline with physical traits gives inherent advantages — needs careful balancing |
+### NPC-Only Kingdom (1)
 
-These kingdoms may become playable in future expansions if the game succeeds. Their data (themes, building configs, resource configs) is already seeded in the database for NPC village use.
+| Kingdom | Theme | Notes |
+|---------|-------|-------|
+| **Drakanith** | Volcanic / Draconic | NPC-only. No playable units. Present in lore, world events, and zone painting. May become playable in future expansions. |
 
 ---
 
 ## Overview
 
 Players choose their kingdom at registration. This choice is **permanent** for the game round and determines:
-- Available troop types and their stats
-- Kingdom-specific building (1 unique building per kingdom)
-- Resource production bonuses
-- Visual theme (UI colors, building art, troop art)
+- Available troop types and their stats (~20 unique units per kingdom)
+- Kingdom-specific building display names (admin-configurable)
+- Visual theme (full CSS theme with unique colors per kingdom)
 - Playstyle identity
 
----
-
-## Veridor — The Tidal Dominion
-
-> *"The sea provides. The sea destroys. We are both."*
-
-### Identity
-
-| Property | Value |
-|----------|-------|
-| **Theme** | Naval / Ocean / Coastal |
-| **Colors** | Blue (#2196F3), white background, black text |
-| **Architecture** | Stone harbors, lighthouse towers, coral-reinforced walls |
-| **Playstyle** | Trade mastery, naval superiority, economic warfare |
-
-### Kingdom Bonuses
-
-- **+15% Wood production** (shipbuilding tradition)
-- **+10% trade income** at Marketplace
-- **Naval supremacy**: Veridor troops move 20% faster on water tiles
-- **Unique Building**: **Dock** — builds naval units and enables sea trade routes
-
-### Troop Roster
-
-| Unit | Type | Attack | Def (Inf) | Def (Cav) | Speed | Carry | Upkeep | Notes |
-|------|------|--------|-----------|-----------|-------|-------|--------|-------|
-| **Tidecaller** | Infantry | 40 | 50 | 30 | 6 | 50 | 1 | Balanced frontline, good defense |
-| **Harpooneer** | Ranged | 55 | 20 | 25 | 7 | 30 | 1 | High attack, fragile |
-| **Wave Rider** | Cavalry | 70 | 30 | 40 | 12 | 80 | 2 | Fast raider |
-| **Coral Sentinel** | Heavy Inf | 30 | 70 | 60 | 4 | 20 | 2 | Dedicated wall defender |
-| **Sea Serpent** | Naval | 90 | 40 | 40 | 14 | 100 | 3 | Powerful but only on water. Dock required. |
-| **Stormcaster** | Siege | 60 | 15 | 15 | 3 | 10 | 3 | Destroys walls. Slow. |
-| **Gull Scout** | Scout | 10 | 5 | 5 | 18 | 0 | 1 | Fastest scout. Reveals enemy info. |
-
-### Strengths & Weaknesses
-
-- **Strengths**: Best economy through trade. Naval dominance on water maps. Fast scouts. Strong defensive infantry.
-- **Weaknesses**: Expensive troops. Relies heavily on water tiles. Weaker siege capability on land.
+Kingdom bonuses (resource production bonuses, terrain bonuses, etc.) are **designed but not yet implemented**. They will be added during the balance/combat phase.
 
 ---
 
@@ -91,33 +51,26 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Property | Value |
 |----------|-------|
 | **Theme** | Forest / Jungle / Nature-magic |
-| **Colors** | Forest green (#2E7D32), golden parchment background, black text |
+| **CSS Theme** | Forest green (#2E7D32) accent, golden parchment background, black text |
 | **Architecture** | Treehouse fortresses, vine-wrapped palisades, living-wood walls |
 | **Playstyle** | Guerrilla warfare, fast strikes, rune mastery, ambush tactics |
+| **Troops** | 19 units (4 barracks, 3 stable, 4 archery, 4 workshop, 4 special) |
 
-### Kingdom Bonuses
+### Military Buildings
 
-- **+15% Food production** (fertile jungle lands)
-- **+10% rune discovery rate** (rune affinity)
-- **Ambush**: Sylvara troops deal 15% bonus damage when attacking from forest tiles
-- **Unique Building**: **Grove Sanctum** — enhances rune altar, doubles rune combination success rate
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Roothall |
+| Stable | Beast Hall |
+| Archery | Grove Range |
+| Workshop | Tree-Sapper Yard |
+| Special | Spirit Glade |
 
-### Troop Roster
+### Designed Bonuses (Not Yet Implemented)
 
-| Unit | Type | Attack | Def (Inf) | Def (Cav) | Speed | Carry | Upkeep | Notes |
-|------|------|--------|-----------|-----------|-------|-------|--------|-------|
-| **Thornguard** | Infantry | 45 | 40 | 35 | 7 | 45 | 1 | Fast infantry, balanced |
-| **Venomarcher** | Ranged | 60 | 15 | 20 | 8 | 25 | 1 | Poison DOT, very high attack |
-| **Panther Rider** | Cavalry | 75 | 25 | 45 | 14 | 70 | 2 | Fastest cavalry in the game |
-| **Rootwarden** | Heavy Inf | 25 | 60 | 55 | 5 | 15 | 2 | Defensive but can root enemies (slow debuff) |
-| **Jungle Stalker** | Assassin | 85 | 10 | 10 | 10 | 40 | 2 | Massive attack, paper defense. Ambush specialist. |
-| **Siege Vine** | Siege | 50 | 20 | 20 | 4 | 10 | 3 | Living siege engine. Bypasses walls partially. |
-| **Hawk Eye** | Scout | 8 | 8 | 8 | 16 | 0 | 1 | Good scouting, slightly tougher than other scouts |
-
-### Strengths & Weaknesses
-
-- **Strengths**: Fastest troops overall. Best rune synergy. Devastating ambushes from forest tiles. Strong food economy supports large armies.
-- **Weaknesses**: Fragile elite units. Poor defense if caught in open terrain. Weak on water/desert maps.
+- +15% Food production (fertile jungle lands)
+- +10% rune discovery rate (rune affinity)
+- Ambush: Sylvara troops deal 15% bonus damage when attacking from forest tiles
 
 ---
 
@@ -130,58 +83,241 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Property | Value |
 |----------|-------|
 | **Theme** | Mountain / Gladiator / Knights |
-| **Colors** | Crimson red (#DC143C), black background, white text |
+| **CSS Theme** | Crimson red (#DC143C) accent, black background, white text |
 | **Architecture** | Stone fortresses, mountain citadels, colosseum arenas, iron-reinforced walls |
 | **Playstyle** | Heavy defense, superior crafting, brute force, siege warfare |
+| **Troops** | 20 units (4 barracks, 4 stable, 4 archery, 4 workshop, 4 special) |
 
-### Kingdom Bonuses
+### Military Buildings
 
-- **+15% Iron production** (mountain mining tradition)
-- **+15% Forge crafting speed** (master smiths)
-- **Fortification**: Arkazia walls provide 20% more defense bonus
-- **Unique Building**: **Colosseum** — trains elite gladiator units, provides morale bonus to defending troops
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Red Bastion |
+| Stable | Arknight Stables |
+| Archery | Ridge Range |
+| Workshop | Stonecaller Yard |
+| Special | Chapter Fortress |
 
-### Troop Roster
+### Designed Bonuses (Not Yet Implemented)
 
-| Unit | Type | Attack | Def (Inf) | Def (Cav) | Speed | Carry | Upkeep | Notes |
-|------|------|--------|-----------|-----------|-------|-------|--------|-------|
-| **Iron Legionary** | Infantry | 50 | 55 | 40 | 5 | 55 | 1 | Best standard infantry in the game |
-| **Crossbowman** | Ranged | 50 | 30 | 25 | 5 | 35 | 1 | Balanced ranged, good defense for ranged |
-| **Mountain Knight** | Cavalry | 80 | 40 | 50 | 10 | 90 | 3 | Slowest cavalry but hits hardest |
-| **Shieldbearer** | Heavy Inf | 20 | 80 | 70 | 3 | 10 | 2 | Best pure defender in the game |
-| **Gladiator** | Elite | 95 | 50 | 45 | 7 | 60 | 3 | Colosseum-trained. Highest attack of any standard unit. |
-| **Battering Ram** | Siege | 70 | 25 | 10 | 3 | 0 | 4 | Best siege unit. Destroys walls efficiently. |
-| **Mountain Scout** | Scout | 12 | 10 | 10 | 12 | 0 | 1 | Slowest scout but toughest. Hard to kill. |
+- +15% Stone production (mountain mining tradition)
+- +15% Forge crafting speed (master smiths)
+- Fortification: Arkazia walls provide 20% more defense bonus
 
-### Strengths & Weaknesses
+---
 
-- **Strengths**: Best defensive troops. Best siege. Best forge/weapon crafting. Iron economy feeds military.
-- **Weaknesses**: Slowest troops overall. Expensive elite units. Poor food production means smaller armies unless farming is prioritized.
+## Veridor — The Tidal Dominion
+
+> *"The sea provides. The sea destroys. We are both."*
+
+### Identity
+
+| Property | Value |
+|----------|-------|
+| **Theme** | Naval / Ocean / Coastal |
+| **CSS Theme** | Blue (#2196F3) accent, light (white/blue tint) background, black text |
+| **Architecture** | Stone harbors, lighthouse towers, coral-reinforced walls |
+| **Playstyle** | Trade mastery, naval superiority, economic warfare |
+| **Troops** | 20 units (4 barracks, 4 stable, 4 archery, 4 workshop, 4 special) |
+
+### Military Buildings
+
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Road Barracks |
+| Stable | River Cavalry Yard |
+| Archery | Chart Range |
+| Workshop | Shipwright Siegeyard |
+| Special | Admiralty Hall |
+
+### Designed Bonuses (Not Yet Implemented)
+
+- +15% Lumber production (shipbuilding tradition)
+- +10% trade income at Marketplace
+- Naval supremacy: Veridor troops move 20% faster on water tiles
+
+---
+
+## Draxys — The Scorched Frontier
+
+> *"In the arena, there is only truth."*
+
+### Identity
+
+| Property | Value |
+|----------|-------|
+| **Theme** | Desert / Sand / Gladiator Arena |
+| **CSS Theme** | Yellow (#F9A825) accent, dark background, white text |
+| **Architecture** | Sandstone walls, arena coliseums, scorpion-shaped siege works |
+| **Playstyle** | Arena-focused, beast-riders, brutal shock warfare |
+| **Troops** | 21 units (4 barracks, 4 stable, 4 archery, 4 workshop, 5 special) |
+
+### Military Buildings
+
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Sandwall Barracks |
+| Stable | Scorpion Pens |
+| Archery | Oasis Range |
+| Workshop | Sandwall Foundry |
+| Special | Grand Arena |
+
+### Designed Bonuses (Not Yet Implemented)
+
+- +10% Food production (oasis farming)
+- Gladiator morale: Draxys troops deal 10% bonus damage when outnumbered
+- Desert endurance: No movement penalty on desert tiles
+
+---
+
+## Nordalh — The Frozen Holds
+
+> *"We forge in fire. We fight in frost."*
+
+### Identity
+
+| Property | Value |
+|----------|-------|
+| **Theme** | Frost / Northern / Viking |
+| **CSS Theme** | Purple (#7B1FA2) accent, light (white/purple tint) background, black text |
+| **Architecture** | Longhouses, stone forges, ice-reinforced palisades |
+| **Playstyle** | Brutal melee, forge-crafted elites, cold endurance, wolf-riders |
+| **Troops** | 20 units (4 barracks, 4 stable, 4 archery, 4 workshop, 4 special) |
+
+### Military Buildings
+
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Hearth Barracks |
+| Stable | Wolf Kennels |
+| Archery | Ice Loom Range |
+| Workshop | Long Forge Siegeyard |
+| Special | Long Forge Hall |
+
+### Designed Bonuses (Not Yet Implemented)
+
+- +15% Stone production (mountain quarrying)
+- +10% weapon durability (master forge-craft)
+- Frost endurance: No movement penalty on swamp tiles
+
+---
+
+## Zandres — The Deep Lattice
+
+> *"What you cannot see, you cannot fight."*
+
+### Identity
+
+| Property | Value |
+|----------|-------|
+| **Theme** | Underground / Crystal / Technology |
+| **CSS Theme** | Brown (#795548) accent, dark background, white text |
+| **Architecture** | Crystal-lattice halls, bored tunnels, resonance engines |
+| **Playstyle** | Precision engineering, tunnel warfare, tech-augmented troops |
+| **Troops** | 20 units (4 barracks, 4 stable, 4 archery, 4 workshop, 4 special) |
+
+### Military Buildings
+
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Doorwarden Hall |
+| Stable | Crawler Pens |
+| Archery | Crystal Range |
+| Workshop | Resonance Works |
+| Special | Circuit Archive |
+
+### Designed Bonuses (Not Yet Implemented)
+
+- +15% Stone production (deep mining)
+- Resonance detection: Zandres watchtowers have +2 tile detection range
+- Tunnel movement: Zandres troops move 15% faster on mountain tiles
+
+---
+
+## Lumus — The Radiant Court
+
+> *"Light reveals all. Light endures all."*
+
+### Identity
+
+| Property | Value |
+|----------|-------|
+| **Theme** | Light / Holy / Solar Ritual |
+| **CSS Theme** | Golden Yellow (#FBC02D) accent, light (white/yellow tint) background, black text |
+| **Architecture** | Mirror towers, prism barracks, sun-court plazas |
+| **Playstyle** | Sacred warrior discipline, radiant defense, ceremonial combat |
+| **Troops** | 20 units (4 barracks, 4 stable, 4 archery, 4 workshop, 4 special) |
+
+### Military Buildings
+
+| Building | Kingdom Display Name |
+|----------|---------------------|
+| Barracks | Prism Barracks |
+| Stable | Sun Court Stables |
+| Archery | Sunshot Range |
+| Workshop | Heliostat Works |
+| Special | Heliostat Sanctum |
+
+### Designed Bonuses (Not Yet Implemented)
+
+- +15% Water production (sacred springs)
+- Radiant defense: Lumus walls glow, reducing attacker accuracy by 5%
+- Holy morale: Lumus troops gain +10% defense when defending their own village
+
+---
+
+## Drakanith — The Ember Throne (NPC-Only)
+
+> *"The dragon's blood is both gift and curse."*
+
+### Identity
+
+| Property | Value |
+|----------|-------|
+| **Theme** | Volcanic / Draconic |
+| **CSS Theme** | Orange (#FF6D00) accent, dark background, white text |
+| **Status** | **NPC-only** — not selectable by players |
+| **Role** | Appears in lore, world events, and as NPC villages/defenders |
+
+Drakanith has no playable troop roster. Their data (theme, building configs, resource configs) is seeded in the database for zone painting and NPC use.
 
 ---
 
 ## Kingdom Comparison Matrix
 
-| Aspect | Veridor | Sylvara | Arkazia |
-|--------|---------|---------|---------|
-| **Resource Bonus** | +15% Wood | +15% Food | +15% Iron |
-| **Special Bonus** | +10% trade | +10% rune discovery | +15% forge speed |
-| **Terrain Bonus** | Water (+20% speed) | Forest (+15% damage) | Walls (+20% defense) |
-| **Unique Building** | Dock | Grove Sanctum | Colosseum |
-| **Speed** | Medium | Fast | Slow |
-| **Attack** | Medium | High (ambush) | High (brute force) |
-| **Defense** | High (naval) | Low-Medium | Very High |
-| **Economy** | Best (trade) | Good (food) | Good (iron) |
-| **Crafting** | Normal | Rune-focused | Forge-focused |
+| Aspect | Sylvara | Arkazia | Veridor | Draxys | Nordalh | Zandres | Lumus |
+|--------|---------|---------|---------|--------|---------|---------|-------|
+| **Total Troops** | 19 | 20 | 20 | 21 | 20 | 20 | 20 |
+| **Theme** | Nature | Mountain | Naval | Desert | Frost | Underground | Holy |
+| **CSS Background** | Warm parchment | Dark (black) | Light (blue tint) | Dark (black) | Light (purple tint) | Dark (black) | Light (yellow tint) |
+| **Accent Color** | Green | Crimson | Blue | Yellow | Purple | Brown | Golden |
+
+---
+
+## Kingdom Theming (CSS)
+
+Each kingdom has a full CSS variable theme applied via `data-kingdom` attribute on `<html>`. The theme overrides `--bg-*`, `--text-*`, `--accent*`, `--border*`, and `--shadow-*` variables. See `docs/04-frontend/styling-guide.md` and `client/src/styles/themes.css` for details.
+
+| Kingdom | `--text-on-accent` |
+|---------|-------------------|
+| Arkazia | #FFFFFF |
+| Draxys | #000000 |
+| Drakanith | #FFFFFF |
+| Zandres | #FFFFFF |
+| Veridor | #FFFFFF |
+| Nordalh | #FFFFFF |
+| Lumus | #000000 |
+| Sylvara | #FFFFFF |
 
 ---
 
 ## Balance Philosophy
 
 - No kingdom should be strictly superior. Each excels in different situations.
-- **Rock-Paper-Scissors dynamics**: Veridor's economy outpaces Arkazia's slow expansion, Sylvara's speed counters Veridor's naval strategy, Arkazia's defense walls out Sylvara's hit-and-run tactics.
-- Balance will be refined through playtesting. Stat values in this document are **draft** — expect iteration.
-- Kingdom-specific UI theming is implemented — each kingdom has a full CSS variable theme applied via `data-kingdom` attribute. See `docs/04-frontend/styling-guide.md`.
+- **Rock-Paper-Scissors dynamics** between kingdom playstyles.
+- Balance will be refined through playtesting. Kingdom bonuses are designed but not yet implemented.
+- Troop stats are balanced per building-tier across kingdoms. See `server/internal/config/troops.go` for exact values.
+- Kingdom-specific UI theming is fully implemented for all 8 kingdoms (7 playable + Drakanith NPC).
 
 ---
 
@@ -190,5 +326,6 @@ Players choose their kingdom at registration. This choice is **permanent** for t
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of kingdoms reference |
-| 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
-| 2026-03-06 | Updated kingdom color specs to match implemented kingdom themes |\n| 2026-03-07 | Split kingdoms into 5 playable + 3 NPC-only (Zandres, Lumus, Drakanith). Added rationale for each locked kingdom |
+| 2026-03-06 | Updated kingdom color specs to match implemented kingdom themes |
+| 2026-03-07 | Split kingdoms into 5 playable + 3 NPC-only |
+| 2026-03-10 | Major rewrite: All 7 kingdoms now playable with full troop rosters (140 troops total). Drakanith is the only NPC-only kingdom. Added all 7 kingdom sections with building names, themes, troop counts. Removed old draft troop stat tables (actual stats live in config codegen pipeline). Marked kingdom bonuses as designed but not implemented. |

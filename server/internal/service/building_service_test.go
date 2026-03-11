@@ -314,8 +314,8 @@ func TestGetUpgradeCost(t *testing.T) {
 	if cost.TargetLevel != 1 {
 		t.Errorf("expected target level 1, got %d", cost.TargetLevel)
 	}
-	// Resource building at level 1: base costs Food:60 Water:40 Lumber:80 Stone:50
-	if cost.Food != 60 || cost.Water != 40 || cost.Lumber != 80 || cost.Stone != 50 {
+	// Resource building at level 1: base costs Food:0 Water:0 Lumber:90 Stone:50
+	if cost.Food != 0 || cost.Water != 0 || cost.Lumber != 90 || cost.Stone != 50 {
 		t.Errorf("unexpected costs: food=%.0f water=%.0f lumber=%.0f stone=%.0f", cost.Food, cost.Water, cost.Lumber, cost.Stone)
 	}
 	if cost.TimeSec <= 0 {

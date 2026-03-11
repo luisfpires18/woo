@@ -1,4 +1,4 @@
-package handler_test
+﻿package handler_test
 
 import (
 	"context"
@@ -52,7 +52,7 @@ func TestTrainingHandler_StartTraining_Success(t *testing.T) {
 	env := newTestEnv(t)
 	playerID, villageID := setupArkaziaPlayer(t, env)
 
-	body := `{"troop_type":"iron_legionary","quantity":2}`
+	body := `{"troop_type":"arkazia_shield_guard","quantity":2}`
 	req := httptest.NewRequest("POST", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	req = req.WithContext(authCtx(playerID, "player"))
@@ -69,8 +69,8 @@ func TestTrainingHandler_StartTraining_Success(t *testing.T) {
 	var resp dto.TrainingQueueResponse
 	json.Unmarshal(data, &resp)
 
-	if resp.TroopType != "iron_legionary" {
-		t.Errorf("troop_type: got %q, want %q", resp.TroopType, "iron_legionary")
+	if resp.TroopType != "arkazia_shield_guard" {
+		t.Errorf("troop_type: got %q, want %q", resp.TroopType, "arkazia_shield_guard")
 	}
 	if resp.Quantity != 2 {
 		t.Errorf("quantity: got %d, want 2", resp.Quantity)
@@ -98,7 +98,7 @@ func TestTrainingHandler_StartTraining_UnknownTroop(t *testing.T) {
 func TestTrainingHandler_StartTraining_Unauthenticated(t *testing.T) {
 	env := newTestEnv(t)
 
-	body := `{"troop_type":"iron_legionary","quantity":1}`
+	body := `{"troop_type":"arkazia_shield_guard","quantity":1}`
 	req := httptest.NewRequest("POST", "/api/villages/1/train", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	req.SetPathValue("id", "1")
@@ -117,7 +117,7 @@ func TestTrainingHandler_GetTrainingCost_Success(t *testing.T) {
 	env := newTestEnv(t)
 	playerID, villageID := setupArkaziaPlayer(t, env)
 
-	req := httptest.NewRequest("GET", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train/cost?troop_type=iron_legionary&quantity=3", nil)
+	req := httptest.NewRequest("GET", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train/cost?troop_type=arkazia_shield_guard&quantity=3", nil)
 	req = req.WithContext(authCtx(playerID, "player"))
 	req.SetPathValue("id", strconv.FormatInt(villageID, 10))
 	rec := httptest.NewRecorder()
@@ -132,7 +132,7 @@ func TestTrainingHandler_GetTrainingCost_Success(t *testing.T) {
 	var resp dto.TrainingCostResponse
 	json.Unmarshal(data, &resp)
 
-	// Iron legionary: Food:100, Water:50, Lumber:60, Stone:40 × 3
+	// Iron legionary: Food:100, Water:50, Lumber:60, Stone:40 Ã— 3
 	if resp.TotalFood != 300 {
 		t.Errorf("total_food: got %.0f, want 300", resp.TotalFood)
 	}
@@ -148,7 +148,7 @@ func TestTrainingHandler_CancelTraining_Success(t *testing.T) {
 	playerID, villageID := setupArkaziaPlayer(t, env)
 
 	// Start training first
-	body := `{"troop_type":"iron_legionary","quantity":1}`
+	body := `{"troop_type":"arkazia_shield_guard","quantity":1}`
 	startReq := httptest.NewRequest("POST", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train", strings.NewReader(body))
 	startReq.Header.Set("Content-Type", "application/json")
 	startReq = startReq.WithContext(authCtx(playerID, "player"))
@@ -210,7 +210,7 @@ func TestTrainingHandler_GetTrainingQueue_Success(t *testing.T) {
 	playerID, villageID := setupArkaziaPlayer(t, env)
 
 	// Start training first
-	body := `{"troop_type":"iron_legionary","quantity":1}`
+	body := `{"troop_type":"arkazia_shield_guard","quantity":1}`
 	startReq := httptest.NewRequest("POST", "/api/villages/"+strconv.FormatInt(villageID, 10)+"/train", strings.NewReader(body))
 	startReq.Header.Set("Content-Type", "application/json")
 	startReq = startReq.WithContext(authCtx(playerID, "player"))
@@ -243,7 +243,7 @@ func TestTrainingHandler_GetTrainingQueue_Success(t *testing.T) {
 	if len(result.Queue) != 1 {
 		t.Errorf("queue length: got %d, want 1", len(result.Queue))
 	}
-	if result.Queue[0].TroopType != "iron_legionary" {
-		t.Errorf("troop_type: got %q, want %q", result.Queue[0].TroopType, "iron_legionary")
+	if result.Queue[0].TroopType != "arkazia_shield_guard" {
+		t.Errorf("troop_type: got %q, want %q", result.Queue[0].TroopType, "arkazia_shield_guard")
 	}
 }

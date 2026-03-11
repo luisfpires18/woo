@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"math/rand"
@@ -58,12 +59,17 @@ func (s *MapService) GenerateMap(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("check map count: %w", err)
 	}
-	if count > 0 {
+	expectedTiles := int64(model.MapSize * model.MapSize)
+	if count == expectedTiles {
 		slog.Info("world map already generated", "tiles", count)
 		return nil
 	}
 
-	slog.Info("generating world map", "size", model.MapSize)
+	if count > 0 {
+		slog.Info("backfilling partial world map", "existing_tiles", count, "expected_tiles", expectedTiles)
+	} else {
+		slog.Info("generating world map", "size", model.MapSize)
+	}
 
 	tiles := make([]*model.MapTile, 0, model.MapSize*model.MapSize)
 	for y := -model.MapHalf; y <= model.MapHalf; y++ {
@@ -81,7 +87,12 @@ func (s *MapService) GenerateMap(ctx context.Context) error {
 		return fmt.Errorf("insert map tiles: %w", err)
 	}
 
-	slog.Info("world map generated", "tiles", len(tiles))
+	finalCount, err := s.mapRepo.Count(ctx)
+	if err != nil {
+		return fmt.Errorf("count generated map tiles: %w", err)
+	}
+
+	slog.Info("world map ready", "tiles", finalCount)
 	return nil
 }
 
@@ -185,31 +196,68 @@ func (s *MapService) GetTile(ctx context.Context, x, y int) (*model.MapTile, err
 // Prefers tiles within the player's kingdom zone. Falls back to any plains tile
 // if no zone-specific tiles exist (e.g. zones not yet painted on the template).
 func (s *MapService) FindSpawnTile(ctx context.Context, kingdom string) (int, int, error) {
-	// Try kingdom zone first
-	candidates, err := s.mapRepo.GetSpawnCandidates(ctx, kingdom)
+	x, y, found, err := s.findAvailableSpawnInScope(ctx, kingdom)
 	if err != nil {
-		return 0, 0, fmt.Errorf("get zone spawn candidates for %s: %w", kingdom, err)
+		return 0, 0, err
+	}
+	if found {
+		return x, y, nil
 	}
 
-	// Fallback: any plains tile on the map
-	if len(candidates) == 0 {
-		slog.Warn("no zone tiles for kingdom, falling back to any plains tile", "kingdom", kingdom)
-		candidates, err = s.mapRepo.GetSpawnCandidates(ctx, "")
-		if err != nil {
-			return 0, 0, fmt.Errorf("get fallback spawn candidates: %w", err)
+	slog.Warn("no zone tiles for kingdom, falling back to any plains tile", "kingdom", kingdom)
+
+	x, y, found, err = s.findAvailableSpawnInScope(ctx, "")
+	if err != nil {
+		return 0, 0, err
+	}
+	if found {
+		return x, y, nil
+	}
+
+	return 0, 0, ErrNoSpawnTile
+}
+
+func (s *MapService) findAvailableSpawnInScope(ctx context.Context, zone string) (int, int, bool, error) {
+	candidates, err := s.mapRepo.GetSpawnCandidates(ctx, zone)
+	if err != nil {
+		if zone != "" {
+			return 0, 0, false, fmt.Errorf("get zone spawn candidates for %s: %w", zone, err)
 		}
+		return 0, 0, false, fmt.Errorf("get fallback spawn candidates: %w", err)
 	}
 
 	if len(candidates) == 0 {
-		return 0, 0, ErrNoSpawnTile
+		return 0, 0, false, nil
 	}
 
-	// Shuffle and pick
+	return s.selectAvailableSpawnCandidate(ctx, candidates)
+}
+
+func (s *MapService) selectAvailableSpawnCandidate(ctx context.Context, candidates []*model.MapTile) (int, int, bool, error) {
 	rand.Shuffle(len(candidates), func(i, j int) {
 		candidates[i], candidates[j] = candidates[j], candidates[i]
 	})
 
-	return candidates[0].X, candidates[0].Y, nil
+	for _, candidate := range candidates {
+		village, err := s.villageRepo.GetByCoordinates(ctx, candidate.X, candidate.Y)
+		switch {
+		case errors.Is(err, model.ErrNotFound):
+			return candidate.X, candidate.Y, true, nil
+		case err != nil:
+			return 0, 0, false, fmt.Errorf("check spawn candidate (%d,%d): %w", candidate.X, candidate.Y, err)
+		default:
+			if syncErr := s.mapRepo.UpdateTileOwner(ctx, candidate.X, candidate.Y, &village.PlayerID, &village.ID); syncErr != nil {
+				slog.Warn("failed to sync stale spawn tile owner",
+					"x", candidate.X,
+					"y", candidate.Y,
+					"village_id", village.ID,
+					"error", syncErr,
+				)
+			}
+		}
+	}
+
+	return 0, 0, false, nil
 }
 
 // UpdateTileOwner links a map tile to a village and player.

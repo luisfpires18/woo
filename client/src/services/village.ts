@@ -7,6 +7,7 @@ import type {
   BuildingQueueResponse,
   BuildingCostResponse,
   BuildingDisplayConfigListResponse,
+  ResourceBuildingConfigListResponse,
 } from '../types/api';
 
 export async function fetchVillages(): Promise<VillageListItem[]> {
@@ -49,8 +50,19 @@ export async function renameVillage(
   return api.put<VillageListItem>(`/villages/${villageId}/name`, { name });
 }
 
+/** Admin: instantly complete a building queue item. */
+export async function instantCompleteBuild(queueId: number): Promise<void> {
+  await api.post(`/admin/building/${queueId}/complete`, {});
+}
+
 /** Fetch building display configs, optionally filtered by kingdom. */
 export async function fetchBuildingDisplayConfigs(kingdom?: string): Promise<BuildingDisplayConfigListResponse> {
   const qs = kingdom ? `?kingdom=${encodeURIComponent(kingdom)}` : '';
   return api.get<BuildingDisplayConfigListResponse>(`/building-display-configs${qs}`);
+}
+
+/** Fetch resource building configs, optionally filtered by kingdom. */
+export async function fetchResourceBuildingConfigs(kingdom?: string): Promise<ResourceBuildingConfigListResponse> {
+  const qs = kingdom ? `?kingdom=${encodeURIComponent(kingdom)}` : '';
+  return api.get<ResourceBuildingConfigListResponse>(`/resource-building-configs${qs}`);
 }

@@ -5,17 +5,19 @@ import {
 } from '../../../services/admin';
 import type { BuildingDisplayConfig } from '../../../types/api';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import { useAssetStore, buildingConfigToAsset } from '../../../stores/assetStore';
+import { getSpriteUrl } from '../../../utils/spriteUrl';
 import styles from './AdminBuildingsPage.module.css';
 
 const KINGDOMS = [
-  'veridor',
-  'sylvara',
   'arkazia',
-  'draxys',
-  'nordalh',
-  'zandres',
-  'lumus',
   'drakanith',
+  'draxys',
+  'lumus',
+  'nordalh',
+  'sylvara',
+  'veridor',
+  'zandres',
 ];
 
 interface EditingState {
@@ -29,9 +31,23 @@ export function AdminBuildingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [kingdom, setKingdom] = useState<string>('');
+  const [kingdom, setKingdom] = useState<string>('arkazia');
   const [editing, setEditing] = useState<Record<number, EditingState>>({});
   const [saving, setSaving] = useState<number | null>(null);
+  const [failedSprites, setFailedSprites] = useState<Set<string>>(new Set());
+  const upsertAsset = useAssetStore((s) => s.upsert);
+  const addOrUpdateAsset = useAssetStore((s) => s.addAsset);
+  const getAsset = useAssetStore((s) => s.getById);
+
+  /** Push a building config change into the asset store so GameIcon updates everywhere. */
+  const syncToAssetStore = useCallback((cfg: BuildingDisplayConfig) => {
+    const asset = buildingConfigToAsset(cfg);
+    if (getAsset(asset.id)) {
+      upsertAsset(asset);
+    } else {
+      addOrUpdateAsset(asset);
+    }
+  }, [upsertAsset, addOrUpdateAsset, getAsset]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -50,9 +66,7 @@ export function AdminBuildingsPage() {
     load();
   }, [load]);
 
-  const filtered = kingdom
-    ? configs.filter((c) => c.kingdom === kingdom)
-    : configs;
+  const filtered = configs.filter((c) => c.kingdom === kingdom);
 
   const startEdit = (cfg: BuildingDisplayConfig) => {
     setEditing((prev) => ({
@@ -97,19 +111,23 @@ export function AdminBuildingsPage() {
         description: edit.description,
         default_icon: edit.default_icon,
       });
-      setConfigs((prev) =>
-        prev.map((c) =>
+      const updatedAt = new Date().toISOString();
+      setConfigs((prev) => {
+        const updated = prev.map((c) =>
           c.id === id
             ? {
                 ...c,
                 display_name: edit.display_name,
                 description: edit.description,
                 default_icon: edit.default_icon,
-                updated_at: new Date().toISOString(),
+                updated_at: updatedAt,
               }
             : c,
-        ),
-      );
+        );
+        const cfg = updated.find((c) => c.id === id);
+        if (cfg) syncToAssetStore(cfg);
+        return updated;
+      });
       cancelEdit(id);
       setSuccess('Building config updated.');
       setTimeout(() => setSuccess(null), 3000);
@@ -118,6 +136,10 @@ export function AdminBuildingsPage() {
     } finally {
       setSaving(null);
     }
+  };
+
+  const handleSpriteError = (key: string) => {
+    setFailedSprites((prev) => new Set(prev).add(key));
   };
 
   if (loading) {
@@ -132,8 +154,8 @@ export function AdminBuildingsPage() {
     <div className={styles.page}>
       <h2 className={styles.heading}>Building Display Names</h2>
       <p className={styles.subtitle}>
-        Customise building names, descriptions, and icons per kingdom. Changes
-        are visible to all players.
+        Customise building names, descriptions, and icons per kingdom. Place sprites
+        in <code>uploads/sprites/&#123;kingdom&#125;/buildings/&#123;building_type&#125;.png</code>.
       </p>
 
       {error && <div className={styles.error}>{error}</div>}
@@ -141,12 +163,6 @@ export function AdminBuildingsPage() {
 
       <div className={styles.filterRow}>
         <span className={styles.filterLabel}>Kingdom:</span>
-        <button
-          className={`${styles.filterBtn} ${kingdom === '' ? styles.filterBtnActive : ''}`}
-          onClick={() => setKingdom('')}
-        >
-          All
-        </button>
         {KINGDOMS.map((k) => (
           <button
             key={k}
@@ -163,14 +179,28 @@ export function AdminBuildingsPage() {
           const edit = editing[cfg.id];
           const isEditing = !!edit;
           const isSaving = saving === cfg.id;
+          const spriteKey = `${cfg.building_type}_${cfg.kingdom}`;
+          const spriteUrl = getSpriteUrl({ kind: 'building', id: cfg.building_type, kingdom: cfg.kingdom });
+          const showSprite = spriteUrl && !failedSprites.has(spriteKey);
 
           return (
             <div key={cfg.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardTitle}>
-                  <span className={styles.icon}>
-                    {isEditing ? edit.default_icon : cfg.default_icon}
-                  </span>
+                  <div className={styles.preview}>
+                    {showSprite ? (
+                      <img
+                        src={spriteUrl}
+                        alt={cfg.display_name}
+                        className={styles.spriteImg}
+                        onError={() => handleSpriteError(spriteKey)}
+                      />
+                    ) : (
+                      <span className={styles.icon}>
+                        {isEditing ? edit.default_icon : cfg.default_icon}
+                      </span>
+                    )}
+                  </div>
                   <span className={styles.buildingType}>
                     {cfg.building_type.replace(/_/g, ' ')}
                   </span>
@@ -204,7 +234,7 @@ export function AdminBuildingsPage() {
                     />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Icon (emoji)</label>
+                    <label className={styles.fieldLabel}>Icon (emoji fallback)</label>
                     <input
                       type="text"
                       className={styles.input}

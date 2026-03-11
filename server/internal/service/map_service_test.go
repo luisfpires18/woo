@@ -1,22 +1,34 @@
-package service_test
+package service
 
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/luisfpires18/woo/internal/model"
 	"github.com/luisfpires18/woo/internal/repository/sqlite"
-	"github.com/luisfpires18/woo/internal/service"
 	"github.com/luisfpires18/woo/internal/testutil"
 )
 
 // newTestMapService creates a MapService backed by an in-memory DB with migrations applied.
-func newTestMapService(t *testing.T) *service.MapService {
+func newTestMapService(t *testing.T) *MapService {
 	t.Helper()
 	db := testutil.NewTestDB(t)
+	if _, err := db.Exec(`
+		DELETE FROM building_queue;
+		DELETE FROM training_queue;
+		DELETE FROM troops;
+		DELETE FROM resources;
+		DELETE FROM buildings;
+		DELETE FROM villages;
+		DELETE FROM season_players;
+		DELETE FROM world_map;
+	`); err != nil {
+		t.Fatalf("reset seeded map test data: %v", err)
+	}
 	worldMapRepo := sqlite.NewWorldMapRepo(db)
 	villageRepo := sqlite.NewVillageRepo(db)
-	return service.NewMapService(worldMapRepo, villageRepo)
+	return NewMapService(worldMapRepo, villageRepo)
 }
 
 // --- GenerateMap tests ---
@@ -91,6 +103,42 @@ func TestGenerateMap_Idempotent(t *testing.T) {
 	}
 	if err := svc.GenerateMap(ctx); err != nil {
 		t.Fatalf("second GenerateMap should be idempotent, got: %v", err)
+	}
+}
+
+func TestGenerateMap_BackfillsPartialSeededMap(t *testing.T) {
+	ctx := context.Background()
+	db := testutil.NewTestDB(t)
+	worldMapRepo := sqlite.NewWorldMapRepo(db)
+	villageRepo := sqlite.NewVillageRepo(db)
+	svc := NewMapService(worldMapRepo, villageRepo)
+
+	countBefore, err := worldMapRepo.Count(ctx)
+	if err != nil {
+		t.Fatalf("count before: %v", err)
+	}
+	if countBefore >= int64(model.MapSize*model.MapSize) {
+		t.Fatalf("expected partial seeded map, got %d tiles", countBefore)
+	}
+
+	if err := svc.GenerateMap(ctx); err != nil {
+		t.Fatalf("GenerateMap: %v", err)
+	}
+
+	countAfter, err := worldMapRepo.Count(ctx)
+	if err != nil {
+		t.Fatalf("count after: %v", err)
+	}
+	if countAfter != int64(model.MapSize*model.MapSize) {
+		t.Fatalf("expected %d tiles after backfill, got %d", model.MapSize*model.MapSize, countAfter)
+	}
+
+	tile, err := svc.GetTile(ctx, 0, 0)
+	if err != nil {
+		t.Fatalf("GetTile(0,0): %v", err)
+	}
+	if tile.VillageID == nil {
+		t.Fatal("expected seeded village tile ownership to be preserved")
 	}
 }
 
@@ -275,6 +323,67 @@ func TestFindSpawnTile_FallbackNoZone(t *testing.T) {
 	}
 	if tile.TerrainType != model.TerrainPlains {
 		t.Errorf("fallback spawn tile terrain: got %q, want %q", tile.TerrainType, model.TerrainPlains)
+	}
+}
+
+func TestSelectAvailableSpawnCandidate_SkipsStaleOccupiedTile(t *testing.T) {
+	ctx := context.Background()
+	db := testutil.NewTestDB(t)
+	worldMapRepo := sqlite.NewWorldMapRepo(db)
+	villageRepo := sqlite.NewVillageRepo(db)
+	playerRepo := sqlite.NewPlayerRepo(db)
+	svc := NewMapService(worldMapRepo, villageRepo)
+
+	if err := svc.GenerateMap(ctx); err != nil {
+		t.Fatalf("GenerateMap: %v", err)
+	}
+
+	player := &model.Player{
+		Username:     "spawnsync",
+		Email:        "spawnsync@example.com",
+		PasswordHash: "not-a-real-hash",
+		Kingdom:      model.ZoneVeridor,
+		CreatedAt:    time.Now().UTC(),
+	}
+	if err := playerRepo.Create(ctx, player); err != nil {
+		t.Fatalf("create player: %v", err)
+	}
+
+	occupied := &model.Village{
+		PlayerID:  player.ID,
+		Name:      "Occupied",
+		X:         10,
+		Y:         10,
+		IsCapital: true,
+		CreatedAt: time.Now().UTC(),
+	}
+	if err := villageRepo.Create(ctx, occupied); err != nil {
+		t.Fatalf("create occupied village: %v", err)
+	}
+
+	x, y, found, err := svc.selectAvailableSpawnCandidate(ctx, []*model.MapTile{
+		{X: 10, Y: 10, TerrainType: model.TerrainPlains},
+		{X: 11, Y: 10, TerrainType: model.TerrainPlains},
+	})
+	if err != nil {
+		t.Fatalf("selectAvailableSpawnCandidate: %v", err)
+	}
+	if !found {
+		t.Fatal("expected to find a free spawn candidate")
+	}
+	if x != 11 || y != 10 {
+		t.Fatalf("expected free tile (11,10), got (%d,%d)", x, y)
+	}
+
+	tile, err := svc.GetTile(ctx, 10, 10)
+	if err != nil {
+		t.Fatalf("GetTile(10,10): %v", err)
+	}
+	if tile.VillageID == nil || *tile.VillageID != occupied.ID {
+		t.Fatalf("expected stale tile to sync village_id %d, got %+v", occupied.ID, tile.VillageID)
+	}
+	if tile.OwnerPlayerID == nil || *tile.OwnerPlayerID != player.ID {
+		t.Fatalf("expected stale tile to sync owner_player_id %d, got %+v", player.ID, tile.OwnerPlayerID)
 	}
 }
 

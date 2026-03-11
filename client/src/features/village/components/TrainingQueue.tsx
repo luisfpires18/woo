@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import type { TrainingQueueResponse } from '../../../types/api';
 import { TROOP_CONFIGS, formatDuration } from '../../../config/troops';
@@ -18,39 +18,46 @@ export function TrainingQueue({ queue, villageId }: TrainingQueueProps) {
   const player = useAuthStore((s) => s.player);
   const isAdmin = player?.role === 'admin';
   const [now, setNow] = useState(() => Date.now());
-  const refetchScheduled = useRef(false);
 
+  // Tick `now` frequently while queue is active for smooth progress
   useEffect(() => {
     if (queue.length === 0) return;
     setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const id = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(id);
   }, [queue.length]);
 
-  // Auto-refetch when earliest training completes
+  // Stable key: only changes when queue IDs, quantities, or completion times actually change
+  const queueKey = useMemo(
+    () => queue.map((q) => `${q.id}:${q.quantity}:${q.completes_at}`).join(','),
+    [queue],
+  );
+
+  // Auto-refetch when earliest item completes, with polling fallback
   useEffect(() => {
     if (queue.length === 0) return;
-    refetchScheduled.current = false;
 
     const earliest = Math.min(
       ...queue.map((q) => new Date(q.completes_at).getTime()),
     );
-    const delay = earliest - Date.now() + 1500;
+    const msUntil = earliest - Date.now();
 
-    if (delay <= 0) {
+    // Item already past due — poll every 2s until server catches up
+    if (msUntil <= 0) {
       queryClient.invalidateQueries({ queryKey: ['village', villageId] });
-      return;
+      const poll = setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ['village', villageId] });
+      }, 2000);
+      return () => clearInterval(poll);
     }
 
+    // Schedule refetch for when item should complete (+1.5s buffer for game-loop tick)
     const timer = setTimeout(() => {
-      if (!refetchScheduled.current) {
-        refetchScheduled.current = true;
-        queryClient.invalidateQueries({ queryKey: ['village', villageId] });
-      }
-    }, delay);
+      queryClient.invalidateQueries({ queryKey: ['village', villageId] });
+    }, msUntil + 1500);
 
     return () => clearTimeout(timer);
-  }, [queue, villageId, queryClient]);
+  }, [queueKey, villageId, queryClient]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (queue.length === 0) return null;
 
@@ -91,19 +98,25 @@ function TrainingQueueItem({ item, now, villageId, isAdmin, cancelMutation }: Tr
 
   const cfg = TROOP_CONFIGS[item.troop_type];
   const displayName = cfg?.displayName ?? item.troop_type;
-  const startMs = new Date(item.started_at).getTime();
+
+  // Per-unit progress: current unit started at (completes_at - each_duration_sec)
+  const eachMs = item.each_duration_sec * 1000;
   const endMs = new Date(item.completes_at).getTime();
-  const totalMs = endMs - startMs;
-  const elapsedMs = now - startMs;
+  const unitStartMs = endMs - eachMs;
+  const elapsedMs = now - unitStartMs;
   const remainingMs = Math.max(0, endMs - now);
-  const progress = totalMs > 0 ? Math.max(0, Math.min(100, (elapsedMs / totalMs) * 100)) : 0;
+  const progress = eachMs > 0 ? Math.max(0, Math.min(100, (elapsedMs / eachMs) * 100)) : 0;
   const remainingSec = Math.ceil(remainingMs / 1000);
+
+  // X/Y progress: how many completed so far + current
+  const completed = item.original_quantity - item.quantity;
+  const currentUnit = completed + 1;
 
   return (
     <div className={styles.item}>
       <div className={styles.info}>
         <span className={styles.name}>
-          {displayName} × {item.quantity}
+          {displayName} — {currentUnit}/{item.original_quantity}
         </span>
         <span className={styles.time}>
           {remainingSec > 0 ? formatDuration(remainingSec) : 'Completing...'}

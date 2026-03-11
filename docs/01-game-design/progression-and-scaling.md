@@ -1,8 +1,8 @@
 # Progression & Scaling
 
-> **Superseded**: Definitive tunable values (costs, rates, scaling factors, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
-
 > How buildings, troops, weapons, and runes scale in cost, time, and power. Essential reference for balancing.
+>
+> **Authoritative values** for building costs, troop stats, and resource economy live in `server/internal/config/*.go` and are exported via the config codegen pipeline. This document describes design philosophy and formulas — for exact numbers, check the Go source.
 
 ---
 
@@ -10,139 +10,105 @@
 
 - **Exponential cost, linear power**: Upgrading costs more each level, but the power gain per level is relatively linear. This prevents runaway snowballing.
 - **Time as a balancer**: Higher-tier upgrades take significantly more real time. Active players don't leap too far ahead of casual players.
-- **Resource diversity**: Higher levels require all 4 resources in increasing proportions, forcing diversified economies.
+- **Lumber + Stone primary**: Building construction costs primarily Lumber and Stone (the two construction resources), with thematic Food/Water additions for certain buildings.
 - **Diminishing returns at cap**: The last few levels of any building/troop upgrade are expensive relative to their benefit, preventing must-max-everything pressure.
 
 ---
 
 ## Building Scaling
 
-### Cost Formula (Draft)
+### Cost Formula
 
 ```
 cost(level) = base_cost × (scaling_factor ^ (level - 1))
 time(level) = base_time × (time_factor ^ (level - 1))
 ```
 
-| Parameter | Value | Notes |
-|-----------|-------|-------|
-| `scaling_factor` | 1.5 – 2.0 | Varies by building type. Resource buildings scale slower (1.5×), military buildings faster (1.8×). |
-| `time_factor` | 1.4 – 1.7 | Construction time scaling |
-| `max_level` | 20 (most buildings) | Town Hall caps at 20. Some buildings cap at 10 or 15. |
+### Base Costs — All Buildings (Level 1)
 
-### Example: Food Field Scaling
+Values from `server/internal/config/buildings.go`:
 
-| Level | Food | Water | Lumber | Stone | Time |
-|-------|------|-------|--------|-------|------|
-| 1 | 60 | 40 | 80 | 50 | 2 min |
-| 2 | 90 | 60 | 120 | 75 | 3 min |
-| 3 | 135 | 90 | 180 | 112 | 5 min |
-| 5 | 304 | 202 | 405 | 253 | 12 min |
-| 10 | 2,307 | 1,538 | 3,075 | 1,922 | 1.5 hr |
-| 15 | 17,515 | 11,677 | 23,354 | 14,596 | 12 hr |
-| 20 | 133,028 | 88,685 | 177,370 | 110,856 | 4 days |
+| Building | Food | Water | Lumber | Stone | Build Time | Scaling | Time Factor | Max Level |
+|----------|------|-------|--------|-------|-----------|---------|-------------|-----------|
+| Town Hall | 0 | 0 | 250 | 250 | 5 min | 1.7 | 1.7 | 20 |
+| Resource Fields (all 12) | 0 | 0 | 90 | 50 | 2 min | 1.5 | 1.5 | 20 |
+| Barracks | 50 | 0 | 200 | 150 | 5 min | 1.8 | 1.8 | 20 |
+| Stable | 40 | 60 | 250 | 200 | 8 min | 1.8 | 1.8 | 15 |
+| Archery | 0 | 0 | 200 | 150 | 5 min | 1.8 | 1.8 | 15 |
+| Workshop | 0 | 0 | 350 | 300 | 10 min | 1.8 | 1.8 | 15 |
+| Special | 40 | 40 | 300 | 350 | 15 min | 1.8 | 1.8 | 15 |
+| Storage | 0 | 0 | 150 | 120 | 3 min | 1.6 | 1.6 | 20 |
+| Provisions | 40 | 0 | 120 | 100 | 3 min | 1.6 | 1.6 | 20 |
+| Reservoir | 0 | 0 | 100 | 150 | 3 min | 1.6 | 1.6 | 20 |
 
-> These are **draft values**. Will be tuned during playtesting. The principle is clear: early levels are quick and cheap, late levels are a major investment.
+> Resource field costs are identical for all 12 fields (food_1–3, water_1–3, lumber_1–3, stone_1–3). Military buildings cost primarily Lumber + Stone with small thematic Food/Water additions.
+
+### Example: Resource Field Scaling (Lumber + Stone only)
+
+| Level | Lumber | Stone | Time |
+|-------|--------|-------|------|
+| 1 | 90 | 50 | 2 min |
+| 2 | 135 | 75 | 3 min |
+| 3 | 203 | 113 | 5 min |
+| 5 | 456 | 253 | 10 min |
+| 10 | 3,462 | 1,923 | 1.3 hr |
+| 15 | 26,301 | 14,612 | 10 hr |
+| 20 | 199,796 | 111,009 | 3.3 days |
 
 ### Production Rates — All Resource Buildings
 
-All 12 resource buildings (3 per resource type: food_1/2/3, water_1/2/3, lumber_1/2/3, stone_1/2/3) share the same production curve. Production rate = `BaseResourceRate(1.0) + RatePerLevel(2.0) × sum(levels of all 3 buildings for that resource)`:
+All 12 resource buildings share the same production formula. Values from `server/internal/config/resources.go`:
 
-| Level | Resources/Second |
-|-------|------------------|
-| 1 | 3 |
-| 2 | 5 |
-| 3 | 7 |
-| 5 | 11 |
-| 10 | 21 |
-| 15 | 31 |
-| 20 | 41 |
+- **BaseResourceRate**: 1.0/s (passive, always present)
+- **RatePerLevel**: 2.0/s per building level
+- **Total rate for a resource**: BaseResourceRate + RatePerLevel × sum(all 3 building levels for that resource)
 
-> Each resource has 3 building slots. The rate shown is for a single slot at that level. Total rate for a resource is the base rate (1.0/s) plus 2.0 × the combined levels of all 3 slots.
+| Combined 3-building Level | Total Rate/s |
+|--------------------------|-------------|
+| 3 (all at 1) | 7.0/s |
+| 6 (all at 2) | 13.0/s |
+| 9 (all at 3) | 19.0/s |
+| 15 (all at 5) | 31.0/s |
+| 30 (all at 10) | 61.0/s |
+| 45 (all at 15) | 91.0/s |
+| 60 (all at 20) | 121.0/s |
 
-Production increases roughly linearly to keep late-game upgrades worthwhile but not game-breaking.
+### Storage Capacity
 
-### Warehouse Capacity
+Three specialized storage buildings control resource caps:
 
-| Level | Max Storage per Resource |
-|-------|------------------------|
-| 1 | 1,000 |
-| 2 | 1,500 |
-| 3 | 2,200 |
-| 5 | 5,000 |
-| 10 | 15,000 |
-| 15 | 40,000 |
-| 20 | 80,000 |
+| Building | Resources Stored | Base Cost (L1) |
+|----------|-----------------|----------------|
+| **Storage** | Lumber, Stone | 150 Lumber, 120 Stone |
+| **Provisions** | Food | 40 Food, 120 Lumber, 100 Stone |
+| **Reservoir** | Water | 100 Lumber, 150 Stone |
 
-### Base Costs — All Buildings (Level 1)
+**Storage formula**: `BaseStorage(1200) + sum(storage_building_level × StoragePerLevel(400))`
 
-| Building | Food | Water | Lumber | Stone | Build Time | Scaling Factor |
-|----------|------|-------|--------|-------|-----------|----------------|
-| Town Hall | 100 | 200 | 200 | 200 | 5 min | 1.7 |
-| Resource Fields (all 12) | 60 | 40 | 80 | 50 | 2 min | 1.5 |
-| Warehouse | 50 | 120 | 120 | 100 | 3 min | 1.6 |
-| Barracks | 80 | 200 | 150 | 100 | 5 min | 1.8 |
-| Stable | 120 | 300 | 200 | 150 | 8 min | 1.8 |
-| Forge | 100 | 250 | 180 | 200 | 8 min | 1.8 |
-| Rune Altar | 150 | 300 | 250 | 250 | 10 min | 1.9 |
-| Walls | 50 | 150 | 100 | 200 | 4 min | 1.6 |
-| Marketplace | 80 | 180 | 180 | 120 | 5 min | 1.6 |
-| Embassy | 100 | 200 | 200 | 200 | 8 min | 1.7 |
-| Watchtower | 60 | 150 | 100 | 150 | 4 min | 1.6 |
-| Dock | 100 | 250 | 300 | 150 | 8 min | 1.8 |
+| Storage Building Level | Max Capacity |
+|-----------------------|-------------|
+| 0 (no storage building) | 1,200 (base) |
+| 1 | 1,600 |
+| 5 | 3,200 |
+| 10 | 5,200 |
+| 15 | 7,200 |
+| 20 | 9,200 |
 
-> Apply the cost formula: `cost(level) = base_cost × (scaling_factor ^ (level - 1))`. Scaling factor varies per building (resource buildings 1.5×, military 1.8×, etc.).
+> These capacities are per resource type. A village with Storage Lv10 can hold 5,200 Lumber and 5,200 Stone. Provisions and Reservoir work the same way for Food and Water respectively.
 
-### Utility Building Scaling
+### Training Building Speed Bonus
 
-#### Barracks — Training Speed Bonus
+Military buildings grant a training speed multiplier (applied to all troops trained in that building):
 
-| Level | Training Speed Bonus |
-|-------|---------------------|
-| 1 | Base (1.0×) |
+| Building Level | Speed Multiplier |
+|---------------|-----------------|
+| 1 | 1.0× (base) |
 | 5 | 1.25× |
 | 10 | 1.6× |
 | 15 | 2.0× |
 | 20 | 2.5× |
 
-#### Forge — Tier Unlocks
-
-| Forge Level | Max Weapon Tier |
-|-------------|----------------|
-| 1 | Common |
-| 3 | Rare |
-| 5 | Epic |
-| 8 | Legendary |
-| 10 | Mythic |
-
-#### Walls — Defense Bonus
-
-| Level | Defense Bonus |
-|-------|-------------|
-| 1 | +5% |
-| 5 | +15% |
-| 10 | +30% |
-| 15 | +50% |
-| 20 | +75% |
-
-#### Marketplace — Trade Capacity
-
-| Level | Max Resources per Trade |
-|-------|------------------------|
-| 1 | 500 |
-| 5 | 2,000 |
-| 10 | 8,000 |
-| 15 | 20,000 |
-
-#### Watchtower — Detection Range
-
-| Level | Warning Time | Detail |
-|-------|-------------|--------|
-| 1 | 30 sec | "Incoming attack" only |
-| 3 | 1 min | Approximate troop count |
-| 5 | 2 min | Troop types visible |
-| 8 | 5 min | Exact troop count + types |
-| 10 | 10 min | Full detail + origin village |
+Interpolated linearly between these breakpoints.
 
 ---
 
@@ -150,25 +116,33 @@ Production increases roughly linearly to keep late-game upgrades worthwhile but 
 
 Troops do **not** have individual levels. Their effectiveness scales through:
 
-1. **Building levels**: Higher Barracks/Stable level → unlock better troops + faster training.
+1. **Building levels**: Higher Barracks/Stable/etc. level → unlock better troops + faster training.
 2. **Weapons**: Equipping weapons adds combat bonuses.
 3. **Runes**: Socketed in weapons for additional effects.
 4. **Hero bonuses**: Hero skills can buff specific troop types.
 5. **Research** (if added later): Tech tree upgrades for troop stats.
 
-### Training Cost Examples (Arkazia)
+### Troop Cost Ranges
 
-| Unit | Iron | Wood | Stone | Food | Training Time |
-|------|------|------|-------|------|--------------|
-| Iron Legionary | 80 | 40 | 30 | 50 | 3 min |
-| Crossbowman | 60 | 70 | 20 | 40 | 4 min |
-| Mountain Knight | 150 | 50 | 80 | 100 | 10 min |
-| Shieldbearer | 100 | 30 | 120 | 60 | 8 min |
-| Gladiator | 200 | 60 | 100 | 150 | 15 min |
-| Battering Ram | 300 | 200 | 150 | 50 | 20 min |
-| Mountain Scout | 40 | 30 | 20 | 30 | 2 min |
+Troop costs vary by kingdom and building tier. General pattern (from `server/internal/config/troops.go`):
 
-> Training times decrease with higher Barracks/Stable levels (approximately -5% per level).
+| Building | Tier | Approx Total Cost/Unit | Approx Train Time |
+|----------|------|----------------------|-------------------|
+| Barracks T1 | Level 1 req | 200–250 resources | 2 min |
+| Barracks T4 | Level 8 req | 400–500 resources | 3.5 min |
+| Stable T1 | Level 1 req | 300–350 resources | 2.5 min |
+| Stable T3+ | Level 5+ req | 500–700 resources | 4–5 min |
+| Archery T1 | Level 1 req | 200–250 resources | 2 min |
+| Workshop T1 | Level 1 req | 300–400 resources | 3 min |
+| Workshop T4 | Level 8 req | 600–800 resources | 5 min |
+| Special T1 | Level 1 req | 350–450 resources | 3.5 min |
+| Special T4–5 | Level 8–10 req | 600–900 resources | 5–6 min |
+
+> Training times above are base times. Higher building levels reduce these via the speed multiplier.
+
+### Troop Food Upkeep
+
+Every troop type has a food_upkeep value (food consumed per hour per unit). Ranges from 1 (basic infantry) to 4 (heavy siege/elite). This creates army size limits based on food economy.
 
 ---
 
@@ -176,13 +150,13 @@ Troops do **not** have individual levels. Their effectiveness scales through:
 
 ### Crafting Costs by Tier
 
-| Tier | Iron | Wood | Stone | Food | Runes | Craft Time | Attack Bonus Range | Defense Bonus Range |
-|------|------|------|-------|------|-------|------------|-------------------|-------------------|
-| Common | 200 | 150 | 100 | 50 | 0 | 10 min | +5 to +15 | +3 to +10 |
-| Rare | 600 | 450 | 300 | 150 | 1 Minor | 1 hr | +15 to +30 | +10 to +20 |
-| Epic | 2,000 | 1,500 | 1,000 | 500 | 2 Major | 6 hr | +30 to +55 | +20 to +40 |
-| Legendary | 8,000 | 6,000 | 4,000 | 2,000 | 3 Grand | 24 hr | +55 to +80 | +40 to +65 |
-| Mythic | 30,000 | 22,500 | 15,000 | 7,500 | 5 Grand | 3 days | +80 to +120 | +65 to +95 |
+| Tier | Food | Water | Lumber | Stone | Runes | Craft Time | Attack Bonus Range | Defense Bonus Range |
+|------|------|-------|--------|-------|-------|------------|-------------------|-------------------|
+| Common | 50 | 50 | 200 | 100 | 0 | 10 min | +5 to +15 | +3 to +10 |
+| Rare | 150 | 150 | 600 | 300 | 1 Minor | 1 hr | +15 to +30 | +10 to +20 |
+| Epic | 500 | 500 | 2,000 | 1,000 | 2 Major | 6 hr | +30 to +55 | +20 to +40 |
+| Legendary | 2,000 | 2,000 | 8,000 | 4,000 | 3 Grand | 24 hr | +55 to +80 | +40 to +65 |
+| Mythic | 7,500 | 7,500 | 30,000 | 15,000 | 5 Grand | 3 days | +80 to +120 | +65 to +95 |
 
 ### Weapon Durability
 
@@ -204,7 +178,6 @@ Troops do **not** have individual levels. Their effectiveness scales through:
 | Grand | 3 Major | 60% | 6 |
 | Primordial | 3 Grand + special event | 40% | 10 |
 
-- **Sylvara bonus**: Grove Sanctum doubles success rate (e.g., Grand becomes 100% instead of 60%).
 - **Failed combinations**: Input runes are lost. This creates scarcity and drives trading.
 
 ### Rune Effect Scaling
@@ -243,10 +216,10 @@ This massive power gap is intentional — Weapons of Chaos are game-changing, wh
 
 | Resource | Amount | Notes |
 |----------|--------|-------|
-| Iron | 500,000 | Alliance-pooled |
-| Wood | 400,000 | Alliance-pooled |
-| Stone | 300,000 | Alliance-pooled |
 | Food | 200,000 | Alliance-pooled |
+| Water | 200,000 | Alliance-pooled |
+| Lumber | 500,000 | Alliance-pooled |
+| Stone | 300,000 | Alliance-pooled |
 | Primordial Runes | 5 | Extremely rare |
 | Forge Level | 10 (max) | At least one alliance member |
 | Crafting Time | 7 days | Cannot be sped up |
@@ -276,5 +249,5 @@ The final decision will be made during playtesting. The system should be configu
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of progression and scaling |
-| 2026-03-03 | Added all building base costs, production rates for all resource buildings, Warehouse capacity table, utility building scaling (Barracks, Forge tiers, Walls defense, Marketplace, Watchtower) — re-applied after previous silent failure |
-| 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
+| 2026-03-03 | Added all building base costs, production rates, warehouse capacity, utility building scaling |
+| 2026-03-10 | Major update: Replaced draft values with actual implemented values from Go config. Updated building costs to Lumber+Stone primary design. Added storage buildings (Storage, Provisions, Reservoir). Updated resource economy to match resources.go constants. Updated weapon costs to use Food/Water/Lumber/Stone. Removed game-template.md superseded reference. |

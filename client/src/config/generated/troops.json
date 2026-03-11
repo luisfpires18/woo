@@ -1,0 +1,2802 @@
+{
+  "arkazia_arknight_captains": {
+    "displayName": "Arknight Captains",
+    "kingdom": "arkazia",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 400,
+      "water": 200,
+      "lumber": 300,
+      "stone": 250
+    },
+    "baseTimeSec": 700,
+    "foodUpkeep": 4,
+    "attack": 90,
+    "defInfantry": 65,
+    "defCavalry": 60,
+    "speed": 9,
+    "carry": 50,
+    "popCost": 3
+  },
+  "arkazia_arknight_lancers": {
+    "displayName": "Arknight Lancers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 180,
+      "water": 100,
+      "lumber": 120,
+      "stone": 80
+    },
+    "baseTimeSec": 270,
+    "foodUpkeep": 2,
+    "attack": 80,
+    "defInfantry": 40,
+    "defCavalry": 55,
+    "speed": 10,
+    "carry": 80,
+    "popCost": 2
+  },
+  "arkazia_banner_knights": {
+    "displayName": "Banner Knights",
+    "kingdom": "arkazia",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 8,
+    "carry": 40,
+    "popCost": 3
+  },
+  "arkazia_banner_riders": {
+    "displayName": "Banner Riders",
+    "kingdom": "arkazia",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 200,
+      "water": 110,
+      "lumber": 140,
+      "stone": 90
+    },
+    "baseTimeSec": 300,
+    "foodUpkeep": 2,
+    "attack": 60,
+    "defInfantry": 45,
+    "defCavalry": 60,
+    "speed": 9,
+    "carry": 60,
+    "popCost": 2
+  },
+  "arkazia_bastion_marshals": {
+    "displayName": "Bastion Marshals",
+    "kingdom": "arkazia",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 350,
+      "water": 200,
+      "lumber": 250,
+      "stone": 200
+    },
+    "baseTimeSec": 650,
+    "foodUpkeep": 4,
+    "attack": 60,
+    "defInfantry": 80,
+    "defCavalry": 70,
+    "speed": 4,
+    "carry": 20,
+    "popCost": 3
+  },
+  "arkazia_bridgewright_crew": {
+    "displayName": "Bridgewright Crew",
+    "kingdom": "arkazia",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 350,
+      "stone": 200
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 5,
+    "attack": 40,
+    "defInfantry": 40,
+    "defCavalry": 30,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "arkazia_crag_bowmen": {
+    "displayName": "Crag Bowmen",
+    "kingdom": "arkazia",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 65,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "arkazia_hill_slingers": {
+    "displayName": "Hill Slingers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 60,
+      "water": 40,
+      "lumber": 50,
+      "stone": 25
+    },
+    "baseTimeSec": 100,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "arkazia_javelin_climbers": {
+    "displayName": "Javelin Climbers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 80,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 30,
+    "defCavalry": 25,
+    "speed": 6,
+    "carry": 40,
+    "popCost": 2
+  },
+  "arkazia_mantlet_pushers": {
+    "displayName": "Mantlet Pushers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 30,
+    "defInfantry": 50,
+    "defCavalry": 40,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "arkazia_mountain_trebuchet": {
+    "displayName": "Mountain Trebuchet",
+    "kingdom": "arkazia",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 400,
+      "stone": 200
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "arkazia_oathsworn_champions": {
+    "displayName": "Oathsworn Champions",
+    "kingdom": "arkazia",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 300,
+      "water": 150,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 600,
+    "foodUpkeep": 3,
+    "attack": 95,
+    "defInfantry": 60,
+    "defCavalry": 50,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 3
+  },
+  "arkazia_pike_guard": {
+    "displayName": "Pike Guard",
+    "kingdom": "arkazia",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 60,
+    "defCavalry": 50,
+    "speed": 4,
+    "carry": 45,
+    "popCost": 1
+  },
+  "arkazia_ram_engineers": {
+    "displayName": "Ram Engineers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 220,
+      "water": 80,
+      "lumber": 350,
+      "stone": 180
+    },
+    "baseTimeSec": 450,
+    "foodUpkeep": 4,
+    "attack": 70,
+    "defInfantry": 30,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "arkazia_rampart_halberdiers": {
+    "displayName": "Rampart Halberdiers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 65,
+    "defInfantry": 65,
+    "defCavalry": 55,
+    "speed": 4,
+    "carry": 40,
+    "popCost": 1
+  },
+  "arkazia_ravine_pursuers": {
+    "displayName": "Ravine Pursuers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 150,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 240,
+    "foodUpkeep": 2,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 40,
+    "speed": 14,
+    "carry": 50,
+    "popCost": 2
+  },
+  "arkazia_redcrest_cavaliers": {
+    "displayName": "Redcrest Cavaliers",
+    "kingdom": "arkazia",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 220,
+      "water": 120,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 330,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 50,
+    "defCavalry": 65,
+    "speed": 8,
+    "carry": 70,
+    "popCost": 2
+  },
+  "arkazia_ridge_crossbowmen": {
+    "displayName": "Ridge Crossbowmen",
+    "kingdom": "arkazia",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "arkazia_shield_guard": {
+    "displayName": "Shield Guard",
+    "kingdom": "arkazia",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 5,
+    "carry": 55,
+    "popCost": 1
+  },
+  "arkazia_stonebreaker": {
+    "displayName": "Stonebreaker",
+    "kingdom": "arkazia",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 70,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 4,
+    "carry": 45,
+    "popCost": 1
+  },
+  "draxys_arena_spearmen": {
+    "displayName": "Arena Spearmen",
+    "kingdom": "draxys",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 280,
+      "water": 140,
+      "lumber": 200,
+      "stone": 140
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 5,
+    "carry": 25,
+    "popCost": 3
+  },
+  "draxys_beast_tamers": {
+    "displayName": "Beast Tamers",
+    "kingdom": "draxys",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 10,
+    "baseCost": {
+      "food": 300,
+      "water": 160,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 580,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 50,
+    "defCavalry": 45,
+    "speed": 7,
+    "carry": 30,
+    "popCost": 3
+  },
+  "draxys_bolt_thrower": {
+    "displayName": "Bolt Thrower",
+    "kingdom": "draxys",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "draxys_camel_skirmishers": {
+    "displayName": "Camel Skirmishers",
+    "kingdom": "draxys",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 150,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 240,
+    "foodUpkeep": 2,
+    "attack": 55,
+    "defInfantry": 30,
+    "defCavalry": 45,
+    "speed": 12,
+    "carry": 60,
+    "popCost": 2
+  },
+  "draxys_chakram_dancers": {
+    "displayName": "Chakram Dancers",
+    "kingdom": "draxys",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 60,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 6,
+    "carry": 30,
+    "popCost": 2
+  },
+  "draxys_dune_axemen": {
+    "displayName": "Dune Axemen",
+    "kingdom": "draxys",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 70,
+    "defInfantry": 50,
+    "defCavalry": 35,
+    "speed": 5,
+    "carry": 45,
+    "popCost": 1
+  },
+  "draxys_dune_lancers": {
+    "displayName": "Dune Lancers",
+    "kingdom": "draxys",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 180,
+      "water": 100,
+      "lumber": 120,
+      "stone": 80
+    },
+    "baseTimeSec": 270,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 35,
+    "defCavalry": 55,
+    "speed": 10,
+    "carry": 80,
+    "popCost": 2
+  },
+  "draxys_dust_chasers": {
+    "displayName": "Dust Chasers",
+    "kingdom": "draxys",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 130,
+      "water": 70,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 200,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 20,
+    "defCavalry": 35,
+    "speed": 16,
+    "carry": 40,
+    "popCost": 2
+  },
+  "draxys_firepot_mangonel": {
+    "displayName": "Firepot Mangonel",
+    "kingdom": "draxys",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 350,
+      "stone": 200
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 5,
+    "attack": 95,
+    "defInfantry": 10,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "draxys_gladiators": {
+    "displayName": "Gladiators",
+    "kingdom": "draxys",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 95,
+    "defInfantry": 50,
+    "defCavalry": 45,
+    "speed": 6,
+    "carry": 30,
+    "popCost": 3
+  },
+  "draxys_javelin_skirmishers": {
+    "displayName": "Javelin Skirmishers",
+    "kingdom": "draxys",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 80,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 7,
+    "carry": 35,
+    "popCost": 2
+  },
+  "draxys_khopesh_guard": {
+    "displayName": "Khopesh Guard",
+    "kingdom": "draxys",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 60,
+    "defInfantry": 45,
+    "defCavalry": 35,
+    "speed": 5,
+    "carry": 50,
+    "popCost": 1
+  },
+  "draxys_netfighters": {
+    "displayName": "Netfighters",
+    "kingdom": "draxys",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 220,
+      "water": 110,
+      "lumber": 160,
+      "stone": 110
+    },
+    "baseTimeSec": 470,
+    "foodUpkeep": 2,
+    "attack": 70,
+    "defInfantry": 45,
+    "defCavalry": 40,
+    "speed": 6,
+    "carry": 25,
+    "popCost": 3
+  },
+  "draxys_oasis_rangers": {
+    "displayName": "Oasis Rangers",
+    "kingdom": "draxys",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "draxys_pit_brutes": {
+    "displayName": "Pit Brutes",
+    "kingdom": "draxys",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 350,
+      "water": 180,
+      "lumber": 250,
+      "stone": 180
+    },
+    "baseTimeSec": 650,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 60,
+    "defCavalry": 40,
+    "speed": 4,
+    "carry": 20,
+    "popCost": 3
+  },
+  "draxys_sandshield_infantry": {
+    "displayName": "Sandshield Infantry",
+    "kingdom": "draxys",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 5,
+    "carry": 55,
+    "popCost": 1
+  },
+  "draxys_scorpion_cage_wagon": {
+    "displayName": "Scorpion Cage Wagon",
+    "kingdom": "draxys",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 300,
+      "stone": 180
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 4,
+    "attack": 85,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "draxys_scorpion_riders": {
+    "displayName": "Scorpion Riders",
+    "kingdom": "draxys",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 120,
+      "lumber": 130,
+      "stone": 90
+    },
+    "baseTimeSec": 300,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 45,
+    "defCavalry": 55,
+    "speed": 9,
+    "carry": 70,
+    "popCost": 2
+  },
+  "draxys_siege_tower": {
+    "displayName": "Siege Tower",
+    "kingdom": "draxys",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 300,
+      "water": 150,
+      "lumber": 450,
+      "stone": 250
+    },
+    "baseTimeSec": 600,
+    "foodUpkeep": 5,
+    "attack": 50,
+    "defInfantry": 60,
+    "defCavalry": 50,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "draxys_sun_slingers": {
+    "displayName": "Sun Slingers",
+    "kingdom": "draxys",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 60,
+      "water": 40,
+      "lumber": 50,
+      "stone": 25
+    },
+    "baseTimeSec": 100,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 6,
+    "carry": 30,
+    "popCost": 2
+  },
+  "draxys_wadi_lashers": {
+    "displayName": "Wadi Lashers",
+    "kingdom": "draxys",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 40,
+    "defCavalry": 30,
+    "speed": 6,
+    "carry": 35,
+    "popCost": 1
+  },
+  "lumus_array_cart": {
+    "displayName": "Array Cart",
+    "kingdom": "lumus",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 35,
+    "defInfantry": 50,
+    "defCavalry": 40,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "lumus_dawn_couriers": {
+    "displayName": "Dawn Couriers",
+    "kingdom": "lumus",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 130,
+      "water": 70,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 200,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 30,
+    "speed": 16,
+    "carry": 40,
+    "popCost": 2
+  },
+  "lumus_eclipse_wardens": {
+    "displayName": "Eclipse Wardens",
+    "kingdom": "lumus",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 55,
+    "defInfantry": 70,
+    "defCavalry": 60,
+    "speed": 4,
+    "carry": 35,
+    "popCost": 1
+  },
+  "lumus_eclipse_watch": {
+    "displayName": "Eclipse Watch",
+    "kingdom": "lumus",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 350,
+      "water": 200,
+      "lumber": 250,
+      "stone": 200
+    },
+    "baseTimeSec": 650,
+    "foodUpkeep": 4,
+    "attack": 55,
+    "defInfantry": 75,
+    "defCavalry": 70,
+    "speed": 4,
+    "carry": 15,
+    "popCost": 3
+  },
+  "lumus_glare_casters": {
+    "displayName": "Glare Casters",
+    "kingdom": "lumus",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 80,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 25,
+    "popCost": 2
+  },
+  "lumus_glare_tower": {
+    "displayName": "Glare Tower",
+    "kingdom": "lumus",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 350,
+      "stone": 200
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 5,
+    "attack": 70,
+    "defInfantry": 40,
+    "defCavalry": 35,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "lumus_halo_chakramists": {
+    "displayName": "Halo Chakramists",
+    "kingdom": "lumus",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 60,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 6,
+    "carry": 30,
+    "popCost": 2
+  },
+  "lumus_halo_riders": {
+    "displayName": "Halo Riders",
+    "kingdom": "lumus",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 200,
+      "water": 110,
+      "lumber": 140,
+      "stone": 90
+    },
+    "baseTimeSec": 300,
+    "foodUpkeep": 2,
+    "attack": 70,
+    "defInfantry": 35,
+    "defCavalry": 50,
+    "speed": 10,
+    "carry": 60,
+    "popCost": 2
+  },
+  "lumus_mirror_ballista": {
+    "displayName": "Mirror Ballista",
+    "kingdom": "lumus",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "lumus_prism_adepts": {
+    "displayName": "Prism Adepts",
+    "kingdom": "lumus",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 300,
+      "water": 180,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 580,
+    "foodUpkeep": 3,
+    "attack": 50,
+    "defInfantry": 65,
+    "defCavalry": 60,
+    "speed": 5,
+    "carry": 20,
+    "popCost": 3
+  },
+  "lumus_prism_guards": {
+    "displayName": "Prism Guards",
+    "kingdom": "lumus",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 60,
+    "defInfantry": 65,
+    "defCavalry": 50,
+    "speed": 4,
+    "carry": 40,
+    "popCost": 1
+  },
+  "lumus_prism_sling_monks": {
+    "displayName": "Prism Sling Monks",
+    "kingdom": "lumus",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 60,
+      "water": 40,
+      "lumber": 50,
+      "stone": 25
+    },
+    "baseTimeSec": 100,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "lumus_radiant_duelists": {
+    "displayName": "Radiant Duelists",
+    "kingdom": "lumus",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 280,
+      "water": 140,
+      "lumber": 200,
+      "stone": 140
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 3,
+    "attack": 90,
+    "defInfantry": 50,
+    "defCavalry": 45,
+    "speed": 7,
+    "carry": 25,
+    "popCost": 3
+  },
+  "lumus_ringwall_wardens": {
+    "displayName": "Ring-Wall Wardens",
+    "kingdom": "lumus",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 60,
+    "defCavalry": 45,
+    "speed": 4,
+    "carry": 50,
+    "popCost": 1
+  },
+  "lumus_sun_monks": {
+    "displayName": "Sun Monks",
+    "kingdom": "lumus",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 5,
+    "carry": 45,
+    "popCost": 1
+  },
+  "lumus_sunchorus_masters": {
+    "displayName": "Sun-Chorus Masters",
+    "kingdom": "lumus",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 75,
+    "defInfantry": 60,
+    "defCavalry": 55,
+    "speed": 5,
+    "carry": 25,
+    "popCost": 3
+  },
+  "lumus_sunfire_trebuchet": {
+    "displayName": "Sunfire Trebuchet",
+    "kingdom": "lumus",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 400,
+      "stone": 200
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "lumus_sunrider_lancers": {
+    "displayName": "Sunrider Lancers",
+    "kingdom": "lumus",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 180,
+      "water": 100,
+      "lumber": 120,
+      "stone": 80
+    },
+    "baseTimeSec": 270,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 35,
+    "defCavalry": 55,
+    "speed": 10,
+    "carry": 80,
+    "popCost": 2
+  },
+  "lumus_sunshot_archers": {
+    "displayName": "Sunshot Archers",
+    "kingdom": "lumus",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "lumus_whitecloak_escorts": {
+    "displayName": "Whitecloak Escorts",
+    "kingdom": "lumus",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 220,
+      "water": 120,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 330,
+    "foodUpkeep": 3,
+    "attack": 60,
+    "defInfantry": 50,
+    "defCavalry": 65,
+    "speed": 8,
+    "carry": 60,
+    "popCost": 2
+  },
+  "nordalh_boiling_pitch_crew": {
+    "displayName": "Boiling Pitch Crew",
+    "kingdom": "nordalh",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 300,
+      "stone": 200
+    },
+    "baseTimeSec": 520,
+    "foodUpkeep": 4,
+    "attack": 85,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "nordalh_chain_wardens": {
+    "displayName": "Chain Wardens",
+    "kingdom": "nordalh",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 65,
+    "defInfantry": 60,
+    "defCavalry": 50,
+    "speed": 4,
+    "carry": 40,
+    "popCost": 1
+  },
+  "nordalh_cliff_ballista": {
+    "displayName": "Cliff Ballista",
+    "kingdom": "nordalh",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "nordalh_cliff_crossbowmen": {
+    "displayName": "Cliff Crossbowmen",
+    "kingdom": "nordalh",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 110,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "nordalh_coyote_blademasters": {
+    "displayName": "Coyote Blademasters",
+    "kingdom": "nordalh",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 280,
+      "water": 140,
+      "lumber": 200,
+      "stone": 140
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 3,
+    "attack": 90,
+    "defInfantry": 50,
+    "defCavalry": 45,
+    "speed": 7,
+    "carry": 25,
+    "popCost": 3
+  },
+  "nordalh_direwolf_riders": {
+    "displayName": "Direwolf Riders",
+    "kingdom": "nordalh",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 180,
+      "water": 100,
+      "lumber": 120,
+      "stone": 80
+    },
+    "baseTimeSec": 270,
+    "foodUpkeep": 2,
+    "attack": 80,
+    "defInfantry": 35,
+    "defCavalry": 50,
+    "speed": 12,
+    "carry": 70,
+    "popCost": 2
+  },
+  "nordalh_elk_lancers": {
+    "displayName": "Elk Lancers",
+    "kingdom": "nordalh",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 220,
+      "water": 120,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 330,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 45,
+    "defCavalry": 60,
+    "speed": 9,
+    "carry": 75,
+    "popCost": 2
+  },
+  "nordalh_fang_cavaliers": {
+    "displayName": "Fang Cavaliers",
+    "kingdom": "nordalh",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 240,
+      "water": 130,
+      "lumber": 160,
+      "stone": 110
+    },
+    "baseTimeSec": 350,
+    "foodUpkeep": 3,
+    "attack": 90,
+    "defInfantry": 40,
+    "defCavalry": 55,
+    "speed": 8,
+    "carry": 65,
+    "popCost": 2
+  },
+  "nordalh_fjord_spearmen": {
+    "displayName": "Fjord Spearmen",
+    "kingdom": "nordalh",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 60,
+    "defCavalry": 45,
+    "speed": 5,
+    "carry": 50,
+    "popCost": 1
+  },
+  "nordalh_frostbow_hunters": {
+    "displayName": "Frost Bow Hunters",
+    "kingdom": "nordalh",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "nordalh_harpoon_throwers": {
+    "displayName": "Harpoon Throwers",
+    "kingdom": "nordalh",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 60,
+    "defInfantry": 30,
+    "defCavalry": 25,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "nordalh_hearth_guards": {
+    "displayName": "Hearth Guards",
+    "kingdom": "nordalh",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 5,
+    "carry": 55,
+    "popCost": 1
+  },
+  "nordalh_iceshore_raiders": {
+    "displayName": "Ice-Shore Raiders",
+    "kingdom": "nordalh",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 70,
+    "defInfantry": 45,
+    "defCavalry": 35,
+    "speed": 6,
+    "carry": 50,
+    "popCost": 1
+  },
+  "nordalh_ram_sled": {
+    "displayName": "Ram Sled",
+    "kingdom": "nordalh",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 220,
+      "water": 80,
+      "lumber": 350,
+      "stone": 180
+    },
+    "baseTimeSec": 450,
+    "foodUpkeep": 4,
+    "attack": 70,
+    "defInfantry": 30,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "nordalh_runeforged_forgers": {
+    "displayName": "Runeforged Forgers",
+    "kingdom": "nordalh",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 400,
+      "water": 200,
+      "lumber": 300,
+      "stone": 250
+    },
+    "baseTimeSec": 700,
+    "foodUpkeep": 4,
+    "attack": 85,
+    "defInfantry": 70,
+    "defCavalry": 60,
+    "speed": 4,
+    "carry": 20,
+    "popCost": 3
+  },
+  "nordalh_smith_retinues": {
+    "displayName": "Smith Retinues",
+    "kingdom": "nordalh",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 65,
+    "defCavalry": 55,
+    "speed": 4,
+    "carry": 30,
+    "popCost": 3
+  },
+  "nordalh_snow_riders": {
+    "displayName": "Snow Riders",
+    "kingdom": "nordalh",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 150,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 240,
+    "foodUpkeep": 2,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 40,
+    "speed": 14,
+    "carry": 50,
+    "popCost": 2
+  },
+  "nordalh_stone_trebuchet": {
+    "displayName": "Stone Trebuchet",
+    "kingdom": "nordalh",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 400,
+      "stone": 200
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "nordalh_storm_slingers": {
+    "displayName": "Storm Slingers",
+    "kingdom": "nordalh",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 60,
+      "water": 40,
+      "lumber": 50,
+      "stone": 25
+    },
+    "baseTimeSec": 100,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "nordalh_ulfhednar_champions": {
+    "displayName": "Ulfhednar Champions",
+    "kingdom": "nordalh",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 350,
+      "water": 180,
+      "lumber": 250,
+      "stone": 180
+    },
+    "baseTimeSec": 650,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 40,
+    "defCavalry": 35,
+    "speed": 6,
+    "carry": 20,
+    "popCost": 3
+  },
+  "sylvara_antler_seers": {
+    "displayName": "Antler Seers",
+    "kingdom": "sylvara",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 280,
+      "water": 180,
+      "lumber": 180,
+      "stone": 130
+    },
+    "baseTimeSec": 520,
+    "foodUpkeep": 3,
+    "attack": 40,
+    "defInfantry": 60,
+    "defCavalry": 55,
+    "speed": 5,
+    "carry": 15,
+    "popCost": 3
+  },
+  "sylvara_beastmasters": {
+    "displayName": "Beastmasters",
+    "kingdom": "sylvara",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 6,
+    "carry": 40,
+    "popCost": 3
+  },
+  "sylvara_boar_riders": {
+    "displayName": "Boar Riders",
+    "kingdom": "sylvara",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 220,
+      "water": 120,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 330,
+    "foodUpkeep": 3,
+    "attack": 90,
+    "defInfantry": 45,
+    "defCavalry": 60,
+    "speed": 8,
+    "carry": 70,
+    "popCost": 2
+  },
+  "sylvara_boarhide_axemen": {
+    "displayName": "Boarhide Axemen",
+    "kingdom": "sylvara",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 65,
+    "defInfantry": 60,
+    "defCavalry": 45,
+    "speed": 4,
+    "carry": 45,
+    "popCost": 1
+  },
+  "sylvara_hart_lancers": {
+    "displayName": "Hart Lancers",
+    "kingdom": "sylvara",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 180,
+      "water": 100,
+      "lumber": 120,
+      "stone": 80
+    },
+    "baseTimeSec": 270,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 35,
+    "defCavalry": 55,
+    "speed": 10,
+    "carry": 80,
+    "popCost": 2
+  },
+  "sylvara_leafknife_stalkers": {
+    "displayName": "Leafknife Stalkers",
+    "kingdom": "sylvara",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 45,
+    "defCavalry": 30,
+    "speed": 7,
+    "carry": 40,
+    "popCost": 1
+  },
+  "sylvara_life_healers": {
+    "displayName": "Life Healers",
+    "kingdom": "sylvara",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 300,
+      "water": 200,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 3,
+    "attack": 30,
+    "defInfantry": 70,
+    "defCavalry": 65,
+    "speed": 5,
+    "carry": 20,
+    "popCost": 3
+  },
+  "sylvara_log_trebuchet": {
+    "displayName": "Log Trebuchet",
+    "kingdom": "sylvara",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 400,
+      "stone": 200
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "sylvara_longbow_wardens": {
+    "displayName": "Longbow Wardens",
+    "kingdom": "sylvara",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "sylvara_owlshot_hunters": {
+    "displayName": "Owlshot Hunters",
+    "kingdom": "sylvara",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 65,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 6,
+    "carry": 30,
+    "popCost": 2
+  },
+  "sylvara_root_ram": {
+    "displayName": "Root Ram",
+    "kingdom": "sylvara",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 220,
+      "water": 80,
+      "lumber": 350,
+      "stone": 180
+    },
+    "baseTimeSec": 450,
+    "foodUpkeep": 4,
+    "attack": 70,
+    "defInfantry": 30,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "sylvara_rootguard_spearmen": {
+    "displayName": "Rootguard Spearmen",
+    "kingdom": "sylvara",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 5,
+    "carry": 55,
+    "popCost": 1
+  },
+  "sylvara_shapeshifter_scouts": {
+    "displayName": "Shapeshifter Scouts",
+    "kingdom": "sylvara",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 450,
+    "foodUpkeep": 2,
+    "attack": 70,
+    "defInfantry": 40,
+    "defCavalry": 35,
+    "speed": 12,
+    "carry": 20,
+    "popCost": 3
+  },
+  "sylvara_sporepot_thrower": {
+    "displayName": "Spore-Pot Thrower",
+    "kingdom": "sylvara",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 350,
+      "stone": 200
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 5,
+    "attack": 90,
+    "defInfantry": 10,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "sylvara_stonesling_foresters": {
+    "displayName": "Stone-sling Foresters",
+    "kingdom": "sylvara",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 60,
+      "water": 40,
+      "lumber": 50,
+      "stone": 25
+    },
+    "baseTimeSec": 100,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "sylvara_thorn_javeliners": {
+    "displayName": "Thorn Javeliners",
+    "kingdom": "sylvara",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 80,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 30,
+    "defCavalry": 25,
+    "speed": 6,
+    "carry": 40,
+    "popCost": 2
+  },
+  "sylvara_thornblade_wardens": {
+    "displayName": "Thornblade Wardens",
+    "kingdom": "sylvara",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 50,
+    "defCavalry": 35,
+    "speed": 5,
+    "carry": 50,
+    "popCost": 1
+  },
+  "sylvara_vine_ballista": {
+    "displayName": "Vine Ballista",
+    "kingdom": "sylvara",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "sylvara_wolf_outriders": {
+    "displayName": "Wolf Outriders",
+    "kingdom": "sylvara",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 150,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 240,
+    "foodUpkeep": 2,
+    "attack": 60,
+    "defInfantry": 25,
+    "defCavalry": 40,
+    "speed": 14,
+    "carry": 50,
+    "popCost": 2
+  },
+  "veridor_bluecoat_captains": {
+    "displayName": "Bluecoat Captains",
+    "kingdom": "veridor",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 350,
+      "water": 200,
+      "lumber": 250,
+      "stone": 200
+    },
+    "baseTimeSec": 650,
+    "foodUpkeep": 4,
+    "attack": 70,
+    "defInfantry": 70,
+    "defCavalry": 65,
+    "speed": 5,
+    "carry": 20,
+    "popCost": 3
+  },
+  "veridor_courier_riders": {
+    "displayName": "Courier Riders",
+    "kingdom": "veridor",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 130,
+      "water": 70,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 200,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 30,
+    "speed": 16,
+    "carry": 40,
+    "popCost": 2
+  },
+  "veridor_cutlass_marines": {
+    "displayName": "Cutlass Marines",
+    "kingdom": "veridor",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 70,
+    "defInfantry": 50,
+    "defCavalry": 35,
+    "speed": 5,
+    "carry": 45,
+    "popCost": 1
+  },
+  "veridor_deck_arbalesters": {
+    "displayName": "Deck Arbalesters",
+    "kingdom": "veridor",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "veridor_firepot_crane": {
+    "displayName": "Firepot Crane",
+    "kingdom": "veridor",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 350,
+      "stone": 200
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 5,
+    "attack": 90,
+    "defInfantry": 10,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "veridor_harbor_ballista": {
+    "displayName": "Harbor Ballista",
+    "kingdom": "veridor",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "veridor_harbor_pike": {
+    "displayName": "Harbor Pike",
+    "kingdom": "veridor",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 60,
+    "defCavalry": 50,
+    "speed": 4,
+    "carry": 45,
+    "popCost": 1
+  },
+  "veridor_harpoon_casters": {
+    "displayName": "Harpoon Casters",
+    "kingdom": "veridor",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 80,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 30,
+    "defCavalry": 25,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "veridor_highland_longbowmen": {
+    "displayName": "Highland Longbowmen",
+    "kingdom": "veridor",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 65,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "veridor_hydra_hunters": {
+    "displayName": "Hydra Hunters",
+    "kingdom": "veridor",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 5,
+    "carry": 40,
+    "popCost": 3
+  },
+  "veridor_mangonel": {
+    "displayName": "Mangonel",
+    "kingdom": "veridor",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 400,
+      "stone": 200
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 4,
+    "attack": 100,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "veridor_marsh_scouts": {
+    "displayName": "Marsh Scouts",
+    "kingdom": "veridor",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 150,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 240,
+    "foodUpkeep": 2,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 40,
+    "speed": 12,
+    "carry": 50,
+    "popCost": 2
+  },
+  "veridor_pavise_marksmen": {
+    "displayName": "Pavise Marksmen",
+    "kingdom": "veridor",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 120,
+      "water": 80,
+      "lumber": 140,
+      "stone": 50
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 70,
+    "defInfantry": 35,
+    "defCavalry": 25,
+    "speed": 4,
+    "carry": 25,
+    "popCost": 2
+  },
+  "veridor_pavise_wagon": {
+    "displayName": "Pavise Wagon",
+    "kingdom": "veridor",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 30,
+    "defInfantry": 50,
+    "defCavalry": 40,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "veridor_river_lancers": {
+    "displayName": "River Lancers",
+    "kingdom": "veridor",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 180,
+      "water": 100,
+      "lumber": 120,
+      "stone": 80
+    },
+    "baseTimeSec": 270,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 35,
+    "defCavalry": 55,
+    "speed": 10,
+    "carry": 80,
+    "popCost": 2
+  },
+  "veridor_road_legionaries": {
+    "displayName": "Road Legionaries",
+    "kingdom": "veridor",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 50,
+    "defCavalry": 40,
+    "speed": 5,
+    "carry": 55,
+    "popCost": 1
+  },
+  "veridor_road_wardens": {
+    "displayName": "Road Wardens",
+    "kingdom": "veridor",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 220,
+      "water": 120,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 330,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 50,
+    "defCavalry": 65,
+    "speed": 8,
+    "carry": 70,
+    "popCost": 2
+  },
+  "veridor_skiff_raiders": {
+    "displayName": "Skiff Raiders",
+    "kingdom": "veridor",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 300,
+      "water": 150,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 600,
+    "foodUpkeep": 3,
+    "attack": 95,
+    "defInfantry": 45,
+    "defCavalry": 40,
+    "speed": 8,
+    "carry": 50,
+    "popCost": 3
+  },
+  "veridor_tidemark_duelists": {
+    "displayName": "Tidemark Duelists",
+    "kingdom": "veridor",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 280,
+      "water": 140,
+      "lumber": 200,
+      "stone": 140
+    },
+    "baseTimeSec": 550,
+    "foodUpkeep": 3,
+    "attack": 90,
+    "defInfantry": 50,
+    "defCavalry": 45,
+    "speed": 7,
+    "carry": 30,
+    "popCost": 3
+  },
+  "veridor_wharf_axemen": {
+    "displayName": "Wharf Axemen",
+    "kingdom": "veridor",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 75,
+    "defInfantry": 55,
+    "defCavalry": 40,
+    "speed": 4,
+    "carry": 40,
+    "popCost": 1
+  },
+  "zandres_barrier_cart": {
+    "displayName": "Barrier Cart",
+    "kingdom": "zandres",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 12,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 30,
+    "defInfantry": 55,
+    "defCavalry": 45,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "zandres_beacon_surveyors": {
+    "displayName": "Beacon Surveyors",
+    "kingdom": "zandres",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 220,
+      "water": 110,
+      "lumber": 160,
+      "stone": 110
+    },
+    "baseTimeSec": 470,
+    "foodUpkeep": 2,
+    "attack": 40,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 6,
+    "carry": 20,
+    "popCost": 3
+  },
+  "zandres_beetle_lancers": {
+    "displayName": "Beetle Lancers",
+    "kingdom": "zandres",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 240,
+      "water": 130,
+      "lumber": 160,
+      "stone": 120
+    },
+    "baseTimeSec": 360,
+    "foodUpkeep": 3,
+    "attack": 75,
+    "defInfantry": 55,
+    "defCavalry": 65,
+    "speed": 6,
+    "carry": 60,
+    "popCost": 2
+  },
+  "zandres_burrow_guards": {
+    "displayName": "Burrow Guards",
+    "kingdom": "zandres",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 220,
+      "water": 120,
+      "lumber": 150,
+      "stone": 100
+    },
+    "baseTimeSec": 330,
+    "foodUpkeep": 3,
+    "attack": 70,
+    "defInfantry": 50,
+    "defCavalry": 60,
+    "speed": 7,
+    "carry": 60,
+    "popCost": 2
+  },
+  "zandres_capacitor_sentries": {
+    "displayName": "Capacitor Sentries",
+    "kingdom": "zandres",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 350,
+      "water": 200,
+      "lumber": 250,
+      "stone": 200
+    },
+    "baseTimeSec": 650,
+    "foodUpkeep": 4,
+    "attack": 70,
+    "defInfantry": 75,
+    "defCavalry": 65,
+    "speed": 4,
+    "carry": 15,
+    "popCost": 3
+  },
+  "zandres_cave_strider_riders": {
+    "displayName": "Cave Strider Riders",
+    "kingdom": "zandres",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 160,
+      "water": 90,
+      "lumber": 100,
+      "stone": 70
+    },
+    "baseTimeSec": 240,
+    "foodUpkeep": 2,
+    "attack": 60,
+    "defInfantry": 25,
+    "defCavalry": 40,
+    "speed": 12,
+    "carry": 60,
+    "popCost": 2
+  },
+  "zandres_crystal_boltcasters": {
+    "displayName": "Crystal Boltcasters",
+    "kingdom": "zandres",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 80,
+      "water": 60,
+      "lumber": 100,
+      "stone": 30
+    },
+    "baseTimeSec": 130,
+    "foodUpkeep": 1,
+    "attack": 55,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 35,
+    "popCost": 2
+  },
+  "zandres_door_wardens": {
+    "displayName": "Door Wardens",
+    "kingdom": "zandres",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 100,
+      "water": 50,
+      "lumber": 60,
+      "stone": 40
+    },
+    "baseTimeSec": 120,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 60,
+    "defCavalry": 45,
+    "speed": 4,
+    "carry": 50,
+    "popCost": 1
+  },
+  "zandres_drill_ram": {
+    "displayName": "Drill Ram",
+    "kingdom": "zandres",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 220,
+      "water": 80,
+      "lumber": 350,
+      "stone": 180
+    },
+    "baseTimeSec": 450,
+    "foodUpkeep": 4,
+    "attack": 75,
+    "defInfantry": 30,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "zandres_karst_pikemen": {
+    "displayName": "Karst Pikemen",
+    "kingdom": "zandres",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 120,
+      "water": 60,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 150,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 4,
+    "carry": 45,
+    "popCost": 1
+  },
+  "zandres_lattice_halberdiers": {
+    "displayName": "Lattice Halberdiers",
+    "kingdom": "zandres",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 140,
+      "water": 80,
+      "lumber": 100,
+      "stone": 60
+    },
+    "baseTimeSec": 180,
+    "foodUpkeep": 1,
+    "attack": 65,
+    "defInfantry": 60,
+    "defCavalry": 50,
+    "speed": 4,
+    "carry": 40,
+    "popCost": 1
+  },
+  "zandres_magnet_lashers": {
+    "displayName": "Magnet Lashers",
+    "kingdom": "zandres",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 300,
+      "water": 160,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 580,
+    "foodUpkeep": 3,
+    "attack": 80,
+    "defInfantry": 55,
+    "defCavalry": 50,
+    "speed": 5,
+    "carry": 25,
+    "popCost": 3
+  },
+  "zandres_powertech_adepts": {
+    "displayName": "Power-Tech Adepts",
+    "kingdom": "zandres",
+    "trainingBuilding": "special",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 250,
+      "water": 120,
+      "lumber": 180,
+      "stone": 120
+    },
+    "baseTimeSec": 500,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 50,
+    "defCavalry": 45,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 3
+  },
+  "zandres_prism_markers": {
+    "displayName": "Prism Markers",
+    "kingdom": "zandres",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 100,
+      "water": 70,
+      "lumber": 120,
+      "stone": 40
+    },
+    "baseTimeSec": 160,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 25,
+    "defCavalry": 20,
+    "speed": 5,
+    "carry": 25,
+    "popCost": 2
+  },
+  "zandres_resonance_ballista": {
+    "displayName": "Resonance Ballista",
+    "kingdom": "zandres",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 1,
+    "baseCost": {
+      "food": 200,
+      "water": 100,
+      "lumber": 300,
+      "stone": 150
+    },
+    "baseTimeSec": 400,
+    "foodUpkeep": 3,
+    "attack": 85,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 3,
+    "carry": 0,
+    "popCost": 3
+  },
+  "zandres_resonance_slingers": {
+    "displayName": "Resonance Slingers",
+    "kingdom": "zandres",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 3,
+    "baseCost": {
+      "food": 70,
+      "water": 50,
+      "lumber": 60,
+      "stone": 30
+    },
+    "baseTimeSec": 110,
+    "foodUpkeep": 1,
+    "attack": 45,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 5,
+    "carry": 30,
+    "popCost": 2
+  },
+  "zandres_stonerail_thrower": {
+    "displayName": "Stone-Rail Thrower",
+    "kingdom": "zandres",
+    "trainingBuilding": "workshop",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 280,
+      "water": 150,
+      "lumber": 400,
+      "stone": 220
+    },
+    "baseTimeSec": 560,
+    "foodUpkeep": 5,
+    "attack": 100,
+    "defInfantry": 15,
+    "defCavalry": 10,
+    "speed": 2,
+    "carry": 0,
+    "popCost": 3
+  },
+  "zandres_survey_couriers": {
+    "displayName": "Survey Couriers",
+    "kingdom": "zandres",
+    "trainingBuilding": "stable",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 130,
+      "water": 70,
+      "lumber": 80,
+      "stone": 50
+    },
+    "baseTimeSec": 200,
+    "foodUpkeep": 1,
+    "attack": 40,
+    "defInfantry": 20,
+    "defCavalry": 30,
+    "speed": 16,
+    "carry": 40,
+    "popCost": 2
+  },
+  "zandres_survey_needlers": {
+    "displayName": "Survey Needlers",
+    "kingdom": "zandres",
+    "trainingBuilding": "archery",
+    "buildingLevelReq": 5,
+    "baseCost": {
+      "food": 90,
+      "water": 60,
+      "lumber": 80,
+      "stone": 35
+    },
+    "baseTimeSec": 140,
+    "foodUpkeep": 1,
+    "attack": 50,
+    "defInfantry": 20,
+    "defCavalry": 15,
+    "speed": 6,
+    "carry": 30,
+    "popCost": 2
+  },
+  "zandres_survey_suppressors": {
+    "displayName": "Survey Suppressors",
+    "kingdom": "zandres",
+    "trainingBuilding": "barracks",
+    "buildingLevelReq": 8,
+    "baseCost": {
+      "food": 160,
+      "water": 100,
+      "lumber": 120,
+      "stone": 70
+    },
+    "baseTimeSec": 210,
+    "foodUpkeep": 2,
+    "attack": 60,
+    "defInfantry": 65,
+    "defCavalry": 55,
+    "speed": 4,
+    "carry": 35,
+    "popCost": 1
+  }
+}

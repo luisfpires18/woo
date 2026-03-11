@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/luisfpires18/woo/internal/config"
 	"github.com/luisfpires18/woo/internal/dto"
 	"github.com/luisfpires18/woo/internal/model"
 	"github.com/luisfpires18/woo/internal/repository"
@@ -28,14 +29,12 @@ var commonBuildings = []string{
 	"lumber_1", "lumber_2", "lumber_3",
 	"stone_1", "stone_2", "stone_3",
 	"barracks", "stable", "archery", "workshop", "special",
+	"storage", "provisions", "reservoir",
 }
 
 // Starting resource config.
 const (
-	startingResources = 500.0
-	startingRate      = 3.0    // per second
-	startingStorage   = 1200.0 // hardcoded cap for now
-	maxSpawnAttempts  = 100
+	maxSpawnAttempts = 100
 )
 
 // VillageService handles village business logic.
@@ -116,16 +115,19 @@ func (s *VillageService) createVillageCore(ctx context.Context, playerID int64, 
 	// Create initial resources
 	resources := &model.Resources{
 		VillageID:       village.ID,
-		Food:            startingResources,
-		Water:           startingResources,
-		Lumber:          startingResources,
-		Stone:           startingResources,
-		FoodRate:        startingRate,
-		WaterRate:       startingRate,
-		LumberRate:      startingRate,
-		StoneRate:       startingRate,
+		Food:            config.StartingResources,
+		Water:           config.StartingResources,
+		Lumber:          config.StartingResources,
+		Stone:           config.StartingResources,
+		FoodRate:        config.StartingRate,
+		WaterRate:       config.StartingRate,
+		LumberRate:      config.StartingRate,
+		StoneRate:       config.StartingRate,
 		FoodConsumption: 0,
-		MaxStorage:      startingStorage,
+		MaxFood:         config.StartingStorage,
+		MaxWater:        config.StartingStorage,
+		MaxLumber:       config.StartingStorage,
+		MaxStone:        config.StartingStorage,
 		LastUpdated:     now,
 	}
 	if err := s.resourceRepo.Create(ctx, resources); err != nil {
@@ -190,16 +192,19 @@ func (s *VillageService) getCalculatedResources(ctx context.Context, villageID i
 		now := time.Now().UTC()
 		res = &model.Resources{
 			VillageID:       villageID,
-			Food:            startingResources,
-			Water:           startingResources,
-			Lumber:          startingResources,
-			Stone:           startingResources,
-			FoodRate:        startingRate,
-			WaterRate:       startingRate,
-			LumberRate:      startingRate,
-			StoneRate:       startingRate,
+			Food:            config.StartingResources,
+			Water:           config.StartingResources,
+			Lumber:          config.StartingResources,
+			Stone:           config.StartingResources,
+			FoodRate:        config.StartingRate,
+			WaterRate:       config.StartingRate,
+			LumberRate:      config.StartingRate,
+			StoneRate:       config.StartingRate,
 			FoodConsumption: 0,
-			MaxStorage:      startingStorage,
+			MaxFood:         config.StartingStorage,
+			MaxWater:        config.StartingStorage,
+			MaxLumber:       config.StartingStorage,
+			MaxStone:        config.StartingStorage,
 			LastUpdated:     now,
 		}
 		if createErr := s.resourceRepo.Create(ctx, res); createErr != nil {
@@ -258,6 +263,8 @@ func (s *VillageService) buildVillageResponse(village *model.Village, buildings 
 		})
 	}
 
+	popCap := config.CalculatePopCap(buildings)
+
 	return &dto.VillageResponse{
 		ID:        village.ID,
 		Name:      village.Name,
@@ -275,7 +282,12 @@ func (s *VillageService) buildVillageResponse(village *model.Village, buildings 
 			LumberRate:      resources.LumberRate,
 			StoneRate:       resources.StoneRate,
 			FoodConsumption: resources.FoodConsumption,
-			MaxStorage:      resources.MaxStorage,
+			MaxFood:         resources.MaxFood,
+			MaxWater:        resources.MaxWater,
+			MaxLumber:       resources.MaxLumber,
+			MaxStone:        resources.MaxStone,
+			PopCap:          popCap,
+			PopUsed:         resources.PopUsed,
 		},
 	}
 }

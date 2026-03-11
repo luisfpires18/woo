@@ -1,0 +1,64 @@
+/* TroopCard — individual troop box with kingdom theming */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-sm);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 0;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+/* Icon centered */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Troop name */
+.name {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Quantity */
+.quantity {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .name {
+    font-size: 0.625rem;
+  }
+
+  .quantity {
+    font-size: 1rem;
+  }
+}

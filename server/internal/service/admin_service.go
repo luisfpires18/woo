@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/luisfpires18/woo/internal/dto"
@@ -25,6 +24,7 @@ type AdminService struct {
 	gameAssetRepo             repository.GameAssetRepository
 	resBuildingConfigRepo     repository.ResourceBuildingConfigRepository
 	buildingDisplayConfigRepo repository.BuildingDisplayConfigRepository
+	troopDisplayConfigRepo    repository.TroopDisplayConfigRepository
 }
 
 // NewAdminService creates a new AdminService.
@@ -35,6 +35,7 @@ func NewAdminService(
 	gameAssetRepo repository.GameAssetRepository,
 	resBuildingConfigRepo repository.ResourceBuildingConfigRepository,
 	buildingDisplayConfigRepo repository.BuildingDisplayConfigRepository,
+	troopDisplayConfigRepo repository.TroopDisplayConfigRepository,
 ) *AdminService {
 	return &AdminService{
 		playerRepo:                playerRepo,
@@ -43,6 +44,7 @@ func NewAdminService(
 		gameAssetRepo:             gameAssetRepo,
 		resBuildingConfigRepo:     resBuildingConfigRepo,
 		buildingDisplayConfigRepo: buildingDisplayConfigRepo,
+		troopDisplayConfigRepo:    troopDisplayConfigRepo,
 	}
 }
 
@@ -193,20 +195,12 @@ func (s *AdminService) ListGameAssets(ctx context.Context) (*dto.GameAssetListRe
 
 	items := make([]*dto.GameAssetDTO, 0, len(assets))
 	for _, a := range assets {
-		var spriteURL *string
-		if a.SpritePath != nil {
-			u := "/uploads/" + *a.SpritePath + "?v=" + strconv.FormatInt(a.UpdatedAt.Unix(), 10)
-			spriteURL = &u
-		}
 		items = append(items, &dto.GameAssetDTO{
-			ID:           a.ID,
-			Category:     a.Category,
-			DisplayName:  a.DisplayName,
-			DefaultIcon:  a.DefaultIcon,
-			SpriteURL:    spriteURL,
-			SpriteWidth:  a.SpriteWidth,
-			SpriteHeight: a.SpriteHeight,
-			UpdatedAt:    a.UpdatedAt,
+			ID:          a.ID,
+			Category:    a.Category,
+			DisplayName: a.DisplayName,
+			DefaultIcon: a.DefaultIcon,
+			UpdatedAt:   a.UpdatedAt,
 		})
 	}
 
@@ -216,11 +210,6 @@ func (s *AdminService) ListGameAssets(ctx context.Context) (*dto.GameAssetListRe
 // GetGameAsset returns a single game asset by ID.
 func (s *AdminService) GetGameAsset(ctx context.Context, id string) (*model.GameAsset, error) {
 	return s.gameAssetRepo.GetByID(ctx, id)
-}
-
-// UpdateGameAssetSprite sets the sprite_path for a game asset.
-func (s *AdminService) UpdateGameAssetSprite(ctx context.Context, id string, spritePath *string) error {
-	return s.gameAssetRepo.UpdateSprite(ctx, id, spritePath)
 }
 
 // CreateGameAsset inserts a new game asset row (used for adding variants of zone/terrain tiles).
@@ -235,13 +224,9 @@ func (s *AdminService) CreateGameAsset(ctx context.Context, asset *model.GameAss
 		return errors.New("display_name is required")
 	}
 	// Validate category is known
-	if _, ok := model.AssetSpriteDimensions[asset.Category]; !ok {
+	if !model.ValidAssetCategories[asset.Category] {
 		return fmt.Errorf("unknown category: %s", asset.Category)
 	}
-	// Set default dimensions from category
-	dims := model.AssetSpriteDimensions[asset.Category]
-	asset.SpriteWidth = dims[0]
-	asset.SpriteHeight = dims[1]
 	if asset.DefaultIcon == "" {
 		asset.DefaultIcon = "🖼️"
 	}
@@ -270,11 +255,6 @@ func (s *AdminService) ListResourceBuildingConfigs(ctx context.Context, kingdom 
 
 	items := make([]*dto.ResourceBuildingConfigDTO, 0, len(configs))
 	for _, c := range configs {
-		var spriteURL *string
-		if c.SpritePath != nil {
-			u := "/uploads/" + *c.SpritePath + "?v=" + strconv.FormatInt(c.UpdatedAt.Unix(), 10)
-			spriteURL = &u
-		}
 		items = append(items, &dto.ResourceBuildingConfigDTO{
 			ID:           c.ID,
 			ResourceType: c.ResourceType,
@@ -283,7 +263,6 @@ func (s *AdminService) ListResourceBuildingConfigs(ctx context.Context, kingdom 
 			DisplayName:  c.DisplayName,
 			Description:  c.Description,
 			DefaultIcon:  c.DefaultIcon,
-			SpriteURL:    spriteURL,
 			UpdatedAt:    c.UpdatedAt.Format(time.RFC3339),
 		})
 	}
@@ -313,11 +292,6 @@ func (s *AdminService) UpdateResourceBuildingConfig(ctx context.Context, id int6
 	return s.resBuildingConfigRepo.Update(ctx, cfg)
 }
 
-// UpdateResourceBuildingConfigSprite sets the sprite_path for a resource building config.
-func (s *AdminService) UpdateResourceBuildingConfigSprite(ctx context.Context, id int64, spritePath *string) error {
-	return s.resBuildingConfigRepo.UpdateSprite(ctx, id, spritePath)
-}
-
 // --- Building display configs ---
 
 // ListBuildingDisplayConfigs returns all building display configs, optionally filtered by kingdom.
@@ -335,11 +309,6 @@ func (s *AdminService) ListBuildingDisplayConfigs(ctx context.Context, kingdom s
 
 	items := make([]*dto.BuildingDisplayConfigDTO, 0, len(configs))
 	for _, c := range configs {
-		var spriteURL *string
-		if c.SpritePath != nil {
-			u := "/uploads/" + *c.SpritePath + "?v=" + strconv.FormatInt(c.UpdatedAt.Unix(), 10)
-			spriteURL = &u
-		}
 		items = append(items, &dto.BuildingDisplayConfigDTO{
 			ID:           c.ID,
 			BuildingType: c.BuildingType,
@@ -347,7 +316,6 @@ func (s *AdminService) ListBuildingDisplayConfigs(ctx context.Context, kingdom s
 			DisplayName:  c.DisplayName,
 			Description:  c.Description,
 			DefaultIcon:  c.DefaultIcon,
-			SpriteURL:    spriteURL,
 			UpdatedAt:    c.UpdatedAt.Format(time.RFC3339),
 		})
 	}
@@ -377,7 +345,58 @@ func (s *AdminService) UpdateBuildingDisplayConfig(ctx context.Context, id int64
 	return s.buildingDisplayConfigRepo.Update(ctx, cfg)
 }
 
-// UpdateBuildingDisplayConfigSprite sets the sprite_path for a building display config.
-func (s *AdminService) UpdateBuildingDisplayConfigSprite(ctx context.Context, id int64, spritePath *string) error {
-	return s.buildingDisplayConfigRepo.UpdateSprite(ctx, id, spritePath)
+// --- Troop display configs ---
+
+// ListTroopDisplayConfigs returns all troop display configs, optionally filtered by kingdom.
+func (s *AdminService) ListTroopDisplayConfigs(ctx context.Context, kingdom string) (*dto.TroopDisplayConfigListResponse, error) {
+	var configs []*model.TroopDisplayConfig
+	var err error
+	if kingdom != "" {
+		configs, err = s.troopDisplayConfigRepo.GetByKingdom(ctx, kingdom)
+	} else {
+		configs, err = s.troopDisplayConfigRepo.GetAll(ctx)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("list troop display configs: %w", err)
+	}
+
+	items := make([]*dto.TroopDisplayConfigDTO, 0, len(configs))
+	for _, c := range configs {
+		items = append(items, &dto.TroopDisplayConfigDTO{
+			ID:               c.ID,
+			TroopType:        c.TroopType,
+			Kingdom:          c.Kingdom,
+			TrainingBuilding: c.TrainingBuilding,
+			DisplayName:      c.DisplayName,
+			Description:      c.Description,
+			DefaultIcon:      c.DefaultIcon,
+			UpdatedAt:        c.UpdatedAt.Format(time.RFC3339),
+		})
+	}
+
+	return &dto.TroopDisplayConfigListResponse{Configs: items}, nil
 }
+
+// GetTroopDisplayConfig returns a single troop display config by ID.
+func (s *AdminService) GetTroopDisplayConfig(ctx context.Context, id int64) (*model.TroopDisplayConfig, error) {
+	return s.troopDisplayConfigRepo.GetByID(ctx, id)
+}
+
+// UpdateTroopDisplayConfig updates display_name, description, and default_icon for a troop config.
+func (s *AdminService) UpdateTroopDisplayConfig(ctx context.Context, id int64, req *dto.UpdateTroopDisplayConfigRequest) error {
+	if req.DisplayName == "" {
+		return errors.New("display_name is required")
+	}
+	cfg, err := s.troopDisplayConfigRepo.GetByID(ctx, id)
+	if err != nil {
+		return fmt.Errorf("get troop display config: %w", err)
+	}
+	cfg.DisplayName = req.DisplayName
+	cfg.Description = req.Description
+	if req.DefaultIcon != "" {
+		cfg.DefaultIcon = req.DefaultIcon
+	}
+	return s.troopDisplayConfigRepo.Update(ctx, cfg)
+}
+
+

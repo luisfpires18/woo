@@ -66,8 +66,10 @@ type AnnouncementRepository interface {
 // BuildingQueueRepository defines data access operations for the building construction queue.
 type BuildingQueueRepository interface {
 	Insert(ctx context.Context, item *model.BuildingQueue) error
+	GetByID(ctx context.Context, id int64) (*model.BuildingQueue, error)
 	GetByVillageID(ctx context.Context, villageID int64) ([]*model.BuildingQueue, error)
 	GetCompleted(ctx context.Context, now time.Time) ([]*model.BuildingQueue, error)
+	Update(ctx context.Context, item *model.BuildingQueue) error
 	Delete(ctx context.Context, id int64) error
 }
 
@@ -76,7 +78,6 @@ type GameAssetRepository interface {
 	GetAll(ctx context.Context) ([]*model.GameAsset, error)
 	GetByID(ctx context.Context, id string) (*model.GameAsset, error)
 	GetByCategory(ctx context.Context, category string) ([]*model.GameAsset, error)
-	UpdateSprite(ctx context.Context, id string, spritePath *string) error
 	Create(ctx context.Context, asset *model.GameAsset) error
 	Delete(ctx context.Context, id string) error
 }
@@ -87,7 +88,6 @@ type ResourceBuildingConfigRepository interface {
 	GetByKingdom(ctx context.Context, kingdom string) ([]*model.ResourceBuildingConfig, error)
 	GetByID(ctx context.Context, id int64) (*model.ResourceBuildingConfig, error)
 	Update(ctx context.Context, cfg *model.ResourceBuildingConfig) error
-	UpdateSprite(ctx context.Context, id int64, spritePath *string) error
 }
 
 // BuildingDisplayConfigRepository defines data access operations for per-kingdom village building cosmetics.
@@ -96,7 +96,14 @@ type BuildingDisplayConfigRepository interface {
 	GetByKingdom(ctx context.Context, kingdom string) ([]*model.BuildingDisplayConfig, error)
 	GetByID(ctx context.Context, id int64) (*model.BuildingDisplayConfig, error)
 	Update(ctx context.Context, cfg *model.BuildingDisplayConfig) error
-	UpdateSprite(ctx context.Context, id int64, spritePath *string) error
+}
+
+// TroopDisplayConfigRepository defines data access operations for per-kingdom troop cosmetics.
+type TroopDisplayConfigRepository interface {
+	GetAll(ctx context.Context) ([]*model.TroopDisplayConfig, error)
+	GetByKingdom(ctx context.Context, kingdom string) ([]*model.TroopDisplayConfig, error)
+	GetByID(ctx context.Context, id int64) (*model.TroopDisplayConfig, error)
+	Update(ctx context.Context, cfg *model.TroopDisplayConfig) error
 }
 
 // WorldMapRepository defines data access operations for the world map tile grid.

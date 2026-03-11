@@ -92,7 +92,12 @@ export interface ResourcesResponse {
   lumber_rate: number;
   stone_rate: number;
   food_consumption: number;
-  max_storage: number;
+  max_food: number;
+  max_water: number;
+  max_lumber: number;
+  max_stone: number;
+  pop_cap: number;
+  pop_used: number;
 }
 
 // Building upgrade types — mirrors server/internal/dto/building.go
@@ -131,6 +136,7 @@ export interface TrainingQueueResponse {
   id: number;
   troop_type: TroopType;
   quantity: number;
+  original_quantity: number;
   each_duration_sec: number;
   started_at: string;
   completes_at: string;
@@ -228,9 +234,7 @@ export interface GameAsset {
   category: AssetCategory;
   display_name: string;
   default_icon: string;
-  sprite_url: string | null;
-  sprite_width: number;
-  sprite_height: number;
+  sprite_url?: string | null;
   updated_at: string;
 }
 
@@ -328,12 +332,28 @@ export interface BuildingDisplayConfig {
   display_name: string;
   description: string;
   default_icon: string;
-  sprite_url: string | null;
   updated_at: string;
 }
 
 export interface BuildingDisplayConfigListResponse {
   configs: BuildingDisplayConfig[];
+}
+
+// Troop display config types — mirrors server/internal/dto/admin.go
+
+export interface TroopDisplayConfig {
+  id: number;
+  troop_type: string;
+  kingdom: string;
+  training_building: string;
+  display_name: string;
+  description: string;
+  default_icon: string;
+  updated_at: string;
+}
+
+export interface TroopDisplayConfigListResponse {
+  configs: TroopDisplayConfig[];
 }
 
 // Resource building config types — mirrors server/internal/dto/admin.go
@@ -346,10 +366,23 @@ export interface ResourceBuildingConfig {
   display_name: string;
   description: string;
   default_icon: string;
-  sprite_url: string | null;
   updated_at: string;
 }
 
 export interface ResourceBuildingConfigListResponse {
   configs: ResourceBuildingConfig[];
+}
+
+// Building sprite info — returned by GET /api/admin/sprites/buildings/{kingdom}
+
+export interface BuildingSpriteInfo {
+  filename: string;
+  resource_type: string;
+  slot: number;
+  name: string;
+  url: string;
+}
+
+export interface BuildingSpriteListResponse {
+  sprites: BuildingSpriteInfo[];
 }

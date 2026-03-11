@@ -243,10 +243,10 @@ func (s *ResourceService) GetCurrentResources(ctx context.Context, villageID int
     elapsed := time.Since(stored.LastUpdated).Hours()
 
     return &model.Resources{
-        Iron:  min(stored.Iron + stored.IronRate*elapsed, stored.MaxStorage),
-        Wood:  min(stored.Wood + stored.WoodRate*elapsed, stored.MaxStorage),
-        Stone: min(stored.Stone + stored.StoneRate*elapsed, stored.MaxStorage),
-        Food:  min(stored.Food + (stored.FoodRate-stored.FoodConsumption)*elapsed, stored.MaxStorage),
+        Food:   min(stored.Food + stored.FoodRate*elapsed, stored.MaxFoodStorage),
+        Water:  min(stored.Water + stored.WaterRate*elapsed, stored.MaxWaterStorage),
+        Lumber: min(stored.Lumber + stored.LumberRate*elapsed, stored.MaxLumberStorage),
+        Stone:  min(stored.Stone + stored.StoneRate*elapsed, stored.MaxStoneStorage),
         LastUpdated: time.Now(),
     }, nil
 }
@@ -510,3 +510,4 @@ func (t *OnlineTracker) OnlineCount() int {
 | 2026-03-03 | Initial creation of Go multiplayer guide |
 | 2026-03-03 | Added coder/websocket library note, updated lazy resource calc with max_storage and food_consumption, added WebSocket reconnection policy |
 | 2026-03-03 | Rewrote Client ReadPump/WritePump code to use coder/websocket context-based API (was gorilla-style) |
+| 2026-03-10 | Updated lazy resource calculation example: Iron/Wood/Stone/Food → Food/Water/Lumber/Stone with per-resource storage caps. |

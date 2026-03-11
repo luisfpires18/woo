@@ -12,7 +12,7 @@ import { TrainingQueue } from '../components/TrainingQueue';
 import { TroopRoster } from '../components/TroopRoster';
 import { BuildModal } from '../components/BuildModal';
 import { BuildingDetailModal } from '../components/BuildingDetailModal';
-import { BuildingTrainingModal } from '../components/BuildingTrainingModal';
+import { BuildingMilitaryModal } from '../components/BuildingMilitaryModal';
 import { isMilitaryBuilding } from '../../../config/troops';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import type { BuildingInfo } from '../../../types/api';
@@ -28,7 +28,7 @@ export function VillagePage() {
   // Modal state
   const [buildModalOpen, setBuildModalOpen] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<BuildingInfo | null>(null);
-  const [trainingBuilding, setTrainingBuilding] = useState<BuildingInfo | null>(null);
+  const [selectedMilitary, setSelectedMilitary] = useState<BuildingInfo | null>(null);
 
   // Rename state
   const [isRenaming, setIsRenaming] = useState(false);
@@ -103,7 +103,7 @@ export function VillagePage() {
 
   const handleBuildingClick = (b: BuildingInfo) => {
     if (isMilitaryBuilding(b.building_type)) {
-      setTrainingBuilding(b);
+      setSelectedMilitary(b);
     } else {
       setSelectedBuilding(b);
     }
@@ -142,7 +142,7 @@ export function VillagePage() {
             {renameError && <span className={styles.renameError}>{renameError}</span>}
           </div>
         ) : (
-          <>
+          <div className={styles.titleRow}>
             <h1 className={styles.title}>{village.name}</h1>
             <button
               className={styles.renameBtn}
@@ -152,7 +152,7 @@ export function VillagePage() {
             >
               ✏️
             </button>
-          </>
+          </div>
         )}
         <span className={styles.coords}>
           ({village.x}, {village.y})
@@ -178,7 +178,6 @@ export function VillagePage() {
               buildings={village.buildings}
               onBuildingClick={(b) => handleBuildingClick(b)}
               onEmptySlotClick={() => setBuildModalOpen(true)}
-              onUpgradeClick={(b) => setSelectedBuilding(b)}
             />
           </section>
         </div>
@@ -212,15 +211,17 @@ export function VillagePage() {
         />
       )}
 
-      {/* Military building training modal */}
-      {trainingBuilding && (
-        <BuildingTrainingModal
+      {/* Military building modal (upgrade + training) */}
+      {selectedMilitary && (
+        <BuildingMilitaryModal
           isOpen={true}
-          onClose={() => setTrainingBuilding(null)}
-          building={trainingBuilding}
+          onClose={() => setSelectedMilitary(null)}
+          building={selectedMilitary}
+          allBuildings={village.buildings}
           villageId={villageId}
           resources={village.resources}
           kingdom={player?.kingdom ?? ''}
+          buildQueue={buildQueue}
           trainingQueue={trainingQueue}
         />
       )}

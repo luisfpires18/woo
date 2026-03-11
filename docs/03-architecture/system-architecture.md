@@ -10,7 +10,7 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                        BROWSER (Client)                     │
 │                                                             │
-│  React 18+ (TypeScript) ── Vite ── Zustand ── React Query  │
+│  React 19 (TypeScript) ─── Vite ── Zustand ── React Query  │
 │                                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
 │  │  REST API │  │WebSocket │  │  OAuth   │  │  Static    │ │
@@ -59,7 +59,7 @@
 
 | Tool | Purpose |
 |------|---------|
-| **React 18+** | UI framework |
+| **React 19** | UI framework |
 | **TypeScript** | Type safety (strict mode) |
 | **Vite** | Build tool + dev server |
 | **Zustand** | Global game state (resources, village, troops) |
@@ -81,27 +81,42 @@ client/
 │   │   ├── Card/
 │   │   ├── ResourceBar/
 │   │   └── ... 
+│   ├── config/                 # Game config imports
+│   │   ├── generated/          # Auto-generated JSON from Go config (DO NOT EDIT)
+│   │   │   ├── buildings.json
+│   │   │   ├── troops.json
+│   │   │   └── resources.json
+│   │   ├── buildings.ts        # TS wrapper for buildings.json
+│   │   ├── troops.ts           # TS wrapper for troops.json
+│   │   └── resources.ts        # TS wrapper for resources.json
 │   ├── features/               # Feature-specific modules
 │   │   ├── auth/               # Login, register, OAuth
 │   │   ├── village/            # Village view, buildings, resources
 │   │   ├── map/                # World map rendering
-│   │   ├── combat/             # Troop management, attacks
-│   │   ├── forge/              # Weapon crafting, runes
-│   │   └── lore/               # Single-player lore explorer
+│   │   ├── kingdom/            # Kingdom selection
+│   │   ├── admin/              # Admin panel
+│   │   ├── profile/            # Player profile
+│   │   ├── season/             # Season/world management
+│   │   └── landing/            # Landing page
 │   ├── hooks/                  # Custom React hooks
-│   │   ├── useAuth.ts
-│   │   ├── useWebSocket.ts
-│   │   ├── useVillageData.ts
+│   │   ├── useBuildingDisplayNames.ts
+│   │   ├── useResourceTicker.ts
 │   │   └── ...
 │   ├── services/               # API + WebSocket service layer
-│   │   ├── api.ts              # REST API client (axios or fetch wrapper)
-│   │   ├── websocket.ts        # WebSocket connection manager
-│   │   └── auth.ts             # Auth-specific API calls
+│   │   ├── api.ts              # REST API client (fetch wrapper)
+│   │   ├── auth.ts             # Auth-specific API calls
+│   │   ├── village.ts          # Village API calls
+│   │   ├── training.ts         # Troop training API calls
+│   │   ├── map.ts              # Map API calls
+│   │   ├── admin.ts            # Admin API calls
+│   │   ├── season.ts           # Season API calls
+│   │   └── player.ts           # Player API calls
 │   ├── stores/                 # Zustand stores
 │   │   ├── authStore.ts
-│   │   ├── villageStore.ts
+│   │   ├── gameStore.ts
 │   │   ├── mapStore.ts
-│   │   └── gameStore.ts
+│   │   ├── assetStore.ts
+│   │   └── themeStore.ts
 │   ├── styles/                 # Global styles
 │   │   ├── globals.css         # Reset, variables, fonts
 │   │   ├── themes.css          # Kingdom theme variables
@@ -153,7 +168,7 @@ client/
 
 | Tool | Purpose |
 |------|---------|
-| **Go 1.22+** | Server language |
+| **Go 1.25+** | Server language |
 | **net/http** | HTTP server (standard library) |
 | **coder/websocket** | WebSocket connections (maintained fork of nhooyr/websocket) |
 | **modernc.org/sqlite** | SQLite driver (pure Go, no CGO) |
@@ -170,7 +185,12 @@ server/
 │       └── main.go             # Entry point, wires everything together
 ├── internal/
 │   ├── config/
-│   │   └── config.go           # Load env vars, config file
+│   │   ├── config.go           # Load env vars, config file
+│   │   ├── buildings.go        # Building configs (costs, scaling, prerequisites)
+│   │   ├── troops.go           # Troop configs (stats, costs, kingdoms)
+│   │   ├── resources.go        # Resource economy constants
+│   │   ├── generated_types.go  # DTO types for genconfig + parity tests
+│   │   └── parity_test.go      # Verify committed JSON matches Go config
 │   ├── handler/
 │   │   ├── auth_handler.go     # Login, register, OAuth endpoints
 │   │   ├── village_handler.go  # Village CRUD endpoints
@@ -206,6 +226,9 @@ server/
 │   │   └── handler.go          # HTTP upgrade handler with JWT auth via ?token=│   ├── dto/                    # Data Transfer Objects (request/response structs)
 │   │   ├── auth.go
 │   │   ├── village.go
+│   │   ├── building.go
+│   │   ├── training.go
+│   │   ├── season.go
 │   │   └── map.go│   └── gameloop/
 │       ├── ticker.go           # Game tick loop
 │       ├── resource_tick.go    # Resource production per tick
@@ -215,6 +238,9 @@ server/
 │   ├── 001_create_players.sql
 │   ├── 002_create_villages.sql
 │   └── ...
+├── cmd/
+│   └── genconfig/
+│       └── main.go             # Config codegen CLI (Go config → JSON)
 ├── go.mod
 ├── go.sum
 └── Makefile
@@ -306,7 +332,7 @@ All WebSocket messages are JSON with a `type` field.
 { "type": "connection_ready", "data": { "player_id": 42, "server_time": "..." } }
 { "type": "subscription_confirmed", "data": { "topics": ["village:123"] } }
 { "type": "village_state", "data": { "village_id": 123, "buildings": [...], "resources": {...} } }
-{ "type": "resource_update", "data": { "village_id": 123, "iron": 5000, "wood": 3200, ... } }
+{ "type": "resource_update", "data": { "village_id": 123, "food": 5000, "water": 3200, ... } }
 { "type": "build_started", "data": { "village_id": 123, "building_type": "barracks", "target_level": 2, "completes_at": "..." } }
 { "type": "build_complete", "data": { "village_id": 123, "building_type": "barracks", "new_level": 2 } }
 { "type": "train_started", "data": { "village_id": 123, "troop_type": "iron_legionary", "quantity": 10, "completes_at": "..." } }
@@ -314,7 +340,7 @@ All WebSocket messages are JSON with a `type` field.
 { "type": "attack_incoming", "data": { "village_id": 123, "arrives_at": "2026-03-03T15:30:00Z" } }
 { "type": "combat_result", "data": { "attack_id": 456, "winner": "attacker", ... } }
 { "type": "world_event", "data": { "event_type": "chaos_weapon_claimed", ... } }
-{ "type": "error", "data": { "code": "INSUFFICIENT_RESOURCES", "message": "Not enough iron" } }
+{ "type": "error", "data": { "code": "INSUFFICIENT_RESOURCES", "message": "Not enough lumber" } }
 ```
 
 ### Rate Limiting (WebSocket)

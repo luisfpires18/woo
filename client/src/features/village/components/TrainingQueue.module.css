@@ -63,7 +63,7 @@
   height: 100%;
   background-color: var(--accent);
   border-radius: 3px;
-  transition: width 1s linear;
+  transition: width 0.25s linear;
 }
 
 .actions {

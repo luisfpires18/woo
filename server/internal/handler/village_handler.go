@@ -28,6 +28,11 @@ func NewVillageHandler(villageService *service.VillageService, buildingService *
 	}
 }
 
+// RegisterAdminRoutes registers admin-only village routes on the given mux.
+func (h *VillageHandler) RegisterAdminRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("POST /building/{queueId}/complete", h.InstantCompleteBuild)
+}
+
 // RegisterRoutes registers village routes on the given mux.
 // All village routes require authentication middleware to be applied externally.
 func (h *VillageHandler) RegisterRoutes(mux *http.ServeMux) {
@@ -273,4 +278,21 @@ func (h *VillageHandler) RenameVillage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, resp)
+}
+
+// InstantCompleteBuild handles POST /api/admin/building/{queueId}/complete.
+// Sets the building queue item's completes_at to now so the game loop processes it instantly.
+func (h *VillageHandler) InstantCompleteBuild(w http.ResponseWriter, r *http.Request) {
+	queueID, err := strconv.ParseInt(r.PathValue("queueId"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid queue id")
+		return
+	}
+
+	if err := h.buildingService.InstantCompleteBuild(r.Context(), queueID); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to instant complete build")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }

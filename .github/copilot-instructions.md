@@ -114,6 +114,8 @@
 ## 6. Lore & Game Content Rules
 
 - The three playable kingdoms are: **Veridor** (naval/ocean), **Sylvara** (forest/jungle), **Arkazia** (mountain/gladiator).
+- Additional playable kingdoms: **Draxys** (desert/gladiator), **Nordalh** (frost/viking), **Zandres** (underground/crystal), **Lumus** (light/holy).
+- **Drakanith** is the 8th kingdom (dragon/volcanic) — currently NPC-only, no playable units.
 - The enemy faction **Moraphys** is NPC-controlled and triggers the endgame by stealing all Weapons of Chaos.
 - **Weapons of Chaos** cause debuffs and chaos to their wielders. They are powerful but dangerous. **Count is configurable per game world** — do not hardcode 7.
 - **Weapons of Order** are the counter — crafted by players through alliance-level collaboration to defeat Moraphys.
@@ -132,7 +134,39 @@
 
 ---
 
-## 8. Dev Server Workflow
+## 8. Config Codegen Pipeline (Go → JSON → TypeScript)
+
+Game configuration (buildings, troops, resource economy) follows a **single-source-of-truth** pipeline:
+
+### Source of Truth
+
+- **Go config files** in `server/internal/config/` are the authoritative source:
+  - `buildings.go` — building configs (costs, scaling, prerequisites)
+  - `troops.go` — troop configs (stats, costs, kingdoms)
+  - `resources.go` — resource economy constants (starting values, rates, storage)
+
+### Pipeline
+
+1. **Edit Go config** → make changes in `server/internal/config/*.go`
+2. **Run codegen** → `npm run gen-config` (from repo root) or `cd server && go run ./cmd/genconfig`
+3. **Generated JSON** → committed files in `client/src/config/generated/`:
+   - `buildings.json`, `troops.json`, `resources.json`
+4. **TypeScript imports** → frontend reads from generated JSON:
+   - `client/src/config/buildings.ts` → imports `buildings.json`
+   - `client/src/config/troops.ts` → imports `troops.json`
+   - `client/src/config/resources.ts` → imports `resources.json`
+
+### Rules
+
+- **Never edit generated JSON files directly.** Always edit the Go source and re-run genconfig.
+- **Never duplicate config values** between Go and TypeScript. The TS side must import from generated JSON.
+- **Parity tests** in `server/internal/config/parity_test.go` verify committed JSON matches Go config. Run `go test ./internal/config/` to check.
+- **After changing any Go config**, always run `npm run gen-config` and commit the updated JSON files.
+- **DTO types** in `server/internal/config/generated_types.go` define the JSON schema shared between genconfig and the parity test.
+
+---
+
+## 9. Dev Server Workflow
 
 After completing any development task:
 
@@ -153,3 +187,4 @@ This ensures the latest code is always running and testable after every change.
 | 2026-03-03 | Removed .mobile.css convention (responsive overrides in .module.css), removed mobile styles from file naming table, added configurable Weapons of Chaos count note |
 | 2026-03-03 | Resources refactored: Iron/Wood/Stone/Food → Food/Water/Lumber/Stone. 4 resource buildings → 12 (3 per resource). Added resource_building_configs table for admin customisation per kingdom |
 | 2026-03-07 | Added Section 8: Dev Server Workflow — mandatory kill/rebuild/restart after every dev task; delete woo.db when migrations change |
+| 2026-03-09 | Added Section 8: Config Codegen Pipeline (Go → JSON → TS) for buildings, troops, and resource economy. Updated kingdom list to include all 8 kingdoms |

@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { fetchGameAssets, uploadSprite, deleteSprite, createGameAsset, deleteGameAsset } from '../../../services/admin';
+import { useState, useEffect, useCallback } from 'react';
+import { fetchGameAssets, createGameAsset, deleteGameAsset } from '../../../services/admin';
 import type { GameAsset, AssetCategory } from '../../../types/api';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { useAssetStore } from '../../../stores/assetStore';
+import { getSpriteUrl } from '../../../utils/spriteUrl';
 import styles from './AdminAssetsPage.module.css';
 
 const CATEGORY_ORDER: AssetCategory[] = ['kingdom_flag', 'village_marker', 'zone_tile', 'terrain_tile', 'building', 'resource', 'unit'];
@@ -24,7 +25,7 @@ const SPRITE_DIMENSIONS: Record<AssetCategory, { w: number; h: number }> = {
   terrain_tile: { w: 256, h: 256 },
   building: { w: 96, h: 96 },
   resource: { w: 32, h: 32 },
-  unit: { w: 64, h: 64 },
+  unit: { w: 256, h: 256 },
 };
 
 /** Categories that support adding / removing variants */
@@ -34,12 +35,9 @@ export function AdminAssetsPage() {
   const [assets, setAssets] = useState<GameAsset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [uploading, setUploading] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeUploadId, setActiveUploadId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [failedSprites, setFailedSprites] = useState<Set<string>>(new Set());
 
-  const upsertStore = useAssetStore((s) => s.upsert);
-  const clearSpriteStore = useAssetStore((s) => s.clearSprite);
   const addAssetStore = useAssetStore((s) => s.addAsset);
   const removeAssetStore = useAssetStore((s) => s.removeAsset);
 
@@ -60,46 +58,8 @@ export function AdminAssetsPage() {
     load();
   }, [load]);
 
-  const handleUploadClick = (id: string) => {
-    setActiveUploadId(id);
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !activeUploadId) return;
-
-    // Reset the input so the same file can be re-selected
-    e.target.value = '';
-
-    setUploading(activeUploadId);
-    setError(null);
-    try {
-      const updated = await uploadSprite(activeUploadId, file);
-      setAssets((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
-      upsertStore(updated);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed.');
-    } finally {
-      setUploading(null);
-      setActiveUploadId(null);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    setUploading(id);
-    setError(null);
-    try {
-      await deleteSprite(id);
-      setAssets((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, sprite_url: null } : a)),
-      );
-      clearSpriteStore(id);
-    } catch {
-      setError('Failed to delete sprite.');
-    } finally {
-      setUploading(null);
-    }
+  const handleSpriteError = (id: string) => {
+    setFailedSprites((prev) => new Set(prev).add(id));
   };
 
   /**
@@ -139,12 +99,12 @@ export function AdminAssetsPage() {
   };
 
   /**
-   * Delete a variant asset entirely (row + sprite).
+   * Delete a variant asset entirely.
    * Only allowed for variant IDs (those with _v\d+ suffix).
    */
   const handleDeleteAsset = async (id: string) => {
     if (!confirm(`Delete asset "${id}" permanently?`)) return;
-    setUploading(id);
+    setDeleting(id);
     setError(null);
     try {
       await deleteGameAsset(id);
@@ -153,7 +113,7 @@ export function AdminAssetsPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete asset.');
     } finally {
-      setUploading(null);
+      setDeleting(null);
     }
   };
 
@@ -179,19 +139,10 @@ export function AdminAssetsPage() {
     <div className={styles.page}>
       <h2 className={styles.heading}>Game Assets</h2>
       <p className={styles.subtitle}>
-        Upload custom PNG sprites for buildings, resources, and units. Emoji icons are used as fallback.
+        Game asset sprites are loaded by convention from the filesystem. Emoji icons are used as fallback.
       </p>
 
       {error && <div className={styles.error}>{error}</div>}
-
-      {/* Hidden file input shared across all cards */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/png"
-        className={styles.hiddenInput}
-        onChange={handleFileChange}
-      />
 
       {grouped.map((group) => (
         <section key={group.category} className={styles.section}>
@@ -203,67 +154,57 @@ export function AdminAssetsPage() {
           </h3>
 
           <div className={styles.grid}>
-            {group.items.map((asset) => (
-              <div key={asset.id} className={styles.card}>
-                <div className={styles.preview}>
-                  {asset.sprite_url ? (
-                    <img
-                      src={asset.sprite_url}
-                      alt={asset.display_name}
-                      width={group.dims.w}
-                      height={group.dims.h}
-                      className={styles.spriteImg}
-                    />
-                  ) : (
-                    <span className={styles.emoji}>{asset.default_icon}</span>
-                  )}
-                </div>
+            {group.items.map((asset) => {
+              const spriteUrl = getSpriteUrl({ kind: asset.category as any, id: asset.id });
+              const showSprite = spriteUrl && !failedSprites.has(asset.id);
 
-                <div className={styles.info}>
-                  <span className={styles.assetName}>{asset.display_name}</span>
-                  <span className={styles.assetId}>{asset.id}</span>
-                </div>
+              return (
+                <div key={asset.id} className={styles.card}>
+                  <div className={styles.preview}>
+                    {showSprite ? (
+                      <img
+                        src={spriteUrl}
+                        alt={asset.display_name}
+                        width={group.dims.w}
+                        height={group.dims.h}
+                        className={styles.spriteImg}
+                        onError={() => handleSpriteError(asset.id)}
+                      />
+                    ) : (
+                      <span className={styles.emoji}>{asset.default_icon}</span>
+                    )}
+                  </div>
 
-                <div className={styles.actions}>
-                  <button
-                    className={styles.uploadBtn}
-                    disabled={uploading === asset.id}
-                    onClick={() => handleUploadClick(asset.id)}
-                  >
-                    {uploading === asset.id ? '…' : asset.sprite_url ? 'Replace' : 'Upload'}
-                  </button>
-                  {asset.sprite_url && (
-                    <button
-                      className={styles.deleteBtn}
-                      disabled={uploading === asset.id}
-                      onClick={() => handleDelete(asset.id)}
-                    >
-                      Remove
-                    </button>
-                  )}
-                  {/* Variant management for zone_tile / terrain_tile */}
-                  {VARIANT_CATEGORIES.has(group.category) && !isVariant(asset.id) && (
-                    <button
-                      className={styles.variantBtn}
-                      onClick={() => handleAddVariant(asset)}
-                      title="Add a new sprite variant for this tile"
-                    >
-                      + Variant
-                    </button>
-                  )}
-                  {VARIANT_CATEGORIES.has(group.category) && isVariant(asset.id) && (
-                    <button
-                      className={styles.deleteAssetBtn}
-                      disabled={uploading === asset.id}
-                      onClick={() => handleDeleteAsset(asset.id)}
-                      title="Delete this variant permanently"
-                    >
-                      Delete
-                    </button>
-                  )}
+                  <div className={styles.info}>
+                    <span className={styles.assetName}>{asset.display_name}</span>
+                    <span className={styles.assetId}>{asset.id}</span>
+                  </div>
+
+                  <div className={styles.actions}>
+                    {/* Variant management for zone_tile / terrain_tile */}
+                    {VARIANT_CATEGORIES.has(group.category) && !isVariant(asset.id) && (
+                      <button
+                        className={styles.variantBtn}
+                        onClick={() => handleAddVariant(asset)}
+                        title="Add a new sprite variant for this tile"
+                      >
+                        + Variant
+                      </button>
+                    )}
+                    {VARIANT_CATEGORIES.has(group.category) && isVariant(asset.id) && (
+                      <button
+                        className={styles.deleteAssetBtn}
+                        disabled={deleting === asset.id}
+                        onClick={() => handleDeleteAsset(asset.id)}
+                        title="Delete this variant permanently"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       ))}

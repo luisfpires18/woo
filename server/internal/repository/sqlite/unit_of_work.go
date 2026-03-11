@@ -79,11 +79,11 @@ func updateResourcesTx(ctx context.Context, tx *sql.Tx, villageID int64, res *mo
 	_, err := tx.ExecContext(ctx,
 		`UPDATE resources SET food = ?, water = ?, lumber = ?, stone = ?,
 		 food_rate = ?, water_rate = ?, lumber_rate = ?, stone_rate = ?,
-		 food_consumption = ?, max_storage = ?, last_updated = ?
+		 food_consumption = ?, max_food = ?, max_water = ?, max_lumber = ?, max_stone = ?, last_updated = ?
 		 WHERE village_id = ?`,
 		res.Food, res.Water, res.Lumber, res.Stone,
 		res.FoodRate, res.WaterRate, res.LumberRate, res.StoneRate,
-		res.FoodConsumption, res.MaxStorage,
+		res.FoodConsumption, res.MaxFood, res.MaxWater, res.MaxLumber, res.MaxStone,
 		res.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
 		villageID,
 	)
@@ -111,9 +111,9 @@ func insertBuildQueueTx(ctx context.Context, tx *sql.Tx, item *model.BuildingQue
 
 func insertTrainQueueTx(ctx context.Context, tx *sql.Tx, item *model.TrainingQueue) error {
 	result, err := tx.ExecContext(ctx,
-		`INSERT INTO training_queue (village_id, troop_type, quantity, each_duration_sec, started_at, completes_at)
-		 VALUES (?, ?, ?, ?, ?, ?)`,
-		item.VillageID, item.TroopType, item.Quantity, item.EachDurationSec,
+		`INSERT INTO training_queue (village_id, troop_type, quantity, original_quantity, each_duration_sec, started_at, completes_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		item.VillageID, item.TroopType, item.Quantity, item.OriginalQuantity, item.EachDurationSec,
 		item.StartedAt.UTC().Format("2006-01-02 15:04:05"),
 		item.CompletesAt.UTC().Format("2006-01-02 15:04:05"),
 	)

@@ -24,7 +24,7 @@ export function GameIcon({ assetId, fallback, size, className }: GameIconProps) 
 
   const emoji = asset?.default_icon ?? fallback ?? '❓';
   const spriteUrl = asset?.sprite_url;
-  const displaySize = size ?? asset?.sprite_width ?? 32;
+  const displaySize = size ?? 32;
 
   const wrapClass = [styles.icon, className].filter(Boolean).join(' ');
 

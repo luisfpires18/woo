@@ -47,6 +47,21 @@ func NewBuildingService(
 	}
 }
 
+// InstantCompleteBuild sets a building queue item's completes_at to now so the
+// game loop picks it up on the next tick. Admin-only — no ownership check.
+func (s *BuildingService) InstantCompleteBuild(ctx context.Context, queueID int64) error {
+	item, err := s.queueRepo.GetByID(ctx, queueID)
+	if err != nil {
+		return fmt.Errorf("get building queue item: %w", err)
+	}
+	now := time.Now().UTC()
+	item.CompletesAt = now
+	if err := s.queueRepo.Update(ctx, item); err != nil {
+		return fmt.Errorf("update building queue item: %w", err)
+	}
+	return nil
+}
+
 // StartUpgrade begins a building upgrade for the given village.
 func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID int64, buildingType string) (*dto.BuildingQueueResponse, error) {
 	// 1. Validate building type exists in config
@@ -359,6 +374,15 @@ func (s *BuildingService) completeBuild(ctx context.Context, item *model.Buildin
 		case "stone":
 			res.StoneRate = newRate
 		}
+	}
+
+	// Recalculate max storage if it's a storage building (storage, provisions, reservoir)
+	if config.IsStorageBuilding(item.BuildingType) {
+		caps := config.CalculateStorageCaps(buildings)
+		res.MaxFood = caps.MaxFood
+		res.MaxWater = caps.MaxWater
+		res.MaxLumber = caps.MaxLumber
+		res.MaxStone = caps.MaxStone
 	}
 
 	// Atomically: level up building, update resources, and remove queue entry

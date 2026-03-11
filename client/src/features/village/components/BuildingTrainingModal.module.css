@@ -98,6 +98,14 @@
   cursor: not-allowed;
 }
 
+.troopIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+  line-height: 1;
+}
+
 .troopHeader {
   display: flex;
   align-items: center;

@@ -81,9 +81,9 @@ func TestGetVillage_Success(t *testing.T) {
 		t.Error("expected buildings to be created")
 	}
 
-	// Veridor should have 18 buildings (town_hall + barracks + stable + archery + workshop + special + 12 resource fields)
-	if len(resp.Buildings) != 18 {
-		t.Errorf("expected 18 buildings for veridor, got %d", len(resp.Buildings))
+	// Veridor should have 21 buildings (town_hall + barracks + stable + archery + workshop + special + storage + provisions + reservoir + 12 resource fields)
+	if len(resp.Buildings) != 21 {
+		t.Errorf("expected 21 buildings for veridor, got %d", len(resp.Buildings))
 	}
 
 	// Check that archery, workshop, special exist (universal military buildings)
@@ -106,8 +106,17 @@ func TestGetVillage_Success(t *testing.T) {
 	if resp.Resources.Food < 499 || resp.Resources.Food > 510 {
 		t.Errorf("expected ~500 food, got %f", resp.Resources.Food)
 	}
-	if resp.Resources.MaxStorage != 1200 {
-		t.Errorf("expected 1200 max storage, got %f", resp.Resources.MaxStorage)
+	if resp.Resources.MaxFood != 1200 {
+		t.Errorf("expected 1200 max food storage, got %f", resp.Resources.MaxFood)
+	}
+	if resp.Resources.MaxWater != 1200 {
+		t.Errorf("expected 1200 max water storage, got %f", resp.Resources.MaxWater)
+	}
+	if resp.Resources.MaxLumber != 1200 {
+		t.Errorf("expected 1200 max lumber storage, got %f", resp.Resources.MaxLumber)
+	}
+	if resp.Resources.MaxStone != 1200 {
+		t.Errorf("expected 1200 max stone storage, got %f", resp.Resources.MaxStone)
 	}
 }
 
@@ -188,9 +197,9 @@ func TestCreateFirstVillage_Sylvara(t *testing.T) {
 		t.Fatalf("get village: %v", err)
 	}
 
-	// Sylvara gets same 18 buildings as every kingdom (no kingdom-specific buildings)
-	if len(resp.Buildings) != 18 {
-		t.Errorf("expected 18 buildings for sylvara, got %d", len(resp.Buildings))
+	// Sylvara gets same 21 buildings as every kingdom (no kingdom-specific buildings)
+	if len(resp.Buildings) != 21 {
+		t.Errorf("expected 21 buildings for sylvara, got %d", len(resp.Buildings))
 	}
 }
 
@@ -224,8 +233,8 @@ func TestCreateFirstVillage_Arkazia(t *testing.T) {
 		t.Fatalf("get village: %v", err)
 	}
 
-	// Arkazia gets same 18 buildings as every kingdom (no kingdom-specific buildings)
-	if len(resp.Buildings) != 18 {
-		t.Errorf("expected 18 buildings for arkazia, got %d", len(resp.Buildings))
+	// Arkazia gets same 21 buildings as every kingdom (no kingdom-specific buildings)
+	if len(resp.Buildings) != 21 {
+		t.Errorf("expected 21 buildings for arkazia, got %d", len(resp.Buildings))
 	}
 }

@@ -1,4 +1,10 @@
-# Weapons of Order — Kingdom Roster Descriptions
+# Kingdom Roster Descriptions
+
+> Detailed descriptions of all military buildings and troop types for each playable kingdom. For exact troop stats (attack, defense, speed, costs), see `server/internal/config/troops.go` or the generated `client/src/config/generated/troops.json`.
+>
+> Each kingdom has 5 military buildings (Barracks, Stable, Archery, Workshop, Special) with kingdom-specific display names. Each building trains 3–5 troop types. Total: **140 troops across 7 kingdoms**.
+
+---
 
 ## Sylvara
 
@@ -375,3 +381,12 @@
 **Runeforged Forgers (Special)** — rare heavy elites wielding empowered forge-crafted weapons.
 
 **Ulfhednar Champions (Special)** — terrifying berserker-style elites who trade composure for killing force.
+
+---
+
+## Changelog
+
+| Date | Change |
+|------|--------|
+| 2026-03-09 | Initial creation with all 7 playable kingdom rosters (Sylvara, Arkazia, Veridor, Draxys, Zandres, Lumus, Nordalh) — 140 troops total |
+| 2026-03-10 | Added header with context, stat reference links, and changelog |

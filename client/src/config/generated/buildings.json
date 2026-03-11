@@ -1,0 +1,373 @@
+{
+  "archery": {
+    "displayName": "Archery",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 300,
+    "scalingFactor": 1.8,
+    "timeFactor": 1.8,
+    "maxLevel": 15,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 3
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "barracks": {
+    "displayName": "Barracks",
+    "baseCost": {
+      "food": 50,
+      "water": 0,
+      "lumber": 200,
+      "stone": 150
+    },
+    "baseTimeSec": 300,
+    "scalingFactor": 1.8,
+    "timeFactor": 1.8,
+    "maxLevel": 20,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 3
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "food_1": {
+    "displayName": "Food Field I",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "food_2": {
+    "displayName": "Food Field II",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "food_3": {
+    "displayName": "Food Field III",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "lumber_1": {
+    "displayName": "Lumber Field I",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "lumber_2": {
+    "displayName": "Lumber Field II",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "lumber_3": {
+    "displayName": "Lumber Field III",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "provisions": {
+    "displayName": "Provisions",
+    "baseCost": {
+      "food": 40,
+      "water": 0,
+      "lumber": 120,
+      "stone": 100
+    },
+    "baseTimeSec": 180,
+    "scalingFactor": 1.6,
+    "timeFactor": 1.6,
+    "maxLevel": 20,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 1
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "reservoir": {
+    "displayName": "Reservoir",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 100,
+      "stone": 150
+    },
+    "baseTimeSec": 180,
+    "scalingFactor": 1.6,
+    "timeFactor": 1.6,
+    "maxLevel": 20,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 1
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "special": {
+    "displayName": "Special",
+    "baseCost": {
+      "food": 40,
+      "water": 40,
+      "lumber": 300,
+      "stone": 350
+    },
+    "baseTimeSec": 900,
+    "scalingFactor": 1.8,
+    "timeFactor": 1.8,
+    "maxLevel": 15,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 10
+      },
+      {
+        "buildingType": "barracks",
+        "minLevel": 7
+      },
+      {
+        "buildingType": "stable",
+        "minLevel": 5
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "stable": {
+    "displayName": "Stable",
+    "baseCost": {
+      "food": 40,
+      "water": 60,
+      "lumber": 250,
+      "stone": 200
+    },
+    "baseTimeSec": 480,
+    "scalingFactor": 1.8,
+    "timeFactor": 1.8,
+    "maxLevel": 15,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 5
+      },
+      {
+        "buildingType": "barracks",
+        "minLevel": 5
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "stone_1": {
+    "displayName": "Stone Field I",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "stone_2": {
+    "displayName": "Stone Field II",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "stone_3": {
+    "displayName": "Stone Field III",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "storage": {
+    "displayName": "Storage",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 150,
+      "stone": 120
+    },
+    "baseTimeSec": 180,
+    "scalingFactor": 1.6,
+    "timeFactor": 1.6,
+    "maxLevel": 20,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 1
+      }
+    ],
+    "popCapPerLevel": 5
+  },
+  "town_hall": {
+    "displayName": "Town Hall",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 250,
+      "stone": 250
+    },
+    "baseTimeSec": 300,
+    "scalingFactor": 1.7,
+    "timeFactor": 1.7,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 15
+  },
+  "water_1": {
+    "displayName": "Water Field I",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "water_2": {
+    "displayName": "Water Field II",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "water_3": {
+    "displayName": "Water Field III",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 90,
+      "stone": 50
+    },
+    "baseTimeSec": 120,
+    "scalingFactor": 1.5,
+    "timeFactor": 1.5,
+    "maxLevel": 20,
+    "prerequisites": [],
+    "popCapPerLevel": 3
+  },
+  "workshop": {
+    "displayName": "Workshop",
+    "baseCost": {
+      "food": 0,
+      "water": 0,
+      "lumber": 350,
+      "stone": 300
+    },
+    "baseTimeSec": 600,
+    "scalingFactor": 1.8,
+    "timeFactor": 1.8,
+    "maxLevel": 15,
+    "prerequisites": [
+      {
+        "buildingType": "town_hall",
+        "minLevel": 7
+      },
+      {
+        "buildingType": "barracks",
+        "minLevel": 5
+      }
+    ],
+    "popCapPerLevel": 5
+  }
+}

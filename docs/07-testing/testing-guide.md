@@ -45,38 +45,38 @@ All service tests must use table-driven tests:
 ```go
 func TestResourceService_CalculateCurrent(t *testing.T) {
     tests := []struct {
-        name       string
-        stored     model.Resources
-        elapsed    time.Duration
-        wantIron   float64
-        wantWood   float64
+        name        string
+        stored      model.Resources
+        elapsed     time.Duration
+        wantFood    float64
+        wantLumber  float64
     }{
         {
             name: "1 hour elapsed with base rates",
             stored: model.Resources{
-                Iron: 100, IronRate: 30,
-                Wood: 200, WoodRate: 25,
+                Food: 100, FoodRate: 30,
+                Lumber: 200, LumberRate: 25,
             },
-            elapsed:  1 * time.Hour,
-            wantIron: 130,
-            wantWood: 225,
+            elapsed:    1 * time.Hour,
+            wantFood:   130,
+            wantLumber: 225,
         },
         {
             name: "caps at max storage",
             stored: model.Resources{
-                Iron: 900, IronRate: 200,
-                MaxStorage: 1000,
+                Food: 900, FoodRate: 200,
+                MaxFoodStorage: 1000,
             },
             elapsed:  1 * time.Hour,
-            wantIron: 1000, // capped, not 1100
+            wantFood: 1000, // capped, not 1100
         },
         {
             name: "zero elapsed returns stored values",
             stored: model.Resources{
-                Iron: 500, IronRate: 100,
+                Food: 500, FoodRate: 100,
             },
             elapsed:  0,
-            wantIron: 500,
+            wantFood: 500,
         },
     }
 
@@ -85,11 +85,11 @@ func TestResourceService_CalculateCurrent(t *testing.T) {
             svc := service.NewResourceService(nil) // nil repo for calc-only tests
             result := svc.Calculate(tt.stored, tt.elapsed)
 
-            if result.Iron != tt.wantIron {
-                t.Errorf("iron: got %.2f, want %.2f", result.Iron, tt.wantIron)
+            if result.Food != tt.wantFood {
+                t.Errorf("food: got %.2f, want %.2f", result.Food, tt.wantFood)
             }
-            if tt.wantWood > 0 && result.Wood != tt.wantWood {
-                t.Errorf("wood: got %.2f, want %.2f", result.Wood, tt.wantWood)
+            if tt.wantLumber > 0 && result.Lumber != tt.wantLumber {
+                t.Errorf("lumber: got %.2f, want %.2f", result.Lumber, tt.wantLumber)
             }
         })
     }
@@ -501,3 +501,4 @@ jobs:
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of testing guide |
+| 2026-03-10 | Updated resource test examples: Iron/Wood → Food/Lumber with per-resource storage caps. |

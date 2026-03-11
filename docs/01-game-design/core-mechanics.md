@@ -1,8 +1,8 @@
 # Core Mechanics
 
-> **Superseded**: Definitive tunable values (costs, stats, curves, etc.) are in [`game-template.md`](game-template.md). Values below are **drafts** — when they conflict, `game-template.md` wins.
-
 > All fundamental game systems. Read this before implementing any gameplay feature.
+>
+> **Authoritative config values** (building costs, troop stats, resource economy) live in `server/internal/config/*.go` and are exported to the frontend via the config codegen pipeline. Values in this document describe design intent and formulas — for exact numbers, always check the Go source.
 
 ---
 
@@ -17,13 +17,28 @@ The game has **four base resources**. Every village produces all four, but produ
 | **Lumber** | 3 lumber buildings (e.g. Sawmill, Lumber Camp, Woodcutter) | Buildings, siege equipment, ships (Veridor) |
 | **Stone** | 3 stone buildings (e.g. Quarry, Stone Pit, Mine) | Fortifications, walls, heavy structures |
 
-Each resource type has **3 building slots** per village. Building display names, descriptions, icons, and sprites are **admin-configurable per kingdom** via the `resource_building_configs` table. The production rate is: `BaseResourceRate(1.0) + RatePerLevel(2.0) × sum(all 3 building levels for that resource type)`.
+Each resource type has **3 building slots** per village. Building display names, descriptions, icons, and sprites are **admin-configurable per kingdom** via the `resource_building_configs` table.
+
+### Resource Economy Constants
+
+These values are defined in `server/internal/config/resources.go` and exported via codegen:
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| `StartingResources` | 500 | Initial amount of each resource in a new village |
+| `StartingRate` | 3.0/s | Initial production rate per resource |
+| `BaseResourceRate` | 1.0/s | Passive production rate at level 0 |
+| `RatePerLevel` | 2.0/s | Additional rate per building level |
+| `BaseStorage` | 1,200 | Base storage capacity before storage buildings |
+| `StoragePerLevel` | 400 | Additional capacity per storage building level |
+
+**Production formula**: `BaseResourceRate + RatePerLevel × sum(all 3 building levels for that resource type)`
 
 ### Resource Rules
 
 - Resources accumulate over time based on building production rates.
-- **Lazy calculation**: Do NOT update resources in the DB every tick. Store `last_updated` timestamp and calculate current value on read: `current = stored + (rate_per_hour × hours_elapsed)`. Write to DB only on events (build, trade, attack, etc.).
-- Each village has a **Warehouse** that caps resource storage. Overflow is lost.
+- **Lazy calculation**: Do NOT update resources in the DB every tick. Store `last_updated` timestamp and calculate current value on read: `current = stored + (rate_per_second × seconds_elapsed)`. Write to DB only on events (build, trade, attack, etc.).
+- Each village has **storage buildings** that cap resource storage. Overflow is lost.
 - **Food** is special: it is consumed by troops and population. If food production < consumption, troops start dying (starvation mechanic).
 - Resources can be traded at the Marketplace between players.
 - Resources can be raided from enemy villages via attacks.
@@ -43,7 +58,9 @@ When a new player registers and selects a kingdom, their **first village** is cr
 | water_1 / water_2 / water_3 | 1 |
 | lumber_1 / lumber_2 / lumber_3 | 1 |
 | stone_1 / stone_2 / stone_3 | 1 |
-| Warehouse | 1 |
+| Storage | 1 |
+| Provisions | 1 |
+| Reservoir | 1 |
 
 All other buildings start at level 0 (not built).
 
@@ -58,7 +75,8 @@ All other buildings start at level 0 (not built).
 
 ### Village Placement Rules
 
-- The village is placed on a **random plains tile** on the world map.
+- The village is placed on a **random plains tile** within the player's kingdom zone (if zones are painted).
+- Falls back to any plains tile with no village if no zones are painted.
 - Minimum **5-tile distance** from any other existing village (Chebyshev distance).
 - The tile must not be water, a Chaos Shrine, or the Moraphys Stronghold.
 - If no valid tile is found within 100 random attempts, expand the search to any unoccupied land tile.
@@ -68,32 +86,36 @@ All other buildings start at level 0 (not built).
 
 ## Buildings
 
-Buildings are constructed inside a village and provide various functions. Each building has levels (starting at 0 = not built, max level TBD during balancing).
+Buildings are constructed inside a village and provide various functions. Each building has levels (starting at 0 = not built, up to its max level).
 
-### Building Types
+### Building Types (21 total)
 
-| Building | Function | Unlocks |
-|----------|---------|---------|
-| **Town Hall** | Central building. Its level determines what other buildings can be built. | All other buildings |
-| **food_1 / food_2 / food_3** | 3 slots that produce Food per hour. Display names are admin-configurable per kingdom. | — |
-| **water_1 / water_2 / water_3** | 3 slots that produce Water per hour. | — |
-| **lumber_1 / lumber_2 / lumber_3** | 3 slots that produce Lumber per hour. | — |
-| **stone_1 / stone_2 / stone_3** | 3 slots that produce Stone per hour. | — |
-| **Barracks** | Trains infantry troops. Higher level = faster training, more unit types. | Troop types by level |
-| **Stable** | Trains mounted/cavalry troops. | Advanced troop types |
-| **Archery** | Trains ranged troops (archers, crossbowmen, slingers). | Ranged troop types |
-| **Workshop** | Builds siege equipment (trebuchets, rams, ballistas). | Siege troop types |
-| **Special** | Trains kingdom-unique elite units. | Elite troop types |
+| Building | Function | Max Level |
+|----------|---------|-----------|
+| **Town Hall** | Central building. Its level determines what other buildings can be built. | 20 |
+| **food_1 / food_2 / food_3** | 3 slots that produce Food per second. Display names are admin-configurable per kingdom. | 20 |
+| **water_1 / water_2 / water_3** | 3 slots that produce Water per second. | 20 |
+| **lumber_1 / lumber_2 / lumber_3** | 3 slots that produce Lumber per second. | 20 |
+| **stone_1 / stone_2 / stone_3** | 3 slots that produce Stone per second. | 20 |
+| **Barracks** | Trains infantry troops. Higher level = faster training, more unit types. | 20 |
+| **Stable** | Trains mounted/cavalry troops. | 15 |
+| **Archery** | Trains ranged troops (archers, crossbowmen, slingers). | 15 |
+| **Workshop** | Builds siege equipment (trebuchets, rams, ballistas). | 15 |
+| **Special** | Trains kingdom-unique elite units. | 15 |
+| **Storage** | Increases max storage for Lumber and Stone. | 20 |
+| **Provisions** | Increases max storage for Food. | 20 |
+| **Reservoir** | Increases max storage for Water. | 20 |
 
 ### Building Type Constants
 
-Canonical string identifiers used in the database `/buildings.building_type` column and all backend code:
+Canonical string identifiers used in the database `buildings.building_type` column and all backend code:
 
 ```
 town_hall,
 food_1, food_2, food_3, water_1, water_2, water_3,
 lumber_1, lumber_2, lumber_3, stone_1, stone_2, stone_3,
-barracks, stable, archery, workshop, special
+barracks, stable, archery, workshop, special,
+storage, provisions, reservoir
 ```
 
 > All 5 military buildings are available to every kingdom. Display names are admin-configurable per kingdom via `building_display_configs`. See `docs/01-game-design/kingdoms_units_buildlings.md` for kingdom-specific names.
@@ -112,30 +134,77 @@ barracks, stable, archery, workshop, special
 | Archery | `archery` | 15 | Town Hall 3 |
 | Workshop | `workshop` | 15 | Town Hall 7, Barracks 5 |
 | Special | `special` | 15 | Town Hall 10, Barracks 7, Stable 5 |
+| Storage | `storage` | 20 | Town Hall 1 |
+| Provisions | `provisions` | 20 | Town Hall 1 |
+| Reservoir | `reservoir` | 20 | Town Hall 1 |
+
+### Building Cost Design
+
+Building costs use primarily **Lumber and Stone** as the core construction materials, with thematic **Food or Water** additions for certain buildings:
+
+- **Resource fields**: Lumber + Stone only (no food/water cost)
+- **Military buildings**: Primarily Lumber + Stone, with Food for buildings that require food stores (Barracks, Special) and Water for stables
+- **Storage buildings**: Lumber + Stone, with thematic food/water additions (Provisions costs Food, etc.)
+
+Cost formula: `base_cost × scaling_factor^(level - 1)`. Build time formula: `base_time × time_factor^(level - 1)`. See `server/internal/config/buildings.go` for exact values.
 
 ### Construction Rules
 
 - Only one building can be under construction at a time per village (upgradeable via Town Hall to allow parallel queues — TBD during balancing).
-- Construction requires resources and time. Both scale exponentially with building level (see `docs/01-game-design/progression-and-scaling.md`).
+- Construction requires resources and time. Both scale exponentially with building level.
 - Buildings have **prerequisites** as listed above. The server validates prerequisites on every build request.
 - A building cannot exceed its **max level**.
 - Destroying (demolishing) a building is instant but returns zero resources.
+
+### Storage System
+
+Three storage buildings control how much of each resource a village can hold:
+
+| Storage Building | Resources Stored | Base Cost Focus |
+|-----------------|-----------------|-----------------|
+| **Storage** | Lumber, Stone | Lumber + Stone |
+| **Provisions** | Food | Food + Lumber + Stone |
+| **Reservoir** | Water | Lumber + Stone |
+
+**Storage formula**: `BaseStorage(1200) + sum(storage_building_level × StoragePerLevel(400))` across all relevant storage buildings.
+
+All three start at level 1 in a new village.
 
 ---
 
 ## Troops
 
-Each kingdom has a unique set of troop types. See `docs/01-game-design/kingdoms.md` for kingdom-specific unit rosters.
+All 7 playable kingdoms have unique troop rosters. See `docs/01-game-design/kingdoms_units_buildlings.md` for full kingdom roster descriptions and `server/internal/config/troops.go` for exact stats.
 
 ### Implementation Status
 
-**Arkazia** troops are fully implemented (7 types). Training uses a **Travian-style one-unit-at-a-time queue**: a player queues N units, the server produces them one by one (each taking `each_duration_sec`), and the game loop advances the queue every tick. Higher training building levels grant a speed multiplier via linear interpolation (Lv1 = 1.0×, Lv5 = 1.25×, Lv10 = 1.6×, Lv15 = 2.0×, Lv20 = 2.5×).
+All **140 troop types** across 7 kingdoms are fully implemented. Each kingdom has ~20 units spread across 5 military buildings:
 
-**Backend**: models, config, repository, service (`training_service.go`), handler (4 REST endpoints), game loop integration with WebSocket `train_complete` notifications.
+| Building | Troops Per Kingdom | Notes |
+|----------|-------------------|-------|
+| Barracks | 4 | Infantry — available from building level 1, 3, 5, 8 |
+| Stable | 3–4 | Cavalry/mounted — available from building level 1, 3, 5 (some have 4th at 8) |
+| Archery | 4 | Ranged — available from building level 1, 3, 5, 8 |
+| Workshop | 4 | Siege — available from building level 1, 3, 5, 8 |
+| Special | 4–5 | Elite/unique — available from building level 1, 3, 5, 8 (Draxys has 5th at 10) |
 
-**Frontend**: troop config mirror, API service, `BuildingTrainingModal` (training UI inside military building modals), `TrainingQueue`, `TroopRoster` components integrated into `VillagePage`. Clicking a military building (barracks, stable, archery, workshop, special) opens the training modal filtered to that building's troop roster. Non-military buildings open the standard upgrade modal. Military buildings have a small upgrade icon (⬆) on the building card for accessing the upgrade modal separately.
+### Training System
 
-Remaining kingdoms (Veridor, Sylvara, Draxys, Nordalh) need their troop rosters added to `config/troops.go` + `config/troops.ts`.
+Training uses a **Travian-style one-unit-at-a-time queue**: a player queues N units, the server produces them one by one (each taking `each_duration_sec`), and the game loop advances the queue every tick.
+
+Higher training building levels grant a speed multiplier via linear interpolation:
+
+| Building Level | Speed Multiplier |
+|---------------|-----------------|
+| 1 | 1.0× |
+| 5 | 1.25× |
+| 10 | 1.6× |
+| 15 | 2.0× |
+| 20 | 2.5× |
+
+**Backend**: Troop models, config (140 TroopConfig entries), repository, service (`training_service.go`), handler (4 REST endpoints: train, cost, cancel, list troops), game loop integration with WebSocket `train_complete` notifications.
+
+**Frontend**: Troop config imported from generated JSON, API service, `BuildingTrainingModal` (training UI inside military building modals), `TrainingQueue`, `TroopRoster` components integrated into `VillagePage`. Clicking a military building opens the training modal filtered to that building's troop roster.
 
 ### Universal Troop Properties
 
@@ -147,7 +216,7 @@ Remaining kingdoms (Veridor, Sylvara, Draxys, Nordalh) need their troop rosters 
 | **Speed** | Movement speed on the world map (tiles per hour) |
 | **Carry Capacity** | Max resources this unit can carry when raiding |
 | **Food Upkeep** | Food consumed per hour per unit |
-| **Training Time** | Base time to train one unit |
+| **Training Time** | Base time to train one unit (modified by building level) |
 | **Training Cost** | Resource cost per unit (Food, Water, Lumber, Stone) |
 
 ### Troop Actions
@@ -165,7 +234,7 @@ Combat uses a **point-based system**:
 1. Attacker's total attack power = sum of all attacking troops' attack values + weapon bonuses + hero bonuses.
 2. Defender's total defense power = sum of all defending troops' relevant defense values (infantry vs infantry, cavalry vs cavalry) + wall bonus + weapon bonuses.
 3. The side with higher total power wins. Losses are proportional to the ratio of powers.
-4. Detailed formula TBD during Phase 3 balancing. Will be documented here when finalized.
+4. Detailed formula TBD during combat implementation phase. Will be documented here when finalized.
 
 ---
 
@@ -314,7 +383,7 @@ The multiplayer world is a **square tile-based grid map** (similar to Travian's 
 3. **Oases** are scattered on ~5% of land tiles, providing resource bonuses to adjacent villages.
 4. Terrain is generated procedurally (noise-based) to create natural-looking regions.
 5. **Water** tiles form coherent bodies (seas, lakes) — not random isolated tiles.
-6. **Kingdom starting zones** are not enforced — players from any kingdom can settle anywhere. The map is neutral.
+6. **Kingdom starting zones** are painted via the admin map editor / template system. `FindSpawnTile` first looks for plains tiles within the player's kingdom zone, then falls back to any plains tile with no village if no zones are painted.
 
 ### Map Properties
 
@@ -364,7 +433,7 @@ Players can form alliances for cooperative play.
 
 ## Hero System (Future)
 
-> Planned for Phase 3-4. Placeholder for design reference.
+> Planned for later phases. Placeholder for design reference.
 
 - Each player has one hero, tied to their kingdom.
 - Heroes lead armies, equip weapons and runes, and gain XP from battles.
@@ -378,9 +447,6 @@ Players can form alliances for cooperative play.
 | Date | Change |
 |------|--------|
 | 2026-03-03 | Initial creation of core mechanics |
-| 2026-03-03 | Added Initial Village Setup, building prerequisites/max levels, canonical constants, square grid map spec (401×401), map generation rules, Weapons of Chaos configurable count |
-| 2026-03-03 | Added grove_sanctum and colosseum to canonical building type constants |
-| 2026-03-05 | Marked as superseded by `game-template.md` for all tunable values |
-| 2026-03-07 | Updated map dimensions from 401×401 to configurable (default 51×51). Added template system reference. |
-| 2026-03-08 | Added Troops implementation status section — Arkazia 7-troop roster fully implemented with Travian-style one-at-a-time queue, speed multiplier, full-stack (backend + frontend). |
-| 2026-03-08 | Buildings simplified to match kingdoms_units_buildlings.md: removed dock/grove_sanctum/colosseum, added archery/workshop/special. All 5 military buildings are universal (no KingdomOnly restriction). Display names per kingdom set via building_display_configs table with lore-accurate names. |
+| 2026-03-03 | Added Initial Village Setup, building prerequisites/max levels, canonical constants, square grid map spec, map generation rules, Weapons of Chaos configurable count |
+| 2026-03-08 | Added Troops implementation status section — Arkazia 7-troop roster. Buildings simplified to 5 universal military buildings with admin-configurable display names. |
+| 2026-03-10 | Major update: All 140 troops across 7 kingdoms implemented. Added storage buildings (storage, provisions, reservoir). Added resource economy constants from resources.go. Removed game-template.md superseded reference (config codegen pipeline is now the source of truth). Updated village setup to include storage buildings. |

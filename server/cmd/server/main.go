@@ -54,16 +54,15 @@ func main() {
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
 	buildingDisplayConfigRepo := sqlite.NewBuildingDisplayConfigRepo(db)
+	troopDisplayConfigRepo := sqlite.NewTroopDisplayConfigRepo(db)
 	worldMapRepo := sqlite.NewWorldMapRepo(db)
 	kingdomRelationRepo := sqlite.NewKingdomRelationRepo(db)
 	_ = kingdomRelationRepo // used later for diplomacy features
 
 	// Ensure uploads directory exists
-	for _, dir := range []string{"uploads/sprites/building", "uploads/sprites/building_display", "uploads/sprites/resource", "uploads/sprites/unit", "uploads/sprites/kingdom_flag", "uploads/sprites/village_marker", "uploads/sprites/zone_tile", "uploads/sprites/terrain_tile", "uploads/sprites/resource_building"} {
-		if err := os.MkdirAll(dir, 0o755); err != nil {
-			slog.Error("failed to create uploads directory", "dir", dir, "error", err)
-			os.Exit(1)
-		}
+	if err := os.MkdirAll("uploads/sprites", 0o755); err != nil {
+		slog.Error("failed to create uploads directory", "error", err)
+		os.Exit(1)
 	}
 
 	// Wire up template repository (file-system backed)
@@ -82,7 +81,7 @@ func main() {
 	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, mapService)
 	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo)
 	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo)
-	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo)
+	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo, troopDisplayConfigRepo)
 	templateService := service.NewTemplateService(templateRepo, worldMapRepo)
 
 	// Season repository + service
@@ -106,6 +105,10 @@ func main() {
 	templateHandler := handler.NewTemplateHandler(templateService)
 	playerHandler := handler.NewPlayerHandler(playerService, seasonService)
 	seasonHandler := handler.NewSeasonHandler(seasonService)
+	spriteHandler := handler.NewSpriteHandler("uploads")
+	if err := spriteHandler.SyncSpriteManifest(); err != nil {
+		slog.Warn("failed to sync sprites manifest", "error", err)
+	}
 
 	// Auth middleware for protected routes
 	authMiddleware := middleware.Auth(authService.ValidateAccessToken)
@@ -162,12 +165,23 @@ func main() {
 	// Building display configs — read is auth-only (players need display names per kingdom)
 	mux.Handle("GET /api/building-display-configs", authMiddleware(http.HandlerFunc(adminHandler.ListBuildingDisplayConfigs)))
 
+	// Troop display configs — read is auth-only (players need display names per kingdom)
+	mux.Handle("GET /api/troop-display-configs", authMiddleware(http.HandlerFunc(adminHandler.ListTroopDisplayConfigs)))
+
+	// Resource building configs — read is auth-only (players need display names per kingdom)
+	mux.Handle("GET /api/resource-building-configs", authMiddleware(http.HandlerFunc(adminHandler.ListResourceBuildingConfigs)))
+
+	// Public sprite resolver — players need building sprites during gameplay
+	spriteHandler.RegisterPublicRoutes(mux)
+
 	// Admin routes — wrapped with auth + admin middleware
 	adminMux := http.NewServeMux()
 	adminHandler.RegisterRoutes(adminMux)
 	templateHandler.RegisterRoutes(adminMux)
 	trainingHandler.RegisterAdminRoutes(adminMux)
+	villageHandler.RegisterAdminRoutes(adminMux)
 	seasonHandler.RegisterAdminRoutes(adminMux)
+	spriteHandler.RegisterAdminRoutes(adminMux)
 	mux.Handle("/api/admin/", authMiddleware(middleware.RequireAdmin(http.StripPrefix("/api/admin", adminMux))))
 
 	// Serve uploaded sprites with caching

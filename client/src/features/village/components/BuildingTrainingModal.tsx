@@ -159,6 +159,9 @@ export function BuildingTrainingModal({
                         : `Requires ${displayName} level ${troopCfg.buildingLevelReq}`
                     }
                   >
+                    <div className={styles.troopIcon}>
+                      <GameIcon assetId={troopType} fallback="⚔️" size={36} />
+                    </div>
                     <div className={styles.troopHeader}>
                       <span className={styles.troopName}>{troopCfg.displayName}</span>
                       {!meetsReq && (
@@ -201,34 +204,42 @@ export function BuildingTrainingModal({
 
             {costPreview && !costLoading && (
               <div className={styles.costGrid}>
-                <div className={styles.costRow}>
-                  <span className={styles.costIcon}>🌾</span>
-                  <span className={styles.costLabel}>Food</span>
-                  <span className={resources.food >= costPreview.totalFood ? styles.costOk : styles.costBad}>
-                    {Math.ceil(costPreview.totalFood)}
-                  </span>
-                </div>
-                <div className={styles.costRow}>
-                  <span className={styles.costIcon}>💧</span>
-                  <span className={styles.costLabel}>Water</span>
-                  <span className={resources.water >= costPreview.totalWater ? styles.costOk : styles.costBad}>
-                    {Math.ceil(costPreview.totalWater)}
-                  </span>
-                </div>
-                <div className={styles.costRow}>
-                  <span className={styles.costIcon}>🪵</span>
-                  <span className={styles.costLabel}>Lumber</span>
-                  <span className={resources.lumber >= costPreview.totalLumber ? styles.costOk : styles.costBad}>
-                    {Math.ceil(costPreview.totalLumber)}
-                  </span>
-                </div>
-                <div className={styles.costRow}>
-                  <span className={styles.costIcon}>🪨</span>
-                  <span className={styles.costLabel}>Stone</span>
-                  <span className={resources.stone >= costPreview.totalStone ? styles.costOk : styles.costBad}>
-                    {Math.ceil(costPreview.totalStone)}
-                  </span>
-                </div>
+                {Math.ceil(costPreview.totalFood) > 0 && (
+                  <div className={styles.costRow}>
+                    <span className={styles.costIcon}>🌾</span>
+                    <span className={styles.costLabel}>Food</span>
+                    <span className={resources.food >= costPreview.totalFood ? styles.costOk : styles.costBad}>
+                      {Math.ceil(costPreview.totalFood)}
+                    </span>
+                  </div>
+                )}
+                {Math.ceil(costPreview.totalWater) > 0 && (
+                  <div className={styles.costRow}>
+                    <span className={styles.costIcon}>💧</span>
+                    <span className={styles.costLabel}>Water</span>
+                    <span className={resources.water >= costPreview.totalWater ? styles.costOk : styles.costBad}>
+                      {Math.ceil(costPreview.totalWater)}
+                    </span>
+                  </div>
+                )}
+                {Math.ceil(costPreview.totalLumber) > 0 && (
+                  <div className={styles.costRow}>
+                    <span className={styles.costIcon}>🪵</span>
+                    <span className={styles.costLabel}>Lumber</span>
+                    <span className={resources.lumber >= costPreview.totalLumber ? styles.costOk : styles.costBad}>
+                      {Math.ceil(costPreview.totalLumber)}
+                    </span>
+                  </div>
+                )}
+                {Math.ceil(costPreview.totalStone) > 0 && (
+                  <div className={styles.costRow}>
+                    <span className={styles.costIcon}>🪨</span>
+                    <span className={styles.costLabel}>Stone</span>
+                    <span className={resources.stone >= costPreview.totalStone ? styles.costOk : styles.costBad}>
+                      {Math.ceil(costPreview.totalStone)}
+                    </span>
+                  </div>
+                )}
                 <div className={styles.costTime}>
                   ⏱ {formatDuration(costPreview.eachTimeSec)}/unit · {formatDuration(costPreview.totalTimeSec)} total
                 </div>

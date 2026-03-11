@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS training_queue (
     village_id        INTEGER NOT NULL REFERENCES villages(id),
     troop_type        TEXT    NOT NULL,
     quantity          INTEGER NOT NULL,
+    original_quantity INTEGER NOT NULL DEFAULT 1,
     each_duration_sec INTEGER NOT NULL DEFAULT 60,
     started_at        TEXT    NOT NULL DEFAULT (datetime('now')),
     completes_at      TEXT    NOT NULL
@@ -258,9 +259,6 @@ CREATE TABLE IF NOT EXISTS game_assets (
     category      TEXT    NOT NULL CHECK (category IN ('building', 'resource', 'unit', 'kingdom_flag', 'village_marker', 'zone_tile', 'terrain_tile')),
     display_name  TEXT    NOT NULL,
     default_icon  TEXT    NOT NULL,
-    sprite_path   TEXT,
-    sprite_width  INTEGER NOT NULL DEFAULT 0,
-    sprite_height INTEGER NOT NULL DEFAULT 0,
     updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -273,7 +271,6 @@ CREATE TABLE IF NOT EXISTS resource_building_configs (
     display_name  TEXT    NOT NULL,
     description   TEXT    NOT NULL DEFAULT '',
     default_icon  TEXT    NOT NULL DEFAULT '🏗️',
-    sprite_path   TEXT,
     updated_at    TEXT    NOT NULL DEFAULT (datetime('now')),
     UNIQUE(resource_type, slot, kingdom)
 );
@@ -319,7 +316,18 @@ CREATE TABLE IF NOT EXISTS building_display_configs (
     display_name  TEXT    NOT NULL,
     description   TEXT    NOT NULL DEFAULT '',
     default_icon  TEXT    NOT NULL DEFAULT '🏛️',
-    sprite_path   TEXT,
     updated_at    TEXT    NOT NULL DEFAULT (datetime('now')),
     UNIQUE(building_type, kingdom)
+);
+-- ── Troop Display Configs (admin-customisable per kingdom) ──────────────────
+CREATE TABLE IF NOT EXISTS troop_display_configs (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    troop_type        TEXT    NOT NULL,
+    kingdom           TEXT    NOT NULL,
+    training_building TEXT    NOT NULL,
+    display_name      TEXT    NOT NULL,
+    description       TEXT    NOT NULL DEFAULT '',
+    default_icon      TEXT    NOT NULL DEFAULT '⚔️',
+    updated_at        TEXT    NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(troop_type, kingdom)
 );

@@ -30,7 +30,7 @@ func (r *worldMapRepo) InsertBatch(ctx context.Context, tiles []*model.MapTile) 
 			batch := tiles[i:end]
 
 			var sb strings.Builder
-			sb.WriteString("INSERT OR REPLACE INTO world_map (x, y, terrain_type, kingdom_zone) VALUES ")
+			sb.WriteString("INSERT OR IGNORE INTO world_map (x, y, terrain_type, kingdom_zone) VALUES ")
 
 			args := make([]any, 0, len(batch)*4)
 			for j, t := range batch {
