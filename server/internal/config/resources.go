@@ -8,6 +8,9 @@ package config
 // StartingResources is the initial amount of each resource in a new village.
 const StartingResources = 500.0
 
+// StartingGold is the initial gold amount for a new player.
+const StartingGold = 200.0
+
 // StartingRate is the initial production rate (per second) for each resource.
 const StartingRate = 3.0
 

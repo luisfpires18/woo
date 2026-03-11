@@ -1,6 +1,7 @@
 import styles from './ResourceBar.module.css';
 import type { ResourcesResponse } from '../../types/api';
 import { useResourceTicker } from '../../hooks/useResourceTicker';
+import { useGameStore } from '../../stores/gameStore';
 
 interface ResourceBarProps {
   resources: ResourcesResponse;
@@ -15,9 +16,15 @@ const RESOURCE_CONFIG = [
 
 export function ResourceBar({ resources }: ResourceBarProps) {
   const live = useResourceTicker(resources);
+  const playerGold = useGameStore((s) => s.playerGold);
 
   return (
     <div className={styles.bar}>
+      <div className={styles.resource} title={`Gold: ${Math.floor(playerGold)}`}>
+        <span className={styles.emoji}>{'\uD83E\uDE99'}</span>
+        <span className={styles.amount}>{Math.floor(playerGold).toLocaleString()}</span>
+      </div>
+      <div className={styles.divider} />
       {RESOURCE_CONFIG.map(({ key, maxKey, label, emoji }) => {
         const amount = Math.floor(live[key]);
         const rate = live[`${key}_rate`];

@@ -11,6 +11,9 @@ var ErrConflict = errors.New("conflict")
 // ErrInsufficientResources is returned when a player lacks enough resources for an action.
 var ErrInsufficientResources = errors.New("insufficient resources")
 
+// ErrInsufficientGold is returned when a player lacks enough gold for an action.
+var ErrInsufficientGold = errors.New("insufficient gold")
+
 // ErrBuildingInProgress is returned when a construction queue slot is already occupied.
 var ErrBuildingInProgress = errors.New("building already under construction")
 

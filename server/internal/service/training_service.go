@@ -31,13 +31,14 @@ type TrainCompletionEvent struct {
 
 // TrainingService handles troop training business logic.
 type TrainingService struct {
-	uow          repository.UnitOfWork
-	villageRepo  repository.VillageRepository
-	buildingRepo repository.BuildingRepository
-	resourceRepo repository.ResourceRepository
-	troopRepo    repository.TroopRepository
-	queueRepo    repository.TrainingQueueRepository
-	playerRepo   repository.PlayerRepository
+	uow            repository.UnitOfWork
+	villageRepo    repository.VillageRepository
+	buildingRepo   repository.BuildingRepository
+	resourceRepo   repository.ResourceRepository
+	troopRepo      repository.TroopRepository
+	queueRepo      repository.TrainingQueueRepository
+	playerRepo     repository.PlayerRepository
+	playerEconRepo repository.PlayerEconomyRepository
 }
 
 // NewTrainingService creates a new TrainingService.
@@ -49,15 +50,17 @@ func NewTrainingService(
 	troopRepo repository.TroopRepository,
 	queueRepo repository.TrainingQueueRepository,
 	playerRepo repository.PlayerRepository,
+	playerEconRepo repository.PlayerEconomyRepository,
 ) *TrainingService {
 	return &TrainingService{
-		uow:          uow,
-		villageRepo:  villageRepo,
-		buildingRepo: buildingRepo,
-		resourceRepo: resourceRepo,
-		troopRepo:    troopRepo,
-		queueRepo:    queueRepo,
-		playerRepo:   playerRepo,
+		uow:            uow,
+		villageRepo:    villageRepo,
+		buildingRepo:   buildingRepo,
+		resourceRepo:   resourceRepo,
+		troopRepo:      troopRepo,
+		queueRepo:      queueRepo,
+		playerRepo:     playerRepo,
+		playerEconRepo: playerEconRepo,
 	}
 }
 
@@ -147,7 +150,18 @@ func (s *TrainingService) StartTraining(ctx context.Context, playerID, villageID
 		return nil, model.ErrInsufficientResources
 	}
 
-	// 9a. Check sufficient population capacity
+	// 9a. Check sufficient gold (per-player currency)
+	if totalCost.Gold > 0 {
+		econ, err := s.playerEconRepo.GetByPlayerID(ctx, playerID)
+		if err != nil {
+			return nil, fmt.Errorf("get player economy: %w", err)
+		}
+		if econ.Gold < totalCost.Gold {
+			return nil, model.ErrInsufficientGold
+		}
+	}
+
+	// 9b. Check sufficient population capacity
 	popCost := config.TroopPopCost(troopType)
 	popCap := config.CalculatePopCap(buildings)
 	if res.PopUsed+popCost*quantity > popCap {
@@ -173,7 +187,7 @@ func (s *TrainingService) StartTraining(ctx context.Context, playerID, villageID
 		CompletesAt:      completesAt,
 	}
 
-	err = s.uow.DeductResourcesAndInsertTrainQueue(ctx, villageID, res, queueItem)
+	err = s.uow.DeductResourcesGoldAndInsertTrainQueue(ctx, villageID, res, playerID, totalCost.Gold, queueItem)
 	if err != nil {
 		return nil, fmt.Errorf("execute training transaction: %w", err)
 	}
@@ -353,6 +367,7 @@ func (s *TrainingService) GetTrainingCost(ctx context.Context, playerID, village
 		TotalWater:   totalCost.Water,
 		TotalLumber:  totalCost.Lumber,
 		TotalStone:   totalCost.Stone,
+		TotalGold:    totalCost.Gold,
 		EachTimeSec:  eachTimeSec,
 		TotalTimeSec: eachTimeSec * quantity,
 	}, nil

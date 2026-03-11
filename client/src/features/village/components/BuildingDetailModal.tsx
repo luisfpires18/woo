@@ -13,6 +13,7 @@ import {
 import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import { useResourceBuildingDisplay } from '../../../hooks/useResourceBuildingDisplay';
 import { useStartUpgrade } from '../hooks/useBuildingUpgrade';
+import { useGameStore } from '../../../stores/gameStore';
 import styles from './BuildingDetailModal.module.css';
 
 interface BuildingDetailModalProps {
@@ -38,6 +39,7 @@ export function BuildingDetailModal({
   const { getDisplayName } = useBuildingDisplayNames();
   const { getDisplay } = useResourceBuildingDisplay();
   const [spriteFailed, setSpriteFailed] = useState(false);
+  const playerGold = useGameStore((s) => s.playerGold);
   const type = building.building_type;
   const cfg = BUILDING_CONFIGS[type];
   const isResourceBuilding = RESOURCE_BUILDING_TYPES.has(type);
@@ -61,7 +63,8 @@ export function BuildingDetailModal({
     ? resources.food >= cost.food &&
       resources.water >= cost.water &&
       resources.lumber >= cost.lumber &&
-      resources.stone >= cost.stone
+      resources.stone >= cost.stone &&
+      playerGold >= cost.gold
     : false;
 
   const canUpgrade = !isMaxLevel && prereqs.allMet && canAfford && !queueActive;
@@ -111,6 +114,7 @@ export function BuildingDetailModal({
                 {building.level === 0 ? 'Build to Level 1' : `Upgrade to Level ${effectiveTarget}`}
               </h4>
               <div className={styles.costGrid}>
+                <CostRow label="Gold" icon="🪙" value={cost!.gold} available={playerGold} />
                 <CostRow label="Food" icon="🌾" value={cost!.food} available={resources.food} />
                 <CostRow label="Water" icon="💧" value={cost!.water} available={resources.water} />
                 <CostRow label="Lumber" icon="🪵" value={cost!.lumber} available={resources.lumber} />

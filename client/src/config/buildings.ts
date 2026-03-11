@@ -10,6 +10,7 @@ export interface ResourceCost {
   water: number;
   lumber: number;
   stone: number;
+  gold: number;
 }
 
 export interface BuildingPrerequisite {
@@ -68,6 +69,7 @@ export function costAtLevel(buildingType: BuildingType, level: number): Resource
     water: Math.round(cfg.baseCost.water * mult),
     lumber: Math.round(cfg.baseCost.lumber * mult),
     stone: Math.round(cfg.baseCost.stone * mult),
+    gold: Math.round(cfg.baseCost.gold * mult),
   };
 }
 

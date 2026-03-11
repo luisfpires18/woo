@@ -28,11 +28,41 @@ func (u *unitOfWork) DeductResourcesAndInsertBuildQueue(ctx context.Context, vil
 	})
 }
 
+// DeductResourcesGoldAndInsertBuildQueue atomically deducts village resources + player gold + inserts a build queue item.
+func (u *unitOfWork) DeductResourcesGoldAndInsertBuildQueue(ctx context.Context, villageID int64, res *model.Resources, playerID int64, goldCost float64, item *model.BuildingQueue) error {
+	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
+		if err := updateResourcesTx(ctx, tx, villageID, res); err != nil {
+			return err
+		}
+		if goldCost > 0 {
+			if err := deductGoldTx(ctx, tx, playerID, goldCost); err != nil {
+				return err
+			}
+		}
+		return insertBuildQueueTx(ctx, tx, item)
+	})
+}
+
 // DeductResourcesAndInsertTrainQueue atomically deducts resources and inserts a training queue item.
 func (u *unitOfWork) DeductResourcesAndInsertTrainQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.TrainingQueue) error {
 	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
 		if err := updateResourcesTx(ctx, tx, villageID, res); err != nil {
 			return err
+		}
+		return insertTrainQueueTx(ctx, tx, item)
+	})
+}
+
+// DeductResourcesGoldAndInsertTrainQueue atomically deducts village resources + player gold + inserts a training queue item.
+func (u *unitOfWork) DeductResourcesGoldAndInsertTrainQueue(ctx context.Context, villageID int64, res *model.Resources, playerID int64, goldCost float64, item *model.TrainingQueue) error {
+	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
+		if err := updateResourcesTx(ctx, tx, villageID, res); err != nil {
+			return err
+		}
+		if goldCost > 0 {
+			if err := deductGoldTx(ctx, tx, playerID, goldCost); err != nil {
+				return err
+			}
 		}
 		return insertTrainQueueTx(ctx, tx, item)
 	})
@@ -79,11 +109,11 @@ func updateResourcesTx(ctx context.Context, tx *sql.Tx, villageID int64, res *mo
 	_, err := tx.ExecContext(ctx,
 		`UPDATE resources SET food = ?, water = ?, lumber = ?, stone = ?,
 		 food_rate = ?, water_rate = ?, lumber_rate = ?, stone_rate = ?,
-		 food_consumption = ?, max_food = ?, max_water = ?, max_lumber = ?, max_stone = ?, last_updated = ?
+		 food_consumption = ?, pop_used = ?, max_food = ?, max_water = ?, max_lumber = ?, max_stone = ?, last_updated = ?
 		 WHERE village_id = ?`,
 		res.Food, res.Water, res.Lumber, res.Stone,
 		res.FoodRate, res.WaterRate, res.LumberRate, res.StoneRate,
-		res.FoodConsumption, res.MaxFood, res.MaxWater, res.MaxLumber, res.MaxStone,
+		res.FoodConsumption, res.PopUsed, res.MaxFood, res.MaxWater, res.MaxLumber, res.MaxStone,
 		res.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
 		villageID,
 	)
@@ -174,6 +204,24 @@ func deleteBuildQueueTx(ctx context.Context, tx *sql.Tx, id int64) error {
 	_, err := tx.ExecContext(ctx, `DELETE FROM building_queue WHERE id = ?`, id)
 	if err != nil {
 		return fmt.Errorf("delete building queue item (tx) %d: %w", id, err)
+	}
+	return nil
+}
+
+func deductGoldTx(ctx context.Context, tx *sql.Tx, playerID int64, amount float64) error {
+	result, err := tx.ExecContext(ctx,
+		`UPDATE player_economy SET gold = gold - ? WHERE player_id = ? AND gold >= ?`,
+		amount, playerID, amount,
+	)
+	if err != nil {
+		return fmt.Errorf("deduct gold (tx) for player %d: %w", playerID, err)
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("check gold deduction (tx) for player %d: %w", playerID, err)
+	}
+	if rows == 0 {
+		return model.ErrInsufficientGold
 	}
 	return nil
 }

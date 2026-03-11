@@ -8,6 +8,7 @@ import type { TroopType } from '../../../config/troops';
 import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import { getTrainingCost } from '../../../services/training';
 import { useStartTraining } from '../hooks/useTrainingMutations';
+import { useGameStore } from '../../../stores/gameStore';
 import styles from './BuildingTrainingModal.module.css';
 
 interface BuildingTrainingModalProps {
@@ -32,6 +33,7 @@ export function BuildingTrainingModal({
   const troops = getTroopsForBuilding(building.building_type, kingdom as Kingdom);
   const startMutation = useStartTraining(villageId);
   const { getDisplayName } = useBuildingDisplayNames();
+  const playerGold = useGameStore((s) => s.playerGold);
 
   const [selectedTroop, setSelectedTroop] = useState<TroopType | ''>('');
   const [quantity, setQuantity] = useState(1);
@@ -40,6 +42,7 @@ export function BuildingTrainingModal({
     totalWater: number;
     totalLumber: number;
     totalStone: number;
+    totalGold: number;
     eachTimeSec: number;
     totalTimeSec: number;
   } | null>(null);
@@ -76,6 +79,7 @@ export function BuildingTrainingModal({
               totalWater: resp.total_water,
               totalLumber: resp.total_lumber,
               totalStone: resp.total_stone,
+              totalGold: resp.total_gold,
               eachTimeSec: resp.each_time_sec,
               totalTimeSec: resp.total_time_sec,
             });
@@ -113,7 +117,8 @@ export function BuildingTrainingModal({
     ? resources.food >= costPreview.totalFood &&
       resources.water >= costPreview.totalWater &&
       resources.lumber >= costPreview.totalLumber &&
-      resources.stone >= costPreview.totalStone
+      resources.stone >= costPreview.totalStone &&
+      playerGold >= costPreview.totalGold
     : false;
 
   const queueCount = trainingQueue.length;
@@ -204,6 +209,15 @@ export function BuildingTrainingModal({
 
             {costPreview && !costLoading && (
               <div className={styles.costGrid}>
+                {Math.ceil(costPreview.totalGold) > 0 && (
+                  <div className={styles.costRow}>
+                    <span className={styles.costIcon}>🪙</span>
+                    <span className={styles.costLabel}>Gold</span>
+                    <span className={playerGold >= costPreview.totalGold ? styles.costOk : styles.costBad}>
+                      {Math.ceil(costPreview.totalGold)}
+                    </span>
+                  </div>
+                )}
                 {Math.ceil(costPreview.totalFood) > 0 && (
                   <div className={styles.costRow}>
                     <span className={styles.costIcon}>🌾</span>

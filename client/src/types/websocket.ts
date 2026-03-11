@@ -34,3 +34,11 @@ export interface WSTrainComplete extends WSMessage {
     new_total: number;
   };
 }
+
+export interface WSGoldUpdate extends WSMessage {
+  type: 'gold_update';
+  data: {
+    player_id: number;
+    gold: number;
+  };
+}

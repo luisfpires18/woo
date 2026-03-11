@@ -10,11 +10,13 @@ import (
 
 // ResourceCost represents the resource cost for an action.
 // The four base resources are: Food, Water, Lumber, Stone.
+// Gold is the per-player currency cost.
 type ResourceCost struct {
 	Food   float64
 	Water  float64
 	Lumber float64
 	Stone  float64
+	Gold   float64
 }
 
 // BuildingPrerequisite describes a required building type and minimum level.
@@ -39,7 +41,7 @@ type BuildingConfig struct {
 const BasePopulation = 20
 
 // resourceBuildingCost is the shared base cost for all 12 resource field buildings.
-var resourceBuildingCost = ResourceCost{Food: 0, Water: 0, Lumber: 90, Stone: 50}
+var resourceBuildingCost = ResourceCost{Food: 0, Water: 0, Lumber: 90, Stone: 50, Gold: 20}
 
 // newResourceBuilding returns a BuildingConfig for a resource-producing building slot.
 func newResourceBuilding(displayName string) BuildingConfig {
@@ -59,7 +61,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	// --- Village buildings ---
 	"town_hall": {
 		DisplayName:    "Town Hall",
-		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 250, Stone: 250},
+		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 250, Stone: 250, Gold: 80},
 		BaseTimeSec:    300, // 5 min
 		ScalingFactor:  1.7,
 		TimeFactor:     1.7,
@@ -68,7 +70,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"barracks": {
 		DisplayName:    "Barracks",
-		BaseCost:       ResourceCost{Food: 50, Water: 0, Lumber: 200, Stone: 150},
+		BaseCost:       ResourceCost{Food: 50, Water: 0, Lumber: 200, Stone: 150, Gold: 60},
 		BaseTimeSec:    300,
 		ScalingFactor:  1.8,
 		TimeFactor:     1.8,
@@ -80,7 +82,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"stable": {
 		DisplayName:    "Stable",
-		BaseCost:       ResourceCost{Food: 40, Water: 60, Lumber: 250, Stone: 200},
+		BaseCost:       ResourceCost{Food: 40, Water: 60, Lumber: 250, Stone: 200, Gold: 80},
 		BaseTimeSec:    480, // 8 min
 		ScalingFactor:  1.8,
 		TimeFactor:     1.8,
@@ -93,7 +95,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"archery": {
 		DisplayName:    "Archery",
-		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 200, Stone: 150},
+		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 200, Stone: 150, Gold: 60},
 		BaseTimeSec:    300, // 5 min
 		ScalingFactor:  1.8,
 		TimeFactor:     1.8,
@@ -105,7 +107,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"workshop": {
 		DisplayName:    "Workshop",
-		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 350, Stone: 300},
+		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 350, Stone: 300, Gold: 100},
 		BaseTimeSec:    600, // 10 min
 		ScalingFactor:  1.8,
 		TimeFactor:     1.8,
@@ -118,7 +120,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"special": {
 		DisplayName:    "Special",
-		BaseCost:       ResourceCost{Food: 40, Water: 40, Lumber: 300, Stone: 350},
+		BaseCost:       ResourceCost{Food: 40, Water: 40, Lumber: 300, Stone: 350, Gold: 120},
 		BaseTimeSec:    900, // 15 min
 		ScalingFactor:  1.8,
 		TimeFactor:     1.8,
@@ -134,7 +136,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	// --- Storage buildings (increase resource capacity) ---
 	"storage": {
 		DisplayName:    "Storage",
-		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 150, Stone: 120},
+		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 150, Stone: 120, Gold: 30},
 		BaseTimeSec:    180, // 3 min
 		ScalingFactor:  1.6,
 		TimeFactor:     1.6,
@@ -146,7 +148,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"provisions": {
 		DisplayName:    "Provisions",
-		BaseCost:       ResourceCost{Food: 40, Water: 0, Lumber: 120, Stone: 100},
+		BaseCost:       ResourceCost{Food: 40, Water: 0, Lumber: 120, Stone: 100, Gold: 30},
 		BaseTimeSec:    180, // 3 min
 		ScalingFactor:  1.6,
 		TimeFactor:     1.6,
@@ -158,7 +160,7 @@ var BuildingConfigs = map[string]BuildingConfig{
 	},
 	"reservoir": {
 		DisplayName:    "Reservoir",
-		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 100, Stone: 150},
+		BaseCost:       ResourceCost{Food: 0, Water: 0, Lumber: 100, Stone: 150, Gold: 30},
 		BaseTimeSec:    180, // 3 min
 		ScalingFactor:  1.6,
 		TimeFactor:     1.6,
@@ -290,6 +292,7 @@ func CostAtLevel(buildingType string, level int) (ResourceCost, error) {
 		Water:  math.Round(cfg.BaseCost.Water * mult),
 		Lumber: math.Round(cfg.BaseCost.Lumber * mult),
 		Stone:  math.Round(cfg.BaseCost.Stone * mult),
+		Gold:   math.Round(cfg.BaseCost.Gold * mult),
 	}, nil
 }
 

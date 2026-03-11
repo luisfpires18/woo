@@ -21,8 +21,9 @@ func setupBuildingTest(t *testing.T) (*BuildingService, int64, int64) {
 	buildingRepo := sqlite.NewBuildingRepo(db)
 	resourceRepo := sqlite.NewResourceRepo(db)
 	queueRepo := sqlite.NewBuildingQueueRepo(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 
-	svc := NewBuildingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo)
+	svc := NewBuildingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo, playerEconRepo)
 
 	// Create a test player
 	player := &model.Player{
@@ -38,7 +39,7 @@ func setupBuildingTest(t *testing.T) (*BuildingService, int64, int64) {
 	}
 
 	// Create a village with starter buildings
-	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
+	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := villageSvc.CreateFirstVillage(context.Background(), player.ID, "veridor", "testplayer")
 	if err != nil {
 		t.Fatalf("create village: %v", err)

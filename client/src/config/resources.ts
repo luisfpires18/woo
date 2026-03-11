@@ -9,6 +9,8 @@ export interface ResourceEconomy {
   startingResources: number;
   /** Initial production rate (per second) for each resource. */
   startingRate: number;
+  /** Initial gold amount for a new player. */
+  startingGold: number;
   /** Passive production rate per second at building level 0. */
   baseResourceRate: number;
   /** Additional production rate per second per building level. */
@@ -26,6 +28,7 @@ export const RESOURCE_ECONOMY = generatedResources as unknown as ResourceEconomy
 // Re-export individual constants for convenience.
 export const STARTING_RESOURCES = RESOURCE_ECONOMY.startingResources;
 export const STARTING_RATE = RESOURCE_ECONOMY.startingRate;
+export const STARTING_GOLD = RESOURCE_ECONOMY.startingGold;
 export const BASE_RESOURCE_RATE = RESOURCE_ECONOMY.baseResourceRate;
 export const RATE_PER_LEVEL = RESOURCE_ECONOMY.ratePerLevel;
 export const BASE_STORAGE = RESOURCE_ECONOMY.baseStorage;

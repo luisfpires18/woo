@@ -16,6 +16,7 @@ import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames'
 import { useStartUpgrade } from '../hooks/useBuildingUpgrade';
 import { getTrainingCost } from '../../../services/training';
 import { useStartTraining } from '../hooks/useTrainingMutations';
+import { useGameStore } from '../../../stores/gameStore';
 import styles from './BuildingMilitaryModal.module.css';
 
 interface BuildingMilitaryModalProps {
@@ -44,6 +45,7 @@ export function BuildingMilitaryModal({
   const { getDisplayName } = useBuildingDisplayNames();
   const upgradeMutation = useStartUpgrade(villageId);
   const startTraining = useStartTraining(villageId);
+  const playerGold = useGameStore((s) => s.playerGold);
 
   const type = building.building_type;
   const cfg = BUILDING_CONFIGS[type];
@@ -66,7 +68,8 @@ export function BuildingMilitaryModal({
     ? resources.food >= cost.food &&
       resources.water >= cost.water &&
       resources.lumber >= cost.lumber &&
-      resources.stone >= cost.stone
+      resources.stone >= cost.stone &&
+      playerGold >= cost.gold
     : false;
 
   const canUpgrade = !isMaxLevel && prereqs.allMet && canAffordUpgrade && !queueActive;
@@ -90,6 +93,7 @@ export function BuildingMilitaryModal({
     totalWater: number;
     totalLumber: number;
     totalStone: number;
+    totalGold: number;
     eachTimeSec: number;
     totalTimeSec: number;
   } | null>(null);
@@ -119,6 +123,7 @@ export function BuildingMilitaryModal({
               totalWater: resp.total_water,
               totalLumber: resp.total_lumber,
               totalStone: resp.total_stone,
+              totalGold: resp.total_gold,
               eachTimeSec: resp.each_time_sec,
               totalTimeSec: resp.total_time_sec,
             });
@@ -148,7 +153,8 @@ export function BuildingMilitaryModal({
     ? resources.food >= costPreview.totalFood &&
       resources.water >= costPreview.totalWater &&
       resources.lumber >= costPreview.totalLumber &&
-      resources.stone >= costPreview.totalStone
+      resources.stone >= costPreview.totalStone &&
+      playerGold >= costPreview.totalGold
     : false;
 
   const queueCount = trainingQueue.length;
@@ -233,6 +239,7 @@ export function BuildingMilitaryModal({
             <div className={`${styles.costGrid} ${costLoading ? styles.costGridLoading : ''}`}>
               {costLoading ? (
                 <>
+                  <div className={styles.costRow}><span className={styles.costIcon}>🪙</span><span className={styles.costLabel}>Gold</span><span className={styles.costSkeleton} /></div>
                   <div className={styles.costRow}><span className={styles.costIcon}>🌾</span><span className={styles.costLabel}>Food</span><span className={styles.costSkeleton} /></div>
                   <div className={styles.costRow}><span className={styles.costIcon}>💧</span><span className={styles.costLabel}>Water</span><span className={styles.costSkeleton} /></div>
                   <div className={styles.costRow}><span className={styles.costIcon}>🪵</span><span className={styles.costLabel}>Lumber</span><span className={styles.costSkeleton} /></div>
@@ -241,6 +248,15 @@ export function BuildingMilitaryModal({
                 </>
               ) : costPreview ? (
                 <>
+                  {Math.ceil(costPreview.totalGold) > 0 && (
+                    <div className={styles.costRow}>
+                      <span className={styles.costIcon}>🪙</span>
+                      <span className={styles.costLabel}>Gold</span>
+                      <span className={playerGold >= costPreview.totalGold ? styles.costOk : styles.costBad}>
+                        {Math.ceil(costPreview.totalGold)}
+                      </span>
+                    </div>
+                  )}
                   {Math.ceil(costPreview.totalFood) > 0 && (
                     <div className={styles.costRow}>
                       <span className={styles.costIcon}>🌾</span>
@@ -321,6 +337,7 @@ export function BuildingMilitaryModal({
               Upgrade to Level {effectiveTarget}
             </h4>
             <div className={styles.costGridSmall}>
+              <CostRow label="Gold"   icon="🪙" value={cost!.gold}   available={playerGold} />
               <CostRow label="Food"   icon="🌾" value={cost!.food}   available={resources.food} />
               <CostRow label="Water"  icon="💧" value={cost!.water}  available={resources.water} />
               <CostRow label="Lumber" icon="🪵" value={cost!.lumber} available={resources.lumber} />

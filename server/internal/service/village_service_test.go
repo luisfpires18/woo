@@ -19,6 +19,7 @@ func newTestVillageService(t *testing.T) (*service.VillageService, *model.Player
 	villageRepo := sqlite.NewVillageRepo(db)
 	buildingRepo := sqlite.NewBuildingRepo(db)
 	resourceRepo := sqlite.NewResourceRepo(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 
 	// Create a test player
 	player := &model.Player{
@@ -32,7 +33,7 @@ func newTestVillageService(t *testing.T) (*service.VillageService, *model.Player
 		t.Fatalf("create test player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
+	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	return svc, player
 }
 
@@ -173,6 +174,7 @@ func TestCreateFirstVillage_Sylvara(t *testing.T) {
 	villageRepo := sqlite.NewVillageRepo(db)
 	buildingRepo := sqlite.NewBuildingRepo(db)
 	resourceRepo := sqlite.NewResourceRepo(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 	ctx := context.Background()
 
 	player := &model.Player{
@@ -186,7 +188,7 @@ func TestCreateFirstVillage_Sylvara(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
+	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := svc.CreateFirstVillage(ctx, player.ID, player.Kingdom, player.Username)
 	if err != nil {
 		t.Fatalf("create village: %v", err)
@@ -209,6 +211,7 @@ func TestCreateFirstVillage_Arkazia(t *testing.T) {
 	villageRepo := sqlite.NewVillageRepo(db)
 	buildingRepo := sqlite.NewBuildingRepo(db)
 	resourceRepo := sqlite.NewResourceRepo(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 	ctx := context.Background()
 
 	player := &model.Player{
@@ -222,7 +225,7 @@ func TestCreateFirstVillage_Arkazia(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
+	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := svc.CreateFirstVillage(ctx, player.ID, player.Kingdom, player.Username)
 	if err != nil {
 		t.Fatalf("create village: %v", err)

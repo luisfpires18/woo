@@ -1,6 +1,7 @@
 {
   "startingResources": 500,
   "startingRate": 3,
+  "startingGold": 200,
   "baseResourceRate": 1,
   "ratePerLevel": 2,
   "baseStorage": 1200,

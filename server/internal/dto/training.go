@@ -29,6 +29,7 @@ type TrainingCostResponse struct {
 	TotalWater   float64 `json:"total_water"`
 	TotalLumber  float64 `json:"total_lumber"`
 	TotalStone   float64 `json:"total_stone"`
+	TotalGold    float64 `json:"total_gold"`
 	EachTimeSec  int     `json:"each_time_sec"`
 	TotalTimeSec int     `json:"total_time_sec"`
 }

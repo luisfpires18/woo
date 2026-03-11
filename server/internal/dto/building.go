@@ -25,5 +25,6 @@ type BuildingCostResponse struct {
 	Water        float64 `json:"water"`
 	Lumber       float64 `json:"lumber"`
 	Stone        float64 `json:"stone"`
+	Gold         float64 `json:"gold"`
 	TimeSec      int     `json:"time_seconds"`
 }

@@ -20,12 +20,13 @@ var (
 
 // BuildingService handles building construction business logic.
 type BuildingService struct {
-	uow          repository.UnitOfWork
-	villageRepo  repository.VillageRepository
-	buildingRepo repository.BuildingRepository
-	resourceRepo repository.ResourceRepository
-	queueRepo    repository.BuildingQueueRepository
-	playerRepo   repository.PlayerRepository
+	uow            repository.UnitOfWork
+	villageRepo    repository.VillageRepository
+	buildingRepo   repository.BuildingRepository
+	resourceRepo   repository.ResourceRepository
+	queueRepo      repository.BuildingQueueRepository
+	playerRepo     repository.PlayerRepository
+	playerEconRepo repository.PlayerEconomyRepository
 }
 
 // NewBuildingService creates a new BuildingService.
@@ -36,14 +37,16 @@ func NewBuildingService(
 	resourceRepo repository.ResourceRepository,
 	queueRepo repository.BuildingQueueRepository,
 	playerRepo repository.PlayerRepository,
+	playerEconRepo repository.PlayerEconomyRepository,
 ) *BuildingService {
 	return &BuildingService{
-		uow:          uow,
-		villageRepo:  villageRepo,
-		buildingRepo: buildingRepo,
-		resourceRepo: resourceRepo,
-		queueRepo:    queueRepo,
-		playerRepo:   playerRepo,
+		uow:            uow,
+		villageRepo:    villageRepo,
+		buildingRepo:   buildingRepo,
+		resourceRepo:   resourceRepo,
+		queueRepo:      queueRepo,
+		playerRepo:     playerRepo,
+		playerEconRepo: playerEconRepo,
 	}
 }
 
@@ -144,7 +147,18 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		return nil, model.ErrInsufficientResources
 	}
 
-	// 10. Deduct resources + insert queue atomically
+	// 9a. Check sufficient gold (per-player currency)
+	if cost.Gold > 0 {
+		econ, err := s.playerEconRepo.GetByPlayerID(ctx, playerID)
+		if err != nil {
+			return nil, fmt.Errorf("get player economy: %w", err)
+		}
+		if econ.Gold < cost.Gold {
+			return nil, model.ErrInsufficientGold
+		}
+	}
+
+	// 10. Deduct resources + gold + insert queue atomically
 	res.Food -= cost.Food
 	res.Water -= cost.Water
 	res.Lumber -= cost.Lumber
@@ -160,7 +174,7 @@ func (s *BuildingService) StartUpgrade(ctx context.Context, playerID, villageID 
 		CompletesAt:  completesAt,
 	}
 
-	err = s.uow.DeductResourcesAndInsertBuildQueue(ctx, villageID, res, queueItem)
+	err = s.uow.DeductResourcesGoldAndInsertBuildQueue(ctx, villageID, res, playerID, cost.Gold, queueItem)
 	if err != nil {
 		return nil, fmt.Errorf("execute upgrade transaction: %w", err)
 	}
@@ -227,6 +241,7 @@ func (s *BuildingService) GetUpgradeCost(ctx context.Context, playerID, villageI
 		Water:        cost.Water,
 		Lumber:       cost.Lumber,
 		Stone:        cost.Stone,
+		Gold:         cost.Gold,
 		TimeSec:      timeSec,
 	}, nil
 }

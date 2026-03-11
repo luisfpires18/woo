@@ -52,14 +52,15 @@ func newTestEnv(t *testing.T) *testEnv {
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
 
 	uow := sqlite.NewUnitOfWork(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, "test-secret", "woo-test")
 	mapService := service.NewMapService(worldMapRepo, villageRepo)
-	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, mapService)
-	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo)
+	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, mapService)
+	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo, playerEconRepo)
 	troopRepo := sqlite.NewTroopRepo(db)
 	trainingQueueRepo := sqlite.NewTrainingQueueRepo(db)
-	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo)
+	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo, playerEconRepo)
 	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, sqlite.NewBuildingDisplayConfigRepo(db), sqlite.NewTroopDisplayConfigRepo(db))
 
 	// Template repo (file-based, uses temp dir)

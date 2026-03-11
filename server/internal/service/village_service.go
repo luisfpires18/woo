@@ -39,10 +39,11 @@ const (
 
 // VillageService handles village business logic.
 type VillageService struct {
-	villageRepo  repository.VillageRepository
-	buildingRepo repository.BuildingRepository
-	resourceRepo repository.ResourceRepository
-	mapService   *MapService
+	villageRepo     repository.VillageRepository
+	buildingRepo    repository.BuildingRepository
+	resourceRepo    repository.ResourceRepository
+	playerEconRepo  repository.PlayerEconomyRepository
+	mapService      *MapService
 }
 
 // NewVillageService creates a new VillageService.
@@ -50,13 +51,15 @@ func NewVillageService(
 	villageRepo repository.VillageRepository,
 	buildingRepo repository.BuildingRepository,
 	resourceRepo repository.ResourceRepository,
+	playerEconRepo repository.PlayerEconomyRepository,
 	mapService *MapService,
 ) *VillageService {
 	return &VillageService{
-		villageRepo:  villageRepo,
-		buildingRepo: buildingRepo,
-		resourceRepo: resourceRepo,
-		mapService:   mapService,
+		villageRepo:    villageRepo,
+		buildingRepo:   buildingRepo,
+		resourceRepo:   resourceRepo,
+		playerEconRepo: playerEconRepo,
+		mapService:     mapService,
 	}
 }
 
@@ -134,6 +137,16 @@ func (s *VillageService) createVillageCore(ctx context.Context, playerID int64, 
 		return nil, fmt.Errorf("create starter resources: %w", err)
 	}
 
+	// Create player economy (gold) — idempotent, only for first village.
+	if s.playerEconRepo != nil {
+		_, econErr := s.playerEconRepo.GetByPlayerID(ctx, playerID)
+		if econErr != nil {
+			if err := s.playerEconRepo.Create(ctx, playerID, config.StartingGold); err != nil {
+				return nil, fmt.Errorf("create player economy: %w", err)
+			}
+		}
+	}
+
 	return village, nil
 }
 
@@ -160,7 +173,18 @@ func (s *VillageService) GetVillage(ctx context.Context, villageID, playerID int
 		return nil, fmt.Errorf("get resources: %w", err)
 	}
 
-	return s.buildVillageResponse(village, buildings, resources), nil
+	// Fetch player gold
+	var gold float64
+	if s.playerEconRepo != nil {
+		econ, err := s.playerEconRepo.GetByPlayerID(ctx, playerID)
+		if err == nil {
+			gold = econ.Gold
+		}
+	}
+
+	resp := s.buildVillageResponse(village, buildings, resources)
+	resp.Gold = gold
+	return resp, nil
 }
 
 // ListVillages lists all villages for a player.

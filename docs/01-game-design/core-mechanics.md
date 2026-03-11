@@ -45,6 +45,47 @@ These values are defined in `server/internal/config/resources.go` and exported v
 
 ---
 
+## Gold (Currency)
+
+Gold is the **universal currency** in Weapons of Order. Unlike resources (Food, Water, Lumber, Stone), gold is **not produced by buildings** — it is earned through gameplay actions.
+
+### Key Properties
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| **Scope** | Per-player | Shared across all villages |
+| **Starting Amount** | 200 | Defined in `server/internal/config/resources.go` as `StartingGold` |
+| **Storage Cap** | Uncapped | No maximum — gold can accumulate indefinitely |
+| **Production** | None | Gold is not passively produced; it is earned |
+
+### Gold Costs
+
+Every building construction/upgrade and every troop training costs gold in addition to standard resources. Gold costs are defined alongside resource costs in:
+
+- **Buildings**: `server/internal/config/buildings.go` — each building's `ResourceCost` struct includes a `Gold` field. Gold scales with level using the same `CostMultiplierPerLevel` formula as resources.
+- **Troops**: `server/internal/config/troops.go` — each troop's `BaseCost` includes a `Gold` field. Training cost = `BaseCost.Gold × quantity`.
+
+### Earning Methods (Future Implementation)
+
+Gold earning mechanics are planned but not yet implemented:
+
+- **Expedition rewards** — PvE missions that yield gold
+- **Raid loot from players** — steal gold from enemy players via attacks
+- **Quest completion** — one-time or repeatable quest rewards
+- **NPC village raids** — attacking Moraphys or neutral NPC settlements
+- **Marketplace trading** — sell resources for gold between players
+
+### Technical Details
+
+- Gold is stored in the `player_economy` table (migration `005_player_economy.sql`).
+- The `PlayerEconomyRepository` handles all gold CRUD operations.
+- Gold deduction is atomic: the `DeductGold` method uses `UPDATE ... WHERE gold >= amount` with rows-affected checking to prevent negative balances.
+- Building and training services use `DeductResourcesGoldAndInsertBuildQueue` / `DeductResourcesGoldAndInsertTrainQueue` UoW methods for atomic resource + gold deduction.
+- Frontend displays gold in the `ResourceBar` (🪙 icon, no rate since it's not produced) and in all cost modals.
+- Gold is returned in the `VillageResponse` DTO and synced to the `gameStore.playerGold` Zustand state.
+
+---
+
 ## Initial Village Setup
 
 When a new player registers and selects a kingdom, their **first village** is created automatically.
@@ -450,3 +491,4 @@ Players can form alliances for cooperative play.
 | 2026-03-03 | Added Initial Village Setup, building prerequisites/max levels, canonical constants, square grid map spec, map generation rules, Weapons of Chaos configurable count |
 | 2026-03-08 | Added Troops implementation status section — Arkazia 7-troop roster. Buildings simplified to 5 universal military buildings with admin-configurable display names. |
 | 2026-03-10 | Major update: All 140 troops across 7 kingdoms implemented. Added storage buildings (storage, provisions, reservoir). Added resource economy constants from resources.go. Removed game-template.md superseded reference (config codegen pipeline is now the source of truth). Updated village setup to include storage buildings. |
+| 2026-03-11 | Added Gold (Currency) section — per-player, uncapped, starting 200. Gold costs on all buildings and troops. Earning methods documented as future work. |

@@ -1,5 +1,6 @@
 import type { ResourcesResponse } from '../../../types/api';
 import { useResourceTicker } from '../../../hooks/useResourceTicker';
+import { useGameStore } from '../../../stores/gameStore';
 import { ResourceCard } from './ResourceCard';
 import styles from './ResourcePanel.module.css';
 
@@ -23,6 +24,7 @@ const RESOURCE_ITEMS: {
 
 export function ResourcePanel({ resources }: ResourcePanelProps) {
   const live = useResourceTicker(resources);
+  const playerGold = useGameStore((s) => s.playerGold);
 
   const popCap = live.pop_cap ?? 0;
   const popUsed = live.pop_used ?? 0;
@@ -32,6 +34,12 @@ export function ResourcePanel({ resources }: ResourcePanelProps) {
   return (
     <div className={styles.panel}>
       <h3 className={styles.heading}>Resources</h3>
+
+      <div className={styles.goldSection}>
+        <span className={styles.goldIcon}>🪙</span>
+        <span className={styles.goldLabel}>Gold</span>
+        <span className={styles.goldValue}>{Math.floor(playerGold).toLocaleString()}</span>
+      </div>
 
       <div className={styles.popSection}>
         <div className={styles.popHeader}>

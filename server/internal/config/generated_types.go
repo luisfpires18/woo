@@ -13,6 +13,7 @@ type GeneratedResourceCost struct {
 	Water  float64 `json:"water"`
 	Lumber float64 `json:"lumber"`
 	Stone  float64 `json:"stone"`
+	Gold   float64 `json:"gold"`
 }
 
 // GeneratedPrerequisite is the JSON-serialisable form of BuildingPrerequisite.
@@ -54,6 +55,7 @@ type GeneratedTroopConfig struct {
 type GeneratedResourceEconomy struct {
 	StartingResources float64             `json:"startingResources"`
 	StartingRate      float64             `json:"startingRate"`
+	StartingGold      float64             `json:"startingGold"`
 	BaseResourceRate  float64             `json:"baseResourceRate"`
 	RatePerLevel      float64             `json:"ratePerLevel"`
 	BaseStorage       float64             `json:"baseStorage"`
@@ -74,6 +76,7 @@ func ToGeneratedResourceEconomy() GeneratedResourceEconomy {
 	return GeneratedResourceEconomy{
 		StartingResources: StartingResources,
 		StartingRate:      StartingRate,
+		StartingGold:      StartingGold,
 		BaseResourceRate:  BaseResourceRate,
 		RatePerLevel:      RatePerLevel,
 		BaseStorage:       BaseStorage,
@@ -153,5 +156,6 @@ func toGeneratedCost(c ResourceCost) GeneratedResourceCost {
 		Water:  c.Water,
 		Lumber: c.Lumber,
 		Stone:  c.Stone,
+		Gold:   c.Gold,
 	}
 }

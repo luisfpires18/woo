@@ -69,6 +69,7 @@ export interface VillageResponse {
   x: number;
   y: number;
   is_capital: boolean;
+  gold: number;
   buildings: BuildingInfo[];
   resources: ResourcesResponse;
   build_queue: BuildingQueueResponse[];
@@ -122,6 +123,7 @@ export interface BuildingCostResponse {
   water: number;
   lumber: number;
   stone: number;
+  gold: number;
   time_seconds: number;
 }
 
@@ -149,6 +151,7 @@ export interface TrainingCostResponse {
   total_water: number;
   total_lumber: number;
   total_stone: number;
+  total_gold: number;
   each_time_sec: number;
   total_time_sec: number;
 }

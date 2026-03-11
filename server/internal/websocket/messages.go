@@ -36,6 +36,7 @@ const (
 	// Game event messages
 	MsgBuildComplete  = "build_complete"
 	MsgResourceUpdate = "resource_update"
+	MsgGoldUpdate     = "gold_update"
 	MsgTrainComplete  = "train_complete"
 	MsgAttackIncoming = "attack_incoming"
 	MsgCombatResult   = "combat_result"
@@ -76,4 +77,10 @@ type ResourceUpdateData struct {
 	Water     float64 `json:"water"`
 	Lumber    float64 `json:"lumber"`
 	Stone     float64 `json:"stone"`
+}
+
+// GoldUpdateData pushes current player gold balance.
+type GoldUpdateData struct {
+	PlayerID int64   `json:"player_id"`
+	Gold     float64 `json:"gold"`
 }

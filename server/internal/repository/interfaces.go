@@ -48,6 +48,17 @@ type ResourceRepository interface {
 	Create(ctx context.Context, resources *model.Resources) error
 }
 
+// PlayerEconomyRepository defines data access operations for per-player economy (gold).
+type PlayerEconomyRepository interface {
+	Create(ctx context.Context, playerID int64, gold float64) error
+	GetByPlayerID(ctx context.Context, playerID int64) (*model.PlayerEconomy, error)
+	UpdateGold(ctx context.Context, playerID int64, newGold float64) error
+	// DeductGold atomically deducts gold if sufficient balance exists. Returns ErrInsufficientGold otherwise.
+	DeductGold(ctx context.Context, playerID int64, amount float64) error
+	// DeductGoldTx atomically deducts gold within an existing transaction.
+	DeductGoldTx(ctx context.Context, tx interface{}, playerID int64, amount float64) error
+}
+
 // RefreshTokenRepository defines data access operations for refresh tokens.
 type RefreshTokenRepository interface {
 	Create(ctx context.Context, token *model.RefreshToken) error
@@ -186,8 +197,14 @@ type UnitOfWork interface {
 	// DeductResourcesAndInsertBuildQueue atomically deducts resources and inserts a build queue item.
 	DeductResourcesAndInsertBuildQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.BuildingQueue) error
 
+	// DeductResourcesGoldAndInsertBuildQueue atomically deducts village resources + player gold + inserts a build queue item.
+	DeductResourcesGoldAndInsertBuildQueue(ctx context.Context, villageID int64, res *model.Resources, playerID int64, goldCost float64, item *model.BuildingQueue) error
+
 	// DeductResourcesAndInsertTrainQueue atomically deducts resources and inserts a training queue item.
 	DeductResourcesAndInsertTrainQueue(ctx context.Context, villageID int64, res *model.Resources, item *model.TrainingQueue) error
+
+	// DeductResourcesGoldAndInsertTrainQueue atomically deducts village resources + player gold + inserts a training queue item.
+	DeductResourcesGoldAndInsertTrainQueue(ctx context.Context, villageID int64, res *model.Resources, playerID int64, goldCost float64, item *model.TrainingQueue) error
 
 	// CompleteTrainingUnit atomically adds troops, updates resources (food consumption), and advances/deletes the queue item.
 	CompleteTrainingUnit(ctx context.Context, villageID int64, troopType string, addQty int, res *model.Resources, queueItem *model.TrainingQueue, deleteQueue bool) error

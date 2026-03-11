@@ -31,6 +31,13 @@
   font-size: 0.75rem;
 }
 
+.divider {
+  width: 1px;
+  height: 1.2rem;
+  background-color: var(--border-primary);
+  flex-shrink: 0;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .bar {
@@ -40,5 +47,9 @@
 
   .rate {
     display: none;
+  }
+
+  .divider {
+    height: 1rem;
   }
 }

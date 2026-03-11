@@ -13,6 +13,7 @@ import {
 } from '../../../config/buildings';
 import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import { useStartUpgrade } from '../hooks/useBuildingUpgrade';
+import { useGameStore } from '../../../stores/gameStore';
 import styles from './BuildModal.module.css';
 
 interface BuildModalProps {
@@ -29,7 +30,7 @@ interface BuildOption {
   building: BuildingInfo;
   type: BuildingType;
   displayName: string;
-  cost: { food: number; water: number; lumber: number; stone: number };
+  cost: { food: number; water: number; lumber: number; stone: number; gold: number };
   timeSec: number;
   prereqs: { allMet: boolean; checks: PrerequisiteCheck[] };
   canAfford: boolean;
@@ -45,6 +46,7 @@ export function BuildModal({
 }: BuildModalProps) {
   const upgradeMutation = useStartUpgrade(villageId);
   const { getDisplayName } = useBuildingDisplayNames();
+  const playerGold = useGameStore((s) => s.playerGold);
   const queueActive = queue.length > 0;
 
   // Get all village buildings at level 0, excluding resource fields and wrong-kingdom buildings
@@ -71,7 +73,8 @@ export function BuildModal({
           resources.food >= cost.food &&
           resources.water >= cost.water &&
           resources.lumber >= cost.lumber &&
-          resources.stone >= cost.stone,
+          resources.stone >= cost.stone &&
+          playerGold >= cost.gold,
       };
     });
 
@@ -108,6 +111,7 @@ export function BuildModal({
                     </div>
 
                     <div className={styles.costs}>
+                      <CostItem label="Gold" value={o.cost.gold} available={playerGold} />
                       <CostItem label="Food" value={o.cost.food} available={resources.food} />
                       <CostItem label="Water" value={o.cost.water} available={resources.water} />
                       <CostItem label="Lumber" value={o.cost.lumber} available={resources.lumber} />

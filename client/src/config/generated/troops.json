@@ -8,7 +8,8 @@
       "food": 400,
       "water": 200,
       "lumber": 300,
-      "stone": 250
+      "stone": 250,
+      "gold": 130
     },
     "baseTimeSec": 700,
     "foodUpkeep": 4,
@@ -28,7 +29,8 @@
       "food": 180,
       "water": 100,
       "lumber": 120,
-      "stone": 80
+      "stone": 80,
+      "gold": 52
     },
     "baseTimeSec": 270,
     "foodUpkeep": 2,
@@ -48,7 +50,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -68,7 +71,8 @@
       "food": 200,
       "water": 110,
       "lumber": 140,
-      "stone": 90
+      "stone": 90,
+      "gold": 58
     },
     "baseTimeSec": 300,
     "foodUpkeep": 2,
@@ -88,7 +92,8 @@
       "food": 350,
       "water": 200,
       "lumber": 250,
-      "stone": 200
+      "stone": 200,
+      "gold": 110
     },
     "baseTimeSec": 650,
     "foodUpkeep": 4,
@@ -108,7 +113,8 @@
       "food": 280,
       "water": 150,
       "lumber": 350,
-      "stone": 200
+      "stone": 200,
+      "gold": 96
     },
     "baseTimeSec": 550,
     "foodUpkeep": 5,
@@ -128,7 +134,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -148,7 +155,8 @@
       "food": 60,
       "water": 40,
       "lumber": 50,
-      "stone": 25
+      "stone": 25,
+      "gold": 17
     },
     "baseTimeSec": 100,
     "foodUpkeep": 1,
@@ -168,7 +176,8 @@
       "food": 90,
       "water": 60,
       "lumber": 80,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -188,7 +197,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -208,7 +218,8 @@
       "food": 250,
       "water": 120,
       "lumber": 400,
-      "stone": 200
+      "stone": 200,
+      "gold": 90
     },
     "baseTimeSec": 500,
     "foodUpkeep": 4,
@@ -228,7 +239,8 @@
       "food": 300,
       "water": 150,
       "lumber": 200,
-      "stone": 150
+      "stone": 150,
+      "gold": 90
     },
     "baseTimeSec": 600,
     "foodUpkeep": 3,
@@ -248,7 +260,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -268,7 +281,8 @@
       "food": 220,
       "water": 80,
       "lumber": 350,
-      "stone": 180
+      "stone": 180,
+      "gold": 80
     },
     "baseTimeSec": 450,
     "foodUpkeep": 4,
@@ -288,7 +302,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,
@@ -308,7 +323,8 @@
       "food": 150,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 42
     },
     "baseTimeSec": 240,
     "foodUpkeep": 2,
@@ -328,7 +344,8 @@
       "food": 220,
       "water": 120,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 64
     },
     "baseTimeSec": 330,
     "foodUpkeep": 3,
@@ -348,7 +365,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -368,7 +386,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -388,7 +407,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -408,7 +428,8 @@
       "food": 280,
       "water": 140,
       "lumber": 200,
-      "stone": 140
+      "stone": 140,
+      "gold": 84
     },
     "baseTimeSec": 550,
     "foodUpkeep": 3,
@@ -428,7 +449,8 @@
       "food": 300,
       "water": 160,
       "lumber": 200,
-      "stone": 150
+      "stone": 150,
+      "gold": 90
     },
     "baseTimeSec": 580,
     "foodUpkeep": 3,
@@ -448,7 +470,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -468,7 +491,8 @@
       "food": 150,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 42
     },
     "baseTimeSec": 240,
     "foodUpkeep": 2,
@@ -488,7 +512,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -508,7 +533,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -528,7 +554,8 @@
       "food": 180,
       "water": 100,
       "lumber": 120,
-      "stone": 80
+      "stone": 80,
+      "gold": 52
     },
     "baseTimeSec": 270,
     "foodUpkeep": 2,
@@ -548,7 +575,8 @@
       "food": 130,
       "water": 70,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 36
     },
     "baseTimeSec": 200,
     "foodUpkeep": 1,
@@ -568,7 +596,8 @@
       "food": 280,
       "water": 150,
       "lumber": 350,
-      "stone": 200
+      "stone": 200,
+      "gold": 96
     },
     "baseTimeSec": 550,
     "foodUpkeep": 5,
@@ -588,7 +617,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -608,7 +638,8 @@
       "food": 90,
       "water": 60,
       "lumber": 80,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -628,7 +659,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -648,7 +680,8 @@
       "food": 220,
       "water": 110,
       "lumber": 160,
-      "stone": 110
+      "stone": 110,
+      "gold": 66
     },
     "baseTimeSec": 470,
     "foodUpkeep": 2,
@@ -668,7 +701,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -688,7 +722,8 @@
       "food": 350,
       "water": 180,
       "lumber": 250,
-      "stone": 180
+      "stone": 180,
+      "gold": 106
     },
     "baseTimeSec": 650,
     "foodUpkeep": 4,
@@ -708,7 +743,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -728,7 +764,8 @@
       "food": 250,
       "water": 120,
       "lumber": 300,
-      "stone": 180
+      "stone": 180,
+      "gold": 86
     },
     "baseTimeSec": 500,
     "foodUpkeep": 4,
@@ -748,7 +785,8 @@
       "food": 200,
       "water": 120,
       "lumber": 130,
-      "stone": 90
+      "stone": 90,
+      "gold": 58
     },
     "baseTimeSec": 300,
     "foodUpkeep": 3,
@@ -768,7 +806,8 @@
       "food": 300,
       "water": 150,
       "lumber": 450,
-      "stone": 250
+      "stone": 250,
+      "gold": 110
     },
     "baseTimeSec": 600,
     "foodUpkeep": 5,
@@ -788,7 +827,8 @@
       "food": 60,
       "water": 40,
       "lumber": 50,
-      "stone": 25
+      "stone": 25,
+      "gold": 17
     },
     "baseTimeSec": 100,
     "foodUpkeep": 1,
@@ -808,7 +848,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,
@@ -828,7 +869,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -848,7 +890,8 @@
       "food": 130,
       "water": 70,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 36
     },
     "baseTimeSec": 200,
     "foodUpkeep": 1,
@@ -868,7 +911,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,
@@ -888,7 +932,8 @@
       "food": 350,
       "water": 200,
       "lumber": 250,
-      "stone": 200
+      "stone": 200,
+      "gold": 110
     },
     "baseTimeSec": 650,
     "foodUpkeep": 4,
@@ -908,7 +953,8 @@
       "food": 90,
       "water": 60,
       "lumber": 80,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -928,7 +974,8 @@
       "food": 280,
       "water": 150,
       "lumber": 350,
-      "stone": 200
+      "stone": 200,
+      "gold": 96
     },
     "baseTimeSec": 550,
     "foodUpkeep": 5,
@@ -948,7 +995,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -968,7 +1016,8 @@
       "food": 200,
       "water": 110,
       "lumber": 140,
-      "stone": 90
+      "stone": 90,
+      "gold": 58
     },
     "baseTimeSec": 300,
     "foodUpkeep": 2,
@@ -988,7 +1037,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -1008,7 +1058,8 @@
       "food": 300,
       "water": 180,
       "lumber": 200,
-      "stone": 150
+      "stone": 150,
+      "gold": 90
     },
     "baseTimeSec": 580,
     "foodUpkeep": 3,
@@ -1028,7 +1079,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -1048,7 +1100,8 @@
       "food": 60,
       "water": 40,
       "lumber": 50,
-      "stone": 25
+      "stone": 25,
+      "gold": 17
     },
     "baseTimeSec": 100,
     "foodUpkeep": 1,
@@ -1068,7 +1121,8 @@
       "food": 280,
       "water": 140,
       "lumber": 200,
-      "stone": 140
+      "stone": 140,
+      "gold": 84
     },
     "baseTimeSec": 550,
     "foodUpkeep": 3,
@@ -1088,7 +1142,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -1108,7 +1163,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -1128,7 +1184,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -1148,7 +1205,8 @@
       "food": 250,
       "water": 120,
       "lumber": 400,
-      "stone": 200
+      "stone": 200,
+      "gold": 90
     },
     "baseTimeSec": 500,
     "foodUpkeep": 4,
@@ -1168,7 +1226,8 @@
       "food": 180,
       "water": 100,
       "lumber": 120,
-      "stone": 80
+      "stone": 80,
+      "gold": 52
     },
     "baseTimeSec": 270,
     "foodUpkeep": 2,
@@ -1188,7 +1247,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -1208,7 +1268,8 @@
       "food": 220,
       "water": 120,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 64
     },
     "baseTimeSec": 330,
     "foodUpkeep": 3,
@@ -1228,7 +1289,8 @@
       "food": 280,
       "water": 150,
       "lumber": 300,
-      "stone": 200
+      "stone": 200,
+      "gold": 96
     },
     "baseTimeSec": 520,
     "foodUpkeep": 4,
@@ -1248,7 +1310,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,
@@ -1268,7 +1331,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -1288,7 +1352,8 @@
       "food": 90,
       "water": 60,
       "lumber": 110,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -1308,7 +1373,8 @@
       "food": 280,
       "water": 140,
       "lumber": 200,
-      "stone": 140
+      "stone": 140,
+      "gold": 84
     },
     "baseTimeSec": 550,
     "foodUpkeep": 3,
@@ -1328,7 +1394,8 @@
       "food": 180,
       "water": 100,
       "lumber": 120,
-      "stone": 80
+      "stone": 80,
+      "gold": 52
     },
     "baseTimeSec": 270,
     "foodUpkeep": 2,
@@ -1348,7 +1415,8 @@
       "food": 220,
       "water": 120,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 64
     },
     "baseTimeSec": 330,
     "foodUpkeep": 3,
@@ -1368,7 +1436,8 @@
       "food": 240,
       "water": 130,
       "lumber": 160,
-      "stone": 110
+      "stone": 110,
+      "gold": 70
     },
     "baseTimeSec": 350,
     "foodUpkeep": 3,
@@ -1388,7 +1457,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -1408,7 +1478,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -1428,7 +1499,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -1448,7 +1520,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -1468,7 +1541,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -1488,7 +1562,8 @@
       "food": 220,
       "water": 80,
       "lumber": 350,
-      "stone": 180
+      "stone": 180,
+      "gold": 80
     },
     "baseTimeSec": 450,
     "foodUpkeep": 4,
@@ -1508,7 +1583,8 @@
       "food": 400,
       "water": 200,
       "lumber": 300,
-      "stone": 250
+      "stone": 250,
+      "gold": 130
     },
     "baseTimeSec": 700,
     "foodUpkeep": 4,
@@ -1528,7 +1604,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -1548,7 +1625,8 @@
       "food": 150,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 42
     },
     "baseTimeSec": 240,
     "foodUpkeep": 2,
@@ -1568,7 +1646,8 @@
       "food": 250,
       "water": 120,
       "lumber": 400,
-      "stone": 200
+      "stone": 200,
+      "gold": 90
     },
     "baseTimeSec": 500,
     "foodUpkeep": 4,
@@ -1588,7 +1667,8 @@
       "food": 60,
       "water": 40,
       "lumber": 50,
-      "stone": 25
+      "stone": 25,
+      "gold": 17
     },
     "baseTimeSec": 100,
     "foodUpkeep": 1,
@@ -1608,7 +1688,8 @@
       "food": 350,
       "water": 180,
       "lumber": 250,
-      "stone": 180
+      "stone": 180,
+      "gold": 106
     },
     "baseTimeSec": 650,
     "foodUpkeep": 4,
@@ -1628,7 +1709,8 @@
       "food": 280,
       "water": 180,
       "lumber": 180,
-      "stone": 130
+      "stone": 130,
+      "gold": 82
     },
     "baseTimeSec": 520,
     "foodUpkeep": 3,
@@ -1648,7 +1730,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -1668,7 +1751,8 @@
       "food": 220,
       "water": 120,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 64
     },
     "baseTimeSec": 330,
     "foodUpkeep": 3,
@@ -1688,7 +1772,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -1708,7 +1793,8 @@
       "food": 180,
       "water": 100,
       "lumber": 120,
-      "stone": 80
+      "stone": 80,
+      "gold": 52
     },
     "baseTimeSec": 270,
     "foodUpkeep": 2,
@@ -1728,7 +1814,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,
@@ -1748,7 +1835,8 @@
       "food": 300,
       "water": 200,
       "lumber": 200,
-      "stone": 150
+      "stone": 150,
+      "gold": 90
     },
     "baseTimeSec": 550,
     "foodUpkeep": 3,
@@ -1768,7 +1856,8 @@
       "food": 250,
       "water": 120,
       "lumber": 400,
-      "stone": 200
+      "stone": 200,
+      "gold": 90
     },
     "baseTimeSec": 500,
     "foodUpkeep": 4,
@@ -1788,7 +1877,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -1808,7 +1898,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -1828,7 +1919,8 @@
       "food": 220,
       "water": 80,
       "lumber": 350,
-      "stone": 180
+      "stone": 180,
+      "gold": 80
     },
     "baseTimeSec": 450,
     "foodUpkeep": 4,
@@ -1848,7 +1940,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -1868,7 +1961,8 @@
       "food": 200,
       "water": 100,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 60
     },
     "baseTimeSec": 450,
     "foodUpkeep": 2,
@@ -1888,7 +1982,8 @@
       "food": 280,
       "water": 150,
       "lumber": 350,
-      "stone": 200
+      "stone": 200,
+      "gold": 96
     },
     "baseTimeSec": 550,
     "foodUpkeep": 5,
@@ -1908,7 +2003,8 @@
       "food": 60,
       "water": 40,
       "lumber": 50,
-      "stone": 25
+      "stone": 25,
+      "gold": 17
     },
     "baseTimeSec": 100,
     "foodUpkeep": 1,
@@ -1928,7 +2024,8 @@
       "food": 90,
       "water": 60,
       "lumber": 80,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -1948,7 +2045,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -1968,7 +2066,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -1988,7 +2087,8 @@
       "food": 150,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 42
     },
     "baseTimeSec": 240,
     "foodUpkeep": 2,
@@ -2008,7 +2108,8 @@
       "food": 350,
       "water": 200,
       "lumber": 250,
-      "stone": 200
+      "stone": 200,
+      "gold": 110
     },
     "baseTimeSec": 650,
     "foodUpkeep": 4,
@@ -2028,7 +2129,8 @@
       "food": 130,
       "water": 70,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 36
     },
     "baseTimeSec": 200,
     "foodUpkeep": 1,
@@ -2048,7 +2150,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -2068,7 +2171,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -2088,7 +2192,8 @@
       "food": 280,
       "water": 150,
       "lumber": 350,
-      "stone": 200
+      "stone": 200,
+      "gold": 96
     },
     "baseTimeSec": 550,
     "foodUpkeep": 5,
@@ -2108,7 +2213,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -2128,7 +2234,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -2148,7 +2255,8 @@
       "food": 90,
       "water": 60,
       "lumber": 80,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -2168,7 +2276,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -2188,7 +2297,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -2208,7 +2318,8 @@
       "food": 250,
       "water": 120,
       "lumber": 400,
-      "stone": 200
+      "stone": 200,
+      "gold": 90
     },
     "baseTimeSec": 500,
     "foodUpkeep": 4,
@@ -2228,7 +2339,8 @@
       "food": 150,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 42
     },
     "baseTimeSec": 240,
     "foodUpkeep": 2,
@@ -2248,7 +2360,8 @@
       "food": 120,
       "water": 80,
       "lumber": 140,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -2268,7 +2381,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -2288,7 +2402,8 @@
       "food": 180,
       "water": 100,
       "lumber": 120,
-      "stone": 80
+      "stone": 80,
+      "gold": 52
     },
     "baseTimeSec": 270,
     "foodUpkeep": 2,
@@ -2308,7 +2423,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -2328,7 +2444,8 @@
       "food": 220,
       "water": 120,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 64
     },
     "baseTimeSec": 330,
     "foodUpkeep": 3,
@@ -2348,7 +2465,8 @@
       "food": 300,
       "water": 150,
       "lumber": 200,
-      "stone": 150
+      "stone": 150,
+      "gold": 90
     },
     "baseTimeSec": 600,
     "foodUpkeep": 3,
@@ -2368,7 +2486,8 @@
       "food": 280,
       "water": 140,
       "lumber": 200,
-      "stone": 140
+      "stone": 140,
+      "gold": 84
     },
     "baseTimeSec": 550,
     "foodUpkeep": 3,
@@ -2388,7 +2507,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,
@@ -2408,7 +2528,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -2428,7 +2549,8 @@
       "food": 220,
       "water": 110,
       "lumber": 160,
-      "stone": 110
+      "stone": 110,
+      "gold": 66
     },
     "baseTimeSec": 470,
     "foodUpkeep": 2,
@@ -2448,7 +2570,8 @@
       "food": 240,
       "water": 130,
       "lumber": 160,
-      "stone": 120
+      "stone": 120,
+      "gold": 72
     },
     "baseTimeSec": 360,
     "foodUpkeep": 3,
@@ -2468,7 +2591,8 @@
       "food": 220,
       "water": 120,
       "lumber": 150,
-      "stone": 100
+      "stone": 100,
+      "gold": 64
     },
     "baseTimeSec": 330,
     "foodUpkeep": 3,
@@ -2488,7 +2612,8 @@
       "food": 350,
       "water": 200,
       "lumber": 250,
-      "stone": 200
+      "stone": 200,
+      "gold": 110
     },
     "baseTimeSec": 650,
     "foodUpkeep": 4,
@@ -2508,7 +2633,8 @@
       "food": 160,
       "water": 90,
       "lumber": 100,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 240,
     "foodUpkeep": 2,
@@ -2528,7 +2654,8 @@
       "food": 80,
       "water": 60,
       "lumber": 100,
-      "stone": 30
+      "stone": 30,
+      "gold": 22
     },
     "baseTimeSec": 130,
     "foodUpkeep": 1,
@@ -2548,7 +2675,8 @@
       "food": 100,
       "water": 50,
       "lumber": 60,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 120,
     "foodUpkeep": 1,
@@ -2568,7 +2696,8 @@
       "food": 220,
       "water": 80,
       "lumber": 350,
-      "stone": 180
+      "stone": 180,
+      "gold": 80
     },
     "baseTimeSec": 450,
     "foodUpkeep": 4,
@@ -2588,7 +2717,8 @@
       "food": 120,
       "water": 60,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 34
     },
     "baseTimeSec": 150,
     "foodUpkeep": 1,
@@ -2608,7 +2738,8 @@
       "food": 140,
       "water": 80,
       "lumber": 100,
-      "stone": 60
+      "stone": 60,
+      "gold": 40
     },
     "baseTimeSec": 180,
     "foodUpkeep": 1,
@@ -2628,7 +2759,8 @@
       "food": 300,
       "water": 160,
       "lumber": 200,
-      "stone": 150
+      "stone": 150,
+      "gold": 90
     },
     "baseTimeSec": 580,
     "foodUpkeep": 3,
@@ -2648,7 +2780,8 @@
       "food": 250,
       "water": 120,
       "lumber": 180,
-      "stone": 120
+      "stone": 120,
+      "gold": 74
     },
     "baseTimeSec": 500,
     "foodUpkeep": 3,
@@ -2668,7 +2801,8 @@
       "food": 100,
       "water": 70,
       "lumber": 120,
-      "stone": 40
+      "stone": 40,
+      "gold": 28
     },
     "baseTimeSec": 160,
     "foodUpkeep": 1,
@@ -2688,7 +2822,8 @@
       "food": 200,
       "water": 100,
       "lumber": 300,
-      "stone": 150
+      "stone": 150,
+      "gold": 70
     },
     "baseTimeSec": 400,
     "foodUpkeep": 3,
@@ -2708,7 +2843,8 @@
       "food": 70,
       "water": 50,
       "lumber": 60,
-      "stone": 30
+      "stone": 30,
+      "gold": 20
     },
     "baseTimeSec": 110,
     "foodUpkeep": 1,
@@ -2728,7 +2864,8 @@
       "food": 280,
       "water": 150,
       "lumber": 400,
-      "stone": 220
+      "stone": 220,
+      "gold": 100
     },
     "baseTimeSec": 560,
     "foodUpkeep": 5,
@@ -2748,7 +2885,8 @@
       "food": 130,
       "water": 70,
       "lumber": 80,
-      "stone": 50
+      "stone": 50,
+      "gold": 36
     },
     "baseTimeSec": 200,
     "foodUpkeep": 1,
@@ -2768,7 +2906,8 @@
       "food": 90,
       "water": 60,
       "lumber": 80,
-      "stone": 35
+      "stone": 35,
+      "gold": 25
     },
     "baseTimeSec": 140,
     "foodUpkeep": 1,
@@ -2788,7 +2927,8 @@
       "food": 160,
       "water": 100,
       "lumber": 120,
-      "stone": 70
+      "stone": 70,
+      "gold": 46
     },
     "baseTimeSec": 210,
     "foodUpkeep": 2,

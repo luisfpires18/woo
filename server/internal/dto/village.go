@@ -8,6 +8,7 @@ type VillageResponse struct {
 	X             int                     `json:"x"`
 	Y             int                     `json:"y"`
 	IsCapital     bool                    `json:"is_capital"`
+	Gold          float64                 `json:"gold"`
 	Buildings     []BuildingInfo          `json:"buildings"`
 	Resources     *ResourcesResponse      `json:"resources"`
 	BuildQueue    []BuildingQueueResponse `json:"build_queue"`

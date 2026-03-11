@@ -24,8 +24,9 @@ func setupTrainingTest(t *testing.T) (*TrainingService, int64, int64, repository
 	resourceRepo := sqlite.NewResourceRepo(db)
 	troopRepo := sqlite.NewTroopRepo(db)
 	queueRepo := sqlite.NewTrainingQueueRepo(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 
-	svc := NewTrainingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, troopRepo, queueRepo, playerRepo)
+	svc := NewTrainingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, troopRepo, queueRepo, playerRepo, playerEconRepo)
 
 	// Create an Arkazia player
 	player := &model.Player{
@@ -41,7 +42,7 @@ func setupTrainingTest(t *testing.T) (*TrainingService, int64, int64, repository
 	}
 
 	// Create a village with starter buildings (includes barracks at level 0)
-	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
+	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := villageSvc.CreateFirstVillage(context.Background(), player.ID, "arkazia", "gladiator")
 	if err != nil {
 		t.Fatalf("create village: %v", err)
@@ -161,8 +162,9 @@ func TestStartTraining_WrongKingdom(t *testing.T) {
 	resourceRepo := sqlite.NewResourceRepo(db)
 	troopRepo := sqlite.NewTroopRepo(db)
 	queueRepo := sqlite.NewTrainingQueueRepo(db)
+	playerEconRepo := sqlite.NewPlayerEconomyRepo(db)
 
-	svc := NewTrainingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, troopRepo, queueRepo, playerRepo)
+	svc := NewTrainingService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, troopRepo, queueRepo, playerRepo, playerEconRepo)
 
 	player := &model.Player{
 		Username:     "sailor",
@@ -176,7 +178,7 @@ func TestStartTraining_WrongKingdom(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, nil)
+	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := villageSvc.CreateFirstVillage(context.Background(), player.ID, "veridor", "sailor")
 	if err != nil {
 		t.Fatalf("create village: %v", err)

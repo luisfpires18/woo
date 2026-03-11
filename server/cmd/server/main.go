@@ -50,6 +50,7 @@ func main() {
 	buildingQueueRepo := sqlite.NewBuildingQueueRepo(db)
 	troopRepo := sqlite.NewTroopRepo(db)
 	trainingQueueRepo := sqlite.NewTrainingQueueRepo(db)
+	playerEconomyRepo := sqlite.NewPlayerEconomyRepo(db)
 	announcementRepo := sqlite.NewAnnouncementRepo(db)
 	gameAssetRepo := sqlite.NewGameAssetRepo(db)
 	resBuildingConfigRepo := sqlite.NewResourceBuildingConfigRepo(db)
@@ -78,9 +79,9 @@ func main() {
 	// Wire up services
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
 	mapService := service.NewMapService(worldMapRepo, villageRepo)
-	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, mapService)
-	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo)
-	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo)
+	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconomyRepo, mapService)
+	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo, playerEconomyRepo)
+	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo, playerEconomyRepo)
 	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo, troopDisplayConfigRepo)
 	templateService := service.NewTemplateService(templateRepo, worldMapRepo)
 
