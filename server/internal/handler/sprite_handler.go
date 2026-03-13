@@ -40,6 +40,27 @@ var spriteKeyRe = regexp.MustCompile(`^(food|water|lumber|stone)_([1-3])$`)
 // Groups: 1=kingdom, 2=resource, 3=slot, 4=optional_name (without leading _).
 var buildingSpriteRe = regexp.MustCompile(`^([a-z]+)_(food|water|lumber|stone)_([1-3])(?:_(.+))?\.png$`)
 
+// validBuildingTypes lists the non-resource building types that can have sprites.
+var validBuildingTypes = map[string]bool{
+	"town_hall":  true,
+	"barracks":   true,
+	"stable":     true,
+	"archery":    true,
+	"workshop":   true,
+	"special":    true,
+	"storage":    true,
+	"provisions": true,
+	"reservoir":  true,
+}
+
+// displayBuildingSpriteRe parses a filename like "arkazia_barracks_red_bastion.png".
+// Groups: 1=kingdom, 2=building_type, 3=optional_name (without leading _).
+var displayBuildingSpriteRe = regexp.MustCompile(`^([a-z]+)_(town_hall|barracks|stable|archery|workshop|special|storage|provisions|reservoir)(?:_(.+))?\.png$`)
+
+// troopSpriteRe parses a filename like "sylvara_rootguard_spearmen.png" or with optional suffix.
+// Groups: 1=full_match. We do prefix-based matching instead of full regex parsing for troops.
+var troopSpriteRe = regexp.MustCompile(`^([a-z]+)_(.+)\.png$`)
+
 // SpriteHandler handles sprite-related HTTP endpoints.
 type SpriteHandler struct {
 	uploadsDir string // base directory for uploads (e.g. "uploads")
@@ -59,16 +80,25 @@ func (h *SpriteHandler) SyncSpriteManifest() error {
 // RegisterPublicRoutes registers public sprite routes on the given mux.
 func (h *SpriteHandler) RegisterPublicRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/sprites/building/{kingdom}/{key}", h.ResolveBuildingSprite)
+	mux.HandleFunc("GET /api/sprites/building-display/{kingdom}/{buildingType}", h.ResolveDisplayBuildingSprite)
+	mux.HandleFunc("GET /api/sprites/troop/{kingdom}/{troopType}", h.ResolveTroopSprite)
 }
 
 // RegisterAdminRoutes registers admin-only sprite routes on the given mux.
 func (h *SpriteHandler) RegisterAdminRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /sprites/buildings/{kingdom}", h.ListKingdomBuildingSprites)
+	mux.HandleFunc("GET /sprites/display-buildings/{kingdom}", h.ListKingdomDisplayBuildingSprites)
+	mux.HandleFunc("GET /sprites/troops/{kingdom}", h.ListKingdomTroopSprites)
 }
 
 // buildingsDir returns the path to a kingdom's buildings sprite folder.
 func (h *SpriteHandler) buildingsDir(kingdom string) string {
 	return filepath.Join(h.uploadsDir, "sprites", "kingdoms", kingdom, "buildings")
+}
+
+// troopsDir returns the path to a kingdom's troops sprite folder.
+func (h *SpriteHandler) troopsDir(kingdom string) string {
+	return filepath.Join(h.uploadsDir, "sprites", "kingdoms", kingdom, "troops")
 }
 
 // ResolveBuildingSprite handles GET /api/sprites/building/{kingdom}/{key}.
@@ -193,6 +223,213 @@ func (h *SpriteHandler) ListKingdomBuildingSprites(w http.ResponseWriter, r *htt
 	writeJSON(w, http.StatusOK, map[string]any{"sprites": sprites})
 }
 
+// ResolveDisplayBuildingSprite handles GET /api/sprites/building-display/{kingdom}/{buildingType}.
+// It scans the kingdom's buildings folder for a file matching the prefix
+// {kingdom}_{buildingType}*.png and redirects to the static file URL.
+func (h *SpriteHandler) ResolveDisplayBuildingSprite(w http.ResponseWriter, r *http.Request) {
+	kingdom := r.PathValue("kingdom")
+	buildingType := r.PathValue("buildingType")
+
+	if !allKingdoms[kingdom] {
+		writeError(w, http.StatusBadRequest, "invalid kingdom")
+		return
+	}
+
+	if !validBuildingTypes[buildingType] {
+		writeError(w, http.StatusBadRequest, "invalid building type")
+		return
+	}
+
+	prefix := kingdom + "_" + buildingType
+
+	dir := h.buildingsDir(kingdom)
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		// Must match prefix exactly followed by either .png or _*.png
+		if strings.HasPrefix(name, prefix) && strings.HasSuffix(name, ".png") {
+			// Ensure we don't match e.g. "arkazia_storage" when looking for "arkazia_stable"
+			rest := name[len(prefix):]
+			if rest == ".png" || (len(rest) > 0 && rest[0] == '_') {
+				url := "/uploads/sprites/kingdoms/" + kingdom + "/buildings/" + name
+				http.Redirect(w, r, url, http.StatusFound)
+				return
+			}
+		}
+	}
+
+	http.NotFound(w, r)
+}
+
+// DisplayBuildingSpriteInfo describes a parsed non-resource building sprite file.
+type DisplayBuildingSpriteInfo struct {
+	Filename     string `json:"filename"`
+	BuildingType string `json:"building_type"`
+	Name         string `json:"name"`
+	URL          string `json:"url"`
+}
+
+// ListKingdomDisplayBuildingSprites handles GET /api/admin/sprites/display-buildings/{kingdom}.
+// It scans the kingdom's buildings folder and returns parsed metadata for non-resource building sprites.
+func (h *SpriteHandler) ListKingdomDisplayBuildingSprites(w http.ResponseWriter, r *http.Request) {
+	kingdom := r.PathValue("kingdom")
+
+	if !allKingdoms[kingdom] {
+		writeError(w, http.StatusBadRequest, "invalid kingdom")
+		return
+	}
+
+	dir := h.buildingsDir(kingdom)
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		writeJSON(w, http.StatusOK, map[string]any{"sprites": []DisplayBuildingSpriteInfo{}})
+		return
+	}
+
+	sprites := make([]DisplayBuildingSpriteInfo, 0)
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		matches := displayBuildingSpriteRe.FindStringSubmatch(name)
+		if matches == nil {
+			continue
+		}
+
+		fileKingdom := matches[1]
+		if fileKingdom != kingdom {
+			continue
+		}
+
+		bType := matches[2]
+		spriteName := matches[3] // may be empty
+
+		sprites = append(sprites, DisplayBuildingSpriteInfo{
+			Filename:     name,
+			BuildingType: bType,
+			Name:         spriteName,
+			URL:          "/uploads/sprites/kingdoms/" + kingdom + "/buildings/" + name,
+		})
+	}
+
+	writeJSON(w, http.StatusOK, map[string]any{"sprites": sprites})
+}
+
+// ResolveTroopSprite handles GET /api/sprites/troop/{kingdom}/{troopType}.
+// It scans the kingdom's troops folder for a file matching the prefix
+// {kingdom}_{troopType}*.png and redirects to the static file URL.
+func (h *SpriteHandler) ResolveTroopSprite(w http.ResponseWriter, r *http.Request) {
+	kingdom := r.PathValue("kingdom")
+	troopType := r.PathValue("troopType")
+
+	if !allKingdoms[kingdom] {
+		writeError(w, http.StatusBadRequest, "invalid kingdom")
+		return
+	}
+
+	// Validate troop type format: must be alphanumeric + underscores
+	for _, c := range troopType {
+		if !((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_') {
+			writeError(w, http.StatusBadRequest, "invalid troop type format")
+			return
+		}
+	}
+
+	prefix := kingdom + "_" + troopType
+
+	dir := h.troopsDir(kingdom)
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if strings.HasPrefix(name, prefix) && strings.HasSuffix(name, ".png") {
+			rest := name[len(prefix):]
+			if rest == ".png" || (len(rest) > 0 && rest[0] == '_') {
+				url := "/uploads/sprites/kingdoms/" + kingdom + "/troops/" + name
+				http.Redirect(w, r, url, http.StatusFound)
+				return
+			}
+		}
+	}
+
+	http.NotFound(w, r)
+}
+
+// TroopSpriteInfo describes a parsed troop sprite file.
+type TroopSpriteInfo struct {
+	Filename  string `json:"filename"`
+	TroopType string `json:"troop_type"`
+	Name      string `json:"name"`
+	URL       string `json:"url"`
+}
+
+// ListKingdomTroopSprites handles GET /api/admin/sprites/troops/{kingdom}.
+// It scans the kingdom's troops folder and returns parsed troop sprite metadata.
+func (h *SpriteHandler) ListKingdomTroopSprites(w http.ResponseWriter, r *http.Request) {
+	kingdom := r.PathValue("kingdom")
+
+	if !allKingdoms[kingdom] {
+		writeError(w, http.StatusBadRequest, "invalid kingdom")
+		return
+	}
+
+	dir := h.troopsDir(kingdom)
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		writeJSON(w, http.StatusOK, map[string]any{"sprites": []TroopSpriteInfo{}})
+		return
+	}
+
+	sprites := make([]TroopSpriteInfo, 0)
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if !strings.HasSuffix(name, ".png") {
+			continue
+		}
+		matches := troopSpriteRe.FindStringSubmatch(name)
+		if matches == nil {
+			continue
+		}
+
+		fileKingdom := matches[1]
+		if fileKingdom != kingdom {
+			continue
+		}
+
+		// The rest after kingdom_ is the troop identifier (possibly with _name suffix)
+		rawType := matches[2] // e.g. "rootguard_spearmen" or "rootguard_spearmen_elite"
+
+		// We store the whole identifier as troop_type; the admin page matches by prefix
+		sprites = append(sprites, TroopSpriteInfo{
+			Filename:  name,
+			TroopType: rawType,
+			Name:      "",
+			URL:       "/uploads/sprites/kingdoms/" + kingdom + "/troops/" + name,
+		})
+	}
+
+	writeJSON(w, http.StatusOK, map[string]any{"sprites": sprites})
+}
+
 func (h *SpriteHandler) writeSpriteManifest() error {
 	root := filepath.Join(h.uploadsDir, "sprites")
 	if err := os.MkdirAll(root, 0o755); err != nil {
@@ -203,6 +440,7 @@ func (h *SpriteHandler) writeSpriteManifest() error {
 	resources := []string{"food", "water", "lumber", "stone"}
 	slots := []string{"1", "2", "3"}
 	militaryBuildings := []string{"barracks", "stable", "archery", "workshop", "special"}
+	utilityBuildings := []string{"town_hall", "storage", "provisions", "reservoir"}
 
 	actualLines := make([]string, 0)
 	templateLines := make([]string, 0)
@@ -271,10 +509,27 @@ func (h *SpriteHandler) writeSpriteManifest() error {
 	// Kingdom MILITARY building sprites (barracks, stable, archery, workshop, special)
 	for _, kingdom := range kingdoms {
 		for _, building := range militaryBuildings {
-			path := fmt.Sprintf("uploads/sprites/kingdoms/%s/buildings/%s_%s.png", kingdom, kingdom, building)
+			path := fmt.Sprintf("uploads/sprites/kingdoms/%s/buildings/%s_%s_[name].png", kingdom, kingdom, building)
 			found := false
 			for _, line := range actualLines {
-				if strings.Contains(line, path) {
+				if strings.Contains(line, fmt.Sprintf("%s_%s", kingdom, building)) {
+					found = true
+					break
+				}
+			}
+			if !found {
+				templateLines = append(templateLines, fmt.Sprintf("%s | 256x256 (recommended)", path))
+			}
+		}
+	}
+
+	// Kingdom UTILITY building sprites (town_hall, storage, provisions, reservoir)
+	for _, kingdom := range kingdoms {
+		for _, building := range utilityBuildings {
+			path := fmt.Sprintf("uploads/sprites/kingdoms/%s/buildings/%s_%s_[name].png", kingdom, kingdom, building)
+			found := false
+			for _, line := range actualLines {
+				if strings.Contains(line, fmt.Sprintf("%s_%s", kingdom, building)) {
 					found = true
 					break
 				}

@@ -48,11 +48,11 @@ export function getSpriteUrl(opts: SpriteUrlOptions): string | null {
   switch (kind) {
     case 'unit':
       if (!kingdom) return null;
-      return `/uploads/sprites/${kingdom}/units/${id}.png`;
+      return `/api/sprites/troop/${kingdom}/${id}`;
 
     case 'building':
       if (!kingdom) return null;
-      return `/uploads/sprites/${kingdom}/buildings/${id}.png`;
+      return `/api/sprites/building-display/${kingdom}/${id}`;
 
     case 'resource_building':
       if (!kingdom || slot == null) return null;

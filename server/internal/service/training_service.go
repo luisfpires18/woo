@@ -249,6 +249,8 @@ func (s *TrainingService) CompleteTraining(ctx context.Context) ([]TrainCompleti
 		troop, err := s.troopRepo.GetByVillageAndType(ctx, item.VillageID, item.TroopType)
 		if err == nil {
 			newTotal = troop.Quantity
+		} else {
+			slog.Warn("could not look up troop count after training", "troop_type", item.TroopType, "village_id", item.VillageID, "error", err)
 		}
 
 		// Look up player owning this village

@@ -389,3 +389,317 @@ export interface BuildingSpriteInfo {
 export interface BuildingSpriteListResponse {
   sprites: BuildingSpriteInfo[];
 }
+
+// Display building sprite info — returned by GET /api/admin/sprites/display-buildings/{kingdom}
+
+export interface DisplayBuildingSpriteInfo {
+  filename: string;
+  building_type: string;
+  name: string;
+  url: string;
+}
+
+export interface DisplayBuildingSpriteListResponse {
+  sprites: DisplayBuildingSpriteInfo[];
+}
+
+// Troop sprite info — returned by GET /api/admin/sprites/troops/{kingdom}
+
+export interface TroopSpriteInfo {
+  filename: string;
+  troop_type: string;
+  name: string;
+  url: string;
+}
+
+export interface TroopSpriteListResponse {
+  sprites: TroopSpriteInfo[];
+}
+
+// ── Camp & Expedition types — mirrors server/internal/dto/camp.go ──────────
+
+/** A camp visible on the world map */
+export interface CampResponse {
+  id: number;
+  template_name: string;
+  tier: number;
+  tile_x: number;
+  tile_y: number;
+  status: 'active' | 'under_attack' | 'cleared';
+  spawned_at: string;
+  beasts: CampBeastResponse[];
+}
+
+export interface CampBeastResponse {
+  name: string;
+  sprite_key: string;
+  hp: number;
+  attack_power: number;
+  attack_interval: number;
+  defense_percent: number;
+  crit_chance_percent: number;
+  count: number;
+}
+
+/** Dispatch expedition request */
+export interface DispatchExpeditionRequest {
+  camp_id: number;
+  troops: TroopDispatch[];
+}
+
+export interface TroopDispatch {
+  troop_type: string;
+  quantity: number;
+}
+
+/** Expedition status response */
+export interface ExpeditionResponse {
+  id: number;
+  village_id: number;
+  camp_id: number;
+  status: 'marching' | 'battling' | 'returning' | 'completed';
+  dispatched_at: string;
+  arrives_at: string;
+  return_at?: string;
+  completed_at?: string;
+  battle_id?: number;
+  troops: ExpeditionTroopResponse[];
+}
+
+export interface ExpeditionTroopResponse {
+  troop_type: string;
+  quantity_sent: number;
+  quantity_survived: number;
+}
+
+/** Battle report */
+export interface BattleReportResponse {
+  id: number;
+  expedition_id: number;
+  camp_id: number;
+  result: 'attacker_won' | 'defender_won' | 'draw';
+  attacker_losses: BattleLosses;
+  defender_losses: BattleLosses;
+  rewards: BattleRewardResponse[];
+  fought_at: string;
+}
+
+export interface BattleLosses {
+  total_sent: number;
+  total_lost: number;
+  total_survived: number;
+}
+
+export interface BattleRewardResponse {
+  resource_type: string;
+  amount: number;
+}
+
+/** Raw replay JSON */
+export interface BattleReplayResponse {
+  version: number;
+  tick_rate_ms: number;
+  attackers: ReplayUnit[];
+  defenders: ReplayUnit[];
+  events: ReplayEvent[];
+  result: string;
+  total_ticks: number;
+}
+
+export interface ReplayUnit {
+  id: number;
+  side: 'attacker' | 'defender';
+  name: string;
+  sprite_key: string;
+  hp: number;
+  max_hp: number;
+  attack_power: number;
+  attack_interval: number;
+  defense_percent: number;
+  crit_chance_percent: number;
+}
+
+export interface ReplayEvent {
+  tick: number;
+  type: 'attack' | 'kill';
+  source_id: number;
+  target_id: number;
+  damage: number;
+  is_crit: boolean;
+  target_hp_after: number;
+  is_kill: boolean;
+}
+
+// ── Admin Camp types — mirrors server/internal/dto/camp.go admin DTOs ──────
+
+export interface BeastTemplateResponse {
+  id: number;
+  name: string;
+  sprite_key: string;
+  hp: number;
+  attack_power: number;
+  attack_interval: number;
+  defense_percent: number;
+  crit_chance_percent: number;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateBeastTemplateRequest {
+  name: string;
+  sprite_key: string;
+  hp: number;
+  attack_power: number;
+  attack_interval?: number;
+  defense_percent?: number;
+  crit_chance_percent?: number;
+  description?: string;
+}
+
+export interface UpdateBeastTemplateRequest {
+  name?: string;
+  sprite_key?: string;
+  hp?: number;
+  attack_power?: number;
+  attack_interval?: number;
+  defense_percent?: number;
+  crit_chance_percent?: number;
+  description?: string;
+}
+
+export interface CampTemplateResponse {
+  id: number;
+  name: string;
+  tier: number;
+  min_beasts: number;
+  max_beasts: number;
+  reward_table_id: number;
+  description: string;
+  created_at: string;
+  updated_at: string;
+  beast_slots: CampBeastSlotResponse[];
+}
+
+export interface CampBeastSlotResponse {
+  id: number;
+  beast_template_id: number;
+  beast_name: string;
+  min_count: number;
+  max_count: number;
+  weight: number;
+}
+
+export interface CreateCampTemplateRequest {
+  name: string;
+  tier: number;
+  min_beasts: number;
+  max_beasts: number;
+  reward_table_id: number;
+  description?: string;
+  beast_slots: CampBeastSlotRequest[];
+}
+
+export interface CampBeastSlotRequest {
+  beast_template_id: number;
+  min_count: number;
+  max_count: number;
+  weight: number;
+}
+
+export interface UpdateCampTemplateRequest {
+  name?: string;
+  tier?: number;
+  min_beasts?: number;
+  max_beasts?: number;
+  reward_table_id?: number;
+  description?: string;
+}
+
+export interface SpawnRuleResponse {
+  id: number;
+  name: string;
+  enabled: boolean;
+  terrain_types: string[];
+  zone_types: string[];
+  camp_template_pool: CampTemplatePoolEntry[];
+  max_camps: number;
+  spawn_interval_sec: number;
+  despawn_after_sec: number;
+  min_camp_distance: number;
+  min_village_distance: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CampTemplatePoolEntry {
+  camp_template_id: number;
+  weight: number;
+}
+
+export interface CreateSpawnRuleRequest {
+  name: string;
+  terrain_types: string[];
+  zone_types: string[];
+  camp_template_pool: CampTemplatePoolEntry[];
+  max_camps: number;
+  spawn_interval_sec: number;
+  despawn_after_sec: number;
+  min_camp_distance?: number;
+  min_village_distance?: number;
+}
+
+export interface UpdateSpawnRuleRequest {
+  name?: string;
+  enabled?: boolean;
+  terrain_types?: string[];
+  zone_types?: string[];
+  camp_template_pool?: CampTemplatePoolEntry[];
+  max_camps?: number;
+  spawn_interval_sec?: number;
+  despawn_after_sec?: number;
+  min_camp_distance?: number;
+  min_village_distance?: number;
+}
+
+export interface RewardTableResponse {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  entries: RewardEntryResponse[];
+}
+
+export interface RewardEntryResponse {
+  id: number;
+  reward_type: string;
+  min_amount: number;
+  max_amount: number;
+  drop_chance_pct: number;
+}
+
+export interface CreateRewardTableRequest {
+  name: string;
+  entries: RewardEntryRequest[];
+}
+
+export interface UpdateRewardTableRequest {
+  name?: string;
+}
+
+export interface RewardEntryRequest {
+  reward_type: string;
+  min_amount: number;
+  max_amount: number;
+  drop_chance_pct: number;
+}
+
+export interface BattleTuningResponse {
+  tick_duration_ms: number;
+  crit_damage_multiplier: number;
+  max_defense_percent: number;
+  max_crit_chance_percent: number;
+  min_attack_interval: number;
+  march_speed_tiles_per_min: number;
+  max_ticks: number;
+}

@@ -34,14 +34,18 @@ const (
 	MsgError = "error"
 
 	// Game event messages
-	MsgBuildComplete  = "build_complete"
-	MsgResourceUpdate = "resource_update"
-	MsgGoldUpdate     = "gold_update"
-	MsgTrainComplete  = "train_complete"
-	MsgAttackIncoming = "attack_incoming"
-	MsgCombatResult   = "combat_result"
-	MsgWorldEvent     = "world_event"
-	MsgAnnouncement   = "announcement"
+	MsgBuildComplete      = "build_complete"
+	MsgResourceUpdate     = "resource_update"
+	MsgGoldUpdate         = "gold_update"
+	MsgTrainComplete      = "train_complete"
+	MsgAttackIncoming     = "attack_incoming"
+	MsgCombatResult       = "combat_result"
+	MsgWorldEvent         = "world_event"
+	MsgAnnouncement       = "announcement"
+	MsgExpeditionComplete = "expedition_complete"
+	MsgExpeditionReturn   = "expedition_return"
+	MsgCampSpawned        = "camp_spawned"
+	MsgCampDespawned      = "camp_despawned"
 )
 
 // ConnectionReadyData is sent on successful WebSocket connection.
@@ -83,4 +87,18 @@ type ResourceUpdateData struct {
 type GoldUpdateData struct {
 	PlayerID int64   `json:"player_id"`
 	Gold     float64 `json:"gold"`
+}
+
+// ExpeditionCompleteData is sent when a battle at a camp is resolved.
+type ExpeditionCompleteData struct {
+	VillageID    int64  `json:"village_id"`
+	ExpeditionID int64  `json:"expedition_id"`
+	CampID       int64  `json:"camp_id"`
+	Result       string `json:"result"` // "attacker_won" | "defender_won" | "draw"
+}
+
+// ExpeditionReturnData is sent when expeditioned troops arrive home.
+type ExpeditionReturnData struct {
+	VillageID    int64 `json:"village_id"`
+	ExpeditionID int64 `json:"expedition_id"`
 }

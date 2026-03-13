@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"context"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -15,7 +17,8 @@ type rateLimiterEntry struct {
 
 // RateLimit returns middleware that rate-limits requests per IP address.
 // Stale entries are cleaned up periodically to prevent memory leaks.
-func RateLimit(requestsPerSecond int) Middleware {
+// The cleanup goroutine stops when ctx is cancelled.
+func RateLimit(ctx context.Context, requestsPerSecond int) Middleware {
 	var (
 		mu       sync.Mutex
 		limiters = make(map[string]*rateLimiterEntry)
@@ -25,20 +28,28 @@ func RateLimit(requestsPerSecond int) Middleware {
 	go func() {
 		ticker := time.NewTicker(3 * time.Minute)
 		defer ticker.Stop()
-		for range ticker.C {
-			mu.Lock()
-			for ip, entry := range limiters {
-				if time.Since(entry.lastSeen) > 5*time.Minute {
-					delete(limiters, ip)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				mu.Lock()
+				for ip, entry := range limiters {
+					if time.Since(entry.lastSeen) > 5*time.Minute {
+						delete(limiters, ip)
+					}
 				}
+				mu.Unlock()
 			}
-			mu.Unlock()
 		}
 	}()
 
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ip := r.RemoteAddr
+			ip, _, err := net.SplitHostPort(r.RemoteAddr)
+			if err != nil {
+				ip = r.RemoteAddr // fallback if no port present
+			}
 
 			mu.Lock()
 			entry, ok := limiters[ip]

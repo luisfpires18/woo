@@ -39,6 +39,7 @@ const (
 
 // VillageService handles village business logic.
 type VillageService struct {
+	uow             repository.UnitOfWork
 	villageRepo     repository.VillageRepository
 	buildingRepo    repository.BuildingRepository
 	resourceRepo    repository.ResourceRepository
@@ -48,6 +49,7 @@ type VillageService struct {
 
 // NewVillageService creates a new VillageService.
 func NewVillageService(
+	uow repository.UnitOfWork,
 	villageRepo repository.VillageRepository,
 	buildingRepo repository.BuildingRepository,
 	resourceRepo repository.ResourceRepository,
@@ -55,6 +57,7 @@ func NewVillageService(
 	mapService *MapService,
 ) *VillageService {
 	return &VillageService{
+		uow:            uow,
 		villageRepo:    villageRepo,
 		buildingRepo:   buildingRepo,
 		resourceRepo:   resourceRepo,
@@ -91,33 +94,18 @@ func (s *VillageService) createVillageCore(ctx context.Context, playerID int64, 
 		SeasonID:  seasonID,
 		CreatedAt: now,
 	}
-	if err := s.villageRepo.Create(ctx, village); err != nil {
-		return nil, fmt.Errorf("create village: %w", err)
-	}
-
-	// Link the map tile to this village and player
-	if s.mapService != nil {
-		if err := s.mapService.UpdateTileOwner(ctx, x, y, playerID, village.ID); err != nil {
-			return nil, fmt.Errorf("link tile to village: %w", err)
-		}
-	}
 
 	// Create starter buildings (all at level 0 = slot exists but not built)
 	buildings := make([]*model.Building, 0, len(commonBuildings)+1)
 	for _, bt := range commonBuildings {
 		buildings = append(buildings, &model.Building{
-			VillageID:    village.ID,
 			BuildingType: bt,
 			Level:        0,
 		})
 	}
-	if err := s.buildingRepo.CreateBatch(ctx, buildings); err != nil {
-		return nil, fmt.Errorf("create starter buildings: %w", err)
-	}
 
 	// Create initial resources
 	resources := &model.Resources{
-		VillageID:       village.ID,
 		Food:            config.StartingResources,
 		Water:           config.StartingResources,
 		Lumber:          config.StartingResources,
@@ -133,18 +121,10 @@ func (s *VillageService) createVillageCore(ctx context.Context, playerID int64, 
 		MaxStone:        config.StartingStorage,
 		LastUpdated:     now,
 	}
-	if err := s.resourceRepo.Create(ctx, resources); err != nil {
-		return nil, fmt.Errorf("create starter resources: %w", err)
-	}
 
-	// Create player economy (gold) — idempotent, only for first village.
-	if s.playerEconRepo != nil {
-		_, econErr := s.playerEconRepo.GetByPlayerID(ctx, playerID)
-		if econErr != nil {
-			if err := s.playerEconRepo.Create(ctx, playerID, config.StartingGold); err != nil {
-				return nil, fmt.Errorf("create player economy: %w", err)
-			}
-		}
+	// Atomically create village + link tile + buildings + resources + economy
+	if err := s.uow.CreateVillageWithSetup(ctx, village, x, y, buildings, resources, playerID, config.StartingGold); err != nil {
+		return nil, fmt.Errorf("create village setup: %w", err)
 	}
 
 	return village, nil

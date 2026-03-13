@@ -60,6 +60,19 @@ func main() {
 	kingdomRelationRepo := sqlite.NewKingdomRelationRepo(db)
 	_ = kingdomRelationRepo // used later for diplomacy features
 
+	// Camp & battle repositories
+	beastTemplateRepo := sqlite.NewBeastTemplateRepo(db)
+	campTemplateRepo := sqlite.NewCampTemplateRepo(db)
+	campBeastSlotRepo := sqlite.NewCampBeastSlotRepo(db)
+	spawnRuleRepo := sqlite.NewSpawnRuleRepo(db)
+	rewardTableRepo := sqlite.NewRewardTableRepo(db)
+	rewardEntryRepo := sqlite.NewRewardTableEntryRepo(db)
+	campRepo := sqlite.NewCampRepo(db)
+	expeditionRepo := sqlite.NewExpeditionRepo(db)
+	battleRepo := sqlite.NewBattleRepo(db)
+	battleTuningRepo := sqlite.NewBattleTuningRepo(db)
+	adminAuditLogRepo := sqlite.NewAdminAuditLogRepo(db)
+
 	// Ensure uploads directory exists
 	if err := os.MkdirAll("uploads/sprites", 0o755); err != nil {
 		slog.Error("failed to create uploads directory", "error", err)
@@ -79,7 +92,7 @@ func main() {
 	// Wire up services
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, cfg.JWTSecret, cfg.JWTIssuer)
 	mapService := service.NewMapService(worldMapRepo, villageRepo)
-	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconomyRepo, mapService)
+	villageService := service.NewVillageService(uow, villageRepo, buildingRepo, resourceRepo, playerEconomyRepo, mapService)
 	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, buildingQueueRepo, playerRepo, playerEconomyRepo)
 	trainingService := service.NewTrainingService(uow, villageRepo, buildingRepo, resourceRepo, troopRepo, trainingQueueRepo, playerRepo, playerEconomyRepo)
 	adminService := service.NewAdminService(playerRepo, villageRepo, announcementRepo, gameAssetRepo, resBuildingConfigRepo, buildingDisplayConfigRepo, troopDisplayConfigRepo)
@@ -88,6 +101,11 @@ func main() {
 	// Season repository + service
 	seasonRepo := sqlite.NewSeasonRepo(db)
 	seasonService := service.NewSeasonService(seasonRepo, playerRepo, villageService)
+
+	// Camp & expedition services
+	campService := service.NewCampService(campRepo, campTemplateRepo, campBeastSlotRepo, beastTemplateRepo, spawnRuleRepo, worldMapRepo, villageRepo)
+	expeditionService := service.NewExpeditionService(uow, expeditionRepo, campRepo, battleRepo, battleTuningRepo, troopRepo, villageRepo, rewardTableRepo, rewardEntryRepo, campTemplateRepo, resourceRepo)
+	campAdminService := service.NewCampAdminService(beastTemplateRepo, campTemplateRepo, campBeastSlotRepo, spawnRuleRepo, rewardTableRepo, rewardEntryRepo, battleTuningRepo, adminAuditLogRepo)
 
 	// Generate world map on startup (idempotent — skips if already done)
 	if err := mapService.GenerateMap(context.Background()); err != nil {
@@ -106,6 +124,8 @@ func main() {
 	templateHandler := handler.NewTemplateHandler(templateService)
 	playerHandler := handler.NewPlayerHandler(playerService, seasonService)
 	seasonHandler := handler.NewSeasonHandler(seasonService)
+	expeditionHandler := handler.NewExpeditionHandler(expeditionService, campService)
+	campAdminHandler := handler.NewCampAdminHandler(campAdminService)
 	spriteHandler := handler.NewSpriteHandler("uploads")
 	if err := spriteHandler.SyncSpriteManifest(); err != nil {
 		slog.Warn("failed to sync sprites manifest", "error", err)
@@ -138,10 +158,19 @@ func main() {
 	protectedMux := http.NewServeMux()
 	villageHandler.RegisterRoutes(protectedMux)
 	trainingHandler.RegisterRoutes(protectedMux)
+	expeditionHandler.RegisterRoutes(protectedMux)
 
 	// Mount protected routes under the auth middleware
 	mux.Handle("/api/villages", authMiddleware(protectedMux))
 	mux.Handle("/api/villages/", authMiddleware(protectedMux))
+
+	// Camp, expedition, and battle routes (protected)
+	mux.Handle("/api/camps", authMiddleware(protectedMux))
+	mux.Handle("/api/camps/", authMiddleware(protectedMux))
+	mux.Handle("/api/expeditions", authMiddleware(protectedMux))
+	mux.Handle("/api/expeditions/", authMiddleware(protectedMux))
+	mux.Handle("/api/battles", authMiddleware(protectedMux))
+	mux.Handle("/api/battles/", authMiddleware(protectedMux))
 
 	// Map routes (protected)
 	mapMux := http.NewServeMux()
@@ -183,6 +212,7 @@ func main() {
 	villageHandler.RegisterAdminRoutes(adminMux)
 	seasonHandler.RegisterAdminRoutes(adminMux)
 	spriteHandler.RegisterAdminRoutes(adminMux)
+	campAdminHandler.RegisterRoutes(adminMux)
 	mux.Handle("/api/admin/", authMiddleware(middleware.RequireAdmin(http.StripPrefix("/api/admin", adminMux))))
 
 	// Serve uploaded sprites with caching
@@ -192,12 +222,16 @@ func main() {
 		fileServer.ServeHTTP(w, r)
 	})))
 
+	// Graceful shutdown context
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+
 	// Apply middleware stack
 	handler := middleware.Chain(
 		mux,
 		middleware.Logging(logger),
 		middleware.CORS(cfg.CORSOrigin),
-		middleware.RateLimit(30),
+		middleware.RateLimit(ctx, 30),
 	)
 
 	// Create HTTP server
@@ -215,19 +249,18 @@ func main() {
 	// Start WebSocket hub
 	wsHub := wws.NewHub()
 	go wsHub.Run()
-	wsHandler := wws.NewHandler(wsHub, authService.ValidateAccessToken)
+	wsHandler := wws.NewHandler(wsHub, authService.ValidateAccessToken, cfg.CORSOrigin)
 
 	// Connect game loop → WebSocket hub for build/train completion notifications
 	gl.SetNotifier(wsHub)
 	gl.SetTrainNotifier(wsHub)
+	gl.SetExpeditionNotifier(wsHub)
+	gl.SetCampService(campService)
+	gl.SetExpeditionService(expeditionService)
 	gl.Start()
 
 	// WebSocket endpoint (public — auth is via token query param)
 	mux.Handle("/ws", wsHandler)
-
-	// Graceful shutdown context
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer cancel()
 
 	// Start server
 	go func() {

@@ -39,7 +39,7 @@ func setupBuildingTest(t *testing.T) (*BuildingService, int64, int64) {
 	}
 
 	// Create a village with starter buildings
-	villageSvc := NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
+	villageSvc := NewVillageService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := villageSvc.CreateFirstVillage(context.Background(), player.ID, "veridor", "testplayer")
 	if err != nil {
 		t.Fatalf("create village: %v", err)

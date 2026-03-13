@@ -1,0 +1,146 @@
+/* Expeditions history page */
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0;
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm);
+  letter-spacing: 0.03em;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Expedition card */
+
+.expCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.expHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expId {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.expStatus {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+}
+
+.statusMarching {
+  color: var(--warning);
+  background-color: color-mix(in srgb, var(--warning) 15%, transparent);
+}
+
+.statusBattling {
+  color: var(--danger);
+  background-color: color-mix(in srgb, var(--danger) 15%, transparent);
+}
+
+.statusReturning {
+  color: var(--success);
+  background-color: color-mix(in srgb, var(--success) 15%, transparent);
+}
+
+.statusCompleted {
+  color: var(--text-muted);
+  background-color: var(--bg-secondary);
+}
+
+/* Detail rows */
+
+.expDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xs) var(--spacing-lg);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.detailLabel {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detailValue {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Troop breakdown chips */
+
+.troopBreakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.troopChip {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .expDetails {
+    grid-template-columns: 1fr;
+  }
+}

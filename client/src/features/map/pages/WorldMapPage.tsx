@@ -1,12 +1,18 @@
-// World Map page — displays the Canvas 2D map renderer with tile info panel
+// World Map page — displays the Canvas 2D map renderer with tile info, camps, and expeditions
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MapRenderer } from '../components/MapRenderer';
 import type { MapRendererHandle } from '../components/MapRenderer';
 import { TileInfoPanel } from '../components/TileInfoPanel';
+import { DispatchExpeditionModal } from '../components/DispatchExpeditionModal';
+import { ExpeditionPanel } from '../components/ExpeditionPanel';
+import { BattleReportModal } from '../components/BattleReportModal';
 import { useMapStore } from '../../../stores/mapStore';
 import { useGameStore } from '../../../stores/gameStore';
+import { useExpeditionStore } from '../../../stores/expeditionStore';
+import { fetchCamps, fetchExpeditions } from '../../../services/camp';
 import type { MapTile } from '../../../types/map';
+import type { CampResponse } from '../../../types/api';
 import styles from './WorldMapPage.module.css';
 
 export function WorldMapPage() {
@@ -19,6 +25,14 @@ export function WorldMapPage() {
   const selectTile = useMapStore((s) => s.selectTile);
   const loading = useMapStore((s) => s.loading);
   const villages = useGameStore((s) => s.villages);
+
+  // Camp & expedition state
+  const setCamps = useExpeditionStore((s) => s.setCamps);
+  const setExpeditions = useExpeditionStore((s) => s.setExpeditions);
+  const campsLoaded = useExpeditionStore((s) => s.campsLoaded);
+  const [attackCamp, setAttackCamp] = useState<CampResponse | null>(null);
+  const [viewBattleId, setViewBattleId] = useState<number | null>(null);
+  const [expeditionPanelOpen, setExpeditionPanelOpen] = useState(true);
 
   // Get the player's first village as the initial center
   const firstVillage = villages[0];
@@ -42,6 +56,24 @@ export function WorldMapPage() {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
+  // Load camps and expeditions when the map page mounts
+  useEffect(() => {
+    if (!campsLoaded) {
+      fetchCamps().then((c) => setCamps(c ?? [])).catch(() => {});
+    }
+    fetchExpeditions().then((e) => setExpeditions(e ?? [])).catch(() => {});
+    // Refresh expeditions every 5s, camps every 30s
+    let campTick = 0;
+    const interval = setInterval(() => {
+      fetchExpeditions().then((e) => setExpeditions(e ?? [])).catch(() => {});
+      campTick++;
+      if (campTick % 6 === 0) {
+        fetchCamps().then((c) => setCamps(c ?? [])).catch(() => {});
+      }
+    }, 5_000);
+    return () => clearInterval(interval);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleTileClick = useCallback(
     (tile: MapTile) => {
       selectTile(tile);
@@ -55,6 +87,22 @@ export function WorldMapPage() {
 
   const handleTileHover = useCallback((x: number, y: number) => {
     setHoverCoords({ x, y });
+  }, []);
+
+  const handleAttackCamp = useCallback((camp: CampResponse) => {
+    setAttackCamp(camp);
+  }, []);
+
+  const handleCloseDispatch = useCallback(() => {
+    setAttackCamp(null);
+  }, []);
+
+  const handleViewReport = useCallback((battleId: number) => {
+    setViewBattleId(battleId);
+  }, []);
+
+  const handleCloseReport = useCallback(() => {
+    setViewBattleId(null);
   }, []);
 
   const handleGotoSubmit = useCallback(
@@ -111,8 +159,23 @@ export function WorldMapPage() {
           />
         )}
 
-        <TileInfoPanel tile={selectedTile} onClose={handleClosePanel} />
+        <TileInfoPanel tile={selectedTile} onClose={handleClosePanel} onAttackCamp={handleAttackCamp} />
+        {expeditionPanelOpen ? (
+          <ExpeditionPanel onViewReport={handleViewReport} onClose={() => setExpeditionPanelOpen(false)} />
+        ) : (
+          <button className={styles.reopenExpeditions} onClick={() => setExpeditionPanelOpen(true)}>
+            ⚔ Expeditions
+          </button>
+        )}
       </div>
+
+      {attackCamp && (
+        <DispatchExpeditionModal camp={attackCamp} onClose={handleCloseDispatch} />
+      )}
+
+      {viewBattleId !== null && (
+        <BattleReportModal battleId={viewBattleId} onClose={handleCloseReport} />
+      )}
 
       <div className={styles.legend}>
         <span className={styles.legendItem}>

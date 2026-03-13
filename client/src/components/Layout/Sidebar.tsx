@@ -5,6 +5,7 @@ import styles from './Sidebar.module.css';
 const NAV_ITEMS = [
   { label: 'Village', path: '/village', icon: '\uD83C\uDFE0', enabled: true },
   { label: 'Map', path: '/map', icon: '\uD83D\uDDFA\uFE0F', enabled: true },
+  { label: 'Expeditions', path: '/expeditions', icon: '\u2694\uFE0F', enabled: true },
   { label: 'Alliance', path: '/alliance', icon: '\uD83D\uDEE1\uFE0F', enabled: false },
 ];
 

@@ -92,6 +92,25 @@
   margin: var(--spacing-xs) 0;
 }
 
+.attackBtn {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s ease;
+}
+
+.attackBtn:hover {
+  background: #991111;
+}
+
 @media (max-width: 768px) {
   .panel {
     position: fixed;

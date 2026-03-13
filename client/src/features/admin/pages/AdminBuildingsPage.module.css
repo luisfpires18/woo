@@ -80,16 +80,79 @@
 }
 
 /* Grid of building cards */
-.grid {
+.configGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
 }
 
-.card {
+.configCard {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Hero sprite area at top of card */
+.cardSpriteHero {
+  width: 100%;
+  height: 160px;
+  background-color: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.heroImg {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.spritePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  width: 100%;
+  height: 100%;
+  border: 2px dashed var(--border);
+}
+
+.placeholderEmoji {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+.placeholderHint {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  opacity: 0.6;
+  text-align: center;
+  padding: 0 var(--spacing-sm);
+}
+
+.spriteFilename {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: var(--bg-tertiary);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Card body (below hero) */
+.cardBody {
   padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
@@ -100,85 +163,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.cardTitle {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.icon {
-  font-size: 1.25rem;
-}
-
-.preview {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.spriteImg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-
-.hiddenInput {
-  display: none;
-}
-
-.spriteActions {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-
-.uploadBtn,
-.deleteBtn {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-  border: 1px solid var(--border);
-}
-
-.uploadBtn {
-  background-color: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
-.uploadBtn:hover:not(:disabled) {
-  opacity: 0.9;
-}
-
-.uploadBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.deleteBtn {
-  background-color: transparent;
-  color: #fca5a5;
-  border-color: #fca5a5;
-}
-
-.deleteBtn:hover:not(:disabled) {
-  background-color: rgba(220, 38, 38, 0.15);
-}
-
-.deleteBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .buildingType {
@@ -232,7 +216,7 @@
   font-family: inherit;
 }
 
-.actions {
+.formActions {
   display: flex;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-xs);
@@ -274,7 +258,7 @@
 }
 
 @media (max-width: 768px) {
-  .grid {
+  .configGrid {
     grid-template-columns: 1fr;
   }
 

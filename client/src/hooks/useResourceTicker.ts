@@ -38,8 +38,8 @@ export function useResourceTicker(snapshot: ResourcesResponse): ResourcesRespons
   return {
     ...base,
     food: Math.max(0, Math.min(base.food + (base.food_rate - base.food_consumption) * elapsed, base.max_food)),
-    water: Math.min(base.water + base.water_rate * elapsed, base.max_water),
-    lumber: Math.min(base.lumber + base.lumber_rate * elapsed, base.max_lumber),
-    stone: Math.min(base.stone + base.stone_rate * elapsed, base.max_stone),
+    water: Math.max(0, Math.min(base.water + base.water_rate * elapsed, base.max_water)),
+    lumber: Math.max(0, Math.min(base.lumber + base.lumber_rate * elapsed, base.max_lumber)),
+    stone: Math.max(0, Math.min(base.stone + base.stone_rate * elapsed, base.max_stone)),
   };
 }

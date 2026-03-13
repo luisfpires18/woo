@@ -30,7 +30,10 @@ func (r *playerRepo) Create(ctx context.Context, player *model.Player) error {
 	if err != nil {
 		return fmt.Errorf("insert player: %w", err)
 	}
-	id, _ := result.LastInsertId()
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get last insert id: %w", err)
+	}
 	player.ID = id
 	return nil
 }

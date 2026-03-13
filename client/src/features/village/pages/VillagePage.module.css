@@ -144,6 +144,9 @@
 }
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
   position: sticky;
   top: var(--spacing-lg);
 }

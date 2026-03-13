@@ -35,6 +35,7 @@ export interface MapTile {
   village_id?: number;
   village_name?: string;
   owner_name?: string;
+  camp_id?: number;
 }
 
 /** Response from GET /api/map */

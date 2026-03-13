@@ -42,3 +42,21 @@ export interface WSGoldUpdate extends WSMessage {
     gold: number;
   };
 }
+
+export interface WSExpeditionComplete extends WSMessage {
+  type: 'expedition_complete';
+  data: {
+    village_id: number;
+    expedition_id: number;
+    camp_id: number;
+    result: 'attacker_won' | 'defender_won' | 'draw';
+  };
+}
+
+export interface WSExpeditionReturn extends WSMessage {
+  type: 'expedition_return';
+  data: {
+    village_id: number;
+    expedition_id: number;
+  };
+}

@@ -33,7 +33,7 @@ func newTestVillageService(t *testing.T) (*service.VillageService, *model.Player
 		t.Fatalf("create test player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
+	svc := service.NewVillageService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	return svc, player
 }
 
@@ -188,7 +188,7 @@ func TestCreateFirstVillage_Sylvara(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
+	svc := service.NewVillageService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := svc.CreateFirstVillage(ctx, player.ID, player.Kingdom, player.Username)
 	if err != nil {
 		t.Fatalf("create village: %v", err)
@@ -225,7 +225,7 @@ func TestCreateFirstVillage_Arkazia(t *testing.T) {
 		t.Fatalf("create player: %v", err)
 	}
 
-	svc := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
+	svc := service.NewVillageService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, playerEconRepo, nil)
 	village, err := svc.CreateFirstVillage(ctx, player.ID, player.Kingdom, player.Username)
 	if err != nil {
 		t.Fatalf("create village: %v", err)

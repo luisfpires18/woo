@@ -33,7 +33,7 @@ func TestWebSocket_ConnectAndReceiveReady(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(42))
+	handler := wws.NewHandler(hub, fakeValidator(42), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 
@@ -74,7 +74,7 @@ func TestWebSocket_MissingToken(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(1))
+	handler := wws.NewHandler(hub, fakeValidator(1), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 
@@ -94,7 +94,7 @@ func TestWebSocket_PingPong(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(1))
+	handler := wws.NewHandler(hub, fakeValidator(1), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 
@@ -136,7 +136,7 @@ func TestWebSocket_Subscribe(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(1))
+	handler := wws.NewHandler(hub, fakeValidator(1), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 
@@ -181,7 +181,7 @@ func TestHub_SendToPlayer(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(99))
+	handler := wws.NewHandler(hub, fakeValidator(99), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 
@@ -223,7 +223,7 @@ func TestHub_BroadcastAll(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(1))
+	handler := wws.NewHandler(hub, fakeValidator(1), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 
@@ -262,7 +262,7 @@ func TestWebSocket_UnknownMessageType(t *testing.T) {
 	hub := wws.NewHub()
 	go hub.Run()
 
-	handler := wws.NewHandler(hub, fakeValidator(1))
+	handler := wws.NewHandler(hub, fakeValidator(1), "")
 	server := httptest.NewServer(handler)
 	defer server.Close()
 

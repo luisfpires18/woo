@@ -1,5 +1,6 @@
-import { TROOP_CONFIGS, type TroopType } from '../../../config/troops';
-import { GameIcon } from '../../../components/GameIcon/GameIcon';
+import { useState } from 'react';
+import type { TroopType } from '../../../config/troops';
+import { useTroopDisplay } from '../../../hooks/useTroopDisplay';
 import styles from './TroopCard.module.css';
 
 interface TroopCardProps {
@@ -10,13 +11,26 @@ interface TroopCardProps {
 }
 
 export function TroopCard({ troopType, quantity }: TroopCardProps) {
-  const cfg = TROOP_CONFIGS[troopType];
-  const displayName = cfg?.displayName ?? troopType;
+  const { getDisplay } = useTroopDisplay();
+  const { displayName, spriteUrl, emoji } = getDisplay(troopType);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <div className={styles.card}>
       <div className={styles.icon}>
-        <GameIcon assetId={troopType} fallback="⚔️" size={28} />
+        {spriteUrl && !imgError ? (
+          <img
+            src={spriteUrl}
+            alt={displayName}
+            width={28}
+            height={28}
+            onError={() => setImgError(true)}
+            draggable={false}
+            style={{ objectFit: 'contain' }}
+          />
+        ) : (
+          <span style={{ fontSize: '28px', lineHeight: 1 }}>{emoji}</span>
+        )}
       </div>
       <span className={styles.name}>{displayName}</span>
       <span className={styles.quantity}>{quantity.toLocaleString()}</span>

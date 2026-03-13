@@ -1,0 +1,71 @@
+/* Troop movement banner — expedition & incoming attack indicators */
+
+.banner {
+  border-left: 3px solid var(--warning);
+}
+
+.movement {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.movement + .movement {
+  border-top: 1px solid var(--border);
+}
+
+.icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.label {
+  flex: 1;
+  font-family: var(--font-body);
+}
+
+.detail {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.timer {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  min-width: 4rem;
+  text-align: right;
+}
+
+.marching .timer {
+  color: var(--warning);
+}
+
+.returning .timer {
+  color: var(--success);
+}
+
+.incoming {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.incoming .timer {
+  color: var(--danger);
+}
+
+@media (max-width: 768px) {
+  .movement {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .detail {
+    order: 3;
+    width: 100%;
+  }
+}

@@ -26,7 +26,10 @@ func (r *villageRepo) Create(ctx context.Context, village *model.Village) error 
 	if err != nil {
 		return fmt.Errorf("insert village: %w", err)
 	}
-	id, _ := result.LastInsertId()
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get village last insert id: %w", err)
+	}
 	village.ID = id
 	return nil
 }

@@ -13,6 +13,8 @@ import type {
   TroopDisplayConfigListResponse,
   ResourceBuildingConfigListResponse,
   BuildingSpriteListResponse,
+  DisplayBuildingSpriteListResponse,
+  TroopSpriteListResponse,
 } from '../types/api';
 
 // --- Player management ---
@@ -114,4 +116,20 @@ export async function fetchKingdomBuildingSprites(
   kingdom: string,
 ): Promise<BuildingSpriteListResponse> {
   return api.get<BuildingSpriteListResponse>(`/admin/sprites/buildings/${kingdom}`);
+}
+
+// --- Kingdom display building sprites ---
+
+export async function fetchKingdomDisplayBuildingSprites(
+  kingdom: string,
+): Promise<DisplayBuildingSpriteListResponse> {
+  return api.get<DisplayBuildingSpriteListResponse>(`/admin/sprites/display-buildings/${kingdom}`);
+}
+
+// --- Kingdom troop sprites ---
+
+export async function fetchKingdomTroopSprites(
+  kingdom: string,
+): Promise<TroopSpriteListResponse> {
+  return api.get<TroopSpriteListResponse>(`/admin/sprites/troops/${kingdom}`);
 }

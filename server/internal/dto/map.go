@@ -26,6 +26,7 @@ type MapTileInfo struct {
 	VillageID   *int64 `json:"village_id,omitempty"`
 	VillageName string `json:"village_name,omitempty"`
 	OwnerName   string `json:"owner_name,omitempty"`
+	CampID      *int64 `json:"camp_id,omitempty"`
 }
 
 // MapTileFromModel converts a model.MapTile to a MapTileInfo DTO.
@@ -38,5 +39,6 @@ func MapTileFromModel(t *model.MapTile) MapTileInfo {
 		VillageID:   t.VillageID,
 		VillageName: t.VillageName,
 		OwnerName:   t.OwnerName,
+		CampID:      t.CampID,
 	}
 }

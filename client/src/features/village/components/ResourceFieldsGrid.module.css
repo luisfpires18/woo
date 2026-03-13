@@ -37,48 +37,57 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+  justify-items: center;
 }
 
 .card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
-  background-color: var(--bg-tertiary);
-  border: 1px solid var(--border);
+  justify-content: center;
+  gap: 2px;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-xs);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
   font-family: inherit;
   color: inherit;
+  width: fit-content;
 }
 
 .card:hover {
   border-color: var(--accent);
-  box-shadow: 0 0 8px rgba(220, 20, 60, 0.15);
+  background-color: var(--bg-tertiary);
+  box-shadow: 0 0 12px rgba(220, 20, 60, 0.2);
 }
 
 .unbuilt {
-  opacity: 0.55;
-  border-style: dashed;
+  opacity: 0.45;
 }
 
 .unbuilt:hover {
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 .icon {
-  width: 80px;
-  height: 80px;
+  width: 256px;
+  height: 256px;
   object-fit: contain;
-  border-radius: var(--radius-sm);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  transition: transform 0.2s;
+}
+
+.card:hover .icon {
+  transform: scale(1.05);
 }
 
 .iconEmoji {
-  font-size: 3.5rem;
+  font-size: 6rem;
   line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
 }
 
 .name {
@@ -88,10 +97,11 @@
   color: var(--text-primary);
   text-align: center;
   letter-spacing: 0.03em;
+  margin-top: var(--spacing-xs);
 }
 
 .level {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   font-weight: 700;
 }
@@ -99,6 +109,15 @@
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+  }
+
+  .icon {
+    width: 180px;
+    height: 180px;
+  }
+
+  .iconEmoji {
+    font-size: 5rem;
   }
 }

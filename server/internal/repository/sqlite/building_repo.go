@@ -25,7 +25,10 @@ func (r *buildingRepo) Create(ctx context.Context, building *model.Building) err
 	if err != nil {
 		return fmt.Errorf("insert building: %w", err)
 	}
-	id, _ := result.LastInsertId()
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get last insert id: %w", err)
+	}
 	building.ID = id
 	return nil
 }
@@ -50,7 +53,10 @@ func (r *buildingRepo) CreateBatch(ctx context.Context, buildings []*model.Build
 		if err != nil {
 			return fmt.Errorf("insert building %s: %w", b.BuildingType, err)
 		}
-		id, _ := result.LastInsertId()
+		id, err := result.LastInsertId()
+		if err != nil {
+			return fmt.Errorf("get last insert id for %s: %w", b.BuildingType, err)
+		}
 		b.ID = id
 	}
 

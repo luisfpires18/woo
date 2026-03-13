@@ -31,6 +31,8 @@ async function attemptTokenRefresh(): Promise<string | null> {
     const result: ApiResponse<{ access_token: string; refresh_token: string }> =
       await response.json();
 
+    if (!result.data) return null;
+
     localStorage.setItem('access_token', result.data.access_token);
     localStorage.setItem('refresh_token', result.data.refresh_token);
     return result.data.access_token;

@@ -26,7 +26,7 @@ CREATE        INDEX IF NOT EXISTS idx_players_oauth    ON players(oauth_provider
 -- ── Refresh Tokens ───────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS refresh_tokens (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id  INTEGER NOT NULL REFERENCES players(id),
+    player_id  INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
     token_hash TEXT    NOT NULL UNIQUE,
     expires_at TEXT    NOT NULL,
     created_at TEXT    NOT NULL DEFAULT (datetime('now'))
@@ -214,8 +214,9 @@ CREATE TABLE IF NOT EXISTS attacks (
     result_json         TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_attacks_attacker   ON attacks(attacker_player_id);
-CREATE INDEX IF NOT EXISTS idx_attacks_arrives_at ON attacks(arrives_at);
+CREATE INDEX IF NOT EXISTS idx_attacks_attacker         ON attacks(attacker_player_id);
+CREATE INDEX IF NOT EXISTS idx_attacks_attacker_village  ON attacks(attacker_village_id);
+CREATE INDEX IF NOT EXISTS idx_attacks_arrives_at        ON attacks(arrives_at);
 CREATE INDEX IF NOT EXISTS idx_attacks_status     ON attacks(status);
 
 -- ── Weapons of Chaos ─────────────────────────────────────────────────────────

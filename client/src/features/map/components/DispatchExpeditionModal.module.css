@@ -1,0 +1,197 @@
+/* Dispatch Expedition modal — select troops to send against a camp */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.campInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.campRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.campLabel {
+  color: var(--text-muted);
+}
+
+.campValue {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.troopList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.troopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.troopName {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.troopAvailable {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-width: 60px;
+  text-align: right;
+}
+
+.troopInput {
+  width: 70px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.troopInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.noTroops {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+
+.cancelBtn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+}
+
+.cancelBtn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.dispatchBtn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  transition: background 0.15s ease;
+}
+
+.dispatchBtn:hover:not(:disabled) {
+  background: #991111;
+}
+
+.dispatchBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorMsg {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-bottom: var(--spacing-sm);
+  text-align: center;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: var(--spacing-xs) 0;
+  border-top: 1px solid var(--border);
+  margin-bottom: var(--spacing-sm);
+}
+
+.totalLabel {
+  color: var(--text-muted);
+}
+
+.totalValue {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 95vw;
+    margin: var(--spacing-sm);
+  }
+}

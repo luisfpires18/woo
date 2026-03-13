@@ -26,7 +26,7 @@ func newPlayerTestEnv(t *testing.T) (*service.PlayerService, int64) {
 
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, "test-secret", "woo-test")
 	mapService := service.NewMapService(worldMapRepo, villageRepo)
-	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, mapService)
+	villageService := service.NewVillageService(sqlite.NewUnitOfWork(db), villageRepo, buildingRepo, resourceRepo, playerEconRepo, mapService)
 	playerService := service.NewPlayerService(playerRepo, villageService)
 
 	// Generate map so village creation works

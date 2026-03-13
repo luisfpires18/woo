@@ -8,6 +8,7 @@ import type {
   BuildingCostResponse,
   BuildingDisplayConfigListResponse,
   ResourceBuildingConfigListResponse,
+  TroopDisplayConfigListResponse,
 } from '../types/api';
 
 export async function fetchVillages(): Promise<VillageListItem[]> {
@@ -65,4 +66,10 @@ export async function fetchBuildingDisplayConfigs(kingdom?: string): Promise<Bui
 export async function fetchResourceBuildingConfigs(kingdom?: string): Promise<ResourceBuildingConfigListResponse> {
   const qs = kingdom ? `?kingdom=${encodeURIComponent(kingdom)}` : '';
   return api.get<ResourceBuildingConfigListResponse>(`/resource-building-configs${qs}`);
+}
+
+/** Fetch troop display configs, optionally filtered by kingdom. */
+export async function fetchTroopDisplayConfigs(kingdom?: string): Promise<TroopDisplayConfigListResponse> {
+  const qs = kingdom ? `?kingdom=${encodeURIComponent(kingdom)}` : '';
+  return api.get<TroopDisplayConfigListResponse>(`/troop-display-configs${qs}`);
 }

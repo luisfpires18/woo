@@ -1,0 +1,50 @@
+/* PixiJS battle replay viewer — auto-play, skip only */
+
+.container {
+  position: relative;
+}
+
+.sceneContainer {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  line-height: 0;
+}
+
+.skipBtn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 4px 14px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  backdrop-filter: blur(4px);
+  transition: background 0.15s ease;
+  z-index: 2;
+}
+
+.skipBtn:hover {
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+}
+
+.finishedLabel {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: var(--spacing-xs) 0;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .sceneContainer {
+    min-height: 200px;
+  }
+}

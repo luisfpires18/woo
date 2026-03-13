@@ -66,7 +66,7 @@ func (r *worldMapRepo) GetChunk(ctx context.Context, cx, cy, radius int) ([]*mod
 
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT wm.x, wm.y, wm.terrain_type, wm.kingdom_zone,
-		       wm.owner_player_id, wm.village_id,
+		       wm.owner_player_id, wm.village_id, wm.camp_id,
 		       COALESCE(v.name, ''), COALESCE(p.username, '')
 		FROM world_map wm
 		LEFT JOIN villages v ON wm.village_id = v.id
@@ -83,10 +83,10 @@ func (r *worldMapRepo) GetChunk(ctx context.Context, cx, cy, radius int) ([]*mod
 	var tiles []*model.MapTile
 	for rows.Next() {
 		t := &model.MapTile{}
-		var ownerID, villageID sql.NullInt64
+		var ownerID, villageID, campID sql.NullInt64
 		if err := rows.Scan(
 			&t.X, &t.Y, &t.TerrainType, &t.KingdomZone,
-			&ownerID, &villageID,
+			&ownerID, &villageID, &campID,
 			&t.VillageName, &t.OwnerName,
 		); err != nil {
 			return nil, fmt.Errorf("scan map tile: %w", err)
@@ -97,6 +97,9 @@ func (r *worldMapRepo) GetChunk(ctx context.Context, cx, cy, radius int) ([]*mod
 		if villageID.Valid {
 			t.VillageID = &villageID.Int64
 		}
+		if campID.Valid {
+			t.CampID = &campID.Int64
+		}
 		tiles = append(tiles, t)
 	}
 	return tiles, rows.Err()
@@ -105,13 +108,13 @@ func (r *worldMapRepo) GetChunk(ctx context.Context, cx, cy, radius int) ([]*mod
 // GetTile returns a single tile at the given coordinates.
 func (r *worldMapRepo) GetTile(ctx context.Context, x, y int) (*model.MapTile, error) {
 	row := r.db.QueryRowContext(ctx, `
-		SELECT x, y, terrain_type, kingdom_zone, owner_player_id, village_id
+		SELECT x, y, terrain_type, kingdom_zone, owner_player_id, village_id, camp_id
 		FROM world_map WHERE x = ? AND y = ?`, x, y,
 	)
 
 	t := &model.MapTile{}
-	var ownerID, villageID sql.NullInt64
-	err := row.Scan(&t.X, &t.Y, &t.TerrainType, &t.KingdomZone, &ownerID, &villageID)
+	var ownerID, villageID, campID sql.NullInt64
+	err := row.Scan(&t.X, &t.Y, &t.TerrainType, &t.KingdomZone, &ownerID, &villageID, &campID)
 	if err == sql.ErrNoRows {
 		return nil, model.ErrNotFound
 	}
@@ -123,6 +126,9 @@ func (r *worldMapRepo) GetTile(ctx context.Context, x, y int) (*model.MapTile, e
 	}
 	if villageID.Valid {
 		t.VillageID = &villageID.Int64
+	}
+	if campID.Valid {
+		t.CampID = &campID.Int64
 	}
 	return t, nil
 }

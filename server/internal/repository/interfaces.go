@@ -191,6 +191,104 @@ type SeasonRepository interface {
 	GetPlayerSeasonHistory(ctx context.Context, playerID int64) ([]model.SeasonHistoryRow, error)
 }
 
+// BeastTemplateRepository defines data access operations for beast templates.
+type BeastTemplateRepository interface {
+	Create(ctx context.Context, bt *model.BeastTemplate) error
+	GetByID(ctx context.Context, id int64) (*model.BeastTemplate, error)
+	GetAll(ctx context.Context) ([]*model.BeastTemplate, error)
+	Update(ctx context.Context, bt *model.BeastTemplate) error
+	Delete(ctx context.Context, id int64) error
+}
+
+// CampTemplateRepository defines data access operations for camp templates.
+type CampTemplateRepository interface {
+	Create(ctx context.Context, ct *model.CampTemplate) error
+	GetByID(ctx context.Context, id int64) (*model.CampTemplate, error)
+	GetAll(ctx context.Context) ([]*model.CampTemplate, error)
+	Update(ctx context.Context, ct *model.CampTemplate) error
+	Delete(ctx context.Context, id int64) error
+}
+
+// CampBeastSlotRepository defines data access operations for camp beast slots.
+type CampBeastSlotRepository interface {
+	Create(ctx context.Context, slot *model.CampBeastSlot) error
+	GetByCampTemplateID(ctx context.Context, campTemplateID int64) ([]*model.CampBeastSlot, error)
+	Delete(ctx context.Context, id int64) error
+	DeleteByCampTemplateID(ctx context.Context, campTemplateID int64) error
+}
+
+// SpawnRuleRepository defines data access operations for spawn rules.
+type SpawnRuleRepository interface {
+	Create(ctx context.Context, rule *model.SpawnRule) error
+	GetByID(ctx context.Context, id int64) (*model.SpawnRule, error)
+	GetAll(ctx context.Context) ([]*model.SpawnRule, error)
+	GetEnabled(ctx context.Context) ([]*model.SpawnRule, error)
+	Update(ctx context.Context, rule *model.SpawnRule) error
+	Delete(ctx context.Context, id int64) error
+}
+
+// RewardTableRepository defines data access operations for reward tables.
+type RewardTableRepository interface {
+	Create(ctx context.Context, rt *model.RewardTable) error
+	GetByID(ctx context.Context, id int64) (*model.RewardTable, error)
+	GetAll(ctx context.Context) ([]*model.RewardTable, error)
+	Delete(ctx context.Context, id int64) error
+	Update(ctx context.Context, rt *model.RewardTable) error
+}
+
+// RewardTableEntryRepository defines data access operations for reward table entries.
+type RewardTableEntryRepository interface {
+	Create(ctx context.Context, entry *model.RewardTableEntry) error
+	GetByRewardTableID(ctx context.Context, rewardTableID int64) ([]*model.RewardTableEntry, error)
+	Delete(ctx context.Context, id int64) error
+	DeleteByRewardTableID(ctx context.Context, rewardTableID int64) error
+}
+
+// CampRepository defines data access operations for runtime camp instances.
+type CampRepository interface {
+	Create(ctx context.Context, camp *model.Camp) error
+	GetByID(ctx context.Context, id int64) (*model.Camp, error)
+	GetByTile(ctx context.Context, x, y int) (*model.Camp, error)
+	GetByStatus(ctx context.Context, status string) ([]*model.Camp, error)
+	CountBySpawnRule(ctx context.Context, spawnRuleID int64) (int, error)
+	UpdateStatus(ctx context.Context, id int64, status string) error
+	Delete(ctx context.Context, id int64) error
+	GetExpiredCamps(ctx context.Context, now time.Time) ([]*model.Camp, error)
+	ListActive(ctx context.Context) ([]*model.Camp, error)
+}
+
+// ExpeditionRepository defines data access operations for expeditions.
+type ExpeditionRepository interface {
+	Create(ctx context.Context, exp *model.Expedition) error
+	GetByID(ctx context.Context, id int64) (*model.Expedition, error)
+	GetByPlayerID(ctx context.Context, playerID int64) ([]*model.Expedition, error)
+	GetArrivedExpeditions(ctx context.Context, now time.Time) ([]*model.Expedition, error)
+	GetReturningExpeditions(ctx context.Context, now time.Time) ([]*model.Expedition, error)
+	UpdateStatus(ctx context.Context, id int64, status string) error
+	UpdateReturnsAt(ctx context.Context, id int64, returnsAt time.Time) error
+	Update(ctx context.Context, exp *model.Expedition) error
+}
+
+// BattleRepository defines data access operations for battle results.
+type BattleRepository interface {
+	Create(ctx context.Context, battle *model.Battle) error
+	GetByID(ctx context.Context, id int64) (*model.Battle, error)
+	GetByExpeditionID(ctx context.Context, expeditionID int64) (*model.Battle, error)
+	GetReplayData(ctx context.Context, id int64) ([]byte, error)
+}
+
+// BattleTuningRepository defines data access operations for the battle tuning singleton.
+type BattleTuningRepository interface {
+	Get(ctx context.Context) (*model.BattleTuning, error)
+	Update(ctx context.Context, tuning *model.BattleTuning) error
+}
+
+// AdminAuditLogRepository defines data access operations for the admin audit log.
+type AdminAuditLogRepository interface {
+	Create(ctx context.Context, entry *model.AdminAuditLog) error
+	List(ctx context.Context, entityType string, limit, offset int) ([]*model.AdminAuditLog, error)
+}
+
 // UnitOfWork encapsulates multi-table transactional operations.
 // Keeps database transaction details behind the repository abstraction boundary.
 type UnitOfWork interface {
@@ -211,4 +309,13 @@ type UnitOfWork interface {
 
 	// CompleteBuildingUpgrade atomically updates building level, refreshes resource rates, and deletes the queue item.
 	CompleteBuildingUpgrade(ctx context.Context, villageID int64, building *model.Building, resources *model.Resources, queueID int64) error
+
+	// DeductTroopsAndCreateExpedition atomically deducts troops from a village and creates an expedition.
+	DeductTroopsAndCreateExpedition(ctx context.Context, villageID int64, troopDeductions map[string]int, exp *model.Expedition) error
+
+	// ReturnExpeditionTroops atomically adds surviving troops back and marks the expedition completed.
+	ReturnExpeditionTroops(ctx context.Context, villageID int64, troopAdditions map[string]int, expeditionID int64) error
+
+	// CreateVillageWithSetup atomically creates a village, links the map tile, creates starter buildings, resources, and player economy.
+	CreateVillageWithSetup(ctx context.Context, village *model.Village, tileX, tileY int, buildings []*model.Building, resources *model.Resources, playerID int64, startingGold float64) error
 }

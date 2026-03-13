@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import type { BuildingInfo } from '../../../types/api';
-import { GameIcon } from '../../../components/GameIcon/GameIcon';
 import { useBuildingDisplayNames } from '../../../hooks/useBuildingDisplayNames';
 import styles from './BuildingCard.module.css';
 
@@ -10,8 +10,9 @@ interface BuildingCardProps {
 }
 
 export function BuildingCard({ building, onClick, isMilitary }: BuildingCardProps) {
-  const { getDisplayName } = useBuildingDisplayNames();
-  const label = getDisplayName(building.building_type);
+  const { getDisplay } = useBuildingDisplayNames();
+  const { displayName, spriteUrl, emoji } = getDisplay(building.building_type);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <button
@@ -19,8 +20,20 @@ export function BuildingCard({ building, onClick, isMilitary }: BuildingCardProp
       className={`${styles.card} ${isMilitary ? styles.military : ''}`}
       onClick={onClick}
     >
-      <GameIcon assetId={building.building_type} fallback="🏗️" size={28} className={styles.icon} />
-      <span className={styles.name}>{label}</span>
+      {spriteUrl && !imgError ? (
+        <img
+          src={spriteUrl}
+          alt={displayName}
+          width={28}
+          height={28}
+          className={styles.icon}
+          onError={() => setImgError(true)}
+          draggable={false}
+        />
+      ) : (
+        <span className={styles.icon} style={{ fontSize: '28px', lineHeight: 1 }}>{emoji}</span>
+      )}
+      <span className={styles.name}>{displayName}</span>
       <span className={styles.level}>Lv {building.level}</span>
     </button>
   );

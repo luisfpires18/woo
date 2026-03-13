@@ -56,7 +56,7 @@ func newTestEnv(t *testing.T) *testEnv {
 
 	authService := service.NewAuthService(playerRepo, refreshTokenRepo, "test-secret", "woo-test")
 	mapService := service.NewMapService(worldMapRepo, villageRepo)
-	villageService := service.NewVillageService(villageRepo, buildingRepo, resourceRepo, playerEconRepo, mapService)
+	villageService := service.NewVillageService(uow, villageRepo, buildingRepo, resourceRepo, playerEconRepo, mapService)
 	buildingService := service.NewBuildingService(uow, villageRepo, buildingRepo, resourceRepo, queueRepo, playerRepo, playerEconRepo)
 	troopRepo := sqlite.NewTroopRepo(db)
 	trainingQueueRepo := sqlite.NewTrainingQueueRepo(db)

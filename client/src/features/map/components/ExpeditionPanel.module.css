@@ -1,0 +1,195 @@
+/* Expedition tracker panel — shows active expeditions */
+
+.panel {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  width: 300px;
+  max-height: 40vh;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  z-index: 5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.collapseBtn,
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.collapseBtn:hover,
+.closeBtn:hover {
+  color: var(--text-primary);
+}
+
+.closeBtn {
+  font-size: 0.95rem;
+}
+
+.badge {
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+}
+
+.expeditionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.expeditionCard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm);
+  font-size: 0.8rem;
+  position: relative;
+}
+
+.dismissBtn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.expeditionCard:hover .dismissBtn {
+  opacity: 1;
+}
+
+.dismissBtn:hover {
+  color: var(--danger);
+}
+
+.expeditionRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.expLabel {
+  color: var(--text-muted);
+}
+
+.expValue {
+  color: var(--text-primary);
+}
+
+.statusMarching {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.statusBattling {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.statusReturning {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.statusCompleted {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+/* Small floating reopen button when panel is closed */
+.reopenBtn {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  z-index: 5;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.reopenBtn:hover {
+  border-color: var(--accent);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--spacing-xs) 0;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    max-height: 35vh;
+  }
+
+  .reopenBtn {
+    top: auto;
+    bottom: var(--spacing-md);
+    left: var(--spacing-md);
+  }
+}

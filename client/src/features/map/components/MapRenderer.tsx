@@ -6,6 +6,7 @@
 import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { useMapStore } from '../../../stores/mapStore';
 import { useAssetStore } from '../../../stores/assetStore';
+import { useExpeditionStore } from '../../../stores/expeditionStore';
 import type { MapTile } from '../../../types/map';
 import { TERRAIN_CONFIG } from '../../../types/map';
 import { TILE_SIZE, hexColor, screenToTile, tileHash, extractBaseName } from '../mapUtils';
@@ -142,6 +143,21 @@ export const MapRenderer = forwardRef<MapRendererHandle, MapRendererProps>(funct
 
   const tiles = useMapStore((s) => s.tiles);
   const loadChunk = useMapStore((s) => s.loadChunk);
+
+  // Camp data from expedition store — used to render camp icons on map
+  const camps = useExpeditionStore((s) => s.camps);
+  const campsByCoord = useRef(new Map<string, { tier: number; status: string }>());
+  // Keep camp lookup map in sync
+  useEffect(() => {
+    const m = new Map<string, { tier: number; status: string }>();
+    for (const c of (camps ?? [])) {
+      m.set(`${c.tile_x},${c.tile_y}`, { tier: c.tier, status: c.status });
+    }
+    campsByCoord.current = m;
+    // Trigger redraw when camps change
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(drawMapRef.current);
+  }, [camps]);
 
   // Asset store for village marker sprites
   const assetStoreAssets = useAssetStore((s) => s.assets);
@@ -413,6 +429,60 @@ export const MapRenderer = forwardRef<MapRendererHandle, MapRendererProps>(funct
         ctx.shadowOffsetY = 0;
       }
     });
+
+    // --- Layer 3.5: Camp markers ---
+    const campLookup = campsByCoord.current;
+    if (campLookup.size > 0) {
+      currentTiles.forEach((tile) => {
+        const campInfo = campLookup.get(`${tile.x},${tile.y}`);
+        if (!campInfo) return;
+
+        const px = tile.x * TILE_SIZE;
+        const py = -tile.y * TILE_SIZE;
+        if (px + TILE_SIZE < worldLeft || px > worldRight) return;
+        if (py + TILE_SIZE < worldTop || py > worldBottom) return;
+
+        const cx = px + TILE_SIZE / 2;
+        const cy = py + TILE_SIZE / 2;
+
+        // Draw a red diamond with skull symbol for camp
+        const campColor = campInfo.status === 'active' ? '#cc2222' : '#888888';
+        const size = 28;
+
+        // Diamond shape
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - size);
+        ctx.lineTo(cx + size * 0.7, cy);
+        ctx.lineTo(cx, cy + size);
+        ctx.lineTo(cx - size * 0.7, cy);
+        ctx.closePath();
+        ctx.fillStyle = campColor;
+        ctx.fill();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Tier number in center
+        ctx.font = 'bold 16px Cinzel, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(`${campInfo.tier}`, cx, cy);
+
+        // "Camp" label below (with shadow for readability)
+        ctx.font = 'bold 11px Cinzel, serif';
+        ctx.textBaseline = 'top';
+        ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+        ctx.shadowBlur = 4;
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+        ctx.strokeText('Camp', cx, cy + size + 4);
+        ctx.fillStyle = '#ff6666';
+        ctx.fillText('Camp', cx, cy + size + 4);
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+      });
+    }
 
     // --- Layer 4: Hover highlight (no coord text — coords shown in village label) ---
     const hover = hoverTileRef.current;

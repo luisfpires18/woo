@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   fetchBuildingDisplayConfigs,
   updateBuildingDisplayConfig,
+  fetchKingdomDisplayBuildingSprites,
 } from '../../../services/admin';
-import type { BuildingDisplayConfig } from '../../../types/api';
+import type { BuildingDisplayConfig, DisplayBuildingSpriteInfo } from '../../../types/api';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { useAssetStore, buildingConfigToAsset } from '../../../stores/assetStore';
-import { getSpriteUrl } from '../../../utils/spriteUrl';
 import styles from './AdminBuildingsPage.module.css';
 
 const KINGDOMS = [
@@ -35,6 +35,7 @@ export function AdminBuildingsPage() {
   const [editing, setEditing] = useState<Record<number, EditingState>>({});
   const [saving, setSaving] = useState<number | null>(null);
   const [failedSprites, setFailedSprites] = useState<Set<string>>(new Set());
+  const [spriteMap, setSpriteMap] = useState<Record<string, DisplayBuildingSpriteInfo>>({});
   const upsertAsset = useAssetStore((s) => s.upsert);
   const addOrUpdateAsset = useAssetStore((s) => s.addAsset);
   const getAsset = useAssetStore((s) => s.getById);
@@ -62,9 +63,27 @@ export function AdminBuildingsPage() {
     }
   }, []);
 
+  const loadSprites = useCallback(async (k: string) => {
+    try {
+      const resp = await fetchKingdomDisplayBuildingSprites(k);
+      const map: Record<string, DisplayBuildingSpriteInfo> = {};
+      for (const s of resp.sprites) {
+        map[s.building_type] = s;
+      }
+      setSpriteMap(map);
+    } catch {
+      setSpriteMap({});
+    }
+  }, []);
+
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    loadSprites(kingdom);
+    setFailedSprites(new Set());
+  }, [kingdom, loadSprites]);
 
   const filtered = configs.filter((c) => c.kingdom === kingdom);
 
@@ -155,7 +174,7 @@ export function AdminBuildingsPage() {
       <h2 className={styles.heading}>Building Display Names</h2>
       <p className={styles.subtitle}>
         Customise building names, descriptions, and icons per kingdom. Place sprites
-        in <code>uploads/sprites/&#123;kingdom&#125;/buildings/&#123;building_type&#125;.png</code>.
+        in <code>uploads/sprites/kingdoms/&#123;kingdom&#125;/buildings/&#123;kingdom&#125;_&#123;building_type&#125;_name.png</code>.
       </p>
 
       {error && <div className={styles.error}>{error}</div>}
@@ -174,116 +193,128 @@ export function AdminBuildingsPage() {
         ))}
       </div>
 
-      <div className={styles.grid}>
+      <div className={styles.configGrid}>
         {filtered.map((cfg) => {
           const edit = editing[cfg.id];
           const isEditing = !!edit;
           const isSaving = saving === cfg.id;
-          const spriteKey = `${cfg.building_type}_${cfg.kingdom}`;
-          const spriteUrl = getSpriteUrl({ kind: 'building', id: cfg.building_type, kingdom: cfg.kingdom });
-          const showSprite = spriteUrl && !failedSprites.has(spriteKey);
+          const spriteInfo = spriteMap[cfg.building_type];
+          const spriteUrl = spriteInfo?.url;
+          const showSprite = spriteUrl && !failedSprites.has(cfg.building_type);
 
           return (
-            <div key={cfg.id} className={styles.card}>
-              <div className={styles.cardHeader}>
-                <div className={styles.cardTitle}>
-                  <div className={styles.preview}>
-                    {showSprite ? (
-                      <img
-                        src={spriteUrl}
-                        alt={cfg.display_name}
-                        className={styles.spriteImg}
-                        onError={() => handleSpriteError(spriteKey)}
-                      />
-                    ) : (
-                      <span className={styles.icon}>
-                        {isEditing ? edit.default_icon : cfg.default_icon}
-                      </span>
-                    )}
+            <div key={cfg.id} className={styles.configCard}>
+              {/* Hero sprite area */}
+              <div className={styles.cardSpriteHero}>
+                {showSprite ? (
+                  <img
+                    src={spriteUrl}
+                    alt={cfg.display_name}
+                    className={styles.heroImg}
+                    onError={() => handleSpriteError(cfg.building_type)}
+                  />
+                ) : (
+                  <div className={styles.spritePlaceholder}>
+                    <span className={styles.placeholderEmoji}>
+                      {isEditing ? edit.default_icon : cfg.default_icon}
+                    </span>
+                    <span className={styles.placeholderHint}>
+                      {cfg.kingdom}_{cfg.building_type}_name.png
+                    </span>
                   </div>
+                )}
+              </div>
+
+              {/* Sprite filename badge */}
+              {spriteInfo && (
+                <span className={styles.spriteFilename}>{spriteInfo.filename}</span>
+              )}
+
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeader}>
                   <span className={styles.buildingType}>
                     {cfg.building_type.replace(/_/g, ' ')}
                   </span>
+                  <span className={styles.kingdom}>{cfg.kingdom}</span>
                 </div>
-                <span className={styles.kingdom}>{cfg.kingdom}</span>
-              </div>
 
-              {isEditing ? (
-                <>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Display Name</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={edit.display_name}
-                      onChange={(e) =>
-                        handleChange(cfg.id, 'display_name', e.target.value)
-                      }
-                      disabled={isSaving}
-                    />
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Description</label>
-                    <textarea
-                      className={styles.textarea}
-                      value={edit.description}
-                      onChange={(e) =>
-                        handleChange(cfg.id, 'description', e.target.value)
-                      }
-                      disabled={isSaving}
-                    />
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Icon (emoji fallback)</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={edit.default_icon}
-                      onChange={(e) =>
-                        handleChange(cfg.id, 'default_icon', e.target.value)
-                      }
-                      disabled={isSaving}
-                    />
-                  </div>
-                  <div className={styles.actions}>
-                    <button
-                      className={styles.saveBtn}
-                      onClick={() => handleSave(cfg.id)}
-                      disabled={isSaving || !edit.display_name.trim()}
-                    >
-                      {isSaving ? 'Saving…' : 'Save'}
-                    </button>
-                    <button
-                      className={styles.cancelBtn}
-                      onClick={() => cancelEdit(cfg.id)}
-                      disabled={isSaving}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className={styles.fieldGroup}>
-                    <span className={styles.fieldLabel}>Display Name</span>
-                    <span>{cfg.display_name}</span>
-                  </div>
-                  {cfg.description && (
+                {isEditing ? (
+                  <>
                     <div className={styles.fieldGroup}>
-                      <span className={styles.fieldLabel}>Description</span>
-                      <span>{cfg.description}</span>
+                      <label className={styles.fieldLabel}>Display Name</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        value={edit.display_name}
+                        onChange={(e) =>
+                          handleChange(cfg.id, 'display_name', e.target.value)
+                        }
+                        disabled={isSaving}
+                      />
                     </div>
-                  )}
-                  <div className={styles.actions}>
-                    <button
-                      className={styles.saveBtn}
-                      onClick={() => startEdit(cfg)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </>
-              )}
+                    <div className={styles.fieldGroup}>
+                      <label className={styles.fieldLabel}>Description</label>
+                      <textarea
+                        className={styles.textarea}
+                        value={edit.description}
+                        onChange={(e) =>
+                          handleChange(cfg.id, 'description', e.target.value)
+                        }
+                        disabled={isSaving}
+                      />
+                    </div>
+                    <div className={styles.fieldGroup}>
+                      <label className={styles.fieldLabel}>Icon (emoji fallback)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        value={edit.default_icon}
+                        onChange={(e) =>
+                          handleChange(cfg.id, 'default_icon', e.target.value)
+                        }
+                        disabled={isSaving}
+                      />
+                    </div>
+                    <div className={styles.formActions}>
+                      <button
+                        className={styles.saveBtn}
+                        onClick={() => handleSave(cfg.id)}
+                        disabled={isSaving || !edit.display_name.trim()}
+                      >
+                        {isSaving ? 'Saving…' : 'Save'}
+                      </button>
+                      <button
+                        className={styles.cancelBtn}
+                        onClick={() => cancelEdit(cfg.id)}
+                        disabled={isSaving}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.fieldGroup}>
+                      <span className={styles.fieldLabel}>Display Name</span>
+                      <span>{cfg.display_name}</span>
+                    </div>
+                    {cfg.description && (
+                      <div className={styles.fieldGroup}>
+                        <span className={styles.fieldLabel}>Description</span>
+                        <span>{cfg.description}</span>
+                      </div>
+                    )}
+                    <div className={styles.formActions}>
+                      <button
+                        className={styles.saveBtn}
+                        onClick={() => startEdit(cfg)}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           );
         })}

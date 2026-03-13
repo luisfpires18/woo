@@ -10,6 +10,7 @@ type MapTile struct {
 	VillageID     *int64 `json:"village_id,omitempty"`
 	VillageName   string `json:"village_name,omitempty"`
 	OwnerName     string `json:"owner_name,omitempty"`
+	CampID        *int64 `json:"camp_id,omitempty"`
 }
 
 // Terrain type constants.

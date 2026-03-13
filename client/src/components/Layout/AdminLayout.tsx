@@ -13,6 +13,8 @@ const ADMIN_TABS = [
   { label: 'Resources', path: '/admin/resources' },
   { label: 'Map Assets', path: '/admin/map-assets' },
   { label: 'Map Editor', path: '/admin/map-editor' },
+  { label: 'Camps', path: '/admin/camps' },
+  { label: 'Battle Stats', path: '/admin/battle-stats' },
 ];
 
 export function AdminLayout() {

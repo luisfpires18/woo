@@ -172,3 +172,47 @@ func (h *Hub) BroadcastBuildComplete(playerID, villageID int64, buildingType str
 		},
 	})
 }
+
+// BroadcastExpeditionComplete notifies the player that a battle at a camp has been resolved.
+func (h *Hub) BroadcastExpeditionComplete(playerID, villageID, expeditionID, campID int64, result string) {
+	h.SendToPlayer(playerID, &Message{
+		Type: MsgExpeditionComplete,
+		Data: ExpeditionCompleteData{
+			VillageID:    villageID,
+			ExpeditionID: expeditionID,
+			CampID:       campID,
+			Result:       result,
+		},
+	})
+
+	topic := fmt.Sprintf("village:%d", villageID)
+	h.SendToTopic(topic, &Message{
+		Type: MsgExpeditionComplete,
+		Data: ExpeditionCompleteData{
+			VillageID:    villageID,
+			ExpeditionID: expeditionID,
+			CampID:       campID,
+			Result:       result,
+		},
+	})
+}
+
+// BroadcastExpeditionReturn notifies the player that expedition troops have returned to the village.
+func (h *Hub) BroadcastExpeditionReturn(playerID, villageID, expeditionID int64) {
+	h.SendToPlayer(playerID, &Message{
+		Type: MsgExpeditionReturn,
+		Data: ExpeditionReturnData{
+			VillageID:    villageID,
+			ExpeditionID: expeditionID,
+		},
+	})
+
+	topic := fmt.Sprintf("village:%d", villageID)
+	h.SendToTopic(topic, &Message{
+		Type: MsgExpeditionReturn,
+		Data: ExpeditionReturnData{
+			VillageID:    villageID,
+			ExpeditionID: expeditionID,
+		},
+	})
+}

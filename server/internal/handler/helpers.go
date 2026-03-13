@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 )
 
@@ -15,14 +16,18 @@ type apiResponse struct {
 func writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(apiResponse{Data: data})
+	if err := json.NewEncoder(w).Encode(apiResponse{Data: data}); err != nil {
+		slog.Error("failed to encode JSON response", "error", err)
+	}
 }
 
 // writeError writes a JSON error response with the given status code and message.
 func writeError(w http.ResponseWriter, status int, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(apiResponse{Error: msg})
+	if err := json.NewEncoder(w).Encode(apiResponse{Error: msg}); err != nil {
+		slog.Error("failed to encode error response", "error", err)
+	}
 }
 
 // decodeJSON decodes a JSON request body into the given target struct.

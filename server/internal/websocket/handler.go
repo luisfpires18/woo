@@ -14,13 +14,15 @@ type TokenValidator func(tokenString string) (playerID int64, role string, err e
 
 // Handler handles WebSocket upgrade requests.
 type Handler struct {
-	hub       *Hub
-	validator TokenValidator
+	hub           *Hub
+	validator     TokenValidator
+	allowedOrigin string
 }
 
 // NewHandler creates a new WebSocket handler.
-func NewHandler(hub *Hub, validator TokenValidator) *Handler {
-	return &Handler{hub: hub, validator: validator}
+// If allowedOrigin is empty, all origins are accepted (dev mode).
+func NewHandler(hub *Hub, validator TokenValidator, allowedOrigin string) *Handler {
+	return &Handler{hub: hub, validator: validator, allowedOrigin: allowedOrigin}
 }
 
 // ServeHTTP upgrades the HTTP connection to WebSocket and registers the client.
@@ -41,10 +43,13 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Accept the WebSocket upgrade.
-	conn, err := ws.Accept(w, r, &ws.AcceptOptions{
-		// Allow all origins in development; tighten in production.
-		InsecureSkipVerify: true,
-	})
+	opts := &ws.AcceptOptions{}
+	if h.allowedOrigin != "" {
+		opts.OriginPatterns = []string{h.allowedOrigin}
+	} else {
+		opts.InsecureSkipVerify = true
+	}
+	conn, err := ws.Accept(w, r, opts)
 	if err != nil {
 		slog.Error("websocket accept failed", "error", err)
 		return

@@ -103,6 +103,154 @@ func (u *unitOfWork) CompleteBuildingUpgrade(ctx context.Context, villageID int6
 	})
 }
 
+// DeductTroopsAndCreateExpedition atomically deducts troops from a village and creates an expedition.
+func (u *unitOfWork) DeductTroopsAndCreateExpedition(ctx context.Context, villageID int64, troopDeductions map[string]int, exp *model.Expedition) error {
+	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
+		for troopType, qty := range troopDeductions {
+			result, err := tx.ExecContext(ctx,
+				`UPDATE troops SET quantity = quantity - ? WHERE village_id = ? AND type = ? AND quantity >= ?`,
+				qty, villageID, troopType, qty,
+			)
+			if err != nil {
+				return fmt.Errorf("deduct troop %s (tx): %w", troopType, err)
+			}
+			rows, err := result.RowsAffected()
+			if err != nil {
+				return fmt.Errorf("check troop deduction %s (tx): %w", troopType, err)
+			}
+			if rows == 0 {
+				return fmt.Errorf("insufficient %s troops for expedition", troopType)
+			}
+		}
+
+		res, err := tx.ExecContext(ctx,
+			`INSERT INTO expeditions (player_id, village_id, camp_id, troops_json, departed_at, arrives_at, status, season_id)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+			exp.PlayerID, exp.VillageID, exp.CampID, exp.TroopsJSON,
+			exp.DepartedAt, exp.ArrivesAt, exp.Status, exp.SeasonID,
+		)
+		if err != nil {
+			return fmt.Errorf("insert expedition (tx): %w", err)
+		}
+		id, err := res.LastInsertId()
+		if err != nil {
+			return fmt.Errorf("get expedition last insert id: %w", err)
+		}
+		exp.ID = id
+		return nil
+	})
+}
+
+// ReturnExpeditionTroops atomically adds surviving troops back and marks the expedition completed.
+func (u *unitOfWork) ReturnExpeditionTroops(ctx context.Context, villageID int64, troopAdditions map[string]int, expeditionID int64) error {
+	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
+		for troopType, qty := range troopAdditions {
+			if qty <= 0 {
+				continue
+			}
+			if err := upsertTroopTx(ctx, tx, villageID, troopType, qty); err != nil {
+				return err
+			}
+		}
+
+		_, err := tx.ExecContext(ctx,
+			`UPDATE expeditions SET status = 'completed' WHERE id = ?`, expeditionID,
+		)
+		if err != nil {
+			return fmt.Errorf("complete expedition (tx) %d: %w", expeditionID, err)
+		}
+		return nil
+	})
+}
+
+// CreateVillageWithSetup atomically creates a village, links the map tile, creates
+// starter buildings, resources, and (if needed) the player economy row.
+func (u *unitOfWork) CreateVillageWithSetup(
+	ctx context.Context,
+	village *model.Village,
+	tileX, tileY int,
+	buildings []*model.Building,
+	resources *model.Resources,
+	playerID int64,
+	startingGold float64,
+) error {
+	return WithTx(ctx, u.db, func(tx *sql.Tx) error {
+		// 1. Insert village
+		result, err := tx.ExecContext(ctx,
+			`INSERT INTO villages (player_id, name, x, y, is_capital, season_id, created_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			village.PlayerID, village.Name, village.X, village.Y,
+			village.IsCapital, village.SeasonID, village.CreatedAt,
+		)
+		if err != nil {
+			return fmt.Errorf("insert village (tx): %w", err)
+		}
+		vid, err := result.LastInsertId()
+		if err != nil {
+			return fmt.Errorf("get village last insert id (tx): %w", err)
+		}
+		village.ID = vid
+
+		// 2. Link map tile to village
+		_, err = tx.ExecContext(ctx,
+			`UPDATE world_map SET owner_player_id = ?, village_id = ? WHERE x = ? AND y = ?`,
+			playerID, village.ID, tileX, tileY,
+		)
+		if err != nil {
+			return fmt.Errorf("link tile to village (tx): %w", err)
+		}
+
+		// 3. Batch-insert starter buildings
+		stmt, err := tx.PrepareContext(ctx,
+			`INSERT INTO buildings (village_id, building_type, level) VALUES (?, ?, ?)`,
+		)
+		if err != nil {
+			return fmt.Errorf("prepare insert building (tx): %w", err)
+		}
+		defer stmt.Close()
+
+		for _, b := range buildings {
+			b.VillageID = village.ID
+			res, err := stmt.ExecContext(ctx, b.VillageID, b.BuildingType, b.Level)
+			if err != nil {
+				return fmt.Errorf("insert building %s (tx): %w", b.BuildingType, err)
+			}
+			bid, err := res.LastInsertId()
+			if err != nil {
+				return fmt.Errorf("get building last insert id (tx): %w", err)
+			}
+			b.ID = bid
+		}
+
+		// 4. Insert starter resources
+		resources.VillageID = village.ID
+		_, err = tx.ExecContext(ctx,
+			`INSERT INTO resources (village_id, food, water, lumber, stone, food_rate, water_rate, lumber_rate, stone_rate, food_consumption, pop_used, max_food, max_water, max_lumber, max_stone, last_updated)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			resources.VillageID, resources.Food, resources.Water, resources.Lumber, resources.Stone,
+			resources.FoodRate, resources.WaterRate, resources.LumberRate, resources.StoneRate,
+			resources.FoodConsumption, resources.PopUsed, resources.MaxFood, resources.MaxWater, resources.MaxLumber, resources.MaxStone,
+			resources.LastUpdated.UTC().Format("2006-01-02 15:04:05"),
+		)
+		if err != nil {
+			return fmt.Errorf("insert resources (tx): %w", err)
+		}
+
+		// 5. Create player economy if not exists (idempotent)
+		if startingGold > 0 {
+			_, err = tx.ExecContext(ctx,
+				`INSERT OR IGNORE INTO player_economy (player_id, gold) VALUES (?, ?)`,
+				playerID, startingGold,
+			)
+			if err != nil {
+				return fmt.Errorf("create player economy (tx): %w", err)
+			}
+		}
+
+		return nil
+	})
+}
+
 // ── Internal transactional helpers (unexported, only used within this package) ─
 
 func updateResourcesTx(ctx context.Context, tx *sql.Tx, villageID int64, res *model.Resources) error {
@@ -134,7 +282,10 @@ func insertBuildQueueTx(ctx context.Context, tx *sql.Tx, item *model.BuildingQue
 	if err != nil {
 		return fmt.Errorf("insert building queue item (tx): %w", err)
 	}
-	id, _ := result.LastInsertId()
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get build queue last insert id: %w", err)
+	}
 	item.ID = id
 	return nil
 }
@@ -150,7 +301,10 @@ func insertTrainQueueTx(ctx context.Context, tx *sql.Tx, item *model.TrainingQue
 	if err != nil {
 		return fmt.Errorf("insert training queue item (tx): %w", err)
 	}
-	id, _ := result.LastInsertId()
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get train queue last insert id: %w", err)
+	}
 	item.ID = id
 	return nil
 }

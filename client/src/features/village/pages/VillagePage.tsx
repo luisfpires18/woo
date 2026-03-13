@@ -10,6 +10,9 @@ import { ResourceFieldsGrid } from '../components/ResourceFieldsGrid';
 import { ConstructionQueue } from '../components/ConstructionQueue';
 import { TrainingQueue } from '../components/TrainingQueue';
 import { TroopRoster } from '../components/TroopRoster';
+import { TroopMovements } from '../components/TroopMovements';
+import { useExpeditionStore } from '../../../stores/expeditionStore';
+import { fetchExpeditions } from '../../../services/camp';
 import { BuildModal } from '../components/BuildModal';
 import { BuildingDetailModal } from '../components/BuildingDetailModal';
 import { BuildingMilitaryModal } from '../components/BuildingMilitaryModal';
@@ -37,6 +40,16 @@ export function VillagePage() {
   const [renameSaving, setRenameSaving] = useState(false);
   const renameInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+
+  // Fetch expeditions so TroopMovements banner can show troop status
+  const setExpeditions = useExpeditionStore((s) => s.setExpeditions);
+  useEffect(() => {
+    fetchExpeditions().then((e) => setExpeditions(e ?? [])).catch(() => {});
+    const interval = setInterval(() => {
+      fetchExpeditions().then((e) => setExpeditions(e ?? [])).catch(() => {});
+    }, 5_000);
+    return () => clearInterval(interval);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (isRenaming && renameInputRef.current) {
@@ -184,6 +197,7 @@ export function VillagePage() {
 
         <aside className={styles.sidebar}>
           <ResourcePanel resources={village.resources} />
+          <TroopMovements villageId={villageId} />
           <TroopRoster troops={troops} />
         </aside>
       </div>

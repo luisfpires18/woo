@@ -35,6 +35,11 @@ const WorldMapPage = lazy(() =>
     default: m.WorldMapPage,
   })),
 );
+const ExpeditionsPage = lazy(() =>
+  import('./features/expedition/pages/ExpeditionsPage').then((m) => ({
+    default: m.ExpeditionsPage,
+  })),
+);
 const ProfilePage = lazy(() =>
   import('./features/profile/pages/ProfilePage').then((m) => ({
     default: m.ProfilePage,
@@ -129,6 +134,16 @@ const AdminSeasonsPage = lazy(() =>
     default: m.AdminSeasonsPage,
   })),
 );
+const AdminCampsPage = lazy(() =>
+  import('./features/admin/pages/AdminCampsPage').then((m) => ({
+    default: m.AdminCampsPage,
+  })),
+);
+const AdminBattleStatsPage = lazy(() =>
+  import('./features/admin/pages/AdminBattleStatsPage').then((m) => ({
+    default: m.AdminBattleStatsPage,
+  })),
+);
 
 function FullPageLoader() {
   return (
@@ -214,6 +229,7 @@ function App() {
             <Route path="/game" element={<GameRedirect />} />
             <Route path="/village/:id" element={<VillagePage />} />
             <Route path="/map" element={<WorldMapPage />} />
+            <Route path="/expeditions" element={<ExpeditionsPage />} />
             <Route path="/choose-kingdom" element={<KingdomSelectionPage />} />
           </Route>
 
@@ -230,6 +246,8 @@ function App() {
             <Route path="buildings" element={<AdminBuildingsPage />} />
             <Route path="units" element={<AdminUnitsPage />} />
             <Route path="seasons" element={<AdminSeasonsPage />} />
+            <Route path="camps" element={<AdminCampsPage />} />
+            <Route path="battle-stats" element={<AdminBattleStatsPage />} />
             <Route path="map-editor" element={<AdminMapEditorPage />} />
           </Route>
         </Routes>

@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "description": "Block edits to generated config JSON files — must use codegen pipeline instead",
+        "windows": "powershell -ExecutionPolicy Bypass -File .github/hooks/scripts/protect-generated.ps1",
+        "timeout": 5
+      }
+    ]
+  }
+}

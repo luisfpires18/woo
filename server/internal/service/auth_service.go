@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"net/mail"
 	"strings"
 	"time"
 
@@ -266,9 +267,9 @@ func (s *AuthService) validateRegisterInput(req *dto.RegisterRequest) error {
 		}
 	}
 
-	// Email: basic check
+	// Email: validate using RFC 5322 parsing
 	email := strings.TrimSpace(req.Email)
-	if !strings.Contains(email, "@") || !strings.Contains(email, ".") || len(email) < 5 {
+	if _, err := mail.ParseAddress(email); err != nil {
 		return ErrInvalidEmail
 	}
 
