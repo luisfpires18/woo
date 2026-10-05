@@ -1,22 +1,22 @@
-# 059: Mobile, accessibility, persistence and permission validation
+# 063: Run medieval alpha and refine next tasks
 
-Task key: QA
+Task key: ALPHA-FEEDBACK
 Status: TODO
 Updated: 2026-10-05
-Milestone: Validation
-Dependencies: BALANCE
+Milestone: Alpha
+Dependencies: FRIENDS
 
 ## Goal
 
-Run focused end-to-end checks on actual deployed medieval flows.
+Collect actual play findings and update the evolving roadmap.
 
 ## Acceptance criteria
 
-Keyboard/touch/light/dark/kingdom themes usable; upload cleanup, auth/world isolation, restart/redeploy persistence and capture retries tested. Known defects recorded without repeated ceremonial suites.
+Track forge decisions, faction participation, workload, counters, recovery and bugs. Add prioritised reviewable tasks. Decide continuation, reset and future rune emergence with owner; master/prod remains separate later release decision.
 
 ## Required reading
 
-- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
+- [docs/roadmap.md](../../docs/roadmap.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

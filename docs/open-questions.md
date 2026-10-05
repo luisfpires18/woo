@@ -47,3 +47,6 @@ New task-level decisions: release version increment policy/shared metadata; imag
 ## Map and resource scope clarification
 
 World-map square painting is a candidate authoring workflow, not an approved movement grid or one-village-per-cell rule. MAP-UI must compare tiled terrain against illustrated terrain on the same synthetic geometry before recommending production. Projection, world bounds, cell size, district cardinality, crossing rules and safe live-world editing need decisions before their affected tasks. Resource catalogue and resource-screen layout remain owner-defined future work; neither belongs to the village or world-map proof.
+
+## Profiles and leaderboard decisions
+Which profile fields and settlement locations are visible to self, same kingdom, opponents and non-members? Do profiles list all owned settlements or only public/discovered ones? Which ranking categories, score formulas, shared-defence attribution, ties, season snapshots and update cadence should v1 use? Settlement is now the preferred player-facing name. Dev is the desired default branch; actual setting change has not yet been verified.

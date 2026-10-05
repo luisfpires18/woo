@@ -1,4 +1,4 @@
-# 057: Offline reconciliation and live UI notifications
+# 059: Offline reconciliation and live UI notifications
 
 Task key: OFFLINE
 Status: TODO

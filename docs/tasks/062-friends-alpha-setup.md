@@ -1,4 +1,4 @@
-# 060: Invite-only friends alpha setup and support
+# 062: Invite-only friends alpha setup and support
 
 Task key: FRIENDS
 Status: TODO

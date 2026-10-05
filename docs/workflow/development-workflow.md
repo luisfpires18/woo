@@ -37,7 +37,7 @@ Record exact commit, requirements addressed, changes, tests actually run/results
 
 ## Git
 
-dev is the working integration branch. master is reserved for production promotion at alpha release. Feature branches originate at current dev and use feat/NNN-short-name. Fixes for an active task stay on its existing branch unless a concrete reason requires another branch.
+dev is the working integration branch and the owner's requested default branch. The repository setting remains pending verification; do not claim it changed based on this document. master is reserved for production promotion at alpha release. Feature branches originate at current dev and use feat/NNN-short-name. Fixes for an active task stay on its existing branch unless a concrete reason requires another branch.
 
 Docs maintained by ChatGPT can be committed directly to dev within the owner's ongoing documentation authorisation. Game implementation goes through the review cycle. Do not touch master in normal implementation.
 

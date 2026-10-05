@@ -14,10 +14,11 @@ GitHub is the primary working specification. Read current topic documents before
 
 ## Gameplay
 
-- [Player and villages](gameplay/player-and-villages.md)
+- [Player and settlements](gameplay/player-and-villages.md)
 - [Economy](gameplay/economy.md)
 - [Forging and progression](gameplay/forging-and-progression.md)
 - [Combat and conquest](gameplay/combat-and-conquest.md)
+- [Player/settlement profiles and leaderboards](gameplay/profiles-and-leaderboards.md)
 - [Map and activities](gameplay/map-and-activities.md)
 - [Seasons and victory](gameplay/seasons-and-victory.md)
 

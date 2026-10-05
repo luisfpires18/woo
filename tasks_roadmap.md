@@ -68,11 +68,13 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 054 | CAPTURE | Capture, occupation and district transfer | TODO | [054-territory-capture.md](docs/tasks/054-territory-capture.md) |
 | 055 | RECOVERY | Defeat, wounded troops and player recovery | TODO | [055-defeat-and-recovery.md](docs/tasks/055-defeat-and-recovery.md) |
 | 056 | COOP | Kingdom overview, defence requests and contribution credit | TODO | [056-kingdom-cooperation.md](docs/tasks/056-kingdom-cooperation.md) |
-| 057 | OFFLINE | Offline reconciliation and live UI notifications | TODO | [057-offline-ui-updates.md](docs/tasks/057-offline-ui-updates.md) |
-| 058 | BALANCE | Economy, counters and faction balance pass | TODO | [058-economy-and-faction-validation.md](docs/tasks/058-economy-and-faction-validation.md) |
-| 059 | QA | Mobile, accessibility, persistence and permission validation | TODO | [059-mobile-and-reliability.md](docs/tasks/059-mobile-and-reliability.md) |
-| 060 | FRIENDS | Invite-only friends alpha setup and support | TODO | [060-friends-alpha-setup.md](docs/tasks/060-friends-alpha-setup.md) |
-| 061 | ALPHA-FEEDBACK | Run medieval alpha and refine next tasks | TODO | [061-alpha-feedback.md](docs/tasks/061-alpha-feedback.md) |
+| 057 | PROFILES | Player and settlement profiles | TODO | [057-player-settlement-profiles.md](docs/tasks/057-player-settlement-profiles.md) |
+| 058 | LEADERBOARDS | World and season leaderboards | TODO | [058-world-leaderboards.md](docs/tasks/058-world-leaderboards.md) |
+| 059 | OFFLINE | Offline reconciliation and live UI notifications | TODO | [059-offline-ui-updates.md](docs/tasks/059-offline-ui-updates.md) |
+| 060 | BALANCE | Economy, counters and faction balance pass | TODO | [060-economy-and-faction-validation.md](docs/tasks/060-economy-and-faction-validation.md) |
+| 061 | QA | Mobile, accessibility, persistence and permission validation | TODO | [061-mobile-and-reliability.md](docs/tasks/061-mobile-and-reliability.md) |
+| 062 | FRIENDS | Invite-only friends alpha setup and support | TODO | [062-friends-alpha-setup.md](docs/tasks/062-friends-alpha-setup.md) |
+| 063 | ALPHA-FEEDBACK | Run medieval alpha and refine next tasks | TODO | [063-alpha-feedback.md](docs/tasks/063-alpha-feedback.md) |
 
 ## Milestones
 
@@ -92,9 +94,10 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | Combat | 048, 049, 050 | Independently reviewed combat slices |
 | Conquest | 052, 053, 054, 055 | Independently reviewed conquest slices |
 | Kingdom | 056 | Independently reviewed kingdom slices |
-| Reliability | 057 | Independently reviewed reliability slices |
-| Validation | 058, 059 | Independently reviewed validation slices |
-| Alpha | 060, 061 | Friends test and roadmap refinement |
+| Community | 057, 058 | Player/settlement inspection and world-season rankings |
+| Reliability | 059 | Independently reviewed reliability slices |
+| Validation | 060, 061 | Independently reviewed validation slices |
+| Alpha | 062, 063 | Friends test and roadmap refinement |
 
 Dependencies in detailed files govern dispatch. Task order is a current plan; new tasks are inserted using whole numbers.
 
@@ -109,7 +112,7 @@ TODO -> WIP when one implementation prompt is dispatched. WIP remains through fi
 Rune discovery, Conduit, Aspect, magical armour, Chaos/Order, heroes, additional kingdoms and naval/air/tunnel systems remain future design material, not active medieval implementation tasks. Production/PostgreSQL/master deployment gets its own explicit tasks when the owner chooses that release, not merely because the friends alpha starts.
 
 ## Village visual proof
-The queue now contains 61 TODO tasks. VILLAGE-UI (011) is the early local layered-art proof, HOTSPOTS (033) is the saved admin editor, and VILLAGE-VISUAL-GATE (035) is the end-to-end acceptance gate after CONFIG (034). Later tasks renumbered with immutable keys preserved; none dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
+The queue now contains 63 TODO tasks. VILLAGE-UI (011) is the early local layered-art proof, HOTSPOTS (033) is the saved admin editor, and VILLAGE-VISUAL-GATE (035) is the end-to-end acceptance gate after CONFIG (034). Later tasks renumbered with immutable keys preserved; none dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
 Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat illustration hotspots alone do not prove interchangeable buildings or modular walls.
 
 ## Scene scope boundaries
@@ -119,3 +122,7 @@ Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat i
 ## Combat proof and integration
 
 013 (COMBAT-UI) proves a static battalion board and final-result layout. 048 (COUNTERS) validates numerical rules; 049 (BATTLES) safely persists server outcomes; 050 (REPORTS) displays authorised final results and reconciled army totals. V1 requires no animation, replay, timeline or narrated combat log. Prefer React/CSS for the board; PixiJS is optional only if a justified requirement emerges. Later visual improvements get separately scoped tasks. Read [combat preparation](docs/design/combat-visual-prototype.md). All remain TODO.
+
+## Settlement terminology and community views
+
+Settlement/settlements is the preferred player-facing term. Existing village filenames, VILLAGE keys and historical references remain technical aliases until a deliberate code/data naming decision. 057 (PROFILES) adds player and settlement pages; 058 (LEADERBOARDS) adds world/season rankings. Later tasks renumbered atomically, stable keys preserved. Ranking categories/formulas and profile visibility need approval before dispatch. Dev is the desired default branch; actual repository setting remains pending verification.

@@ -1,22 +1,22 @@
-# 058: Economy, counters and faction balance pass
+# 061: Mobile, accessibility, persistence and permission validation
 
-Task key: BALANCE
+Task key: QA
 Status: TODO
 Updated: 2026-10-05
 Milestone: Validation
-Dependencies: OFFLINE
+Dependencies: BALANCE
 
 ## Goal
 
-Exercise complete medieval loops with representative small-world scenarios.
+Run focused end-to-end checks on actual deployed medieval flows.
 
 ## Acceptance criteria
 
-Measure production/storage, forge usefulness, troop losses and viable three-kingdom choices. Document evidence and change only supported balance; no fairness guarantee from distinct rosters.
+Keyboard/touch/light/dark/kingdom themes usable; upload cleanup, auth/world isolation, restart/redeploy persistence and capture retries tested. Known defects recorded without repeated ceremonial suites.
 
 ## Required reading
 
-- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
+- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

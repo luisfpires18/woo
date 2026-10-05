@@ -1,22 +1,22 @@
-# 061: Run medieval alpha and refine next tasks
+# 060: Economy, counters and faction balance pass
 
-Task key: ALPHA-FEEDBACK
+Task key: BALANCE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Alpha
-Dependencies: FRIENDS
+Milestone: Validation
+Dependencies: OFFLINE, PROFILES, LEADERBOARDS
 
 ## Goal
 
-Collect actual play findings and update the evolving roadmap.
+Exercise complete medieval loops with representative small-world scenarios.
 
 ## Acceptance criteria
 
-Track forge decisions, faction participation, workload, counters, recovery and bugs. Add prioritised reviewable tasks. Decide continuation, reset and future rune emergence with owner; master/prod remains separate later release decision.
+Measure production/storage, forge usefulness, troop losses and viable three-kingdom choices. Document evidence and change only supported balance; no fairness guarantee from distinct rosters.
 
 ## Required reading
 
-- [docs/roadmap.md](../../docs/roadmap.md)
+- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 
