@@ -35,6 +35,7 @@ GitHub is the primary working specification. Read current topic documents before
 - [Village asset specification](design/village-asset-specification.md)
 - [Village art production runbook](design/village-art-production.md)
 - [Village renderer and interaction](technical/village-scene.md)
+- [Village/resource scene: researched tools and production plan](technical/village-resource-scene-research.md)
 - [Admin village scene editor](technical/village-scene-editor.md)
 - [Map visual prototype: step-by-step guide](design/map-visual-prototype.md)
 - [Map art production](design/map-art-production.md)

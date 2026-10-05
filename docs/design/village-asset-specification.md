@@ -45,3 +45,6 @@ Use feet/ground anchors as a starting point for building depth. Large walls, bri
 - Footprint, hit shape and label anchor supplied.
 - Connector seams and foreground overlaps pass.
 - Source/usage permission and approval recorded; trial art not mislabelled final.
+
+## Cel-shaded input clarification
+The owner can generate transparent 2D cel-shaded assets. Match terrain, buildings and props to one approved camera/light/outline/shading sheet; cel shading alone does not ensure consistency. Validate a forge/tree/ground sample before producing the family. Resource sites can combine one structure with repeated scenery while retaining a single logical site selection. A few visual stages may cover multiple numeric levels; exact mapping and field layout are proposals. Read [researched production details](../technical/village-resource-scene-research.md).
