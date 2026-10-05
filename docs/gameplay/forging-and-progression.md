@@ -6,6 +6,12 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 Units are recruited with default weapons, then can be upgraded. Weaponsmith and Armorsmith specialisations exist. The blacksmith has a talent tree and spends available points on choices. The first version uses ordinary medieval weapons/armour.
 
+## Role in the game
+
+Owner clarification, 2026-10-05: warfare, conquest and creating cool armies with powerful weapons are the central feel. Blacksmithing is the thematic identity and tooling for equipping/strengthening those armies. It does not need to dominate the player's time or make every action a smith activity. The confirmed specialisations, talent tree and future runeforging rules remain in place; this clarification changes their purpose and priority, not their existence.
+
+Evaluate equipment upgrades through their contribution to army strength, composition and enjoyable military progression. Any detailed crafting interaction should serve that experience; a separate crafting-simulation loop is not required. Equipment granularity and numeric effects remain open.
+
 ## Open medieval rules
 
 Upgrade individual soldiers, batches, regiments or a unit type? Are upgrades local or account-wide? Do new recruits inherit them? Can equipped troops fight during crafting? Can some units swap weapon categories? How are talent points earned, reset and limited? Can players master both specialisations?

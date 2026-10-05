@@ -61,3 +61,6 @@ Approved in conversation: centered full-background login and placeholder-based k
 
 ## Backend confirmation, 2026-10-05
 D-37 Confirmed: keep C# / ASP.NET Core backend and React/TypeScript frontend after comparing alternatives. This confirms those components of D-19; SQLite dev remains D-27 and exact versions/layout remain STACK. Azure versus Cloudflare is reassessed in [hosting comparison](../technical/hosting-comparison.md); Azure remains D-23. Serving frontend/API together initially is a recommendation, not an implemented deployment.
+
+## Core experience clarification, 2026-10-05
+D-38 Confirmed: the central feel is warfare, conquest and creating cool armies with powerful weapons. Master-blacksmith identity is thematic framing; forging is tooling for equipping and strengthening armies. The experience does not have to revolve around crafting or make every action feel like smith work. Preserve confirmed specialisations, talents and future rune rules. Supersedes the assistant's interpretation that a distinct blacksmith-centred crafting loop must be a primary feasibility gate. Evaluate strategy, armies, equipment and conquest together; exact rules and medieval-first scope remain unchanged.

@@ -4,7 +4,7 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 ## Confirmed
 
-Blacksmith identity grants control of the player's own village development, resources, recruitment and military actions. It does not grant control of other players. Main building is the settlement's central pillar. Village capture transfers its territory to the conquering kingdom.
+The player is thematically a master blacksmith and controls their own village development, resources, recruitment and military actions. The desired experience is warfare, conquest and building powerful equipped armies; blacksmithing supplies equipment/progression tools rather than restricting play to smith activities. It does not grant control of other players. Main building is the settlement's central pillar. Village capture transfers its territory to the conquering kingdom.
 
 Light/medium/heavy equipment equivalents remain cloth/leather/plate.
 

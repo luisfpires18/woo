@@ -6,6 +6,10 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 No fake attacks or manually synchronised waves. Players defend their kingdom. Capture a village to transfer its district and expand the conquering kingdom. Each unit has strengths and weaknesses; mounted horse units can beat appropriate foot troops but struggle against pikemen.
 
+## Experience priority
+
+Owner clarification, 2026-10-05: warfare, conquest and building cool armies with powerful weapons are the central experience. Combat and territorial growth should make developing armies feel rewarding. Forging is a supporting equipment/progression tool. Prioritise playable evaluation of army composition, equipment impact, understandable battle outcomes and enjoyable attack/defence/conquest choices. This does not approve new combat timings, reward formulas or first-release fantasy systems.
+
 ## Accepted direction
 
 Regiment identity, unit counters, pre-battle stances, fortress modules and capture objectives. Combat timing must be balanced, but no schedule is selected.
