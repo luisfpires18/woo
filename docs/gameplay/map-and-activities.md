@@ -35,3 +35,6 @@ Publish difficulty, estimated losses and mission duration after scouting. Use bo
 ## First-version clarification
 
 Ordinary medieval tasks/camps can be scoped first; rune sites and mythical rewards belong to future systems. Sea/air/underground movement is not automatically launch scope. A small friends alpha needs reachable objectives and enough NPC activity to prevent empty fronts.
+
+## Visual implementation planning
+See [map visual prototype](../design/map-visual-prototype.md). Terrain artwork, district ownership, village/site placement and travel graph are separate. The preview's locations/borders are illustrative; no canonical topology, capacities or final travel rules were approved by its generation.

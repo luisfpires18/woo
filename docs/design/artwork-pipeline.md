@@ -25,3 +25,6 @@ One real Arkazia village scene with six configurable hotspots, working detail pa
 ## Village feasibility work, 2026-10-05
 Read the [step-by-step visual prototype](village-visual-prototype.md) before producing the village family. Prove a clean terrain, separately replaceable forge/upgrade, two buildings, tree, modular walls and river/bridge integration. VILLAGE-UI tests local art/interaction; HOTSPOTS implements saved administration; VILLAGE-VISUAL-GATE validates end-to-end operation before expanding village gameplay. Static whole-scene hotspots are a fallback, not proof of modular upgrades.
 The owner now uploads images to Git personally. ChatGPT maintains documentation and generates previews; it must not upload approved or unapproved images on the owner's behalf. Admin R2 uploads are a separate future game feature.
+
+## Map feasibility work, 2026-10-05
+Read the [map prototype sequence](map-visual-prototype.md), [art runbook](map-art-production.md) and [scene contract](../technical/map-scene.md). Begin with geometry, then clean authored terrain, separate settlements and dynamic political overlays. MAP-UI proves one local region; full-world chunks and saved admin publishing are later integrations. The generated map preview is awaiting approval and cannot be used as final terrain because labels, ownership and villages are baked in.

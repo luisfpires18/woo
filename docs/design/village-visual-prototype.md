@@ -52,3 +52,6 @@ Retain review/source files only in agreed source storage. The live R2 delivery b
 
 ## Outstanding decisions
 Working canvas/camera numbers; final alpha roster/plots; reference and artwork rights; asset limits/formats; shadow convention; depth groups; performance budgets; publishing safety. See [open questions](../open-questions.md). Do not block the skeleton on these; resolve before the affected prototype step.
+
+## Related map guide
+The [map visual prototype](map-visual-prototype.md) applies the same separation of artwork, geometry, interaction and game state at regional scale. Its authored terrain plus dynamic districts/markers is distinct from the village's independently upgraded building composition.

@@ -12,11 +12,14 @@ Prototype regional map viewing, district selection, ownership overlays and detai
 
 ## Acceptance criteria
 
-Use labelled mock geography, not invented canon coordinates. Zoom/pan/selection usable; political ownership separate from terrain. No movement/pathfinding backend yet.
+Follow steps 1–9 of the map visual guide using local fixtures. Use labelled mock geography, not invented canon coordinates. Align authored terrain with explicit world geometry; settlement sprites, marker labels and district ownership remain separate. Prove owner recolour without terrain regeneration, independently replaceable settlement art, zoom/pan/selection, drag-versus-click, search/filter/recentre and a React inspector. Check touch, keyboard/list access, resize, both themes, missing-image fallback and representative label density/performance. Record art alignment/repair effort and actual measurements. No saved admin, R2, movement/pathfinding or capture backend yet. Do not declare whole-world seamless art proven by one regional image.
 
 ## Required reading
 
 - [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
+- [Map visual guide](../design/map-visual-prototype.md)
+- [Map artwork runbook](../design/map-art-production.md)
+- [Map scene contract](../technical/map-scene.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 
