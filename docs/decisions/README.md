@@ -58,3 +58,6 @@ D-34 Confirmed preference: restrained textures; early dark-navigation / ivory-co
 D-35 Accepted planning direction: make village visual feasibility explicit before broad asset production; document an early local proof plus later admin/storage integration gate.
 D-36 Proposal to validate: fixed plots, layered terrain/buildings/walls/bridge/props, stable anchors and geometry; React/PixiJS responsibilities. This does not settle free-placement gameplay, exact camera/schema, budgets or final artwork.
 Approved in conversation: centered full-background login and placeholder-based kingdom selector. Preview sample data is not balance canon.
+
+## Backend confirmation, 2026-10-05
+D-37 Confirmed: keep C# / ASP.NET Core backend and React/TypeScript frontend after comparing alternatives. This confirms those components of D-19; SQLite dev remains D-27 and exact versions/layout remain STACK. Azure versus Cloudflare is reassessed in [hosting comparison](../technical/hosting-comparison.md); Azure remains D-23. Serving frontend/API together initially is a recommendation, not an implemented deployment.

@@ -12,12 +12,13 @@ Choose supported runtime/dependency versions, architecture boundaries and soluti
 
 ## Acceptance criteria
 
-Compare the backend candidates against workload, owner maintainability, account/admin integration, SQLite and Azure constraints; record the explicit selection and reasoning. Record exact supported selected-backend/React/PixiJS/data-access versions, lockfile policy, candidate Domain/Application/Infrastructure/API boundaries and dependency direction. Confirm SQLite local/dev, Azure constraints and an initial 0.0.1-dev version contract. Avoid ceremonial aggregates or distributed services.
+Owner confirmed C# / ASP.NET Core and React/TypeScript on 2026-10-05. Preserve the backend comparison as selection rationale; assess supported versions and deployment compatibility against workload, account/admin integration, SQLite and Azure constraints. Record exact supported selected-backend/React/PixiJS/data-access versions, lockfile policy, candidate Domain/Application/Infrastructure/API boundaries and dependency direction. Confirm SQLite local/dev, Azure constraints and an initial 0.0.1-dev version contract. Avoid ceremonial aggregates or distributed services.
 
 ## Required reading
 
 - [docs/technical/architecture.md](../../docs/technical/architecture.md)
 - [Backend comparison](../technical/backend-comparison.md)
+- [Hosting comparison](../technical/hosting-comparison.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

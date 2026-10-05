@@ -4,7 +4,7 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 ## Status
 
-Recommended stack, not yet selected or implemented. This records the conversation, not a newly verified dependency/version audit. Confirm supported versions before development.
+C# / ASP.NET Core and React/TypeScript are confirmed by the owner. Other components/layout below remain recommendations or previously recorded directions; no implementation exists. Confirm exact supported versions before development.
 
 | Component | Recommendation | Purpose |
 |---|---|---|
@@ -38,4 +38,7 @@ Define architecture and exact supported dependency versions first, then create a
 First landing/game/admin UI can be polished with mock data before SQLite. Real login, owner roles, World membership and kingdom choice require persisted state. See [version/cache contract](versioning-and-cache.md). PostgreSQL provider/server is not implemented now; record migration concerns rather than developing two providers prematurely.
 
 ## Backend reassessment, 2026-10-05
-Read [backend comparison](backend-comparison.md). ASP.NET Core remains the recommendation, not a confirmed backend choice. Java/Spring, Go and TypeScript/Node are credible alternatives. React/TypeScript is the owner's preferred frontend; rendering remains independent of backend language. Final selection occurs in STACK. Early REST/polling and in-process persisted job processing are proposals; SignalR/another worker require justification, not automatic provisioning.
+Read [backend comparison](backend-comparison.md). The owner subsequently confirmed keeping C# / ASP.NET Core with React/TypeScript. Java/Spring, Go and TypeScript/Node remain credible alternatives documented as rationale. Rendering remains independent of backend language. Exact supported versions and boundaries are selected in STACK. Early REST/polling and in-process persisted job processing are proposals; SignalR/another worker require justification, not automatic provisioning.
+
+## Hosting reassessment, 2026-10-05
+Read [Azure versus Cloudflare](hosting-comparison.md). Initial proposal: one Azure app serves the React build and ASP.NET Core API, with R2 images. Cloudflare can host .NET through Containers, but default ephemeral disk complicates current SQLite dev persistence. A separate Cloudflare frontend is optional later. Azure remains the previously confirmed host; no resources were provisioned.
