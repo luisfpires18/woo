@@ -8,13 +8,20 @@ Dependencies: BATTLES, COMBAT-UI
 
 ## Goal
 
-Connect outcome reports and token-based replay to actual server events.
+Connect the accepted COMBAT-UI representation and accessible reports to persisted, server-authorised battle events. Tokens remain the missing-art fallback.
 
 ## Acceptance criteria
 
-Display composition, relevant counters, losses and outcome legibly; replay no gameplay authority. UI handles no-art fallback and version footer.
+Display composition, recorded interactions/modifiers, reconciled losses and final outcome. Do not invent precise causal percentages or expose hidden opponent information. Server projects an authorised report/event view for the requester; animation and downloaded assets cannot contain concealed data.
+
+Replay uses stored events and presentation mappings, not today's ruleset to recalculate yesterday's battle. Old report/event schema compatibility is explicit. Use pause/speed/skip/restart and bounded seeking consistent with the proof; ending totals agree at every supported speed and frame rate. Reports remain immediately accessible without waiting for playback or successful art loading.
+
+Test authorised and denied access, redacted reports, missing/stale assets, old versions, failed/retried fetches and switching battles during loading. Replaying/refreshing sends no resolution command and applies no economic effect. Optional notification integration must not depend on the later OFFLINE task to complete this slice. UI handles symbol fallback, reduced motion, accessible event list, both themes and version footer.
 
 ## Required reading
+
+- [Combat visual proof](../design/combat-visual-prototype.md)
+- [Replay contract and research](../technical/combat-research.md)
 
 - [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
 - [Scope](../scope.md)

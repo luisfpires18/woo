@@ -30,3 +30,6 @@ Centered login over full-screen forge artwork is approved. Kingdom selector is a
 The latest remade village screen is awaiting approval. Its costs, timings, labels, castle, river and building roster are illustrative. Do not treat visual generation as gameplay approval or production art.
 Read the [village visual proof](village-visual-prototype.md). UI labels/counters must remain live; scene art is not a flattened application.
 The owner now handles all Git image uploads; the older committed landing references remain historical until owner replacement. Match newer confirmed written directions when these differ from older pixels.
+
+## Combat preparation
+The owner likes the initial combat layout: central illustrated battlefield, army rosters, frontline/backline/flank labels and stance choices. Follow [combat visual proof](combat-visual-prototype.md) for local fixture controls and replay, and [combat artwork production](combat-art-production.md) for independently replaceable sprites. This preference does not approve the old screenshot's unit names, counts, schedules or stance bonuses. Player-facing formation controls cannot imply actions after commitment unless gameplay explicitly allows them.

@@ -29,3 +29,8 @@ Who declares shared campaigns; contributions/withdrawal deadlines; travel; fog/s
 ## Acceptance scenarios to define
 
 Prepared pikes versus cavalry; mixed armies; offline defender; identical battle inputs reproducible; no duplicated casualties on retries; capture changes owner once; interrupted workers recover a due battle. Exact outcomes require chosen mechanics.
+
+## Combat visual preparation, 2026-10-05
+The owner prefers the initial central illustrated battlefield with army rosters, recognisable frontline/backline/flank roles and pre-battle choices. Read [dedicated combat proof](../design/combat-visual-prototype.md) and [simulation/replay research](../technical/combat-research.md).
+
+Proposal to evaluate: a short recorded replay using a few representative sprites per regiment, with pause/speed/skip and an accessible event report. Four generic medieval roles are fixtures, not approved faction rosters. Formation slots, stance bonuses, phase duration, morale, ammunition and casualty formulas remain undecided. A displayed charge is presentation evidence, not numerical combat validation. Server resolution and committed losses remain separate from playback.

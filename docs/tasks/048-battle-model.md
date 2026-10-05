@@ -4,7 +4,7 @@ Task key: COUNTERS
 Status: TODO
 Updated: 2026-10-05
 Milestone: Combat
-Dependencies: RECRUIT, FORGING, SCOUTING
+Dependencies: RECRUIT, FORGING, SCOUTING, COMBAT-UI
 
 ## Goal
 
@@ -12,9 +12,17 @@ Specify/test numerical combat with readable role, armour and terrain interaction
 
 ## Acceptance criteria
 
-Choose formulas/stances/casualty rules and validate cavalry/pikes/mixed compositions. No assumed universal immunity; reports can explain causes. No full kingdom battle engine in this task.
+Choose and record targeting, phase/order rules, simultaneous-versus-sequential damage, counters, armour/terrain interactions, equipment effects, rounding and casualties. Only approved mechanics are numerical rules; morale, ammunition, retreat and RNG are unresolved until selected.
+
+Use a pure bounded resolver with immutable inputs, ruleset/content revisions and stable ordering. Prefer a small regiment/phase model before individual-soldier physics. If RNG is approved, pin its algorithm/seed and test distributions; seed alone does not guarantee reproducibility. Frame time and sprite collisions cannot affect results.
+
+Validate cavalry/pikes/mixed compositions, exposed ranged units, equipment upgrades, side-swapped equal forces, force-size extremes, zero forces, overkill and configured termination. Define equal-headcount versus equal-cost comparisons after costs are approved. Prevent negative counts, duplicate troop commitments and accidental first-side advantage. Test deterministic reruns, rounding thresholds and bounded runtime; preserve failing seeds where relevant.
+
+Outputs include observed interaction/modifier events and reconciled totals so reports can explain facts. Do not claim a stance caused a win without supporting evidence. No assumed universal immunity or one unstoppable army; final roster/faction balance belongs to BALANCE. No full kingdom battle engine here.
 
 ## Required reading
+
+- [Combat model and replay research](../technical/combat-research.md)
 
 - [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)

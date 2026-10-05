@@ -24,7 +24,7 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 010 | GAME-SHELL | Game UI structure and navigation polish | TODO | [010-game-ui-shell.md](docs/tasks/010-game-ui-shell.md) |
 | 011 | VILLAGE-UI | Village scene and interaction prototype | TODO | [011-village-ui.md](docs/tasks/011-village-ui.md) |
 | 012 | MAP-UI | World map visual and editing proof | TODO | [012-map-ui.md](docs/tasks/012-map-ui.md) |
-| 013 | COMBAT-UI | Army, deployment and combat report prototypes | TODO | [013-combat-ui.md](docs/tasks/013-combat-ui.md) |
+| 013 | COMBAT-UI | Combat formation and replay visual proof | TODO | [013-combat-ui.md](docs/tasks/013-combat-ui.md) |
 | 014 | FORGE-UI | Forge, equipment and talent UI prototypes | TODO | [014-forge-ui.md](docs/tasks/014-forge-ui.md) |
 | 015 | ADMIN-UI | Admin dashboard UI and content-editor structure | TODO | [015-admin-dashboard-ui.md](docs/tasks/015-admin-dashboard-ui.md) |
 | 016 | AUTH-UI | Login, world selection and kingdom-choice UI | TODO | [016-login-onboarding-ui.md](docs/tasks/016-login-onboarding-ui.md) |
@@ -115,3 +115,7 @@ Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat i
 ## Scene scope boundaries
 
 011 (VILLAGE-UI), 033 (HOTSPOTS) and 035 (VILLAGE-VISUAL-GATE) cover village interiors only. 012 (MAP-UI) independently proves the world-map rendering and local square-editing workflow; 043 (DISTRICTS) later owns saved map definitions and authoritative ownership. Resource types, production-site visuals and resource-screen layout are not decided and must not be invented during either scene proof. 023 and 037 remain gated by an owner-approved economy direction. Shared rendering utilities may be reused, but acceptance evidence and content remain separate.
+
+## Combat proof and integration
+
+013 (COMBAT-UI) separately proves the battlefield, formation controls and recorded local replay. 048 (COUNTERS) chooses and validates numerical rules; 049 (BATTLES) applies server results safely; 050 (REPORTS) connects authorised reports/replays to persisted battle events. A visual charge does not prove a counter formula. Shared Pixi utilities do not combine combat acceptance with map or village work. Read [combat preparation](docs/design/combat-visual-prototype.md). All remain TODO.
