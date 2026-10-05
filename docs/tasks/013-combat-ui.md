@@ -1,4 +1,4 @@
-# 013: Combat formation and replay visual proof
+# 013: Static battalion board and result proof
 
 Task key: COMBAT-UI
 Status: TODO
@@ -8,21 +8,19 @@ Dependencies: GAME-SHELL
 
 ## Goal
 
-Prove the preferred combat layout: army rosters beside a central illustrated battlefield, readable regiment formations and a short explanatory replay. Own this proof independently from map, village and resources.
+Prove a simple static battalion board and final result for v1. No animation, replay, timeline, narrated combat log or event-playback controls are required. Keep this separate from village, map and resources.
 
 ## Acceptance criteria
 
-Follow steps 1–9 of the combat visual guide with explicit local fixtures. Four synthetic medieval roles only: infantry, archers, cavalry and pikemen. These are test roles, not approved kingdom rosters. Pre-battle placement and stance controls demonstrate accepted direction; exact slots, effects, timing and casualty rules remain proposals.
+Follow the combat visual guide using local mock state. Define a readable board with frontline, backline and flank slots as a provisional layout. Place representative infantry, archer, cavalry and pikeman battalion cards/icons with name, role, count, side and relevant equipment. These generic fixtures do not define kingdom rosters or counter formulas.
 
-Prove rosters, frontline/backline/flank role readability, regiment selection/inspector and an illustrated battlefield. Start with symbols, then independently replace representative art. Use a bounded number of visible figures per regiment with authoritative-looking counts labelled as mock state. No one-sprite-per-soldier requirement.
+Show pre-battle placement/stance controls only where agreed, with clearly different editable versus committed/read-only states. Display a static opposing arrangement; unknown enemy data stays unknown. Select battalions through the board or accessible list and inspect their details.
 
-Play a schema-versioned recorded fixture through pause/resume, replay speed, restart, skip-to-report and a bounded phase seek. Test out-of-order/invalid fixture rejection, skipped time, repeated playback, reduced motion, missing art and renderer disposal. Outcome and recorded casualties cannot change with FPS, playback speed, seeks or asset changes. A slow or hidden tab must not trigger an unbounded catch-up loop.
+Use a separate final-result state with winner/draw as supported by the chosen rules, starting forces, survivors and approved loss categories. No requirement to watch a battle or read narrative text. Reconcile every displayed total; loss types and formulas remain pending. Mock results are explicitly labelled and do not claim live authority.
 
-Keep event-derived explanations and totals consistent between battlefield, event list and report. Counter messages appear only when the fixture records the relevant interaction; no fabricated causal claim or fictitious percentage attribution. Unknown opponent information is clearly marked in a restricted-view fixture.
+Use independently replaceable static images with symbol fallbacks. Test mouse/touch/keyboard, narrow screens, both themes, readable labels beyond colour, missing images and version footer. Record actual screenshots, layout/asset consistency and basic load/interaction measurements on named devices. A polished board does not need a PixiJS renderer: use React/CSS unless an agreed requirement justifies canvas.
 
-Check mouse/touch/keyboard navigation, responsive roster/inspector, both themes, labels/icons beyond colour, no forced camera shake, accessible report and app-version footer. Record actual sprite camera/anchor consistency, attempts/repairs, density and named-device loading/frame/memory measurements. Set budgets and owner-approved visual reference before dispatch.
-
-Provide owner-reviewed captures of pikes meeting a charge, ranged support and an exposed flank. These illustrate playback only, not a balanced combat engine. Static cutouts with movement/effects are a valid comparison; missing animation art leaves the animation-quality gate pending. No live micro, fake attacks, manual waves, saved orders, server-authoritative resolution, map conquest, siege, heroes, runes or all-kingdom art production.
+No animation/spritesheet production, replay controls, event timeline, live micro, fake attacks, manual waves, persisted orders, server resolution, siege, conquest, heroes or runes. Obtain owner review of the board and result before expansion. Final balance belongs to COUNTERS/BALANCE.
 
 ## Required reading
 

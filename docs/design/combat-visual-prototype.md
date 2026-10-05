@@ -1,58 +1,41 @@
-# Combat formation and replay: step-by-step visual proof
-Updated: 2026-10-05. Status: proposed preparation; no implementation or production assets.
+# Static battalion board and final result: visual proof
+Updated: 2026-10-05. Status: owner-confirmed v1 presentation; layout details are proposals.
 
-## Direction and boundaries
-The owner prefers the original combat screen: army rosters around an illustrated central battlefield with formation roles and pre-battle stances. Keep clean dark navigation, readable content, kingdom accents and restrained texture. Dark/light themes are independent of kingdom identity.
+## V1 boundary
+The owner chose a board showing battalions and a final result. No animation, replay, event timeline or narrated combat log. These can be considered later in separate tasks. COMBAT-UI (013) covers local mock presentation only; COUNTERS/BATTLES/REPORTS later supply validated rules and persisted outcomes. Map, village and resources remain separate.
 
-COMBAT-UI (013) is its own local proof. It does not implement village interiors, world-map editing, resource design, battle authority or conquest. Screen unit names, schedules, numbers and bonuses are illustrative. Four generic medieval fixture roles are not a final roster.
+Use React/CSS for the static board, cards, controls and result. A static battlefield image may sit beneath it. PixiJS is optional if a concrete requirement justifies the added machinery.
 
-Read [combat research](../technical/combat-research.md) and [art production](combat-art-production.md) before dispatch.
+## Proposed board
+A central board with two opposing sides and clearly labelled frontline, backline and flank slots. Army rosters sit beside it on desktop and in accessible tabs/sections on mobile. Exact slot count and assignment restrictions require review.
 
-## Small slice
-One neutral battlefield, two opposing sides, infantry, archers, cavalry and pikemen. A few bounded representative figures stand for each regiment; labelled counts communicate actual fixture forces. No heroes, rune effects, ships, flying troops, siege destruction or nine kingdom art families.
+A battalion is one logical card/icon with stable ID, role/name, troop count, side and relevant equipment. Do not draw one sprite for every soldier. Infantry, archers, cavalry and pikemen are synthetic proof roles, not faction-roster decisions. Labels/icons supplement kingdom colour.
 
-Pre-battle controls can demonstrate role placement and stance choices, but their numerical effects are not invented. Playback is a recorded fixture, explicitly labelled. It is not a battle engine or live troop order.
+Selection opens details. Pre-battle placement and stance controls demonstrate agreed direction only; committed armies are read-only unless rules explicitly allow changes. Opponent information can be unknown. Do not expose hidden counts just to fill the board.
 
-## Ordered work
-| Step | Work | Exit evidence |
+## Ordered proof
+| Step | Work | Evidence |
 |---|---|---|
-| 1 | Pin reference, camera, lanes/formation proposal, fixture IDs/events and budgets | Written source of truth; unapproved rules visible |
-| 2 | Build rosters, formation controls and battlefield with symbols | Selection/inspector and keyboard list work without art |
-| 3 | Define initial/events/final fixture with schema and stable ordering | Totals reconcile; invalid event references are rejected |
-| 4 | Implement one clock and recorded playback | Pause/speed/restart/skip and bounded phase seek agree |
-| 5 | Place static cel-shaded role art on clean battlefield | Roles distinguishable; facing, ground contact and overlap pass |
-| 6 | Add a minimal approved animation/effect subset | Charge/counter/ranged support follows recorded events |
-| 7 | Connect event highlights, roster counts and accessible report | Explanations reflect recorded facts; final totals match |
-| 8 | Test narrow screens, themes, touch, keyboard and failure cases | Reduced-motion/static view, missing-art fallback, hidden-tab policy |
-| 9 | Review captures, art effort and named-device measurements | Owner verdict on readability/feel; unresolved defects documented |
-| 10 | Later connect approved numerical model and stored server events | COUNTERS/BATTLES/REPORTS separately own real game integration |
+| 1 | Pin board reference, provisional slots and fixture IDs | Layout sketch and unresolved mechanics visible |
+| 2 | Build static cards/icons and rosters using symbols | Role, side, counts and selection readable |
+| 3 | Add accessible placement/stance controls where agreed | Editable and committed states distinguishable |
+| 4 | Add optional battlefield backdrop and representative static art | Consistent scale, true alpha, stable placement |
+| 5 | Build final-result state | Outcome and starting/surviving/lost totals reconcile |
+| 6 | Check mobile, themes, keyboard/touch and unknown data | No hover dependence or colour-only identification |
+| 7 | Check loading failures and repeated navigation | Symbol/list fallback, correct selection and no stale result |
+| 8 | Owner reviews board/result captures and measured behaviour | Continue or needs changes; limitations explicit |
 
-No R2 or saved admin is needed for steps 1–9. Use local fixtures, approved source images and independent asset slots. Preview replacement locally without claiming it is saved. Owner handles Git image uploads.
+No event fixture, animation clock, seeking or spritesheet is needed. A fixture result is clearly labelled mock; it does not validate balance.
 
-## Scenarios to show
-- A cavalry approach meeting a prepared pike formation, with a recorded counter highlight.
-- Ranged support behind a frontline, followed by a fixture illustrating exposed ranged troops.
-- A mixed-army exchange with clear targets, losses and final outcome.
-- Restricted opponent information, showing unknown data without revealing it in labels.
-- Missing sprites and reduced motion, where the report remains understandable.
+## Result
+A concise outcome panel and per-battalion totals. Show only approved categories; wounded/captured/retreated are not invented. No text narration is necessary. Initial and final totals must agree with the fixture. Server integration later authorises/redacts results and supplies frozen historical outcomes.
 
-These scripted scenarios prove presentation and report consistency. They do not prove pikes always win, validate balance or adopt ammunition/morale/retreat rules.
+## Artwork and acceptance
+Read [static combat art production](combat-art-production.md) and [combat research](../technical/combat-research.md). Static unit image slots are independently replaceable. Missing art preserves role/count access. Test role silhouettes at actual card size and on light/dark surfaces.
 
-## Acceptance gate
-Recognise role, side and facing at actual display size. Select a regiment using mouse, touch or keyboard/list. Stance/placement controls have clear pre-battle versus committed/read-only state. Formation overlays do not imply playable live movement.
-
-Replaying the same fixture at different speeds/FPS and seeking/skipping yields identical totals and event order. Count updates do not depend on animation callbacks. Repeated playback sends no order and grants no reward.
-
-Important events attract attention without hiding neighbouring formations. Report lists what happened without invented attribution. Missing art or canvas failure preserves text access. Reduced motion removes optional motion; no forced camera shake.
-
-Record source dimensions, anchors, art attempts/repairs, supported facing, viewports, devices, figure/effect counts, load/frame/memory measurements and owner verdict. Resolve exact budgets before dispatch. Placeholders can pass controls but not sprite/animation consistency.
-
-## Fallback and evidence
-Compare static cutouts with movement/highlights against minimal frame animation before commissioning an entire animated roster. Keep the representation that achieves approved readability and feel at sustainable art effort. A fallback needs owner review; it cannot silently pass animation criteria.
-
-Store task evidence in its agreed location: fixture/schema versions, reference IDs, screenshot/video identifiers, repaired assets, interaction assertions, timings and limitations. No automatic image commits.
+Record viewports/devices, screenshot identifiers, fixture values, art references/repairs and basic load/interaction measurements. Owner handles Git image uploads. Do not expand faction art until the board is reviewed.
 
 ## TLDR
-Next: a four-role, one-battlefield local proof.
-Done: ordered production and acceptance plan.
-Issues: fixture rules are illustrative; no simulation, art or device gate has passed.
+Next: a simple static board and result proof.
+Done: v1 simplified; replay and animation deferred.
+Issues: exact formations and numerical rules remain open.

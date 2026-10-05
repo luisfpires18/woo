@@ -14,9 +14,9 @@ Resolve a bounded automatic encounter with authoritative inputs/outcomes.
 
 Freeze eligible troop/equipment/stance inputs under an approved commitment policy; persist battle identity, rules/content versions and RNG details if used. Resolve independently of UI or replay duration. Worker recovery must handle due battles while the web host is idle; no always-on process assumption for Azure F1.
 
-Use database-enforced uniqueness/idempotency and concurrency handling with atomic troop adjustments, result and event/report persistence. Simultaneous battles cannot spend the same troops; define reservation/conflict ordering. Test duplicate jobs, competing workers, restart before/after commit, stale versions, zero surviving forces and bounded retry failures. Do not hold a database write transaction for an entire long simulation.
+Use database-enforced uniqueness/idempotency and concurrency handling with atomic troop adjustments, result and audit persistence. Simultaneous battles cannot spend the same troops; define reservation/conflict ordering. Test duplicate jobs, competing workers, restart before/after commit, stale versions, zero surviving forces and bounded retry failures. Do not hold a database write transaction for an entire long simulation.
 
-Damage/losses and any approved retreat/loot apply once; repeated processing cannot grant rewards or casualties twice. SQLite-safe transactions and application-managed concurrency tokens are required where appropriate; do not assume SQL Server rowversion. Persist enough immutable data to audit and replay after balance changes. Notifications follow commit and can retry without replaying economic effects. Outcome independent of animation. Capture intentionally deferred.
+Damage/losses and any approved retreat/loot apply once; repeated processing cannot grant rewards or casualties twice. SQLite-safe transactions and application-managed concurrency tokens are required where appropriate; do not assume SQL Server rowversion. Persist enough immutable data to audit historical outcomes after balance changes. Notifications follow commit and can retry without replaying economic effects. Outcome independent of animation. Capture intentionally deferred.
 
 ## Required reading
 

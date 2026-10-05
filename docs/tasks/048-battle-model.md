@@ -18,7 +18,7 @@ Use a pure bounded resolver with immutable inputs, ruleset/content revisions and
 
 Validate cavalry/pikes/mixed compositions, exposed ranged units, equipment upgrades, side-swapped equal forces, force-size extremes, zero forces, overkill and configured termination. Define equal-headcount versus equal-cost comparisons after costs are approved. Prevent negative counts, duplicate troop commitments and accidental first-side advantage. Test deterministic reruns, rounding thresholds and bounded runtime; preserve failing seeds where relevant.
 
-Outputs include observed interaction/modifier events and reconciled totals so reports can explain facts. Do not claim a stance caused a win without supporting evidence. No assumed universal immunity or one unstoppable army; final roster/faction balance belongs to BALANCE. No full kingdom battle engine here.
+Outputs include final outcome, reconciled totals and sufficient audit detail for recorded modifier facts where needed. A player-facing event stream or replay is not required for v1. Do not claim a stance caused a win without supporting evidence. No assumed universal immunity or one unstoppable army; final roster/faction balance belongs to BALANCE. No full kingdom battle engine here.
 
 ## Required reading
 

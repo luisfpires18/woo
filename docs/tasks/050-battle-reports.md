@@ -1,4 +1,4 @@
-# 050: Battle reports and simple event replay
+# 050: Final battle results and army totals
 
 Task key: REPORTS
 Status: TODO
@@ -8,15 +8,15 @@ Dependencies: BATTLES, COMBAT-UI
 
 ## Goal
 
-Connect the accepted COMBAT-UI representation and accessible reports to persisted, server-authorised battle events. Tokens remain the missing-art fallback.
+Connect the accepted static battalion board and final result to persisted, server-authorised battle outcomes. Animation and replay are deferred beyond v1.
 
 ## Acceptance criteria
 
-Display composition, recorded interactions/modifiers, reconciled losses and final outcome. Do not invent precise causal percentages or expose hidden opponent information. Server projects an authorised report/event view for the requester; animation and downloaded assets cannot contain concealed data.
+Display authorised composition, outcome, starting forces, survivors and approved loss categories with reconciled totals. No narrated log, event timeline or replay required. Counter/modifier details may be compact optional data only where recorded and useful; do not invent causal percentages.
 
-Replay uses stored events and presentation mappings, not today's ruleset to recalculate yesterday's battle. Old report/event schema compatibility is explicit. Use pause/speed/skip/restart and bounded seeking consistent with the proof; ending totals agree at every supported speed and frame rate. Reports remain immediately accessible without waiting for playback or successful art loading.
+The server redacts hidden opponent data before delivery. Persist sufficient frozen input/rules references and final outcomes for audit; render historical results without recalculating using today's stats. Define result-schema compatibility.
 
-Test authorised and denied access, redacted reports, missing/stale assets, old versions, failed/retried fetches and switching battles during loading. Replaying/refreshing sends no resolution command and applies no economic effect. Optional notification integration must not depend on the later OFFLINE task to complete this slice. UI handles symbol fallback, reduced motion, accessible event list, both themes and version footer.
+Test allowed/denied access, restricted results, missing/stale images, failed/retried requests and switching battles during loading. Viewing/refreshing a result sends no resolution command and applies no economic effect. Static image/symbol fallbacks, accessible lists, both themes and version footer work. Notification integration must not depend on the later OFFLINE task.
 
 ## Required reading
 

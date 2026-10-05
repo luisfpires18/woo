@@ -24,7 +24,7 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 010 | GAME-SHELL | Game UI structure and navigation polish | TODO | [010-game-ui-shell.md](docs/tasks/010-game-ui-shell.md) |
 | 011 | VILLAGE-UI | Village scene and interaction prototype | TODO | [011-village-ui.md](docs/tasks/011-village-ui.md) |
 | 012 | MAP-UI | World map visual and editing proof | TODO | [012-map-ui.md](docs/tasks/012-map-ui.md) |
-| 013 | COMBAT-UI | Combat formation and replay visual proof | TODO | [013-combat-ui.md](docs/tasks/013-combat-ui.md) |
+| 013 | COMBAT-UI | Static battalion board and result proof | TODO | [013-combat-ui.md](docs/tasks/013-combat-ui.md) |
 | 014 | FORGE-UI | Forge, equipment and talent UI prototypes | TODO | [014-forge-ui.md](docs/tasks/014-forge-ui.md) |
 | 015 | ADMIN-UI | Admin dashboard UI and content-editor structure | TODO | [015-admin-dashboard-ui.md](docs/tasks/015-admin-dashboard-ui.md) |
 | 016 | AUTH-UI | Login, world selection and kingdom-choice UI | TODO | [016-login-onboarding-ui.md](docs/tasks/016-login-onboarding-ui.md) |
@@ -61,7 +61,7 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 047 | DUTIES | Useful kingdom duties | TODO | [047-kingdom-duties.md](docs/tasks/047-kingdom-duties.md) |
 | 048 | COUNTERS | Unit counters and battle-model validation | TODO | [048-battle-model.md](docs/tasks/048-battle-model.md) |
 | 049 | BATTLES | Persisted automatic battle resolution | TODO | [049-battle-resolution.md](docs/tasks/049-battle-resolution.md) |
-| 050 | REPORTS | Battle reports and simple event replay | TODO | [050-battle-reports.md](docs/tasks/050-battle-reports.md) |
+| 050 | REPORTS | Final battle results and army totals | TODO | [050-battle-reports.md](docs/tasks/050-battle-reports.md) |
 | 051 | CAMP | Ordinary animal camps and expeditions | TODO | [051-ordinary-camps.md](docs/tasks/051-ordinary-camps.md) |
 | 052 | CAMPAIGNS | Declared kingdom campaigns and defence commitments | TODO | [052-kingdom-campaigns.md](docs/tasks/052-kingdom-campaigns.md) |
 | 053 | SIEGE | Village siege and defensive building effects | TODO | [053-village-siege.md](docs/tasks/053-village-siege.md) |
@@ -118,4 +118,4 @@ Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat i
 
 ## Combat proof and integration
 
-013 (COMBAT-UI) separately proves the battlefield, formation controls and recorded local replay. 048 (COUNTERS) chooses and validates numerical rules; 049 (BATTLES) applies server results safely; 050 (REPORTS) connects authorised reports/replays to persisted battle events. A visual charge does not prove a counter formula. Shared Pixi utilities do not combine combat acceptance with map or village work. Read [combat preparation](docs/design/combat-visual-prototype.md). All remain TODO.
+013 (COMBAT-UI) proves a static battalion board and final-result layout. 048 (COUNTERS) validates numerical rules; 049 (BATTLES) safely persists server outcomes; 050 (REPORTS) displays authorised final results and reconciled army totals. V1 requires no animation, replay, timeline or narrated combat log. Prefer React/CSS for the board; PixiJS is optional only if a justified requirement emerges. Later visual improvements get separately scoped tasks. Read [combat preparation](docs/design/combat-visual-prototype.md). All remain TODO.

@@ -1,49 +1,26 @@
-# Combat battlefield and sprite production
-Updated: 2026-10-05. Status: proposed asset workflow; owner-generated cel-shaded art expected.
+# Static combat board artwork
+Updated: 2026-10-05. Status: v1 asset plan; no production art created.
 
-## Required composition contract
-Approve one camera, scale, outline treatment, light/shadow direction and colour reference. Combat sprites need their own role/facing readability; a village building camera or character portrait does not automatically fit. The owner supplies/approves images and handles Git uploads.
+## V1 assets
+One optional clean battlefield backdrop and static battalion icons/cutouts. No animation frames, walk/run/attack/death sheets or replay effects required. Owner supplies/approves images and handles Git uploads.
 
-Begin with one infantry master on one ground patch. Inspect facing, feet, weapon clearance, contrast and size before expanding to archers, pikemen and cavalry. Mounted sprites need rider/horse contact and a consistent ground footprint. Character identity must survive each animation pose.
+Use one camera, light, outline and scale reference. Begin with representative infantry, archers, cavalry and pikemen; these are fixture roles rather than an approved roster. A single image represents a battalion, with its count rendered as live UI text.
 
-## Asset separation
-| Asset | Contract |
-|---|---|
-| Battlefield ground | Clean terrain, no troops/UI/counts/baked faction ownership |
-| Regiment/unit cutout | True alpha, stable ground anchor, readable weapon silhouette |
-| Optional frame sequence | Same character/camera/scale; preserved padding and named action |
-| Effects | Separate arrow/dust/impact; limited visual importance |
-| Live overlays | Names, counts, role/status, selection and events rendered in UI |
-| Fallback symbol | Available even if image request or animation fails |
+## Per-image contract
+Stable logical ID, role/variant, revision, dimensions, true alpha where needed, approved source/reference, intended display scale and optional ground anchor for illustrated-board placement. Never bake names, counts, selections or outcome into art.
 
-Decoration must not imply a real terrain bonus unless the fixture/model records one. A forest painted behind the battlefield is not automatically cover.
+Check weapon/role silhouette at actual card size, alpha on ivory/charcoal, unclipped spears/bows, readable mounted outline and matching scale. Opposing facing may use separate art or approved mirroring; do not arbitrarily reverse directional lighting or shield/weapon hands.
 
-## Minimal progression
-1. Static infantry cutout, symbolic other roles and clean ground.
-2. Four approved static roles; compare roster readability at minimum play size.
-3. Move representative formations with limited impact/projectile effects.
-4. Add a small action set for representative roles only: idle, advance and attack/impact where useful. Frame count and duration are selected after testing, not mandated now.
-5. Add removal/fade or an approved casualty pose if it improves explanation.
-6. Expand animation coverage only after owner review of assembled footage and production effort.
+The backdrop contains no troops, UI or faction ownership. Decorative terrain does not create gameplay bonuses.
 
-Do not make full walk/run/attack/death sheets for every kingdom before this proof. Existing sprite skills may help generate consistent source frames, but their Unity export and fighting-game motion rules are not automatically the WOO browser specification. No sprite-generation skill is invoked by this documentation update.
+## Delivery sequence
+1. Symbols and role labels prove layout first.
+2. Replace one battalion image and inspect the result at desktop/mobile size.
+3. Add the remaining representative static roles.
+4. Add the optional background only if it improves readability.
+5. Review consistency and replacement behaviour before expanding kingdom art.
 
-## Per-asset metadata
-Stable logical ID, role/variant, revision, dimensions, original canvas dimensions, ground anchor, footprint, allowed facing/mirroring, scale, frame names/durations, animation loops and layer. Record source/usage rights, approved reference and repair effort.
+Image failure retains symbol/name/count. Art variation and ordinary equipment differences must not erase role recognition. Admin replacement/cache/cleanup use ASSETS and IMAGE-CACHE later; local fixtures do not claim saved uploads.
 
-If trimming/packing, preserve original frame offsets so feet do not jump. Atlas rotation is storage packing, not permission to rotate the displayed fighter. Opposite facing may need separate art: mirroring swaps shield/weapon hands and light direction. Approve that explicitly rather than silently flipping all units.
-
-Use transparent PNG sources first. Check alpha on charcoal, ivory and real terrain. Remove painted checkerboards, unwanted glow halos and background remnants. Reserve space for a spear, bow draw and horse without clipping. Do not resize each frame independently to its visible bounding box.
-
-## Regiment representation
-Use a capped display count per regiment and reuse one approved texture/frame set. Visible figures are representative; overlays state fixture numbers. Disappearing figures must not falsely claim one-to-one casualties. Use consistent display-count mapping and exact report totals.
-
-Offset repeated figures within a fixed formation footprint; avoid uncontrolled random jitter and overlaps. A single representative figure per group is an acceptable first comparison. Select the regiment as a group with an accessible roster entry, not tiny soldier targets.
-
-## Quality gate
-Role/side/facing readable; no floating feet or doubled shadow; no frame-to-frame size/identity drift; no spear clipping; cavalry remains distinguishable; important hits visible without effect overload. Inspect movement at normal and slow replay speed on desktop and mobile.
-
-A static image is not proof of animation consistency. A nice GIF is not proof of replay seeking, casualty totals or browser performance. Record both art review and interaction evidence in COMBAT-UI.
-
-## Replacement and runtime
-Independent admin image/animation references follow ASSETS and IMAGE-CACHE later. Source frames, atlases and necessary derivatives need reference-aware cleanup. Do not introduce a mandatory giant atlas for all runtime uploads. Local replacement in 013 proves visual flexibility only; saved administration remains later work.
+## Deferred
+Animation, frame alignment, spritesheet packing and replay effects are future work. Earlier research remains an optional reference, not a v1 gate.

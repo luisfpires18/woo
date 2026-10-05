@@ -30,7 +30,7 @@ Who declares shared campaigns; contributions/withdrawal deadlines; travel; fog/s
 
 Prepared pikes versus cavalry; mixed armies; offline defender; identical battle inputs reproducible; no duplicated casualties on retries; capture changes owner once; interrupted workers recover a due battle. Exact outcomes require chosen mechanics.
 
-## Combat visual preparation, 2026-10-05
-The owner prefers the initial central illustrated battlefield with army rosters, recognisable frontline/backline/flank roles and pre-battle choices. Read [dedicated combat proof](../design/combat-visual-prototype.md) and [simulation/replay research](../technical/combat-research.md).
+## Confirmed v1 combat presentation, 2026-10-05
+The owner chose a simple static board showing battalions and their arrangement, followed by the final result. No animations, replay, timeline or narrated combat log are needed for v1. Earlier replay proposals are deferred, not accepted requirements.
 
-Proposal to evaluate: a short recorded replay using a few representative sprites per regiment, with pause/speed/skip and an accessible event report. Four generic medieval roles are fixtures, not approved faction rosters. Formation slots, stance bonuses, phase duration, morale, ammunition and casualty formulas remain undecided. A displayed charge is presentation evidence, not numerical combat validation. Server resolution and committed losses remain separate from playback.
+Read [combat board proof](../design/combat-visual-prototype.md) and [combat implementation research](../technical/combat-research.md). Generic medieval fixture roles do not confirm faction rosters. Exact placement slots, stance effects, timing and casualty formulas remain open. The server calculates real outcomes later; presentation does not decide combat. Prefer React/CSS for this static board unless a specific requirement justifies canvas.
