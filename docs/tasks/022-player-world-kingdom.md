@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 022: Associate player with World and chosen kingdom
 
-Task key: SKILLS
+Task key: MEMBERSHIP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Accounts
+Dependencies: WORLDS, IDENTITY
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Persist onboarding and Player-to-World-to-Kingdom membership.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Verify playable kingdom and world availability; prevent duplicate invalid joins/cross-world access. Owner decides whether accounts may join several worlds and switching rules before implementation; no silent rule inventions.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/open-questions.md](../../docs/open-questions.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

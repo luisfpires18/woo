@@ -55,3 +55,9 @@ Read latest repository documents, update the relevant topic, record decision cha
 - [Azure and deployment](technical/azure-and-deployment.md)
 
 Current working specification is on dev. Explicitly read dev rather than assuming the repository default. Individual task specifications are linked from tasks_roadmap.md.
+
+- [App versions and image cache](technical/versioning-and-cache.md)
+
+The numbered queue now contains smaller reviewable tasks. Read task dependencies and current milestone outline instead of treating the previous twelve groups as the execution plan.
+
+- [Cloudflare/R2 setup and commands runbook](technical/cloudflare-r2.md)

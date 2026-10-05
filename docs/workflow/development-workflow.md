@@ -18,7 +18,7 @@ Use root [tasks_roadmap.md](../../tasks_roadmap.md) and detailed files in docs/t
 
 Approval is not itself DONE. Track review, merge and deployment separately in the task detail. One active implementation task at a time. If pipeline remains running, record deployment pending; owner can explicitly proceed to another task without pretending the prior pipeline passed.
 
-Numbers show current order, not permanent identity. Each task has an immutable key such as STACK, while filenames use the current number: 002-tech-stack.md. When inserting a refinement, renumber later rows and detail filenames atomically, update all links and dependencies, and preserve the immutable key. Never rewrite historical commits or rename an active implementation branch merely because its task moved. Keep its exact branch and original prompt in Execution record. Future branches use the current number. See the insertion example in tasks_roadmap.md.
+Numbers show current order, not permanent identity. Each task has an immutable key such as STACK, while filenames use the current number: 002-tech-stack.md. When inserting a refinement, renumber later rows and detail filenames atomically, update all links and dependencies, and preserve the immutable key. Never rewrite historical commits or rename an active implementation branch merely because its task moved. Keep its exact branch and original prompt in Execution record. Future branches use the current number. See insertion rules in tasks_roadmap.md. Use whole numbers; separately dispatched/reviewed work gets its own number rather than a letter suffix.
 
 ## Cycle
 
@@ -50,3 +50,7 @@ Always give executable, step-by-step Git/Azure commands with concrete verified v
 ## Closing report
 
 ChatGPT and Claude end each task/prompt/review response with a short TLDR: what is to be done, what is done and issues encountered. Explicitly say when implementation, merge, deployment or remote verification has not happened.
+
+## Continuous roadmap obligation
+
+Update task roadmap/detail files after meaningful scope refinements, discovered prerequisites, implementation dispatch, review, merge and deployment. Keep task status honest and links coherent. Early runnable/deployed slices take precedence over one large all-game rules task. Current local/dev database is SQLite; production remains deferred.

@@ -17,3 +17,11 @@ Server validates ownership, resource sufficiency and prerequisites. Spending and
 Troop granularity, village count, world/account ownership, equipment inheritance, battle resolution, resource precision and maximums, durable scheduling, FK/deletion rules and migration strategy.
 
 Final schemas and endpoint payloads are intentionally not invented at this stage.
+
+## Confirmed storage direction
+
+SQLite for local and dev. Production PostgreSQL is a later consideration; no simultaneous provider implementation required now. Use account, World, Player membership and Kingdom as distinct concepts. A player's membership is scoped to a World; multiple-world and kingdom-switch policies must be explicitly chosen.
+
+Introduce persistence after UI prototypes but before actual account/world state. Incremental schema/migrations follow authorised slices; do not require the full combat/forging model before first deployment. Choose ORM support, ownership keys, constraints, transactions, precision and concurrency behavior against SQLite itself.
+
+Dev database survives redeploy/restart, resides outside app artifacts and has a verified consistent backup/restore path. Azure filesystem/journal compatibility is an early persistence gate. No blind WAL enablement or multi-instance SQLite scaling assumption. See [Azure deployment](azure-and-deployment.md).

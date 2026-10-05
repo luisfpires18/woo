@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 039: Recruitment and troop inventory
 
-Task key: SKILLS
+Task key: RECRUIT
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Military
+Dependencies: CONSTRUCTION, UNITS-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Recruit approved ordinary units with default weapons.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Costs/times/buildings/capacity/upkeep enforced; queue produces units once. Lists expose composition/default equipment. No unique advanced bearer system.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

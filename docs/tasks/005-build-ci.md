@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 005: GitHub build and focused test Actions
 
-Task key: SKILLS
+Task key: BUILD-CI
 Status: TODO
 Updated: 2026-10-05
 Milestone: Foundation
-Dependencies: None
+Dependencies: VERSION
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Add real application build/test checks to the existing documentation CI.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+dev pushes and applicable PRs validate actual code; no Azure credentials needed. Failures block deployment; checks report what actually ran. Preserve working docs/task validation.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/workflow/development-workflow.md](../../docs/workflow/development-workflow.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

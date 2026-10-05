@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 020: Owner bootstrap and admin authorisation
 
-Task key: SKILLS
+Task key: ROLES
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Accounts
+Dependencies: IDENTITY, ADMIN-UI
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Provision the owner role and enforce admin permissions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Owner can enter workspace; ordinary players denied by backend and UI. No public role elevation. Verify bootstrap uses a supported local/configuration handoff without committing credentials.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/admin.md](../../docs/admin.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

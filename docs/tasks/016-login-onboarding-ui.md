@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 016: Login, world selection and kingdom-choice UI
 
-Task key: SKILLS
+Task key: AUTH-UI
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: LANDING, GAME-SHELL
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Prototype the account/onboarding journey including World (game) membership.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Login/error/loading layouts, world list and Arkazia/Veridor/Sylvara choices clear; other future factions greyed out. Prototype does not claim real authentication or saved membership.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/world/kingdoms-and-geography.md](../../docs/world/kingdoms-and-geography.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 010: Game UI structure and navigation polish
 
-Task key: SKILLS
+Task key: GAME-SHELL
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: LANDING
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Build the reusable game layout with navigation, resource-header placeholders and page structure.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Village/map/forge/army/duties views reachable using explicit mock data. Layout works at mobile widths and both themes; shared version footer. No fake saved state or world membership.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

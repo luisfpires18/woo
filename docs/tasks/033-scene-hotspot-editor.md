@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 033: Admin scene anchors and clickable hotspots
 
-Task key: SKILLS
+Task key: HOTSPOTS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Assets
+Dependencies: ASSETS, VILLAGE-UI, MAP-UI
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Configure display anchors and normalised scene/district hotspots.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Hotspots align across resize/zoom/touch; image replacement prompts geometry review. Keyboard-accessible equivalent navigation exists. No terrain adjacency inferred from pixels.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

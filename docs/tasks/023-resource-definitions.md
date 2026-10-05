@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 023: Admin resource definitions
 
-Task key: SKILLS
+Task key: RESOURCES-ADMIN
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Content
+Dependencies: WORLDS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create validated resource definitions and basic economy configuration.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Stable IDs, names, units, image/fallback and availability editable; initial resources supplied/approved rather than guessed. Referenced definitions cannot be destructively deleted without a policy.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/content/catalogues.md](../../docs/content/catalogues.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

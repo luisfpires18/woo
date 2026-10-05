@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 025: Admin unit definitions and default equipment
 
-Task key: SKILLS
+Task key: UNITS-ADMIN
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Content
+Dependencies: BUILDINGS-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create approved initial kingdom rosters as configurable definitions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Recruitment, cost/upkeep, role/domain/armour and default weapon represented. Every unit has purpose and weakness. Owner supplies roster; sea/air fantasy units not enabled by default.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/content/catalogues.md](../../docs/content/catalogues.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

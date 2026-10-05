@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 013: Army, deployment and combat report prototypes
 
-Task key: SKILLS
+Task key: COMBAT-UI
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: GAME-SHELL
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create composition/stance and understandable combat/report layouts.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Explicit mock regiments, tokens and outcomes; readable counters/losses and version footer. No live micro, fake attacks or server-authoritative result claims.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

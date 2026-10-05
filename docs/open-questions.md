@@ -17,7 +17,7 @@ Use this list to resolve implementation blockers before writing final formulas/c
 | O-09 | What ends the medieval first season and what resets? | Alpha scope and retention |
 | O-10 | Map topology, capacities, travel and visibility? | World generation and orders |
 | O-11 | Exact first-version duties/camps, NPCs, hero and naval scope? | Scope freeze |
-| O-12 | Select stack, versions, Azure layout, database hosting and account bootstrap? | Technical setup |
+| O-12 | Select exact dependency versions, pragmatic architecture, Azure SQLite layout and account bootstrap? | Technical setup |
 | O-13 | Which admin edits affect active orders; content rollback semantics? | Config/event consistency |
 | O-14 | R2 confirmation, file limits, delivery and cleanup design? | Asset storage |
 | O-15 | Rune emergence within a season or via later releases? | Future roadmap |
@@ -33,3 +33,9 @@ Future questions need not block a purely medieval prototype unless its data mode
 ## Workflow setup gaps
 
 Current LP AI WORK file and exact sources for requested Claude tools; actual local install audit; repository default branch setting; Azure subscription eligibility/quota/resources/auth; deployable code layout. dev branch and documentation CI are configured; Azure resources and application deployment are not.
+
+## Revised readiness policy
+
+Early skeleton, page, version and deployment tasks do not require every medieval mechanic decided. Resolve a task's own blockers before dispatch; UI mocks are explicit until persistence exists. SQLite local/dev is settled, PostgreSQL production is deferred.
+
+New task-level decisions: release version increment policy/shared metadata; image revision/cache headers; DDD boundary depth; World membership cardinality and kingdom switching; actual Azure SQLite file/journal/backup compatibility. These are tracked by relevant detail files in the expanded queue.

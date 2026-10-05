@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 060: Run medieval alpha and refine next tasks
 
-Task key: SKILLS
+Task key: ALPHA-FEEDBACK
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Alpha
+Dependencies: FRIENDS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Collect actual play findings and update the evolving roadmap.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Track forge decisions, faction participation, workload, counters, recovery and bugs. Add prioritised reviewable tasks. Decide continuation, reset and future rune emergence with owner; master/prod remains separate later release decision.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/roadmap.md](../../docs/roadmap.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

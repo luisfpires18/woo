@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 007: Deploy the first page automatically from dev
 
-Task key: SKILLS
+Task key: DEV-DEPLOY
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Deployment
+Dependencies: AZURE-SETUP
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create the dev-only application deployment Action and validate a complete deployed round trip.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+A dev change builds/tests, deploys its exact artifact and serves a healthy versioned page. Deployment history identifies commit/version; failures visible; no prod workflow. Demonstrate recovery without inventing Azure resource identifiers.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/azure-and-deployment.md](../../docs/technical/azure-and-deployment.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 021: World creation, availability and alpha factions
 
-Task key: SKILLS
+Task key: WORLDS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Accounts
+Dependencies: ROLES
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement World/season admin definitions and availability before assigning players.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Create/open/close test worlds and enforce playable faction flags. Neutral Drakanith/hostile Moraphys roles are configurable; their active medieval content is not automatically enabled. World data isolated.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/world/kingdoms-and-geography.md](../../docs/world/kingdoms-and-geography.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 050: Ordinary animal camps and expeditions
 
-Task key: SKILLS
+Task key: CAMP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Activities
+Dependencies: MOVEMENT, SCOUTING, BATTLES
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement a small bounded medieval expedition loop if included in alpha scope.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Approve ordinary sites/rewards/risks; avoid magical animal-to-rune drops. Reservation/replenishment and offline results predictable. Inclusion remains a scope decision.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

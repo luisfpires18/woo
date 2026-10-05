@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 040: Ordinary weaponsmith and armorsmith upgrades
 
-Task key: SKILLS
+Task key: FORGING
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Military
+Dependencies: RECRUIT, EQUIPMENT-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Connect forge UI to actual medieval upgrades.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Agreed per-type/batch/individual rule implemented; costs/availability and compatibility enforced; define new-recruit inheritance and use during crafting. No generic unrestricted swaps.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

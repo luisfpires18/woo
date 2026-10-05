@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 047: Unit counters and battle-model validation
 
-Task key: SKILLS
+Task key: COUNTERS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Combat
+Dependencies: RECRUIT, FORGING, SCOUTING
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Specify/test numerical combat with readable role, armour and terrain interactions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Choose formulas/stances/casualty rules and validate cavalry/pikes/mixed compositions. No assumed universal immunity; reports can explain causes. No full kingdom battle engine in this task.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

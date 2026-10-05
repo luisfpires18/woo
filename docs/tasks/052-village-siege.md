@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 052: Village siege and defensive building effects
 
-Task key: SKILLS
+Task key: SIEGE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Conquest
+Dependencies: CAMPAIGNS, CONSTRUCTION
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Resolve contested villages with agreed fortress/main-building rules.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Choose win conditions, module effects and infrastructure damage; defence works offline within timing policy. Main building's pillar role explicit, not automatic total deletion.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

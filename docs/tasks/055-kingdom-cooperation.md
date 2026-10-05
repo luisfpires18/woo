@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 055: Kingdom overview, defence requests and contribution credit
 
-Task key: SKILLS
+Task key: COOP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Kingdom
+Dependencies: CAMPAIGNS, DUTIES, RECOVERY
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Make faction cooperation understandable without an alliance hierarchy.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Own/allied visibility respected; actionable requests, contributions and heroes-unavailable states clear. No one can seize others' forces. Extra social/chat features need explicit scope.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/vision.md](../../docs/vision.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

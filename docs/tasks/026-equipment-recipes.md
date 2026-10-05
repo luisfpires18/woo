@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 026: Admin equipment and ordinary forge recipes
 
-Task key: SKILLS
+Task key: EQUIPMENT-ADMIN
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Content
+Dependencies: UNITS-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Define weapon/armour upgrades and compatibility for medieval play.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Choose equipment granularity and allowed swaps before schema finalisation. Validate materials, costs, timing and compatible units. No blood bond/runes in v1.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

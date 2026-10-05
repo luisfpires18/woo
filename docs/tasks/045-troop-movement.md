@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 045: Troop movement, stationing and return
 
-Task key: SKILLS
+Task key: MOVEMENT
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Map
+Dependencies: ROUTES, ORDERS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Dispatch troop contingents and update location on arrival.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Troops cannot be duplicated/spent twice; travel/return/recall rules chosen. Repeated processing doesn't duplicate arrivals; own/allied stationing permissions enforced.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

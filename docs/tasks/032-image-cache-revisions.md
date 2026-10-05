@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 032: Image cache revisions and immediate replacements
 
-Task key: SKILLS
+Task key: IMAGE-CACHE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Assets
+Dependencies: ASSETS, VERSION
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Ensure updated images render reliably without disabling all caching.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Assign image revision/content hash or unique object key per replacement. Changing one image refreshes its URL without bumping app version; same revision reusable across renders. No Date.now cache busting each request. Browser/CDN checks confirm replacement and cleanup.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/versioning-and-cache.md](../../docs/technical/versioning-and-cache.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

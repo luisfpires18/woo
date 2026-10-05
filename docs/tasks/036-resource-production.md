@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 036: Resource production, storage and offline accrual
 
-Task key: SKILLS
+Task key: RESOURCE-STATE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Village
+Dependencies: VILLAGE-CREATE
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement resource rates and storage from configured definitions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Time-based accrual/caps correct after idle/restart; use server time and consistent precision. Validate representative visit intervals and avoid impossible upgrade costs.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 034: Configuration publish, audit and active-order policy
 
-Task key: SKILLS
+Task key: CONFIG
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Content
+Dependencies: TALENTS-ADMIN, ASSETS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Define validated publication and how balance edits affect active worlds/actions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Owner approves immediate/new-order/next-world semantics. Audit changes, reject invalid graphs and clarify rollback without retired image binaries. Admin edits cannot alter already-completed outcomes.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/admin.md](../../docs/admin.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

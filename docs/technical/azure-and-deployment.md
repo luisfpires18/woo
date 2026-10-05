@@ -22,11 +22,11 @@ References checked 2026-10-05:
 
 Persist scheduled actions and due timestamps. For sleeping development, request-triggered catch-up can demonstrate offline completion, but does not execute attacks at their exact deadline while asleep. Choose an independently scheduled processor or always-running tier when punctual shared-world actions matter. Do not silently place a permanent .NET worker in F1 and assume it runs continuously.
 
-App Service does not include a PostgreSQL server. Database hosting, cost, backups, asset delivery and any scheduler are separate decisions. F1 suitability for chosen runtime/deployment format must be checked during stack selection.
+SQLite is the confirmed local/dev database. Establish its durable file location and backup behavior in persistence tasks. PostgreSQL hosting is deferred to future production. Asset delivery and any independent scheduler are separate decisions. F1 suitability for chosen runtime/deployment format must be checked during stack selection.
 
 ## Actions plan
 
-The repository now has executable documentation/task validation CI on dev/master pushes and pull requests. Application build/test and dev deployment Actions will be added in task AZURE-DEV once the code layout, runtime, subscription/resources and authentication are known. This is intentionally not a dummy deployment workflow that claims success without deploying.
+The repository now has executable documentation/task validation CI on dev/master pushes and pull requests. Application build/test and dev deployment Actions will be added in tasks AZURE-SETUP and DEV-DEPLOY once the code layout, runtime, subscription/resources and authentication are known. This is intentionally not a dummy deployment workflow that claims success without deploying.
 
 Dev deploy should build/test an exact dev revision, authenticate with Azure using a selected mechanism (OIDC preferred subject to support), deploy that artifact to the named dev app and check a health endpoint. Do not deploy PR branches or arbitrary refs. Define environment-level configuration, migration handling, serial deployment and failure reporting. Docs-only changes need not redeploy the app once path filtering is defined.
 
@@ -35,3 +35,11 @@ Production Action stays absent until alpha-release approval. Then add master-onl
 ## Command handoff
 
 First collect actual subscription, region, runtime, resource group/app/plan names and current SKU through read-only commands, one dependent step at a time. Assess quota failure before selecting a remedy. Give concrete commands only after outputs are known. Before B1 explain the paid change and check account eligibility. After validation, downgrade with compatible settings (including disabling Always On when required) and verify the resulting SKU. No paid changes or credential setup are executed now.
+
+## Initial deploy versus database deploy
+
+Deploy the first versioned page before database/account/game implementation. Subsequently verify SQLite survives both Azure restart and redeploy before real player data is introduced. Do not store the DB inside a replacement/readonly deployment artifact.
+
+Persistent App Service storage can be backed by a shared filesystem, depending on platform/layout. SQLite WAL is not generally supported over network filesystems; journal/locking behavior must be checked on the actual configuration, not selected from a generic tutorial. Keep dev on a small, deliberately limited single-instance architecture. If storage compatibility fails, report evidence and adjust the Azure layout with the owner while retaining SQLite dev direction; do not silently switch to PostgreSQL.
+
+References for this gate (checked 2026-10-05): [App Service filesystem](https://learn.microsoft.com/en-us/azure/app-service/operating-system-functionality), [container storage](https://learn.microsoft.com/en-us/azure/app-service/configure-custom-container), [SQLite WAL](https://www.sqlite.org/wal.html) and [network caveats](https://www.sqlite.org/useovernet.html).

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 041: Blacksmith experience, points and talent choices
 
-Task key: SKILLS
+Task key: TALENTS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Military
+Dependencies: FORGING, TALENTS-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement meaningful progression and point spending.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Chosen sources/prerequisites/caps/resets applied; no duplicate point spending or cheap-item spam exploit. Weaponsmith/armorsmith effects explained.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

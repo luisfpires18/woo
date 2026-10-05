@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 024: Admin building definitions and prerequisites
 
-Task key: SKILLS
+Task key: BUILDINGS-ADMIN
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Content
+Dependencies: RESOURCES-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Define medieval buildings, levels, costs, duration and prerequisites.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Validate affordable positive costs, level limits and prerequisite cycles; main-building role explicitly specified. Editor permits image slots and fallback; no per-world building instances yet.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/content/catalogues.md](../../docs/content/catalogues.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

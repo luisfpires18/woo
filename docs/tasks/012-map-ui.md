@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 012: Map interaction prototype
 
-Task key: SKILLS
+Task key: MAP-UI
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: GAME-SHELL
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Prototype regional map viewing, district selection, ownership overlays and details.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Use labelled mock geography, not invented canon coordinates. Zoom/pan/selection usable; political ownership separate from terrain. No movement/pathfinding backend yet.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

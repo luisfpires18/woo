@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 057: Economy, counters and faction balance pass
 
-Task key: SKILLS
+Task key: BALANCE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Validation
+Dependencies: OFFLINE
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Exercise complete medieval loops with representative small-world scenarios.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Measure production/storage, forge usefulness, troop losses and viable three-kingdom choices. Document evidence and change only supported balance; no fairness guarantee from distinct rosters.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

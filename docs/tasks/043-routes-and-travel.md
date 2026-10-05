@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 043: Route connectivity and travel calculations
 
-Task key: SKILLS
+Task key: ROUTES
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Map
+Dependencies: DISTRICTS, RECRUIT
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement ordinary land route costs and reachable destinations.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Connectivity/terrain/travel explained; test blocked/reachable routes and server-calculated times. Naval/air/tunnel movement explicitly deferred unless separately authorised.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

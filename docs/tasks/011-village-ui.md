@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 011: Village and resources screen prototype
 
-Task key: SKILLS
+Task key: VILLAGE-UI
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: GAME-SHELL
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create a readable village scene and resource/building details panels.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Mock buildings use configurable symbols/image-slot conventions; selection and companion list work on touch/keyboard. Construction controls clearly preview behavior rather than pretend persistence.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

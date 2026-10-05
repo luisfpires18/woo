@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 028: Cloudflare account, access and CLI configuration
 
-Task key: SKILLS
+Task key: CLOUDFLARE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Assets
+Dependencies: ROLES
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Prepare the owner's Cloudflare account and verified CLI/API access with a step-by-step command handoff.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Check account/R2 availability and current CLI version; authenticate through owner handoff; verify the selected account. Give one dependent concrete command at a time. Do not ask the owner to paste secrets or assume billing activation.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/cloudflare-r2.md](../../docs/technical/cloudflare-r2.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

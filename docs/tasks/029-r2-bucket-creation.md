@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 029: Create and verify the R2 dev asset bucket
 
-Task key: SKILLS
+Task key: R2-SETUP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Assets
+Dependencies: CLOUDFLARE
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create the agreed R2 bucket using verified commands and configure its environment boundary.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Verify account and chosen bucket name before giving a creation command; inspect the created bucket remotely. Record location/options and dev purpose. Do not create prod storage or leave unused test objects.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/cloudflare-r2.md](../../docs/technical/cloudflare-r2.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

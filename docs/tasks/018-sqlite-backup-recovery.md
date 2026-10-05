@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 018: Dev database persistence, backup and restore
 
-Task key: SKILLS
+Task key: DB-RECOVERY
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Persistence
+Dependencies: SQLITE, DEV-DEPLOY
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Verify SQLite survives Azure restart/redeploy and establish a safe restore procedure.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Test chosen filesystem/journal mode; no blind WAL on shared storage. Demonstrate restart/redeploy retention and consistent backup/restore. Define small-dev single-instance limits and report any F1/storage blocker before continuing.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/azure-and-deployment.md](../../docs/technical/azure-and-deployment.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

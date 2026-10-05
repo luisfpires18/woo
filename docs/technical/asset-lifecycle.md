@@ -17,3 +17,9 @@ An entity without an image renders its configured fallback. Admin upload produce
 ## Open implementation details
 
 Supported formats, dimensions, maximum size, image validation, delivery domain/cache policy, whether derivatives are needed, presigned versus backend upload, and reference accounting. User creates the account later. Do not provision services now.
+
+## Cache requirement
+
+Admin replacement refreshes the image independently of app deployments. Use a persisted asset revision/content hash/new key in its URL, keeping unchanged asset URLs stable. See [app/image versioning](versioning-and-cache.md). No timestamp per render or retained unused object histories.
+
+Cloudflare setup is required roadmap work: verify account/CLI, create R2 bucket with commands and configure credentials/delivery/CORS before integrating uploads. See [setup runbook](cloudflare-r2.md).

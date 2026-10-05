@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 017: SQLite persistence and migration foundation
 
-Task key: SKILLS
+Task key: SQLITE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Persistence
+Dependencies: AUTH-UI, STACK
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement SQLite for local and Azure dev before real identity/world state.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Define ORM/migrations, dev DB file path outside deploy package, locking/transaction policy and data reset rules. No production PostgreSQL implementation. Migrate an existing dev DB without erasing unrelated data.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/data-model.md](../../docs/technical/data-model.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

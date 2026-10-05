@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 051: Declared kingdom campaigns and defence commitments
 
-Task key: SKILLS
+Task key: CAMPAIGNS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Conquest
+Dependencies: REPORTS, MEMBERSHIP
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement agreed visible campaign windows and voluntary defence contributions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Owner defines declaration/commitment/withdrawal/command permissions. No independent alliances, fakes, manual synchronised waves or confiscation of others' troops.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

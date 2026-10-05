@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 004: App version footer and build identity
 
-Task key: SKILLS
+Task key: VERSION
 Status: TODO
 Updated: 2026-10-05
 Milestone: Foundation
-Dependencies: None
+Dependencies: SKELETON
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement the visible initial version, such as 0.0.1-dev, and a single build identity source.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Landing/game/admin layouts share a footer version. Backend and frontend identify the same build; deployed version can be compared with its commit. Define version bump policy and distinguish dependency versions from app release versions. Docs-only updates need not bump app version.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/versioning-and-cache.md](../../docs/technical/versioning-and-cache.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

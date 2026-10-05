@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 014: Forge, equipment and talent UI prototypes
 
-Task key: SKILLS
+Task key: FORGE-UI
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: GAME-SHELL
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Make ordinary weapon/armour upgrades and talent choices legible before wiring gameplay.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Default equipment, costs and preview states understandable; light/medium/heavy labels present; no active rune controls in medieval v1. Mock progression is labelled.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

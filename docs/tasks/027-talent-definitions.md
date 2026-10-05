@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 027: Admin talent tree definitions
 
-Task key: SKILLS
+Task key: TALENTS-ADMIN
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Content
+Dependencies: EQUIPMENT-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Configure an approved small weaponsmith/armorsmith talent tree.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Define point sources/resets/dual specialisation with owner, validate graph/prerequisites and supported effects. New behavior still needs code; admin cannot inject arbitrary executable logic.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

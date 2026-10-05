@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 042: Authoritative map districts and ownership
 
-Task key: SKILLS
+Task key: DISTRICTS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Map
+Dependencies: VILLAGE-CREATE, MAP-UI
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Persist approved district topology and political ownership overlays.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Village-centred conquest geometry independent of illustration; three playable homelands visible. Canon geography respected; exact coordinates supplied/approved.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/world/kingdoms-and-geography.md](../../docs/world/kingdoms-and-geography.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

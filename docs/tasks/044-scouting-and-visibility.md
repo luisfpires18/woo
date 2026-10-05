@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 044: Scouting and map information visibility
 
-Task key: SKILLS
+Task key: SCOUTING
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Map
+Dependencies: ROUTES
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Define and enforce what players can know about nearby sites and enemy troops.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Owner selects visibility rules; backend never sends hidden information. Scout costs/results/timing handled via orders; no mandatory nonstop scouting/fake-wave mechanics.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

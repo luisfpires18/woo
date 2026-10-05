@@ -38,3 +38,7 @@ Next action: guarded merge commands for approval, one correction prompt for chan
 TLDR: Next / Done / Issues.
 
 Remote verification belongs to ChatGPT when available. Local behavior validation belongs to Claude. Do not waste Claude tokens polling Actions.
+
+## Current architectural constraints
+
+Exact dependency versions selected before scaffolding. SQLite local/dev, Azure host and shared app-version footer required. Image URLs need independent revisioning. DDD is an option to evaluate, not permission to overbuild. Mock UI tasks explicitly exclude real saved/authenticated behavior; working login/world membership tasks require persistence. Resolve relevant feature rules just in time and keep the queue updated after each cycle.

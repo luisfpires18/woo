@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 030: R2 upload credentials, CORS and image delivery
 
-Task key: SKILLS
+Task key: R2-CONFIG
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Assets
+Dependencies: R2-SETUP
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Configure server upload/delete access, selected delivery URLs and applicable browser/CDN settings.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Scoped credentials stay server-side in local/Azure configuration; CORS uses verified local/dev origins where needed. Distinguish S3 API endpoint from public/custom-domain delivery and test put/read/delete while removing test objects. Provide concrete commands based on previous outputs.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/cloudflare-r2.md](../../docs/technical/cloudflare-r2.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

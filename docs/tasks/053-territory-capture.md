@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 053: Capture, occupation and district transfer
 
-Task key: SKILLS
+Task key: CAPTURE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Conquest
+Dependencies: SIEGE, DISTRICTS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Transfer captured village district and expand conquering kingdom.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Atomic ownership/world/permissions update; occupation/new controller decided; active queues treated consistently. Terrain illustration unchanged by political capture.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 048: Persisted automatic battle resolution
 
-Task key: SKILLS
+Task key: BATTLES
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Combat
+Dependencies: COUNTERS, MOVEMENT, ORDERS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Resolve a bounded automatic encounter with authoritative inputs/outcomes.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Damage/losses/retreat apply once; retries/restart reproduce inputs and don't duplicate loot. Outcome independent of animation. Capture intentionally deferred.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

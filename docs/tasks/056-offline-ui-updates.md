@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 056: Offline reconciliation and live UI notifications
 
-Task key: SKILLS
+Task key: OFFLINE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Reliability
+Dependencies: COOP
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Refresh client state after idle/disconnect and notify real completed actions.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+No stale ownership/resource/order state after reconnect; notifications scoped to authorised world. F1 sleep behavior explained; SignalR is not durable truth.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/architecture.md](../../docs/technical/architecture.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

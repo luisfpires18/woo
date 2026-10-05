@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 038: Building construction, upgrades and queues
 
-Task key: SKILLS
+Task key: CONSTRUCTION
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Village
+Dependencies: ORDERS
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Connect village UI to real construction/main-building prerequisites.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Check ownership/cost/slot/prerequisites; queue completion persists; clear feedback and offline status. Decide cancellation/demolition before enabling those controls.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

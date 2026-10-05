@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 046: Useful kingdom duties
 
-Task key: SKILLS
+Task key: DUTIES
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Activities
+Dependencies: FORGING, MOVEMENT
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Implement useful crafting/scouting/defence tasks without punitive attendance.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Owner approves allowance/reward/backlog; shared task reservation and support credit work. No unique progress locked behind login streaks. First content can be narrowly scoped.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 031: Entity image upload, replacement and cleanup
 
-Task key: SKILLS
+Task key: ASSETS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Assets
+Dependencies: R2-CONFIG, UNITS-ADMIN
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Wire mandatory image/fallback slots to safe upload/replace/delete lifecycle.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Successful replacement saves new reference before removing old unused object; failed upload preserves old image; shared refs protected. Retry/reconcile cleanup; no retained unreferenced histories.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/asset-lifecycle.md](../../docs/technical/asset-lifecycle.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

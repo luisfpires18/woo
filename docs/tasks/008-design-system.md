@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 008: Shared UI foundations, themes and kingdom colours
 
-Task key: SKILLS
+Task key: DESIGN-SYSTEM
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: DEV-DEPLOY
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Establish typography, spacing, layout, reusable controls and independent light/dark/kingdom themes.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Arkazia crimson/black, Sylvara green/gold and Veridor blue/silver accents work with readable surfaces. Forms, navigation, focus and responsive sizing consistent. No final gameplay data needed.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

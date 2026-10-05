@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 009: First landing page UI polish
 
-Task key: SKILLS
+Task key: LANDING
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: UI
+Dependencies: DESIGN-SYSTEM
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Design and implement a clear WOO landing page using the approved visual direction.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Desktop/mobile page introduces the medieval game, offers clear entry actions and includes version footer. No claims of implemented future features; review actual screenshots/browser behavior. Placeholder art allowed.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

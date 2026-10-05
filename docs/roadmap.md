@@ -1,35 +1,25 @@
-# Development roadmap
+# Development milestones
 
-Updated: 2026-10-05. Status: design documentation; no game implementation yet.
+Updated: 2026-10-05. No application implementation has started. Current numbered queue is [tasks_roadmap.md](../tasks_roadmap.md).
 
-## Current state
+## Current path
 
-Documentation foundation created. No game code or infrastructure provisioned. Milestone contents below are proposals for execution after user authorisation.
+1. Claude setup, selected dependency versions and pragmatic architecture; create a skeleton and first running page.
+2. Visible app version/build identity, real build/test CI and an early Azure dev deployment.
+3. Shared themes and UI foundations; polish landing, game, village/map/combat/forge, admin and onboarding screens with explicit mock data.
+4. SQLite local/dev persistence and backup/redeploy verification; real login, admin authorisation, Worlds and player kingdom membership.
+5. Configurable medieval content and uploaded assets, independent image revisions and cleanup.
+6. Persisted village economy, timed actions, construction, recruitment, ordinary forging and talents.
+7. Authoritative map/routes/scouting/movement, scoped activities, numerical counters, battles and reports.
+8. Kingdom campaigns, siege/capture/recovery and useful cooperation.
+9. Offline/live state reconciliation, balance/mobile/reliability validation and a friends alpha with feedback-driven task additions.
 
-## M0: Specify the medieval alpha
+Do not require a full-game medieval specification before the skeleton/first deployment. Decide each gameplay feature's rules before implementing that feature. Prototype UI does not claim working persistence/authentication.
 
-Resolve village count, equipment scale, basic economy/content, talent progression, combat/capture/recovery and first-season ending. Define map size/routes and config-change policy. Exit: each included feature has actions, costs/timing, outcomes, failure cases and acceptance scenarios; all remaining assumptions explicitly provisional.
+## Continuous refinement
 
-## M1: Validate economy and battle model
+Each implementation cycle reads the current queue and pinned task detail. Split broad work, insert discoveries using whole numbers, record decisions and preserve immutable task keys. All current tasks are TODO; numbers may change. Dependencies govern readiness, not merely position.
 
-Simulate resource/storage/forging/army growth and mixed unit matchups. Exit: no impossible upgrades, dominant trivial composition or unacceptable daily workload in tested scenarios; provisional values documented with results.
+## Future releases
 
-## M2: Accounts, admin and asset foundations
-
-Select stack; implement owner permissions, content definitions, configurable visual slots/fallbacks and safe storage lifecycle. Exit: permissions, edits, image replacement and cleanup demonstrated. R2 account supplied by owner when needed.
-
-## M3: One playable village
-
-Resources, ordinary construction/recruitment, forging upgrades and talent choices; clickable scene and accessible fallback controls. Exit: complete actions persist through refresh/offline completion, display accurately, and cannot spend resources twice.
-
-## M4: Small kingdom frontier
-
-Three playable kingdoms, map travel, automatic battle/report and district capture with agreed recovery. Exit: end-to-end border campaign works, ownership updates consistently and defender can continue according to decided rules.
-
-## M5: Friends alpha
-
-Run a short agreed medieval test. Measure forging decisions, active faction balance, counters, recovery, attendance and admin workload. Exit: critical reliability/fairness issues addressed; findings determine next scope.
-
-## Later releases
-
-Add duties/camps or other missing medieval features based on test results; introduce runes gradually; later L1/L2, armour transformation, unique heroes, naval/air/tunnel systems, new kingdoms and Chaos/Order/Moraphys finale as individually scoped updates. No dates or order beyond medieval-first are committed.
+Gradual rune emergence and advanced fantasy mechanics are separate updates. Naval/air/tunnel movement and other kingdoms await their own scope. Friends alpha does not imply production release. PostgreSQL and master production Actions are deferred until an explicit production decision.

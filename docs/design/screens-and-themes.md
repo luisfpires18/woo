@@ -15,3 +15,7 @@ Independent dark/light mode. Arkazia crimson/black; Sylvara green/gold; Veridor 
 ## Proposed interaction requirements
 
 No UI text/counters baked into art. Selected/hover/focus/disabled states, touch targets, companion accessible lists and readable contrast. Ownership uses labels/icons alongside colour. Same art across themes; do not globally darken it to imitate dark UI.
+
+## Early UI delivery order
+
+Build shared theme/layout foundations, polish landing, establish game navigation and village/map/combat/forge prototypes, then admin/onboarding prototypes. Use explicit mock data until database/account APIs exist. All shared layouts include the app-version footer. Actual login and World/Kingdom association come after SQLite, not as a pretend session in the UI prototype.

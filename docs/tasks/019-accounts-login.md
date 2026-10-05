@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 019: Real accounts, sessions and login
 
-Task key: SKILLS
+Task key: IDENTITY
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Accounts
+Dependencies: DB-RECOVERY, AUTH-UI
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Connect real account registration/login/logout and validation to SQLite.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Use selected server identity/session mechanism; no plaintext passwords; sessions/logout and error states verified. Game endpoints do not trust client identity. Password recovery scope explicitly decided.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/admin.md](../../docs/admin.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

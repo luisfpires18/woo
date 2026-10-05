@@ -39,3 +39,15 @@ D-25 Confirmed: skills/plugin health check before implementation; requested inve
 D-26 Confirmed: shared prompt protocol can be refined in another chat; active tasks pin a specification revision.
 
 Exact referenced LP AI WORK skill remains unavailable; an older reconstructed LP WORK was read as a reference, without claiming equivalence. Workflow is based on the user's current instructions.
+
+## Roadmap refinement, 2026-10-05
+
+D-27 Confirmed: SQLite local/dev; PostgreSQL only a future production consideration. This supersedes the current PostgreSQL dev recommendation.
+D-28 Confirmed: broad evolving roadmap with small whole-number tasks; no 012a/012b. Insert and renumber while preserving stable task identity/history.
+D-29 Confirmed: prioritise Claude setup -> defined tech/architecture -> skeleton/first page -> CI/Azure dev -> UI polish -> persistence-backed accounts/world/kingdom -> game slices. Do not make all medieval design decisions a prerequisite to first page.
+D-30 Confirmed: visible app-version footer, exemplified by 0.0.1-dev; dependency versions defined early; image changes must account for caches.
+D-31 Proposal: pragmatic DDD modular boundaries; exact structure chosen in STACK. DDD was a user example, not a complete adopted architecture.
+
+Original 12 TODO task files were replaced by smaller specifications before any dispatch. No active task branch, completed implementation or release version exists.
+
+D-32 Confirmed: include Cloudflare configuration and command-guided R2 bucket creation for admin-uploaded images, before upload integration. No provisioning requested in the roadmap update itself.

@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 059: Invite-only friends alpha setup and support
 
-Task key: SKILLS
+Task key: FRIENDS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Alpha
+Dependencies: QA
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Prepare the owner/friends world, onboarding and support/runbook.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Approved roster/map/config loaded; owner admin works; actual world admission bounded; logs/restore/version checks documented. No automatic public release or prod promotion.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/scope.md](../../docs/scope.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

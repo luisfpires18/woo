@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 049: Battle reports and simple event replay
 
-Task key: SKILLS
+Task key: REPORTS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Combat
+Dependencies: BATTLES, COMBAT-UI
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Connect outcome reports and token-based replay to actual server events.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Display composition, relevant counters, losses and outcome legibly; replay no gameplay authority. UI handles no-art fallback and version footer.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

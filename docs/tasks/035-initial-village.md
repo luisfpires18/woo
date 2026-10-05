@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 035: Initial village placement and player settlement
 
-Task key: SKILLS
+Task key: VILLAGE-CREATE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Village
+Dependencies: MEMBERSHIP, CONFIG
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Create the player's initial village using agreed world placement rules.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Resolve village count/expansion later boundaries, ownership and starting loadout now. Join retry does not create duplicate villages; ownership/world checks enforced. Map marker geometry uses approved layout.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

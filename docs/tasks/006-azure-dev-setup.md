@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 006: Azure dev provisioning through step-by-step commands
 
-Task key: SKILLS
+Task key: AZURE-SETUP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Deployment
+Dependencies: BUILD-CI
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Identify actual subscription/region/quota, then establish an Azure dev app and deployment authentication.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Use concrete verified commands one dependent step at a time. Record runtime/plan/app settings and costs; prefer F1 and assess B1 only when justified and eligible. No production resources. DB not required for the initial landing deployment.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/azure-and-deployment.md](../../docs/technical/azure-and-deployment.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

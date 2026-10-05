@@ -1,22 +1,22 @@
-# 001: Claude setup and skills health check
+# 037: Durable action queues and catch-up processing
 
-Task key: SKILLS
+Task key: ORDERS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Foundation
-Dependencies: None
+Milestone: Village
+Dependencies: RESOURCE-STATE
 
 ## Goal
 
-Verify the actual Claude environment; install missing approved skills/plugins from verified sources.
+Build restart-safe timed orders and agreed F1 catch-up semantics.
 
 ## Acceptance criteria
 
-Record exact sources, versions, invocation and smoke checks; preserve working tools; clearly report unavailable sources. No game scaffold yet.
+Atomic spending+order creation; completion once across retry; current status returned on wake. Choose cancellation/refund/concurrency policy. Request catch-up does not claim punctual execution while F1 sleeps.
 
 ## Required reading
 
-- [docs/workflow/skills-and-plugins.md](../../docs/workflow/skills-and-plugins.md)
+- [docs/technical/azure-and-deployment.md](../../docs/technical/azure-and-deployment.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 
