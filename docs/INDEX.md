@@ -44,6 +44,7 @@ GitHub is the primary working specification. Read current topic documents before
 - [World-map square editing, terrain and validation research](technical/world-map-research.md)
 - [Static combat board and result proof](design/combat-visual-prototype.md)
 - [Static combat artwork production](design/combat-art-production.md)
+- Standing unit sprite test prompts: [Arkazia](design/unit-sprite-prompts/arkazia.md), [Veridor](design/unit-sprite-prompts/veridor.md), [Sylvara](design/unit-sprite-prompts/sylvara.md)
 - [Combat model, static board and validation research](technical/combat-research.md)
 - [Administration](admin.md)
 - [Architecture](technical/architecture.md)
