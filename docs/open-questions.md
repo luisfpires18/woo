@@ -17,7 +17,7 @@ Use this list to resolve implementation blockers before writing final formulas/c
 | O-09 | What ends the medieval first season and what resets? | Alpha scope and retention |
 | O-10 | Map topology, capacities, travel and visibility? | World generation and orders |
 | O-11 | Exact first-version duties/camps, NPCs, hero and naval scope? | Scope freeze |
-| O-12 | Select recommended stack, versions, hosting and account bootstrap? | Technical setup |
+| O-12 | Select stack, versions, Azure layout, database hosting and account bootstrap? | Technical setup |
 | O-13 | Which admin edits affect active orders; content rollback semantics? | Config/event consistency |
 | O-14 | R2 confirmation, file limits, delivery and cleanup design? | Asset storage |
 | O-15 | Rune emergence within a season or via later releases? | Future roadmap |
@@ -29,3 +29,7 @@ Use this list to resolve implementation blockers before writing final formulas/c
 Recommended next order: O-01/O-02, O-04/O-05/O-06, O-07/O-08/O-09, then technical contracts. The owner will provide rosters later; original drafts do not resolve O-07.
 
 Future questions need not block a purely medieval prototype unless its data model would make the future feature impractical.
+
+## Workflow setup gaps
+
+Current LP AI WORK file and exact sources for requested Claude tools; actual local install audit; repository default branch setting; Azure subscription eligibility/quota/resources/auth; deployable code layout. dev branch and documentation CI are configured; Azure resources and application deployment are not.

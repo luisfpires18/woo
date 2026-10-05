@@ -16,7 +16,7 @@ Recommended stack, not yet selected or implemented. This records the conversatio
 | Notifications | SignalR | Push updates after state changes |
 | Accounts | ASP.NET Core Identity, secure cookies | Login and server-enforced permissions |
 | Images | Cloudflare R2, S3-compatible API (service interpretation pending) | Admin-uploaded assets |
-| Hosting | Docker on a VPS initially | Simple API/worker deployment |
+| Hosting | Azure App Service; F1 preferred for dev | Owner-selected direction; exact runtime/layout pending |
 | Recovery | Off-site DB backups | Restore state after failures |
 
 ## Proposed boundaries
@@ -25,4 +25,8 @@ Modular monolith with separate API and worker processes. Database is authoritati
 
 ## Open contracts
 
-Database schema, API routes, identifiers, balance activation, event ordering, concurrency policy, deployment provider, dependency versions, world isolation and recovery objectives. See [data model](data-model.md). No Kubernetes requirement established.
+Database schema, API routes, identifiers, balance activation, event ordering, concurrency policy, Azure layout, dependency versions, world isolation and recovery objectives. See [data model](data-model.md). No Kubernetes requirement established.
+
+## Hosting correction
+
+Azure hosting is confirmed by the owner, superseding the VPS proposal. A separate always-running worker is still a design proposal and is not guaranteed on sleeping F1. See [Azure constraints](azure-and-deployment.md) before selecting deployment and database architecture.

@@ -27,3 +27,15 @@ This register records current user decisions. Feature documents explain details.
 | D-19 | Proposal | React/PixiJS/.NET/PostgreSQL architecture |
 
 All initial records dated 2026-10-05. Superseded: player as ruler-blacksmith; treating all future fantasy features as first-release requirements; retaining unused image versions. Neither a fixed victory condition nor an approved numeric balance exists.
+
+## Workflow decisions, 2026-10-05
+
+D-20 Confirmed: dev integration; feat/NNN branches from dev; master production at alpha release.
+D-21 Confirmed: numbered TODO/WIP/DONE queue with detailed task files, insertion renumbering and preserved task identity.
+D-22 Confirmed: ChatGPT prompt -> Claude local implementation/report -> ChatGPT APPROVED/NEEDS CHANGES/REFUSAL -> owner merge/push -> remote deployment verification.
+D-23 Confirmed: Azure host, F1 preference and conditional temporary B1 path; subscription/quota eligibility must be checked. This supersedes VPS hosting.
+D-24 Confirmed: one dependent command at a time; no guessed placeholders; short TLDR at task-response end.
+D-25 Confirmed: skills/plugin health check before implementation; requested inventory not presumed installed.
+D-26 Confirmed: shared prompt protocol can be refined in another chat; active tasks pin a specification revision.
+
+Exact referenced LP AI WORK skill remains unavailable; an older reconstructed LP WORK was read as a reference, without claiming equivalence. Workflow is based on the user's current instructions.

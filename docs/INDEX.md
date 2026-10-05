@@ -44,3 +44,14 @@ GitHub is the primary working specification. Read current topic documents before
 ## Update workflow
 
 Read latest repository documents, update the relevant topic, record decision changes and unresolved blockers, validate relative links, and commit a focused description. Do not maintain independent competing design copies. The earlier standalone roadmap is now a navigation pointer; its historical content is preserved here.
+
+## Implementation orchestration
+
+- [Task roadmap](../tasks_roadmap.md)
+- [Claude instructions](../CLAUDE.md)
+- [Development workflow](workflow/development-workflow.md)
+- [Implementation prompt protocol](workflow/implementation-protocol.md)
+- [Skills/plugin inventory](workflow/skills-and-plugins.md)
+- [Azure and deployment](technical/azure-and-deployment.md)
+
+Current working specification is on dev. Explicitly read dev rather than assuming the repository default. Individual task specifications are linked from tasks_roadmap.md.

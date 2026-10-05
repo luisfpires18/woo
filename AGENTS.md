@@ -20,3 +20,9 @@ Read README.md, docs/INDEX.md, docs/scope.md, docs/decisions/README.md and the r
 - Do not commit credentials, real account passwords or personal player data. Assets will be configured later.
 
 Feature documents should cover purpose, scope/status, player actions, requirements, costs/timing, outcomes, failure/recovery, admin configuration, dependencies, open questions and acceptance scenarios. Missing details are visible gaps, not permission to invent them.
+
+## Confirmed implementation workflow (2026-10-05)
+
+Read tasks_roadmap.md, CLAUDE.md, docs/workflow/development-workflow.md and docs/workflow/implementation-protocol.md before preparing or executing a task. dev is the working integration branch; master is reserved for production at alpha release. Use one feat/NNN-short-name branch based on verified dev. Claude implements locally, ChatGPT reviews, owner merges/pushes after APPROVED. NEEDS CHANGES produces a focused prompt; REFUSAL records a fundamental mismatch. Never infer approval from an implementer's readiness claim.
+
+Task statuses are TODO/WIP/DONE. Renumber queue/detail links when inserting tasks, keeping immutable keys and active branch history. End task-related responses with TLDR: Next / Done / Issues. Give Git/Azure commands one dependent step at a time with verified concrete values. Azure replaces the earlier VPS hosting recommendation. Missing exact LP AI WORK and local tool installation status must be reported honestly.
