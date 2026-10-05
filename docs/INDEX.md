@@ -61,3 +61,9 @@ Current working specification is on dev. Explicitly read dev rather than assumin
 The numbered queue now contains smaller reviewable tasks. Read task dependencies and current milestone outline instead of treating the previous twelve groups as the execution plan.
 
 - [Cloudflare/R2 setup and commands runbook](technical/cloudflare-r2.md)
+
+## Approved visual references
+
+- [Landing-page light/dark mockups and implementation corrections](../mockup/00-landing-page.md)
+
+Read each mockup's matching notes before image-to-code. Owner approval is required before adding images to mockup/.

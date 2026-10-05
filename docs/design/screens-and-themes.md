@@ -19,3 +19,7 @@ No UI text/counters baked into art. Selected/hover/focus/disabled states, touch 
 ## Early UI delivery order
 
 Build shared theme/layout foundations, polish landing, establish game navigation and village/map/combat/forge prototypes, then admin/onboarding prototypes. Use explicit mock data until database/account APIs exist. All shared layouts include the app-version footer. Actual login and World/Kingdom association come after SQLite, not as a pretend session in the UI prototype.
+
+## Approved landing page, 2026-10-05
+
+See [mockup/00-landing-page.md](../../mockup/00-landing-page.md) and its light/dark screenshots. Slim navbar with anvil branding and auth control only; supplied title/banner below navbar; general info, metrics and world cards underneath. Login uses a separate page/layout. Logged-in navbar uses avatar/nickname with Profile, Settings and Log out. Settings opens a separate page for appearance; no appearance controls in the dropdown and no navbar theme toggle. The written correction overrides the light screenshot's expanded appearance section. Theme and authentication state are independent. Metrics/world names are illustrative, not actual content.
