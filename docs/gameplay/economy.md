@@ -8,7 +8,7 @@ The player controls resources and settlement development. Ordinary forging and e
 
 ## Open
 
-Resource types; production/storage rates; costs; upkeep; trading/convoys; loot; crafting materials; offline production; queue limits; cancellation/refunds; growth curve and first-version building list. Ore in concept screens is illustrative.
+Resource types; production/storage rates; costs; upkeep; trading/convoys; loot; crafting materials; offline production; queue limits; cancellation/refunds; growth curve and first-version building list. Food, lumber, stone and ore in concept screens or earlier fixtures are illustrative, not a confirmed catalogue. The owner explicitly wants an original resource model; no Travian field count, resource ring or copied economy is adopted. Resource-screen and production-site artwork are deferred until this direction is defined.
 
 ## Validation approach (proposal)
 

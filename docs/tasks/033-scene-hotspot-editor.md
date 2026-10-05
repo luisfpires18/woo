@@ -1,14 +1,14 @@
-# 033: Admin scene anchors and clickable hotspots
+# 033: Admin village anchors and clickable hotspots
 
 Task key: HOTSPOTS
 Status: TODO
 Updated: 2026-10-05
 Milestone: Assets
-Dependencies: ASSETS, VILLAGE-UI, MAP-UI
+Dependencies: ASSETS, VILLAGE-UI
 
 ## Goal
 
-Implement the protected saved scene editor for village templates, layered assets, anchors and hotspots; retain map hotspot support without inferring gameplay topology from artwork.
+Implement the protected saved scene editor for village templates, layered assets, anchors and hotspots. World-map authoring belongs to MAP-UI/DISTRICTS, not this village editor.
 
 ## Acceptance criteria
 

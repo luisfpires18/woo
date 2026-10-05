@@ -8,11 +8,13 @@ Dependencies: WORLDS
 
 ## Goal
 
-Create validated resource definitions and basic economy configuration.
+Create validated resource definitions and basic economy configuration after the owner defines the resource model. Resource names, counts, production-site layouts and Travian-style fields are not confirmed.
 
 ## Acceptance criteria
 
 Stable IDs, names, units, image/fallback and availability editable; initial resources supplied/approved rather than guessed. Referenced definitions cannot be destructively deleted without a policy.
+
+Dispatch blocker: owner-approved resource catalogue and initial economy direction. Neutral placeholders may support earlier UI shells without establishing a catalogue.
 
 ## Required reading
 

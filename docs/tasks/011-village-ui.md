@@ -1,4 +1,4 @@
-# 011: Village and resources screen prototype
+# 011: Village scene and interaction prototype
 
 Task key: VILLAGE-UI
 Status: TODO
@@ -8,13 +8,13 @@ Dependencies: GAME-SHELL
 
 ## Goal
 
-Prove a readable village/resources interface and a small repeatable layered Arkazia art workflow before expanding the building family. This is local mock-state work, not persisted game/admin behaviour.
+Prove a readable village interface and a small repeatable layered Arkazia art workflow before expanding the building family. This is local mock-state work, not persisted game/admin behaviour.
 
 ## Acceptance criteria
 
 Follow steps 1–8 of the visual proof. Record approved reference/camera/plots before asset production. Assemble clean terrain, forge and upgrade, two buildings, tree, modular wall junction/gate/tower and river/bridge. Replace the forge at a stable anchor; inspect alpha, scale, perspective, seams and occlusion.
 Selection, labels and companion list work across zoom/resize/touch/keyboard. Mock buildings have configurable image slots/fallbacks. React inspector uses illustrative costs/timings; no real orders/auth or pretend saved admin.
-Include one small resource-outskirts fixture using the same renderer: representative food/lumber/stone/ore site compositions, independent selection/inspector and stable-anchor visual-stage swap. These resource types/counts are fixture examples, not approved gameplay. Compare React/Pixi bindings and camera compatibility using the researched guide; no extra engine required. Optional placement tools are internal fixtures, not saved admin.
+Compare React/Pixi bindings and camera compatibility using the researched guide. Resource types, resource layouts and world-map editing are excluded. Optional placement tools are internal village fixtures, not saved admin.
 Report actual screenshots, tested viewports/devices, asset attempt/repair effort and measured rendering behaviour. Resolve provisional performance budgets at dispatch. Modular proof cannot pass on a flattened scene alone.
 If approved art is missing, placeholders can demonstrate the shell but art-consistency criteria remain pending; obtain owner review rather than claiming success.
 
@@ -25,7 +25,7 @@ If approved art is missing, placeholders can demonstrate the shell but art-consi
 - [Asset specification](../design/village-asset-specification.md)
 - [Art runbook](../design/village-art-production.md)
 - [Renderer design](../technical/village-scene.md)
-- [Village/resource tooling research](../technical/village-resource-scene-research.md)
+- [Village tooling research](../technical/village-resource-scene-research.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

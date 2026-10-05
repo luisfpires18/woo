@@ -1,15 +1,15 @@
-# Village and resource scene: research and production plan
+# Village scene: research and production plan
 Updated: 2026-10-05. Status: researched proposals, no implementation or production asset validation.
 
 ## Goal and owner's input
-Make a coherent clickable village and resource landscape using owner-generated 2D cel-shaded transparent building, unit, beast, tree and prop sprites. The owner identifies this as a major feasibility concern. Production should be prepared thoroughly, but no framework, skill or prompt guarantees a flawless first pass.
+Make a coherent clickable village landscape using owner-generated 2D cel-shaded transparent building, unit, beast, tree and prop sprites. The owner identifies this as a major feasibility concern. Production should be prepared thoroughly, but no framework, skill or prompt guarantees a flawless first pass.
 
 This supplements the [ordered village proof](../design/village-visual-prototype.md), [asset contract](../design/village-asset-specification.md), [art runbook](../design/village-art-production.md) and [renderer design](village-scene.md). Owner uploads images to Git; no images are committed by this documentation update.
 
 ## Recommended implementation choices
 | Tool | Proposed use | Limits / verification |
 |---|---|---|
-| React + TypeScript | Panels, resource numbers, inspector, queues, editor forms and accessible list | Ordinary UI stays HTML; avoid duplicating all UI in canvas |
+| React + TypeScript | Panels, inspector, queues, editor forms and accessible list | Ordinary UI stays HTML; avoid duplicating all UI in canvas |
 | PixiJS v8 | Sprite composition, polygons, masks and overlays | Rendering library, not game state, editor or pathfinding |
 | @pixi/react | Declarative scene components integrated with React | Official project documents React 19/PixiJS 8 support; pin exact compatible versions in STACK |
 | pixi-viewport | Drag, pinch, wheel zoom, bounds and recenter | v6 targets PixiJS 8; verify selected release, lifecycle and event integration |
@@ -29,18 +29,8 @@ A complete Phaser/GDevelop/Unity-like editor or physics engine is unnecessary fo
 
 Third-party scene editors may be worth future experiments; do not make an unverified editor the critical dependency for alpha. None has been integrated or benchmarked here. Tiled's own maintained object format provides a more explicit optional authoring route.
 
-## Resource view proposal
-Two related views can share the renderer and selection model:
-- Village: civic/military buildings, walls, roads, forge and main-building plots.
-- Resource outskirts: farms/food sites, lumber sites, quarry and ore workings on fixed authored plots.
-
-These are presentation proposals. Resource types, count of fields, plots, upgrade rules and whether the outskirts are a separate screen/tab or one zoomed landscape remain unapproved. The first proof can switch between two small fixture definitions. Do not assume Travian's resource-ring layout or exactly eighteen fields.
-
-Each resource plot references a logical resource-site ID and optional building definition, rather than identifying itself by a sprite filename. Selection opens the same React inspector pattern: production, numeric level, upgrade preview, queue and relevant actions. Early fixtures use clearly illustrative values; real production and spending are server-owned later.
-
-Use a compact site composition: a farm structure plus field patch; lumber structure plus reusable trees; quarry structure plus rock cut; mine entrance plus ore/rock props. These are illustrative asset families, not a confirmed resource catalogue. Repeated scenery can be decorative, while the production site has one meaningful selectable ID. Do not make every tree an independent production entity.
-
-Level numbers and rates are real UI overlays. A small number of approved visual stages can cover many levels; exact mapping belongs to content configuration. Upgrading should retain position and ground contact, swapping the relevant sprite/cluster only. Bigger art must stay within reserved plot envelopes and avoid adjacent sites. Colour wash or tiny badges can communicate selection/status without regenerating terrain.
+## Scope boundaries
+This guide covers village interiors only. The filename reflects earlier research scope. Resource types, resource-site artwork, production fields and resource-screen layout are undecided and deferred. Do not use the earlier food/lumber/stone/ore examples as an approved catalogue. World-map rendering and square editing belong to [dedicated map research](world-map-research.md) and MAP-UI, not this proof.
 
 ## Composition contract: the largest risk
 Cel shading is a medium, not a shared perspective. First approve one representative forge and a style/camera sheet. All building sprites, trees, rocks and terrain must use that sheet:
@@ -85,7 +75,7 @@ Start with independently served assets so changing one building does not require
 Do not put all user-admin images in a giant mandatory atlas. Runtime replacements and generated derivatives require a publication/refcount policy; old source or atlas objects are removed only once no draft/published scene references them. Stale requests must not apply previous art after a newer selection/revision. Existing [asset lifecycle](asset-lifecycle.md) governs cleanup.
 
 ## Performance and interaction safeguards
-Keep React updates for meaningful UI/state changes; camera motion and optional effects do not call React state setters each frame. Avoid recreating the Application or reloading textures whenever the resource counter changes. Stable object IDs preserve selection across updates. Rendering/ticker ownership must be explicit, especially under development mount/unmount cycles.
+Keep React updates for meaningful UI/state changes; camera motion and optional effects do not call React state setters each frame. Avoid recreating the Application or reloading textures whenever unrelated UI state changes. Stable object IDs preserve selection across updates. Rendering/ticker ownership must be explicit, especially under development mount/unmount cycles.
 
 Cap device pixel ratio based on measurements, fit without stretching, and stop unnecessary animation/render work when hidden. Do not enable culling and filters blindly; profiling decides whether they help this small scene.
 
@@ -98,16 +88,15 @@ Provisional targets to agree before dispatch: responsive selection within 100 ms
 2. Implement temporary shapes and selection/camera/list before adding expensive artwork.
 3. Assemble terrain, forge L1/L2, two buildings and a tree.
 4. Add representative wall/gate/tower and bridge overlaps.
-5. Add a small resource fixture with representative food/lumber/stone/ore sites using the same scene system.
-6. Select sites on mouse, touch and keyboard; swap visual stage while retaining anchor and selection.
-7. Check desktop, narrow portrait mobile, pan/pinch boundaries and both UI themes.
-8. Simulate image failures, slow loads, rapid revision changes, repeated navigation and clean renderer disposal.
-9. Produce controlled screenshots and interaction evidence. Review art repairs and generation effort.
-10. Only after proof acceptance expand the building/site family and connect saved admin/R2 in the later gate.
+5. Select buildings on mouse, touch and keyboard; swap visual stage while retaining anchor and selection.
+6. Check desktop, narrow portrait mobile, pan/pinch boundaries and both UI themes.
+7. Simulate image failures, slow loads, rapid revision changes, repeated navigation and clean renderer disposal.
+8. Produce controlled screenshots and interaction evidence. Review art repairs and generation effort.
+9. Only after proof acceptance expand the building family and connect saved admin/R2 in the later gate.
 
 Use fixed fixture state, settled assets/fonts, explicit scene-ready signal and disabled optional animation for screenshot baselines. Playwright browser/device emulation is useful but cannot replace an actual iPhone Safari check for touch and GPU behaviour. Verify inspector ID and world-coordinate interactions in addition to pictures. Snapshot baselines require review; accepting every changed screenshot defeats the check.
 
-If resources composition, walls or alpha/perspective fails, repair that part and retest. Smaller fallback compositions can be reviewed explicitly. Placeholders can pass controls/shell checks but cannot pass final art consistency. Documentation itself is not a passed feasibility test.
+If village composition, walls or alpha/perspective fails, repair that part and retest. Smaller fallback compositions can be reviewed explicitly. Placeholders can pass controls/shell checks but cannot pass final art consistency. Documentation itself is not a passed feasibility test.
 
 ## Claude handoff
 Use official pixijs entry and relevant Application, Assets, Events, Math, Container, Sprite, Graphics, Performance and Accessibility guidance. Check actual installed sources and matching versions. Use relevant React design skills for HTML controls and browser tooling for validation. No additional unverified skill or plugin is made mandatory here.

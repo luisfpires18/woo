@@ -13,7 +13,7 @@ Proposal to validate: fixed village plots, reusable layered artwork, React contr
 3. [Scene and interaction design](../technical/village-scene.md).
 4. [Admin scene editor](../technical/village-scene-editor.md).
 5. [Storage lifecycle](../technical/asset-lifecycle.md).
-6. [Researched village/resource tooling and production plan](../technical/village-resource-scene-research.md).
+6. [Researched village tooling and production plan](../technical/village-resource-scene-research.md).
 
 ## Small representative slice
 Use Arkazia only. Produce clean terrain; a forge at two visual levels; two other ordinary buildings; a tree; straight wall, corner, gate and tower pieces; a river and bridge. Names and levels are visual samples, not final gameplay content. Test at least one overlapping foreground object. No runes, armies walking through the village, free building placement, combat simulation or nine kingdom art families.
@@ -57,5 +57,7 @@ Working canvas/camera numbers; final alpha roster/plots; reference and artwork r
 ## Related map guide
 The [map visual prototype](map-visual-prototype.md) applies the same separation of artwork, geometry, interaction and game state at regional scale. Its authored terrain plus dynamic districts/markers is distinct from the village's independently upgraded building composition.
 
-## Resource scene and cel-shaded sprite preparation
-Owner plans transparent 2D cel-shaded buildings, units, beasts, trees and props. The researched plan adds a small resource-outskirts fixture to the local proof using the same coordinate/selection/rendering contracts. Farm/lumber/quarry/mine compositions are illustrative; actual resource catalogue, field count and screen separation remain open. No final art family should expand before assembled perspective/lighting/anchor checks pass. See the [tool comparison and additional proof sequence](../technical/village-resource-scene-research.md).
+## Cel-shaded sprite preparation and scope
+Owner plans transparent 2D cel-shaded buildings, units, beasts, trees and props. No final village art family should expand before assembled perspective, lighting and anchor checks pass. See the [tool comparison and proof sequence](../technical/village-resource-scene-research.md). Its filename is historical; the current guide covers the village only.
+
+Resource types and resource-scene layout remain undecided and are excluded from this proof. World-map rendering and square editing have their own task and guide. Sharing technical utilities does not combine these deliverables.

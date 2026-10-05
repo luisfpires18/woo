@@ -1,46 +1,37 @@
-# Map visual prototype: step-by-step guide
+# World map visual and editing prototype: step-by-step guide
 Updated: 2026-10-05. Status: proposed implementation plan; no code or production assets.
 
-## Purpose and status
-Prepare an attractive interactive kingdom map without requiring a dedicated designer. This complements the [village visual guide](village-visual-prototype.md), not replaces it. The owner requested implementation guidance for the generated map preview. The preview remains awaiting explicit visual approval. Its village names, geography, numbers and buttons are illustrative, not lore or balance canon.
+## Purpose and boundaries
+Prove a convincing interactive world map and a square-based authoring workflow in the dedicated MAP-UI (012) task. This guide does not implement village interiors or resource landscapes. Resource names, counts, production fields and screen layout are undecided.
 
-Confirmed constraints: independent kingdom ownership, admin image uploads/fallbacks, safe asset cleanup, dark/light UI, restrained textures, owner-managed Git image uploads. Proposal: an authored regional map with separate overlays and markers, rendered by PixiJS within React UI. Exact map topology, world capacity, travel rules and final artwork remain open.
+Confirmed constraints: kingdom ownership, admin image slots/fallbacks, safe cleanup, dark/light UI, restrained textures and owner-managed Git image uploads. RPG-Maker-like square painting is a candidate editing approach, not a confirmed movement grid. The latest map preview awaits visual approval; its names, geography and numbers are illustrative.
 
-## Recommended first approach
-Start with one clean regional terrain illustration and separately rendered villages, location pins, labels and district polygons. Mountains, rivers and vegetation can be baked into static terrain; ownership, village markers and changing locations cannot. A screenshot of the complete UI is a visual reference, not a shippable terrain asset.
+## Read first
+Read [world-map research](../technical/world-map-research.md), [map artwork production](map-art-production.md) and [map scene contract](../technical/map-scene.md). Keep paint cells, districts, settlements, render tiles and streaming chunks distinct.
 
-This is easier than procedural generation or building the entire world from individual tiles. It supports real pan/zoom and changing ownership while limiting the early art workload. It also has a deliberate limit: arbitrary new rivers, large terrain destruction or unrestricted settlement placement would need additional terrain/layout systems.
-
-Use [map art production](map-art-production.md) for the asset workflow and [map scene implementation](../technical/map-scene.md) for coordinates, layering, interaction and game-state boundaries.
-
-## Small proof region
-Use synthetic, clearly labelled geography: one river crossing, foothills, forest edge and coastline. Include a few districts; several separately placed medieval settlement icons; one ordinary neutral camp; one optional hostile outpost. Crimson, green and blue demonstrate Arkazia/Sylvara/Veridor ownership without establishing canonical borders. No whole Bellum atlas, underground layers, naval simulation, rune discovery or army animation.
-
-Use an explicit conceptual two-dimensional map plane, not true 3D terrain. Pictorial mountains are decoration: apparent ridges are not automatically impassable. Explicit topology defines crossings and movement later.
+## Small representative slice
+Use synthetic geography containing a coast, river bend and explicit crossing, forest edge, foothills/cliff, a few districts and separately placed medieval settlement/camp icons. Crimson, green and blue demonstrate ownership without establishing canon borders. Add one adjacent chunk to expose seam and neighbour-rule problems. No entire Bellum atlas, village interior, resource fields, naval simulation or fantasy progression.
 
 ## Ordered work
 | Step | Work | Exit evidence |
 |---|---|---|
-| 1 | Specify bounded region, camera convention, coordinates and sample district topology | Geometry sketch with IDs, polygons, anchors and explicit crossings |
-| 2 | Draw a neutral schematic terrain in those coordinates | Roads/rivers and settlement slots readable without illustration |
-| 3 | Generate clean terrain from the schematic | No UI, labels, flags, ownership paint or dynamic settlements baked into art |
-| 4 | Align and repair artwork against geometry | Landmarks and bridge endpoints match; no inferred connections from accidental pixels |
-| 5 | Place separate village/camp sprites and readable markers | Replace a village icon without replacing terrain; matching camera and ground contact |
-| 6 | Draw district ownership and selection overlays | Change one district owner without touching image assets |
-| 7 | Add pan, zoom, search, filters, selection and React inspector | Mouse/touch alignment; drag does not select; keyboard/list alternative works |
-| 8 | Check label density, resize, both themes and loading failure | Legible at actual view sizes; bounded zoom; fallback list remains usable |
-| 9 | Measure representative density and decide art approach | Report loaded textures, decoded memory, render timings, device and defects |
-| 10 | Later integrate authorised saved configuration and world state | Admin publish/reload, cache refresh, asset cleanup, permissions and capture update proven |
+| 1 | Pin bounded coordinates, camera/projection, cell model and sample districts/crossings | Labelled geometry and schema; outstanding decisions visible |
+| 2 | Make a schematic player view and local square-painting harness | Terrain paint, explicit crossing, marker placement, grid toggle and numeric controls |
+| 3 | Configure a small connected ground/water transition family | Assembled corners/edges and defined neighbour rules, not isolated sprite samples |
+| 4 | Compare tiled terrain with an illustrated baseline on the same geometry | Same camera/markers; alignment, style and asset-repair effort recorded |
+| 5 | Add independent multi-cell props and settlement icons | Stable anchors, correct overlaps and independently replaceable art |
+| 6 | Add district ownership, selection, pan/zoom and inspector/list | Recolour without terrain replacement; accessible navigation and correct picking |
+| 7 | Prove undo/redo, deterministic export/reload and boundary edits | One stroke/undo unit; neighbour updates and unchanged IDs |
+| 8 | Check real view sizes, touch, keyboard, themes, missing art and density | Readable labels; drag does not select; image failure preserves navigation |
+| 9 | Measure loading, frame behaviour and texture memory; review approach | Named devices, agreed budgets, defects and owner visual verdict |
+| 10 | Later integrate protected drafts, publication and world state | DISTRICTS owns saved map configuration; matching revisions and safe live-edit policy |
 
-MAP-UI (012) owns the early local/mock proof, steps 1–9. It must not wait for Identity, SQLite or R2. Step 10 belongs to later administration and authoritative district/capture slices; refine their task specs before dispatch. A local fixture editor is not a completed saved admin feature.
+012 owns steps 1–9 with local fixtures only. It does not depend on Identity, SQLite or R2. Step 10 is separate from village HOTSPOTS. Refine/split its map task before implementation if needed; no automatic successor work.
 
-## Success gate
-Selection remains aligned under pan/zoom/resizing. Ownership changes independently of terrain. Images can fail without losing location access. Representative map density stays readable. Asset creation effort and consistency are reported honestly. The art matches approved topology rather than forcing unapproved gameplay around a generated picture.
+## Success and fallback
+The grid can be hidden without making the map confusing. Connected terrain looks coherent at actual scale; ownership and markers change independently. Picking survives camera transforms. Multi-cell props and two-chunk boundaries work at fractional zoom. An exported fixture reloads consistently.
 
-If an illustration is beautiful but cannot align with geometry, repair it or simplify the region. If zoom reveals unacceptable blur, cap zoom or produce approved higher-detail art; do not promise unlimited detail. If regional chunk seams cannot be repaired efficiently, keep a bounded single-region alpha rather than claiming seamless world expansion.
-
-## Future expansion
-Multiple authored regions can later use a world-aligned chunk manifest and lower-resolution overview. Fixed geographical districts may each receive a village at an authored slot. This population model is a proposal: player/village capacity and expansion rules must be decided before the live map schema. World-scale art and reusable tile production are separate future investments.
+The owner reviews side-by-side visuals and art effort before adopting a production method. Missing matching assets can prove controls, but leave aesthetic criteria pending. Tile seams require repair or a reviewed illustrated fallback; illustration misalignment requires repair or smaller scope. Do not claim whole-world expansion or flawless asset generation from one attractive region.
 
 ## Evidence and storage
-Owner uploads approved reference images to Git. Do not commit generated images on their behalf. Record reference IDs, prompt attempts, accepted art, dimensions, coordinate alignment, device captures, timings and verdict in the dispatched task's evidence location. R2 holds referenced published/draft assets and necessary used derivatives, with cleanup governed by the existing lifecycle rules.
+Record reference IDs, attempted/accepted art, coordinates, asset dimensions/revisions, repairs, owner verdict, screenshots, interactions and device measurements in the dispatched task's evidence location. Owner uploads images to Git. Do not commit generated images on their behalf. R2 later holds referenced assets and necessary used derivatives under the lifecycle policy.

@@ -1,4 +1,4 @@
-# 012: Map interaction prototype
+# 012: World map visual and editing proof
 
 Task key: MAP-UI
 Status: TODO
@@ -8,17 +8,24 @@ Dependencies: GAME-SHELL
 
 ## Goal
 
-Prototype regional map viewing, district selection, ownership overlays and details.
+Independently prove a readable, attractive world map and a bounded RPG-Maker-style square-editing workflow using local fixtures. This task excludes village interiors, resource screens and resource catalogue decisions. Square authoring does not approve square-based movement.
 
 ## Acceptance criteria
 
-Follow steps 1–9 of the map visual guide using local fixtures. Use labelled mock geography, not invented canon coordinates. Align authored terrain with explicit world geometry; settlement sprites, marker labels and district ownership remain separate. Prove owner recolour without terrain regeneration, independently replaceable settlement art, zoom/pan/selection, drag-versus-click, search/filter/recentre and a React inspector. Check touch, keyboard/list access, resize, both themes, missing-image fallback and representative label density/performance. Record art alignment/repair effort and actual measurements. No saved admin, R2, movement/pathfinding or capture backend yet. Do not declare whole-world seamless art proven by one regional image.
+Follow the dedicated map visual guide and research checklist using labelled synthetic geography. Compare tiled terrain and an illustrated-terrain baseline on the same geometry, camera and markers. Prove coast/river/cliff transitions, multi-cell props, cross-chunk neighbour handling and geometry alignment; report asset generation/repair effort, not only screenshots.
+
+Local fixture editing supports terrain painting, explicit crossing placement, marker placement, grid toggle, undo/redo and versioned export/reload. Validate unsupported combinations rather than silently guessing. This is not a saved protected admin editor.
+
+Prove independent ownership recolour, replaceable settlement markers, zoom/pan/selection, drag-versus-click, search/filter/recentre and React inspector/list access. Check touch, keyboard, resize, both themes, missing-image fallback, dense labels and measured loading/rendering/memory. Capture a shared-boundary case at fractional zoom and viewport edge. Agree device, density and performance budgets before dispatch.
+
+Owner reviews side-by-side visuals and production effort before adopting a terrain approach. Missing matching art leaves the aesthetic gate pending. No village interior, resource-site fixture, R2/admin persistence, authoritative movement/pathfinding, capture backend or whole-world art production. A single beautiful region does not prove seamless world expansion.
 
 ## Required reading
 
 - [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Map visual guide](../design/map-visual-prototype.md)
 - [Map artwork runbook](../design/map-art-production.md)
+- [World-map research](../technical/world-map-research.md)
 - [Map scene contract](../technical/map-scene.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)

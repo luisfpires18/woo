@@ -44,3 +44,8 @@ For new adjacent regions, use overlap references and deliberate edge repair. Def
 Inspect normal zoom, maximum allowed zoom, touch size and dark/light controls. Check river crossings, marker ground contact, village silhouettes, faction colour contrast, unlabelled landmarks and ownership wash opacity. Do not recolour an entire forest crimson to hide border ambiguity. Pair colours with names/icons. Exact art dimensions and performance targets remain pending the proof.
 
 See [asset lifecycle](../technical/asset-lifecycle.md) and [village asset specification](village-asset-specification.md) for shared anchor, revision and cleanup discipline.
+
+## Square editing comparison before production
+The earlier illustrated-terrain pipeline is a baseline, not a settled production decision. MAP-UI must compare it with connected terrain tiles on the same synthetic geometry. See [dedicated world-map research](../technical/world-map-research.md) for transition inventories, multi-cell props, neighbouring chunks and the validation matrix.
+
+Owner-generated transparent trees, beasts and settlement icons fit independent props. Continuous ground and matching coast/river/cliff transitions require controlled edge templates and assembled seam checks. Do not request independent random square images and assume they form a coherent map. No resource catalogue, resource fields or village-interior art is part of this world-map runbook.

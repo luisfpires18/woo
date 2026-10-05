@@ -22,8 +22,8 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 008 | DESIGN-SYSTEM | Shared UI foundations, themes and kingdom colours | TODO | [008-design-system.md](docs/tasks/008-design-system.md) |
 | 009 | LANDING | First landing page UI polish | TODO | [009-landing-page.md](docs/tasks/009-landing-page.md) |
 | 010 | GAME-SHELL | Game UI structure and navigation polish | TODO | [010-game-ui-shell.md](docs/tasks/010-game-ui-shell.md) |
-| 011 | VILLAGE-UI | Village and resources screen prototype | TODO | [011-village-ui.md](docs/tasks/011-village-ui.md) |
-| 012 | MAP-UI | Map interaction prototype | TODO | [012-map-ui.md](docs/tasks/012-map-ui.md) |
+| 011 | VILLAGE-UI | Village scene and interaction prototype | TODO | [011-village-ui.md](docs/tasks/011-village-ui.md) |
+| 012 | MAP-UI | World map visual and editing proof | TODO | [012-map-ui.md](docs/tasks/012-map-ui.md) |
 | 013 | COMBAT-UI | Army, deployment and combat report prototypes | TODO | [013-combat-ui.md](docs/tasks/013-combat-ui.md) |
 | 014 | FORGE-UI | Forge, equipment and talent UI prototypes | TODO | [014-forge-ui.md](docs/tasks/014-forge-ui.md) |
 | 015 | ADMIN-UI | Admin dashboard UI and content-editor structure | TODO | [015-admin-dashboard-ui.md](docs/tasks/015-admin-dashboard-ui.md) |
@@ -44,7 +44,7 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 030 | R2-CONFIG | R2 upload credentials, CORS and image delivery | TODO | [030-r2-upload-delivery.md](docs/tasks/030-r2-upload-delivery.md) |
 | 031 | ASSETS | Entity image upload, replacement and cleanup | TODO | [031-asset-upload-cleanup.md](docs/tasks/031-asset-upload-cleanup.md) |
 | 032 | IMAGE-CACHE | Image cache revisions and immediate replacements | TODO | [032-image-cache-revisions.md](docs/tasks/032-image-cache-revisions.md) |
-| 033 | HOTSPOTS | Admin scene anchors and clickable hotspots | TODO | [033-scene-hotspot-editor.md](docs/tasks/033-scene-hotspot-editor.md) |
+| 033 | HOTSPOTS | Admin village anchors and clickable hotspots | TODO | [033-scene-hotspot-editor.md](docs/tasks/033-scene-hotspot-editor.md) |
 | 034 | CONFIG | Configuration publish, audit and active-order policy | TODO | [034-content-publish-policy.md](docs/tasks/034-content-publish-policy.md) |
 | 035 | VILLAGE-VISUAL-GATE | Layered village art and admin integration gate | TODO | [035-village-visual-gate.md](docs/tasks/035-village-visual-gate.md) |
 | 036 | VILLAGE-CREATE | Initial village placement and player settlement | TODO | [036-initial-village.md](docs/tasks/036-initial-village.md) |
@@ -111,3 +111,7 @@ Rune discovery, Conduit, Aspect, magical armour, Chaos/Order, heroes, additional
 ## Village visual proof
 The queue now contains 61 TODO tasks. VILLAGE-UI (011) is the early local layered-art proof, HOTSPOTS (033) is the saved admin editor, and VILLAGE-VISUAL-GATE (035) is the end-to-end acceptance gate after CONFIG (034). Later tasks renumbered with immutable keys preserved; none dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
 Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat illustration hotspots alone do not prove interchangeable buildings or modular walls.
+
+## Scene scope boundaries
+
+011 (VILLAGE-UI), 033 (HOTSPOTS) and 035 (VILLAGE-VISUAL-GATE) cover village interiors only. 012 (MAP-UI) independently proves the world-map rendering and local square-editing workflow; 043 (DISTRICTS) later owns saved map definitions and authoritative ownership. Resource types, production-site visuals and resource-screen layout are not decided and must not be invented during either scene proof. 023 and 037 remain gated by an owner-approved economy direction. Shared rendering utilities may be reused, but acceptance evidence and content remain separate.

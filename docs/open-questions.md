@@ -43,3 +43,7 @@ Current LP AI WORK file and exact sources for requested Claude tools; actual loc
 Early skeleton, page, version and deployment tasks do not require every medieval mechanic decided. Resolve a task's own blockers before dispatch; UI mocks are explicit until persistence exists. SQLite local/dev is settled, PostgreSQL production is deferred.
 
 New task-level decisions: release version increment policy/shared metadata; image revision/cache headers; DDD boundary depth; World membership cardinality and kingdom switching; actual Azure SQLite file/journal/backup compatibility. These are tracked by relevant detail files in the expanded queue.
+
+## Map and resource scope clarification
+
+World-map square painting is a candidate authoring workflow, not an approved movement grid or one-village-per-cell rule. MAP-UI must compare tiled terrain against illustrated terrain on the same synthetic geometry before recommending production. Projection, world bounds, cell size, district cardinality, crossing rules and safe live-world editing need decisions before their affected tasks. Resource catalogue and resource-screen layout remain owner-defined future work; neither belongs to the village or world-map proof.

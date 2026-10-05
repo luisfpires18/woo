@@ -2,7 +2,7 @@
 Updated: 2026-10-05. Status: proposed technical contract; exact APIs/versions resolved at implementation.
 
 ## Responsibilities
-React renders navigation, resource bar, search/filter controls, accessible location list, inspector and actions. PixiJS renders terrain, geography-aligned political polygons, settlement/site sprites, markers and selection. ASP.NET Core owns authoritative world state, permissions, visibility, movement and capture. The client never determines ownership by reading image colours.
+React renders navigation, generic status placeholders, search/filter controls, accessible location list, inspector and actions. PixiJS renders terrain, geography-aligned political polygons, settlement/site sprites, markers and selection. ASP.NET Core owns authoritative world state, permissions, visibility, movement and capture. The client never determines ownership by reading image colours.
 
 ## Data model to prove with fixtures
 - Map definition: stable ID, revision, world-coordinate bounds, terrain asset references, authored geometry and coordinate convention.
@@ -59,3 +59,10 @@ Checked 2026-10-05:
 - [PixiJS asset loading](https://pixijs.com/8.x/guides/components/assets)
 
 These support the rendering primitives. The map data model, editor and gameplay contracts above are WOO proposals, not built-in PixiJS features. Read [prototype sequence](../design/map-visual-prototype.md) and [art runbook](../design/map-art-production.md).
+
+## Square authoring candidate and separate scope
+Read [world-map research](world-map-research.md) before implementing MAP-UI. Compare connected tiles against an illustrated baseline on identical geometry. Square paint cells are not automatically districts, village slots, streaming chunks or movement nodes. Projection and cell/district relationships remain open.
+
+Store semantic cells, canonical shared edges/crossings, stable district/location IDs and independent decoration. Choose a primary geometry source; derive secondary boundaries rather than maintaining conflicting cell memberships and polygons. Tiled imports require a documented supported subset and explicit conversions. Editor terrain rules do not run automatically in PixiJS.
+
+The local map proof includes undo/redo and versioned export/reload, not saved admin. Map draft/publication integration belongs to DISTRICTS, while HOTSPOTS covers village interiors only. Resources and production-site imagery remain undecided and excluded. Neighbour rules, cross-chunk props, fractional-zoom seams and bounded texture loading require evidence before expansion.
