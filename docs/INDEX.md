@@ -38,6 +38,7 @@ GitHub is the primary working specification. Read current topic documents before
 - [Admin village scene editor](technical/village-scene-editor.md)
 - [Administration](admin.md)
 - [Architecture](technical/architecture.md)
+- [Backend technology comparison](technical/backend-comparison.md)
 - [Data model planning](technical/data-model.md)
 - [Asset lifecycle](technical/asset-lifecycle.md)
 

@@ -12,7 +12,7 @@ Recommended stack, not yet selected or implemented. This records the conversatio
 | Scene rendering | PixiJS | Village, map and combat presentation |
 | API | ASP.NET Core | Server-authoritative game actions |
 | Database | SQLite for local/dev; PostgreSQL considered for future production | Current persistence direction |
-| Worker | Separate .NET Worker process | Timed construction, recruitment, travel and combat |
+| Job processing | Persisted due actions; in-process initially or separate worker when hosting justifies it | Timed construction, recruitment, travel and combat |
 | Notifications | SignalR | Push updates after state changes |
 | Accounts | ASP.NET Core Identity, secure cookies | Login and server-enforced permissions |
 | Images | Cloudflare R2, S3-compatible API (service interpretation pending) | Admin-uploaded assets |
@@ -21,7 +21,7 @@ Recommended stack, not yet selected or implemented. This records the conversatio
 
 ## Proposed boundaries
 
-Modular monolith with separate API and worker processes. Database is authoritative. Browser graphics never decide outcomes. Persist actions and deadlines; processing must tolerate restarts/retries without duplicate spending or battles. SignalR is notification, not the durable state source.
+Proposed modular monolith, initially one deployable application; keep job-processing logic separable. A separate worker is not an automatic early requirement. Database is authoritative. Browser graphics never decide outcomes. Persist actions and deadlines; processing must tolerate restarts/retries without duplicate spending or battles. SignalR is notification, not the durable state source.
 
 ## Open contracts
 
@@ -36,3 +36,6 @@ Azure hosting is confirmed by the owner, superseding the VPS proposal. A separat
 Define architecture and exact supported dependency versions first, then create a minimal skeleton and running page. Assess pragmatic DDD with explicit boundaries and dependency direction (Domain/Application/Infrastructure/API as a candidate layout). DDD was offered as an example, not a confirmed demand for every tactical pattern. Choose the smallest useful structure; no speculative microservices.
 
 First landing/game/admin UI can be polished with mock data before SQLite. Real login, owner roles, World membership and kingdom choice require persisted state. See [version/cache contract](versioning-and-cache.md). PostgreSQL provider/server is not implemented now; record migration concerns rather than developing two providers prematurely.
+
+## Backend reassessment, 2026-10-05
+Read [backend comparison](backend-comparison.md). ASP.NET Core remains the recommendation, not a confirmed backend choice. Java/Spring, Go and TypeScript/Node are credible alternatives. React/TypeScript is the owner's preferred frontend; rendering remains independent of backend language. Final selection occurs in STACK. Early REST/polling and in-process persisted job processing are proposals; SignalR/another worker require justification, not automatic provisioning.

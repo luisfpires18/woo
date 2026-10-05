@@ -12,11 +12,12 @@ Choose supported runtime/dependency versions, architecture boundaries and soluti
 
 ## Acceptance criteria
 
-Record exact supported .NET/React/PixiJS/ORM versions, lockfile policy, candidate Domain/Application/Infrastructure/API boundaries and dependency direction. Confirm SQLite local/dev, Azure constraints and an initial 0.0.1-dev version contract. Avoid ceremonial aggregates or distributed services.
+Compare the backend candidates against workload, owner maintainability, account/admin integration, SQLite and Azure constraints; record the explicit selection and reasoning. Record exact supported selected-backend/React/PixiJS/data-access versions, lockfile policy, candidate Domain/Application/Infrastructure/API boundaries and dependency direction. Confirm SQLite local/dev, Azure constraints and an initial 0.0.1-dev version contract. Avoid ceremonial aggregates or distributed services.
 
 ## Required reading
 
 - [docs/technical/architecture.md](../../docs/technical/architecture.md)
+- [Backend comparison](../technical/backend-comparison.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 
