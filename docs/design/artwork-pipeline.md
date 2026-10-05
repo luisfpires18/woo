@@ -18,6 +18,10 @@ Test at actual desktop/mobile sizes and both themes. Check style, perspective, t
 
 Keep only referenced images and required used derivatives in the game bucket. Earlier image-version retention proposals are superseded. Prompt/style/approval metadata can remain in documentation, but unused binary histories must not accumulate. See [asset lifecycle](../technical/asset-lifecycle.md).
 
-## Proposed first art milestone
+## Superseded narrow first-art proposal
 
-One real Arkazia village scene with six configurable hotspots, working detail panels and dark/light mode. This is a proposal; no artwork production or code has been started by this documentation migration.
+One real Arkazia village scene with six configurable hotspots, working detail panels and dark/light mode. This earlier proposal is superseded as the complete feasibility gate by the layered visual proof below. No game code or production-ready modular assets exist. Preview mockups have been generated.
+
+## Village feasibility work, 2026-10-05
+Read the [step-by-step visual prototype](village-visual-prototype.md) before producing the village family. Prove a clean terrain, separately replaceable forge/upgrade, two buildings, tree, modular walls and river/bridge integration. VILLAGE-UI tests local art/interaction; HOTSPOTS implements saved administration; VILLAGE-VISUAL-GATE validates end-to-end operation before expanding village gameplay. Static whole-scene hotspots are a fallback, not proof of modular upgrades.
+The owner now uploads images to Git personally. ChatGPT maintains documentation and generates previews; it must not upload approved or unapproved images on the owner's behalf. Admin R2 uploads are a separate future game feature.

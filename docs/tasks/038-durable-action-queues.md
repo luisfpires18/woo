@@ -1,22 +1,22 @@
-# 039: Recruitment and troop inventory
+# 038: Durable action queues and catch-up processing
 
-Task key: RECRUIT
+Task key: ORDERS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Military
-Dependencies: CONSTRUCTION, UNITS-ADMIN
+Milestone: Village
+Dependencies: RESOURCE-STATE
 
 ## Goal
 
-Recruit approved ordinary units with default weapons.
+Build restart-safe timed orders and agreed F1 catch-up semantics.
 
 ## Acceptance criteria
 
-Costs/times/buildings/capacity/upkeep enforced; queue produces units once. Lists expose composition/default equipment. No unique advanced bearer system.
+Atomic spending+order creation; completion once across retry; current status returned on wake. Choose cancellation/refund/concurrency policy. Request catch-up does not claim punctual execution while F1 sleeps.
 
 ## Required reading
 
-- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
+- [docs/technical/azure-and-deployment.md](../../docs/technical/azure-and-deployment.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

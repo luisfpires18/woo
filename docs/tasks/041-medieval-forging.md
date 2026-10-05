@@ -1,22 +1,22 @@
-# 056: Offline reconciliation and live UI notifications
+# 041: Ordinary weaponsmith and armorsmith upgrades
 
-Task key: OFFLINE
+Task key: FORGING
 Status: TODO
 Updated: 2026-10-05
-Milestone: Reliability
-Dependencies: COOP
+Milestone: Military
+Dependencies: RECRUIT, EQUIPMENT-ADMIN
 
 ## Goal
 
-Refresh client state after idle/disconnect and notify real completed actions.
+Connect forge UI to actual medieval upgrades.
 
 ## Acceptance criteria
 
-No stale ownership/resource/order state after reconnect; notifications scoped to authorised world. F1 sleep behavior explained; SignalR is not durable truth.
+Agreed per-type/batch/individual rule implemented; costs/availability and compatibility enforced; define new-recruit inheritance and use during crafting. No generic unrestricted swaps.
 
 ## Required reading
 
-- [docs/technical/architecture.md](../../docs/technical/architecture.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 036: Resource production, storage and offline accrual
+# 052: Declared kingdom campaigns and defence commitments
 
-Task key: RESOURCE-STATE
+Task key: CAMPAIGNS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Village
-Dependencies: VILLAGE-CREATE
+Milestone: Conquest
+Dependencies: REPORTS, MEMBERSHIP
 
 ## Goal
 
-Implement resource rates and storage from configured definitions.
+Implement agreed visible campaign windows and voluntary defence contributions.
 
 ## Acceptance criteria
 
-Time-based accrual/caps correct after idle/restart; use server time and consistent precision. Validate representative visit intervals and avoid impossible upgrade costs.
+Owner defines declaration/commitment/withdrawal/command permissions. No independent alliances, fakes, manual synchronised waves or confiscation of others' troops.
 
 ## Required reading
 
-- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

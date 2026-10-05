@@ -4,7 +4,7 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 ## Screens
 
-Resources, Village, Kingdom Map, Combat, Forge and Kingdom Duties have concept previews. Login, kingdom selection and the admin workspace also need designs. Preview numbers, ore choices and map layouts are illustrative.
+Resources, Village, Kingdom Map, Combat, Forge and Kingdom Duties have concept previews. Login and kingdom selection now have approved conversation previews; admin still needs designs. The owner will upload their images to Git. Preview numbers, ore choices and map layouts are illustrative.
 
 React handles menus, forms, counters and accessible controls; PixiJS is proposed for interactive scenes. Village/map/combat interaction should remain usable with fallback symbols before art exists.
 
@@ -23,3 +23,10 @@ Build shared theme/layout foundations, polish landing, establish game navigation
 ## Approved landing page, 2026-10-05
 
 See [mockup/00-landing-page.md](../../mockup/00-landing-page.md) and its light/dark screenshots. Slim navbar with anvil branding and auth control only; supplied title/banner below navbar; general info, metrics and world cards underneath. Login uses a separate page/layout. Logged-in navbar uses avatar/nickname with Profile, Settings and Log out. Settings opens a separate page for appearance; no appearance controls in the dropdown and no navbar theme toggle. The written correction overrides the light screenshot's expanded appearance section. Theme and authentication state are independent. Metrics/world names are illustrative, not actual content.
+
+## Latest visual direction, 2026-10-05
+The owner prefers the early game-screen style: dark charcoal navigation, warm ivory content, crimson actions and artwork integrated into the village/inspector; minimal textures. Dark/light support remains required. The ivory reference is not the final dark-theme design.
+Centered login over full-screen forge artwork is approved. Kingdom selector is approved: Arkazia/Veridor/Sylvara with image placeholders for later admin uploads; other future playable kingdoms disabled; NPC factions not selectable.
+The latest remade village screen is awaiting approval. Its costs, timings, labels, castle, river and building roster are illustrative. Do not treat visual generation as gameplay approval or production art.
+Read the [village visual proof](village-visual-prototype.md). UI labels/counters must remain live; scene art is not a flattened application.
+The owner now handles all Git image uploads; the older committed landing references remain historical until owner replacement. Match newer confirmed written directions when these differ from older pixels.

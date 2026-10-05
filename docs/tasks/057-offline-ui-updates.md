@@ -1,22 +1,22 @@
-# 044: Scouting and map information visibility
+# 057: Offline reconciliation and live UI notifications
 
-Task key: SCOUTING
+Task key: OFFLINE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Map
-Dependencies: ROUTES
+Milestone: Reliability
+Dependencies: COOP
 
 ## Goal
 
-Define and enforce what players can know about nearby sites and enemy troops.
+Refresh client state after idle/disconnect and notify real completed actions.
 
 ## Acceptance criteria
 
-Owner selects visibility rules; backend never sends hidden information. Scout costs/results/timing handled via orders; no mandatory nonstop scouting/fake-wave mechanics.
+No stale ownership/resource/order state after reconnect; notifications scoped to authorised world. F1 sleep behavior explained; SignalR is not durable truth.
 
 ## Required reading
 
-- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
+- [docs/technical/architecture.md](../../docs/technical/architecture.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

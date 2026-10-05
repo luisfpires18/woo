@@ -1,18 +1,18 @@
-# 041: Blacksmith experience, points and talent choices
+# 040: Recruitment and troop inventory
 
-Task key: TALENTS
+Task key: RECRUIT
 Status: TODO
 Updated: 2026-10-05
 Milestone: Military
-Dependencies: FORGING, TALENTS-ADMIN
+Dependencies: CONSTRUCTION, UNITS-ADMIN
 
 ## Goal
 
-Implement meaningful progression and point spending.
+Recruit approved ordinary units with default weapons.
 
 ## Acceptance criteria
 
-Chosen sources/prerequisites/caps/resets applied; no duplicate point spending or cheap-item spam exploit. Weaponsmith/armorsmith effects explained.
+Costs/times/buildings/capacity/upkeep enforced; queue produces units once. Lists expose composition/default equipment. No unique advanced bearer system.
 
 ## Required reading
 

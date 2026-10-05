@@ -1,22 +1,22 @@
-# 045: Troop movement, stationing and return
+# 044: Route connectivity and travel calculations
 
-Task key: MOVEMENT
+Task key: ROUTES
 Status: TODO
 Updated: 2026-10-05
 Milestone: Map
-Dependencies: ROUTES, ORDERS
+Dependencies: DISTRICTS, RECRUIT
 
 ## Goal
 
-Dispatch troop contingents and update location on arrival.
+Implement ordinary land route costs and reachable destinations.
 
 ## Acceptance criteria
 
-Troops cannot be duplicated/spent twice; travel/return/recall rules chosen. Repeated processing doesn't duplicate arrivals; own/allied stationing permissions enforced.
+Connectivity/terrain/travel explained; test blocked/reachable routes and server-calculated times. Naval/air/tunnel movement explicitly deferred unless separately authorised.
 
 ## Required reading
 
-- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

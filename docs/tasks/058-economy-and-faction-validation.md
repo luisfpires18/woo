@@ -1,22 +1,22 @@
-# 051: Declared kingdom campaigns and defence commitments
+# 058: Economy, counters and faction balance pass
 
-Task key: CAMPAIGNS
+Task key: BALANCE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Conquest
-Dependencies: REPORTS, MEMBERSHIP
+Milestone: Validation
+Dependencies: OFFLINE
 
 ## Goal
 
-Implement agreed visible campaign windows and voluntary defence contributions.
+Exercise complete medieval loops with representative small-world scenarios.
 
 ## Acceptance criteria
 
-Owner defines declaration/commitment/withdrawal/command permissions. No independent alliances, fakes, manual synchronised waves or confiscation of others' troops.
+Measure production/storage, forge usefulness, troop losses and viable three-kingdom choices. Document evidence and change only supported balance; no fairness guarantee from distinct rosters.
 
 ## Required reading
 
-- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
+- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

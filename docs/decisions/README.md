@@ -51,3 +51,10 @@ D-31 Proposal: pragmatic DDD modular boundaries; exact structure chosen in STACK
 Original 12 TODO task files were replaced by smaller specifications before any dispatch. No active task branch, completed implementation or release version exists.
 
 D-32 Confirmed: include Cloudflare configuration and command-guided R2 bucket creation for admin-uploaded images, before upload integration. No provisioning requested in the roadmap update itself.
+
+## Village artwork preparation, 2026-10-05
+D-33 Confirmed: owner personally uploads images to Git from now on. Assistant maintains text documentation and previews; do not commit image files for the owner.
+D-34 Confirmed preference: restrained textures; early dark-navigation / ivory-content / crimson-action game UI. Dark/light remains required. Latest village remake still awaits approval.
+D-35 Accepted planning direction: make village visual feasibility explicit before broad asset production; document an early local proof plus later admin/storage integration gate.
+D-36 Proposal to validate: fixed plots, layered terrain/buildings/walls/bridge/props, stable anchors and geometry; React/PixiJS responsibilities. This does not settle free-placement gameplay, exact camera/schema, budgets or final artwork.
+Approved in conversation: centered full-background login and placeholder-based kingdom selector. Preview sample data is not balance canon.

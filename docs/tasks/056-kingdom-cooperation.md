@@ -1,22 +1,22 @@
-# 053: Capture, occupation and district transfer
+# 056: Kingdom overview, defence requests and contribution credit
 
-Task key: CAPTURE
+Task key: COOP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Conquest
-Dependencies: SIEGE, DISTRICTS
+Milestone: Kingdom
+Dependencies: CAMPAIGNS, DUTIES, RECOVERY
 
 ## Goal
 
-Transfer captured village district and expand conquering kingdom.
+Make faction cooperation understandable without an alliance hierarchy.
 
 ## Acceptance criteria
 
-Atomic ownership/world/permissions update; occupation/new controller decided; active queues treated consistently. Terrain illustration unchanged by political capture.
+Own/allied visibility respected; actionable requests, contributions and heroes-unavailable states clear. No one can seize others' forces. Extra social/chat features need explicit scope.
 
 ## Required reading
 
-- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
+- [docs/vision.md](../../docs/vision.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

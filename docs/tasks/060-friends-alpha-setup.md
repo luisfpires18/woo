@@ -1,22 +1,22 @@
-# 057: Economy, counters and faction balance pass
+# 060: Invite-only friends alpha setup and support
 
-Task key: BALANCE
+Task key: FRIENDS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Validation
-Dependencies: OFFLINE
+Milestone: Alpha
+Dependencies: QA
 
 ## Goal
 
-Exercise complete medieval loops with representative small-world scenarios.
+Prepare the owner/friends world, onboarding and support/runbook.
 
 ## Acceptance criteria
 
-Measure production/storage, forge usefulness, troop losses and viable three-kingdom choices. Document evidence and change only supported balance; no fairness guarantee from distinct rosters.
+Approved roster/map/config loaded; owner admin works; actual world admission bounded; logs/restore/version checks documented. No automatic public release or prod promotion.
 
 ## Required reading
 
-- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
+- [docs/scope.md](../../docs/scope.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

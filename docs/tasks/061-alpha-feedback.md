@@ -1,22 +1,22 @@
-# 040: Ordinary weaponsmith and armorsmith upgrades
+# 061: Run medieval alpha and refine next tasks
 
-Task key: FORGING
+Task key: ALPHA-FEEDBACK
 Status: TODO
 Updated: 2026-10-05
-Milestone: Military
-Dependencies: RECRUIT, EQUIPMENT-ADMIN
+Milestone: Alpha
+Dependencies: FRIENDS
 
 ## Goal
 
-Connect forge UI to actual medieval upgrades.
+Collect actual play findings and update the evolving roadmap.
 
 ## Acceptance criteria
 
-Agreed per-type/batch/individual rule implemented; costs/availability and compatibility enforced; define new-recruit inheritance and use during crafting. No generic unrestricted swaps.
+Track forge decisions, faction participation, workload, counters, recovery and bugs. Add prioritised reviewable tasks. Decide continuation, reset and future rune emergence with owner; master/prod remains separate later release decision.
 
 ## Required reading
 
-- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
+- [docs/roadmap.md](../../docs/roadmap.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 055: Kingdom overview, defence requests and contribution credit
+# 049: Persisted automatic battle resolution
 
-Task key: COOP
+Task key: BATTLES
 Status: TODO
 Updated: 2026-10-05
-Milestone: Kingdom
-Dependencies: CAMPAIGNS, DUTIES, RECOVERY
+Milestone: Combat
+Dependencies: COUNTERS, MOVEMENT, ORDERS
 
 ## Goal
 
-Make faction cooperation understandable without an alliance hierarchy.
+Resolve a bounded automatic encounter with authoritative inputs/outcomes.
 
 ## Acceptance criteria
 
-Own/allied visibility respected; actionable requests, contributions and heroes-unavailable states clear. No one can seize others' forces. Extra social/chat features need explicit scope.
+Damage/losses/retreat apply once; retries/restart reproduce inputs and don't duplicate loot. Outcome independent of animation. Capture intentionally deferred.
 
 ## Required reading
 
-- [docs/vision.md](../../docs/vision.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

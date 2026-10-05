@@ -25,6 +25,10 @@ Use this list to resolve implementation blockers before writing final formulas/c
 | O-17 | Resolve recorded canon conflicts, especially soul/blood and Order L3? | Future lore-dependent mechanics |
 | O-18 | Moraphys victory, Chaos imprisonment/use and rival defeat meaning? | Future finale |
 | O-19 | Sea/air/tunnel access and counterplay for every kingdom? | Future domains |
+| O-20 | Village reference/camera, terrain dimensions, plots, building height envelopes and shadows? | VILLAGE-UI art preparation |
+| O-21 | Modular wall connectors, bridge/river split and difficult occlusion cases? | Village visual proof |
+| O-22 | Asset repair effort, source permissions, formats and measured performance budgets? | Repeatable art production |
+| O-23 | Scene draft/publish revision, concurrent editing and geometry replacement review? | HOTSPOTS / CONFIG / visual gate |
 
 Recommended next order: O-01/O-02, O-04/O-05/O-06, O-07/O-08/O-09, then technical contracts. The owner will provide rosters later; original drafts do not resolve O-07.
 

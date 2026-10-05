@@ -1,22 +1,22 @@
-# 050: Ordinary animal camps and expeditions
+# 037: Resource production, storage and offline accrual
 
-Task key: CAMP
+Task key: RESOURCE-STATE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Activities
-Dependencies: MOVEMENT, SCOUTING, BATTLES
+Milestone: Village
+Dependencies: VILLAGE-CREATE
 
 ## Goal
 
-Implement a small bounded medieval expedition loop if included in alpha scope.
+Implement resource rates and storage from configured definitions.
 
 ## Acceptance criteria
 
-Approve ordinary sites/rewards/risks; avoid magical animal-to-rune drops. Reservation/replenishment and offline results predictable. Inclusion remains a scope decision.
+Time-based accrual/caps correct after idle/restart; use server time and consistent precision. Validate representative visit intervals and avoid impossible upgrade costs.
 
 ## Required reading
 
-- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
+- [docs/gameplay/economy.md](../../docs/gameplay/economy.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

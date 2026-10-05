@@ -1,22 +1,22 @@
-# 059: Invite-only friends alpha setup and support
+# 046: Troop movement, stationing and return
 
-Task key: FRIENDS
+Task key: MOVEMENT
 Status: TODO
 Updated: 2026-10-05
-Milestone: Alpha
-Dependencies: QA
+Milestone: Map
+Dependencies: ROUTES, ORDERS
 
 ## Goal
 
-Prepare the owner/friends world, onboarding and support/runbook.
+Dispatch troop contingents and update location on arrival.
 
 ## Acceptance criteria
 
-Approved roster/map/config loaded; owner admin works; actual world admission bounded; logs/restore/version checks documented. No automatic public release or prod promotion.
+Troops cannot be duplicated/spent twice; travel/return/recall rules chosen. Repeated processing doesn't duplicate arrivals; own/allied stationing permissions enforced.
 
 ## Required reading
 
-- [docs/scope.md](../../docs/scope.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

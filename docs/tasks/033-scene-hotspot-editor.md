@@ -8,15 +8,20 @@ Dependencies: ASSETS, VILLAGE-UI, MAP-UI
 
 ## Goal
 
-Configure display anchors and normalised scene/district hotspots.
+Implement the protected saved scene editor for village templates, layered assets, anchors and hotspots; retain map hotspot support without inferring gameplay topology from artwork.
 
 ## Acceptance criteria
 
-Hotspots align across resize/zoom/touch; image replacement prompts geometry review. Keyboard-accessible equivalent navigation exists. No terrain adjacency inferred from pixels.
+Owner can choose/upload terrain and building variants, edit plot position/scale/ground anchor/footprint/hit polygon/label/depth, save and reload. Test wall connectors and bridge/foreground layout. Numeric/object-list controls complement dragging.
+Hotspots align across resize/zoom/touch; replacement requires geometry review. Keyboard-accessible player building navigation exists. Server authorisation and asset reference/cleanup rules apply to drafts and shared assets.
+Do not rotate perspective sprites arbitrarily or implement free-placement gameplay/pathfinding. Declare limited activation model until CONFIG; later end-to-end gate requires CONFIG. No terrain adjacency inferred from pixels.
 
 ## Required reading
 
 - [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
+- [Admin scene editor](../technical/village-scene-editor.md)
+- [Visual prototype](../design/village-visual-prototype.md)
+- [Asset specification](../design/village-asset-specification.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

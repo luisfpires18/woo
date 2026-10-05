@@ -1,22 +1,22 @@
-# 060: Run medieval alpha and refine next tasks
+# 039: Building construction, upgrades and queues
 
-Task key: ALPHA-FEEDBACK
+Task key: CONSTRUCTION
 Status: TODO
 Updated: 2026-10-05
-Milestone: Alpha
-Dependencies: FRIENDS
+Milestone: Village
+Dependencies: ORDERS
 
 ## Goal
 
-Collect actual play findings and update the evolving roadmap.
+Connect village UI to real construction/main-building prerequisites.
 
 ## Acceptance criteria
 
-Track forge decisions, faction participation, workload, counters, recovery and bugs. Add prioritised reviewable tasks. Decide continuation, reset and future rune emergence with owner; master/prod remains separate later release decision.
+Check ownership/cost/slot/prerequisites; queue completion persists; clear feedback and offline status. Decide cancellation/demolition before enabling those controls.
 
 ## Required reading
 
-- [docs/roadmap.md](../../docs/roadmap.md)
+- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

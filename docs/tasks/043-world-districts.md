@@ -1,22 +1,22 @@
-# 038: Building construction, upgrades and queues
+# 043: Authoritative map districts and ownership
 
-Task key: CONSTRUCTION
+Task key: DISTRICTS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Village
-Dependencies: ORDERS
+Milestone: Map
+Dependencies: VILLAGE-CREATE, MAP-UI
 
 ## Goal
 
-Connect village UI to real construction/main-building prerequisites.
+Persist approved district topology and political ownership overlays.
 
 ## Acceptance criteria
 
-Check ownership/cost/slot/prerequisites; queue completion persists; clear feedback and offline status. Decide cancellation/demolition before enabling those controls.
+Village-centred conquest geometry independent of illustration; three playable homelands visible. Canon geography respected; exact coordinates supplied/approved.
 
 ## Required reading
 
-- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
+- [docs/world/kingdoms-and-geography.md](../../docs/world/kingdoms-and-geography.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

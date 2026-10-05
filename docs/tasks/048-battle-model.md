@@ -1,22 +1,22 @@
-# 043: Route connectivity and travel calculations
+# 048: Unit counters and battle-model validation
 
-Task key: ROUTES
+Task key: COUNTERS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Map
-Dependencies: DISTRICTS, RECRUIT
+Milestone: Combat
+Dependencies: RECRUIT, FORGING, SCOUTING
 
 ## Goal
 
-Implement ordinary land route costs and reachable destinations.
+Specify/test numerical combat with readable role, armour and terrain interactions.
 
 ## Acceptance criteria
 
-Connectivity/terrain/travel explained; test blocked/reachable routes and server-calculated times. Naval/air/tunnel movement explicitly deferred unless separately authorised.
+Choose formulas/stances/casualty rules and validate cavalry/pikes/mixed compositions. No assumed universal immunity; reports can explain causes. No full kingdom battle engine in this task.
 
 ## Required reading
 
-- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

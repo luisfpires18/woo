@@ -31,6 +31,11 @@ GitHub is the primary working specification. Read current topic documents before
 
 - [Screens and themes](design/screens-and-themes.md)
 - [Artwork pipeline](design/artwork-pipeline.md)
+- [Village visual prototype: step-by-step entry point](design/village-visual-prototype.md)
+- [Village asset specification](design/village-asset-specification.md)
+- [Village art production runbook](design/village-art-production.md)
+- [Village renderer and interaction](technical/village-scene.md)
+- [Admin village scene editor](technical/village-scene-editor.md)
 - [Administration](admin.md)
 - [Architecture](technical/architecture.md)
 - [Data model planning](technical/data-model.md)

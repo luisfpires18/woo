@@ -1,22 +1,22 @@
-# 042: Authoritative map districts and ownership
+# 059: Mobile, accessibility, persistence and permission validation
 
-Task key: DISTRICTS
+Task key: QA
 Status: TODO
 Updated: 2026-10-05
-Milestone: Map
-Dependencies: VILLAGE-CREATE, MAP-UI
+Milestone: Validation
+Dependencies: BALANCE
 
 ## Goal
 
-Persist approved district topology and political ownership overlays.
+Run focused end-to-end checks on actual deployed medieval flows.
 
 ## Acceptance criteria
 
-Village-centred conquest geometry independent of illustration; three playable homelands visible. Canon geography respected; exact coordinates supplied/approved.
+Keyboard/touch/light/dark/kingdom themes usable; upload cleanup, auth/world isolation, restart/redeploy persistence and capture retries tested. Known defects recorded without repeated ceremonial suites.
 
 ## Required reading
 
-- [docs/world/kingdoms-and-geography.md](../../docs/world/kingdoms-and-geography.md)
+- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

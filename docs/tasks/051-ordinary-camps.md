@@ -1,22 +1,22 @@
-# 035: Initial village placement and player settlement
+# 051: Ordinary animal camps and expeditions
 
-Task key: VILLAGE-CREATE
+Task key: CAMP
 Status: TODO
 Updated: 2026-10-05
-Milestone: Village
-Dependencies: MEMBERSHIP, CONFIG
+Milestone: Activities
+Dependencies: MOVEMENT, SCOUTING, BATTLES
 
 ## Goal
 
-Create the player's initial village using agreed world placement rules.
+Implement a small bounded medieval expedition loop if included in alpha scope.
 
 ## Acceptance criteria
 
-Resolve village count/expansion later boundaries, ownership and starting loadout now. Join retry does not create duplicate villages; ownership/world checks enforced. Map marker geometry uses approved layout.
+Approve ordinary sites/rewards/risks; avoid magical animal-to-rune drops. Reservation/replenishment and offline results predictable. Inclusion remains a scope decision.
 
 ## Required reading
 
-- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

@@ -1,22 +1,22 @@
-# 048: Persisted automatic battle resolution
+# 050: Battle reports and simple event replay
 
-Task key: BATTLES
+Task key: REPORTS
 Status: TODO
 Updated: 2026-10-05
 Milestone: Combat
-Dependencies: COUNTERS, MOVEMENT, ORDERS
+Dependencies: BATTLES, COMBAT-UI
 
 ## Goal
 
-Resolve a bounded automatic encounter with authoritative inputs/outcomes.
+Connect outcome reports and token-based replay to actual server events.
 
 ## Acceptance criteria
 
-Damage/losses/retreat apply once; retries/restart reproduce inputs and don't duplicate loot. Outcome independent of animation. Capture intentionally deferred.
+Display composition, relevant counters, losses and outcome legibly; replay no gameplay authority. UI handles no-art fallback and version footer.
 
 ## Required reading
 
-- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
+- [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

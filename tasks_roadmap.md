@@ -46,32 +46,33 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | 032 | IMAGE-CACHE | Image cache revisions and immediate replacements | TODO | [032-image-cache-revisions.md](docs/tasks/032-image-cache-revisions.md) |
 | 033 | HOTSPOTS | Admin scene anchors and clickable hotspots | TODO | [033-scene-hotspot-editor.md](docs/tasks/033-scene-hotspot-editor.md) |
 | 034 | CONFIG | Configuration publish, audit and active-order policy | TODO | [034-content-publish-policy.md](docs/tasks/034-content-publish-policy.md) |
-| 035 | VILLAGE-CREATE | Initial village placement and player settlement | TODO | [035-initial-village.md](docs/tasks/035-initial-village.md) |
-| 036 | RESOURCE-STATE | Resource production, storage and offline accrual | TODO | [036-resource-production.md](docs/tasks/036-resource-production.md) |
-| 037 | ORDERS | Durable action queues and catch-up processing | TODO | [037-durable-action-queues.md](docs/tasks/037-durable-action-queues.md) |
-| 038 | CONSTRUCTION | Building construction, upgrades and queues | TODO | [038-building-construction.md](docs/tasks/038-building-construction.md) |
-| 039 | RECRUIT | Recruitment and troop inventory | TODO | [039-troop-recruitment.md](docs/tasks/039-troop-recruitment.md) |
-| 040 | FORGING | Ordinary weaponsmith and armorsmith upgrades | TODO | [040-medieval-forging.md](docs/tasks/040-medieval-forging.md) |
-| 041 | TALENTS | Blacksmith experience, points and talent choices | TODO | [041-blacksmith-progression.md](docs/tasks/041-blacksmith-progression.md) |
-| 042 | DISTRICTS | Authoritative map districts and ownership | TODO | [042-world-districts.md](docs/tasks/042-world-districts.md) |
-| 043 | ROUTES | Route connectivity and travel calculations | TODO | [043-routes-and-travel.md](docs/tasks/043-routes-and-travel.md) |
-| 044 | SCOUTING | Scouting and map information visibility | TODO | [044-scouting-and-visibility.md](docs/tasks/044-scouting-and-visibility.md) |
-| 045 | MOVEMENT | Troop movement, stationing and return | TODO | [045-troop-movement.md](docs/tasks/045-troop-movement.md) |
-| 046 | DUTIES | Useful kingdom duties | TODO | [046-kingdom-duties.md](docs/tasks/046-kingdom-duties.md) |
-| 047 | COUNTERS | Unit counters and battle-model validation | TODO | [047-battle-model.md](docs/tasks/047-battle-model.md) |
-| 048 | BATTLES | Persisted automatic battle resolution | TODO | [048-battle-resolution.md](docs/tasks/048-battle-resolution.md) |
-| 049 | REPORTS | Battle reports and simple event replay | TODO | [049-battle-reports.md](docs/tasks/049-battle-reports.md) |
-| 050 | CAMP | Ordinary animal camps and expeditions | TODO | [050-ordinary-camps.md](docs/tasks/050-ordinary-camps.md) |
-| 051 | CAMPAIGNS | Declared kingdom campaigns and defence commitments | TODO | [051-kingdom-campaigns.md](docs/tasks/051-kingdom-campaigns.md) |
-| 052 | SIEGE | Village siege and defensive building effects | TODO | [052-village-siege.md](docs/tasks/052-village-siege.md) |
-| 053 | CAPTURE | Capture, occupation and district transfer | TODO | [053-territory-capture.md](docs/tasks/053-territory-capture.md) |
-| 054 | RECOVERY | Defeat, wounded troops and player recovery | TODO | [054-defeat-and-recovery.md](docs/tasks/054-defeat-and-recovery.md) |
-| 055 | COOP | Kingdom overview, defence requests and contribution credit | TODO | [055-kingdom-cooperation.md](docs/tasks/055-kingdom-cooperation.md) |
-| 056 | OFFLINE | Offline reconciliation and live UI notifications | TODO | [056-offline-ui-updates.md](docs/tasks/056-offline-ui-updates.md) |
-| 057 | BALANCE | Economy, counters and faction balance pass | TODO | [057-economy-and-faction-validation.md](docs/tasks/057-economy-and-faction-validation.md) |
-| 058 | QA | Mobile, accessibility, persistence and permission validation | TODO | [058-mobile-and-reliability.md](docs/tasks/058-mobile-and-reliability.md) |
-| 059 | FRIENDS | Invite-only friends alpha setup and support | TODO | [059-friends-alpha-setup.md](docs/tasks/059-friends-alpha-setup.md) |
-| 060 | ALPHA-FEEDBACK | Run medieval alpha and refine next tasks | TODO | [060-alpha-feedback.md](docs/tasks/060-alpha-feedback.md) |
+| 035 | VILLAGE-VISUAL-GATE | Layered village art and admin integration gate | TODO | [035-village-visual-gate.md](docs/tasks/035-village-visual-gate.md) |
+| 036 | VILLAGE-CREATE | Initial village placement and player settlement | TODO | [036-initial-village.md](docs/tasks/036-initial-village.md) |
+| 037 | RESOURCE-STATE | Resource production, storage and offline accrual | TODO | [037-resource-production.md](docs/tasks/037-resource-production.md) |
+| 038 | ORDERS | Durable action queues and catch-up processing | TODO | [038-durable-action-queues.md](docs/tasks/038-durable-action-queues.md) |
+| 039 | CONSTRUCTION | Building construction, upgrades and queues | TODO | [039-building-construction.md](docs/tasks/039-building-construction.md) |
+| 040 | RECRUIT | Recruitment and troop inventory | TODO | [040-troop-recruitment.md](docs/tasks/040-troop-recruitment.md) |
+| 041 | FORGING | Ordinary weaponsmith and armorsmith upgrades | TODO | [041-medieval-forging.md](docs/tasks/041-medieval-forging.md) |
+| 042 | TALENTS | Blacksmith experience, points and talent choices | TODO | [042-blacksmith-progression.md](docs/tasks/042-blacksmith-progression.md) |
+| 043 | DISTRICTS | Authoritative map districts and ownership | TODO | [043-world-districts.md](docs/tasks/043-world-districts.md) |
+| 044 | ROUTES | Route connectivity and travel calculations | TODO | [044-routes-and-travel.md](docs/tasks/044-routes-and-travel.md) |
+| 045 | SCOUTING | Scouting and map information visibility | TODO | [045-scouting-and-visibility.md](docs/tasks/045-scouting-and-visibility.md) |
+| 046 | MOVEMENT | Troop movement, stationing and return | TODO | [046-troop-movement.md](docs/tasks/046-troop-movement.md) |
+| 047 | DUTIES | Useful kingdom duties | TODO | [047-kingdom-duties.md](docs/tasks/047-kingdom-duties.md) |
+| 048 | COUNTERS | Unit counters and battle-model validation | TODO | [048-battle-model.md](docs/tasks/048-battle-model.md) |
+| 049 | BATTLES | Persisted automatic battle resolution | TODO | [049-battle-resolution.md](docs/tasks/049-battle-resolution.md) |
+| 050 | REPORTS | Battle reports and simple event replay | TODO | [050-battle-reports.md](docs/tasks/050-battle-reports.md) |
+| 051 | CAMP | Ordinary animal camps and expeditions | TODO | [051-ordinary-camps.md](docs/tasks/051-ordinary-camps.md) |
+| 052 | CAMPAIGNS | Declared kingdom campaigns and defence commitments | TODO | [052-kingdom-campaigns.md](docs/tasks/052-kingdom-campaigns.md) |
+| 053 | SIEGE | Village siege and defensive building effects | TODO | [053-village-siege.md](docs/tasks/053-village-siege.md) |
+| 054 | CAPTURE | Capture, occupation and district transfer | TODO | [054-territory-capture.md](docs/tasks/054-territory-capture.md) |
+| 055 | RECOVERY | Defeat, wounded troops and player recovery | TODO | [055-defeat-and-recovery.md](docs/tasks/055-defeat-and-recovery.md) |
+| 056 | COOP | Kingdom overview, defence requests and contribution credit | TODO | [056-kingdom-cooperation.md](docs/tasks/056-kingdom-cooperation.md) |
+| 057 | OFFLINE | Offline reconciliation and live UI notifications | TODO | [057-offline-ui-updates.md](docs/tasks/057-offline-ui-updates.md) |
+| 058 | BALANCE | Economy, counters and faction balance pass | TODO | [058-economy-and-faction-validation.md](docs/tasks/058-economy-and-faction-validation.md) |
+| 059 | QA | Mobile, accessibility, persistence and permission validation | TODO | [059-mobile-and-reliability.md](docs/tasks/059-mobile-and-reliability.md) |
+| 060 | FRIENDS | Invite-only friends alpha setup and support | TODO | [060-friends-alpha-setup.md](docs/tasks/060-friends-alpha-setup.md) |
+| 061 | ALPHA-FEEDBACK | Run medieval alpha and refine next tasks | TODO | [061-alpha-feedback.md](docs/tasks/061-alpha-feedback.md) |
 
 ## Milestones
 
@@ -83,17 +84,17 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 | Persistence | 017, 018 | Durable SQLite local/dev |
 | Accounts | 019, 020, 021, 022 | Identity and world membership |
 | Content | 023, 024, 025, 026, 027, 034 | Independently reviewed content slices |
-| Assets | 028, 029, 030, 031, 032, 033 | Cloudflare/R2, upload, cache and hotspots |
-| Village | 035, 036, 037, 038 | Independently reviewed village slices |
-| Military | 039, 040, 041 | Independently reviewed military slices |
-| Map | 042, 043, 044, 045 | Independently reviewed map slices |
-| Activities | 046, 050 | Independently reviewed activities slices |
-| Combat | 047, 048, 049 | Independently reviewed combat slices |
-| Conquest | 051, 052, 053, 054 | Independently reviewed conquest slices |
-| Kingdom | 055 | Independently reviewed kingdom slices |
-| Reliability | 056 | Independently reviewed reliability slices |
-| Validation | 057, 058 | Independently reviewed validation slices |
-| Alpha | 059, 060 | Friends test and roadmap refinement |
+| Assets | 028, 029, 030, 031, 032, 033, 035 | Cloudflare/R2, upload, cache and hotspots |
+| Village | 036, 037, 038, 039 | Independently reviewed village slices |
+| Military | 040, 041, 042 | Independently reviewed military slices |
+| Map | 043, 044, 045, 046 | Independently reviewed map slices |
+| Activities | 047, 051 | Independently reviewed activities slices |
+| Combat | 048, 049, 050 | Independently reviewed combat slices |
+| Conquest | 052, 053, 054, 055 | Independently reviewed conquest slices |
+| Kingdom | 056 | Independently reviewed kingdom slices |
+| Reliability | 057 | Independently reviewed reliability slices |
+| Validation | 058, 059 | Independently reviewed validation slices |
+| Alpha | 060, 061 | Friends test and roadmap refinement |
 
 Dependencies in detailed files govern dispatch. Task order is a current plan; new tasks are inserted using whole numbers.
 
@@ -106,3 +107,7 @@ TODO -> WIP when one implementation prompt is dispatched. WIP remains through fi
 ## Deferred future systems
 
 Rune discovery, Conduit, Aspect, magical armour, Chaos/Order, heroes, additional kingdoms and naval/air/tunnel systems remain future design material, not active medieval implementation tasks. Production/PostgreSQL/master deployment gets its own explicit tasks when the owner chooses that release, not merely because the friends alpha starts.
+
+## Village visual proof
+The queue now contains 61 TODO tasks. VILLAGE-UI (011) is the early local layered-art proof, HOTSPOTS (033) is the saved admin editor, and VILLAGE-VISUAL-GATE (035) is the end-to-end acceptance gate after CONFIG (034). Later tasks renumbered with immutable keys preserved; none dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
+Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat illustration hotspots alone do not prove interchangeable buildings or modular walls.

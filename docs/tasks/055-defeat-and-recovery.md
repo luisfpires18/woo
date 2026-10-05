@@ -1,4 +1,4 @@
-# 054: Defeat, wounded troops and player recovery
+# 055: Defeat, wounded troops and player recovery
 
 Task key: RECOVERY
 Status: TODO

@@ -1,22 +1,24 @@
-# 058: Mobile, accessibility, persistence and permission validation
+# 036: Initial village placement and player settlement
 
-Task key: QA
+Task key: VILLAGE-CREATE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Validation
-Dependencies: BALANCE
+Milestone: Village
+Dependencies: MEMBERSHIP, CONFIG, VILLAGE-VISUAL-GATE
 
 ## Goal
 
-Run focused end-to-end checks on actual deployed medieval flows.
+Create the player's initial village using agreed world placement rules.
 
 ## Acceptance criteria
 
-Keyboard/touch/light/dark/kingdom themes usable; upload cleanup, auth/world isolation, restart/redeploy persistence and capture retries tested. Known defects recorded without repeated ceremonial suites.
+Resolve village count/expansion later boundaries, ownership and starting loadout now. Join retry does not create duplicate villages; ownership/world checks enforced. Map marker geometry uses approved layout.
 
 ## Required reading
 
-- [docs/design/screens-and-themes.md](../../docs/design/screens-and-themes.md)
+- [docs/gameplay/player-and-villages.md](../../docs/gameplay/player-and-villages.md)
+- [Village visual gate](035-village-visual-gate.md)
+- [Visual prototype](../design/village-visual-prototype.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

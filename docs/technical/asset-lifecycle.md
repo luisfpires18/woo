@@ -23,3 +23,6 @@ Supported formats, dimensions, maximum size, image validation, delivery domain/c
 Admin replacement refreshes the image independently of app deployments. Use a persisted asset revision/content hash/new key in its URL, keeping unchanged asset URLs stable. See [app/image versioning](versioning-and-cache.md). No timestamp per render or retained unused object histories.
 
 Cloudflare setup is required roadmap work: verify account/CLI, create R2 bucket with commands and configure credentials/delivery/CORS before integrating uploads. See [setup runbook](cloudflare-r2.md).
+
+## Village layout references
+Use [asset specification](../design/village-asset-specification.md) and [admin scene editor](village-scene-editor.md). Terrain, building variants, modular walls and decorations may be shared by many layouts. Assigned drafts count as references; abandoned drafts release them. Safe replacement includes geometry review and coherent scene activation. Rollback metadata cannot restore deleted unused binaries without re-uploading them.

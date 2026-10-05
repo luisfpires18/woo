@@ -1,22 +1,22 @@
-# 046: Useful kingdom duties
+# 042: Blacksmith experience, points and talent choices
 
-Task key: DUTIES
+Task key: TALENTS
 Status: TODO
 Updated: 2026-10-05
-Milestone: Activities
-Dependencies: FORGING, MOVEMENT
+Milestone: Military
+Dependencies: FORGING, TALENTS-ADMIN
 
 ## Goal
 
-Implement useful crafting/scouting/defence tasks without punitive attendance.
+Implement meaningful progression and point spending.
 
 ## Acceptance criteria
 
-Owner approves allowance/reward/backlog; shared task reservation and support credit work. No unique progress locked behind login streaks. First content can be narrowly scoped.
+Chosen sources/prerequisites/caps/resets applied; no duplicate point spending or cheap-item spam exploit. Weaponsmith/armorsmith effects explained.
 
 ## Required reading
 
-- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
+- [docs/gameplay/forging-and-progression.md](../../docs/gameplay/forging-and-progression.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

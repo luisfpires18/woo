@@ -1,22 +1,22 @@
-# 037: Durable action queues and catch-up processing
+# 047: Useful kingdom duties
 
-Task key: ORDERS
+Task key: DUTIES
 Status: TODO
 Updated: 2026-10-05
-Milestone: Village
-Dependencies: RESOURCE-STATE
+Milestone: Activities
+Dependencies: FORGING, MOVEMENT
 
 ## Goal
 
-Build restart-safe timed orders and agreed F1 catch-up semantics.
+Implement useful crafting/scouting/defence tasks without punitive attendance.
 
 ## Acceptance criteria
 
-Atomic spending+order creation; completion once across retry; current status returned on wake. Choose cancellation/refund/concurrency policy. Request catch-up does not claim punctual execution while F1 sleeps.
+Owner approves allowance/reward/backlog; shared task reservation and support credit work. No unique progress locked behind login streaks. First content can be narrowly scoped.
 
 ## Required reading
 
-- [docs/technical/azure-and-deployment.md](../../docs/technical/azure-and-deployment.md)
+- [docs/gameplay/map-and-activities.md](../../docs/gameplay/map-and-activities.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

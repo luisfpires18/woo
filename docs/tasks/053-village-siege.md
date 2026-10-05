@@ -1,4 +1,4 @@
-# 052: Village siege and defensive building effects
+# 053: Village siege and defensive building effects
 
 Task key: SIEGE
 Status: TODO

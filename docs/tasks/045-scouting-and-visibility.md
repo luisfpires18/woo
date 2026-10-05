@@ -1,22 +1,22 @@
-# 049: Battle reports and simple event replay
+# 045: Scouting and map information visibility
 
-Task key: REPORTS
+Task key: SCOUTING
 Status: TODO
 Updated: 2026-10-05
-Milestone: Combat
-Dependencies: BATTLES, COMBAT-UI
+Milestone: Map
+Dependencies: ROUTES
 
 ## Goal
 
-Connect outcome reports and token-based replay to actual server events.
+Define and enforce what players can know about nearby sites and enemy troops.
 
 ## Acceptance criteria
 
-Display composition, relevant counters, losses and outcome legibly; replay no gameplay authority. UI handles no-art fallback and version footer.
+Owner selects visibility rules; backend never sends hidden information. Scout costs/results/timing handled via orders; no mandatory nonstop scouting/fake-wave mechanics.
 
 ## Required reading
 
-- [docs/design/artwork-pipeline.md](../../docs/design/artwork-pipeline.md)
+- [docs/gameplay/combat-and-conquest.md](../../docs/gameplay/combat-and-conquest.md)
 - [Scope](../scope.md)
 - [Prompt protocol](../workflow/implementation-protocol.md)
 

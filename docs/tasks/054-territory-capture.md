@@ -1,18 +1,18 @@
-# 047: Unit counters and battle-model validation
+# 054: Capture, occupation and district transfer
 
-Task key: COUNTERS
+Task key: CAPTURE
 Status: TODO
 Updated: 2026-10-05
-Milestone: Combat
-Dependencies: RECRUIT, FORGING, SCOUTING
+Milestone: Conquest
+Dependencies: SIEGE, DISTRICTS
 
 ## Goal
 
-Specify/test numerical combat with readable role, armour and terrain interactions.
+Transfer captured village district and expand conquering kingdom.
 
 ## Acceptance criteria
 
-Choose formulas/stances/casualty rules and validate cavalry/pikes/mixed compositions. No assumed universal immunity; reports can explain causes. No full kingdom battle engine in this task.
+Atomic ownership/world/permissions update; occupation/new controller decided; active queues treated consistently. Terrain illustration unchanged by political capture.
 
 ## Required reading
 
