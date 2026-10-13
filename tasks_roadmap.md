@@ -1,6 +1,6 @@
 # Task roadmap
 
-Updated: 2026-10-05. All implementation tasks remain TODO. This expanded sequence replaces the original 12 broad tasks; none was dispatched, so no active branch history is affected.
+Updated: 2026-10-13. 001 SKILLS is WIP; all other tasks remain TODO. This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
 
 Working branch: dev. Use sequential whole numbers, not 012a/012b. Numbers are current order; immutable keys preserve identity during insertion. Detailed files hold scope, dependencies and acceptance criteria. This is an evolving queue, not authorisation to implement everything now.
 
@@ -12,7 +12,7 @@ Architecture must be defined in task 002. DDD is a candidate approach, not a dem
 
 | Order | Key | Task | Status | Detail |
 |---|---|---|---|---|
-| 001 | SKILLS | Claude setup and skills health check | TODO | [001-skills-preflight.md](docs/tasks/001-skills-preflight.md) |
+| 001 | SKILLS | Claude setup and skills health check | WIP | [001-skills-preflight.md](docs/tasks/001-skills-preflight.md) |
 | 002 | STACK | Tech stack, dependency versions and architecture | TODO | [002-tech-stack.md](docs/tasks/002-tech-stack.md) |
 | 003 | SKELETON | Create skeleton and run the first page | TODO | [003-application-skeleton.md](docs/tasks/003-application-skeleton.md) |
 | 004 | VERSION | App version footer and build identity | TODO | [004-app-version.md](docs/tasks/004-app-version.md) |
@@ -112,7 +112,7 @@ TODO -> WIP when one implementation prompt is dispatched. WIP remains through fi
 Rune discovery, Conduit, Aspect, magical armour, Chaos/Order, heroes, additional kingdoms and naval/air/tunnel systems remain future design material, not active medieval implementation tasks. Production/PostgreSQL/master deployment gets its own explicit tasks when the owner chooses that release, not merely because the friends alpha starts.
 
 ## Village visual proof
-The queue now contains 63 TODO tasks. VILLAGE-UI (011) is the early local layered-art proof, HOTSPOTS (033) is the saved admin editor, and VILLAGE-VISUAL-GATE (035) is the end-to-end acceptance gate after CONFIG (034). Later tasks renumbered with immutable keys preserved; none dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
+The queue contains 63 tasks: 001 SKILLS is WIP, the rest TODO. VILLAGE-UI (011) is the early local layered-art proof, HOTSPOTS (033) is the saved admin editor, and VILLAGE-VISUAL-GATE (035) is the end-to-end acceptance gate after CONFIG (034). Later tasks renumbered with immutable keys preserved; none had been dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
 Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat illustration hotspots alone do not prove interchangeable buildings or modular walls.
 
 ## Scene scope boundaries
