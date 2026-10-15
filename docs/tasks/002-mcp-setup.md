@@ -42,5 +42,5 @@ Issues: see inventory limitations. GitHub issue: [#64](https://github.com/luisfp
 ## TLDR
 
 Next: ChatGPT review.
-Done: Learn, Context7 and read-only GitHub installed and smoke-checked; PixiJS skills reinstalled on this computer.
+Done: Learn, Context7 and read-only GitHub installed and smoke-checked, GitHub also through in-session `mcp__github__*` tools (issue #2, dev head e8703aa); PixiJS skills reinstalled on this computer.
 Issues: see inventory limitations.
