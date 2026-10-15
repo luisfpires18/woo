@@ -23,3 +23,6 @@ Only delete the old object after the new reference succeeds and no remaining ent
 First page and deployed health/build information identify the same release. Landing/game/admin footers agree. A new app build is discoverable by an existing browser session. Replacing one unit image shows the new art without changing app version or clearing every cached image. Failed replacement preserves the old displayed image and leaves no abandoned object.
 
 Exact release-number policy, CDN headers, response cache policy and stale-client prompt remain task-level decisions.
+
+## Initial build identity contract, 2026-10-15
+Task 003 STACK defines the [0.0.1-dev build identity contract](stack.md#build-identity-contract-001-dev): one root `VERSION` file read by both server and web builds, plus commit, build time and environment exposed by the server and embedded in the web build. SKELETON and VERSION implement it.

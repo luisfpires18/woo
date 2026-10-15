@@ -1,6 +1,6 @@
 # Task roadmap
 
-Updated: 2026-10-15. 001 SKILLS is DONE, 002 MCP-SETUP is WIP and all other tasks remain TODO. STACK (now 003) was dispatched as 002 (issue #2) and is paused by owner decision on 2026-10-15 until MCP-SETUP finishes; its pinned scope/base are unchanged, it has no implementation branch yet, and the tracker keeps it TODO because only one task may be WIP. This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
+Updated: 2026-10-15. 001 SKILLS and 002 MCP-SETUP are DONE, 003 STACK is WIP and all other tasks remain TODO. MCP-SETUP is DONE on the owner's statement of approval plus remote verification that its commits (854489d, 99abf03) are on origin/dev. STACK was first dispatched as 002 (issue #2) against e8703aa on feat/002-tech-stack, paused on 2026-10-15 for MCP-SETUP, and resumed as 003 against base 99abf03 on feat/003-tech-stack; see its [dispatch history](docs/tasks/003-tech-stack.md#dispatch-history). This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
 
 Working branch: dev. Use sequential whole numbers, not 012a/012b. Numbers are current order; immutable keys preserve identity during insertion. Detailed files hold scope, dependencies and acceptance criteria. This is an evolving queue, not authorisation to implement everything now.
 
@@ -8,13 +8,13 @@ Working branch: dev. Use sequential whole numbers, not 012a/012b. Numbers are cu
 
 Get setup, a pragmatic architecture/skeleton, a versioned first page and a real Azure dev deployment working early. Polish the landing/game/admin/onboarding UI with explicit mock data, then implement SQLite and real account-to-World-to-Kingdom membership. Database comes before working login/world persistence even though its screens can be designed first. Resolve gameplay rules per feature, immediately before that feature's implementation; do not block the first page on the entire game's design.
 
-Architecture must be defined in task 003. DDD is a candidate approach, not a demand for complex infrastructure. SQLite is confirmed for local/dev; production PostgreSQL is deferred. App version starts with an illustrative 0.0.1-dev footer; image revisions refresh independently.
+Architecture is defined in task 003 ([stack decision record](docs/technical/stack.md), pending review). DDD is a candidate approach, not a demand for complex infrastructure. SQLite is confirmed for local/dev; production PostgreSQL is deferred. App version starts with an illustrative 0.0.1-dev footer; image revisions refresh independently.
 
 | Order | Key | Task | Status | Detail |
 |---|---|---|---|---|
 | 001 | SKILLS | Claude setup and skills health check | DONE | [001-skills-preflight.md](docs/tasks/001-skills-preflight.md) |
-| 002 | MCP-SETUP | Microsoft Learn, Context7 and read-only GitHub integration | WIP | [002-mcp-setup.md](docs/tasks/002-mcp-setup.md) |
-| 003 | STACK | Tech stack, dependency versions and architecture | TODO | [003-tech-stack.md](docs/tasks/003-tech-stack.md) |
+| 002 | MCP-SETUP | Microsoft Learn, Context7 and read-only GitHub integration | DONE | [002-mcp-setup.md](docs/tasks/002-mcp-setup.md) |
+| 003 | STACK | Tech stack, dependency versions and architecture | WIP | [003-tech-stack.md](docs/tasks/003-tech-stack.md) |
 | 004 | SKELETON | Create skeleton and run the first page | TODO | [004-application-skeleton.md](docs/tasks/004-application-skeleton.md) |
 | 005 | VERSION | App version footer and build identity | TODO | [005-app-version.md](docs/tasks/005-app-version.md) |
 | 006 | BUILD-CI | GitHub build and focused test Actions | TODO | [006-build-ci.md](docs/tasks/006-build-ci.md) |
@@ -113,7 +113,7 @@ TODO -> WIP when one implementation prompt is dispatched. WIP remains through fi
 Rune discovery, Conduit, Aspect, magical armour, Chaos/Order, heroes, additional kingdoms and naval/air/tunnel systems remain future design material, not active medieval implementation tasks. Production/PostgreSQL/master deployment gets its own explicit tasks when the owner chooses that release, not merely because the friends alpha starts.
 
 ## Village visual proof
-The queue contains 64 tasks: 001 SKILLS is DONE, 002 MCP-SETUP is WIP, the rest TODO. VILLAGE-UI (012) is the early local layered-art proof, HOTSPOTS (034) is the saved admin editor, and VILLAGE-VISUAL-GATE (036) is the end-to-end acceptance gate after CONFIG (035). Later tasks renumbered with immutable keys preserved; none had been dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
+The queue contains 64 tasks: 001 SKILLS and 002 MCP-SETUP are DONE, 003 STACK is WIP, the rest TODO. VILLAGE-UI (012) is the early local layered-art proof, HOTSPOTS (034) is the saved admin editor, and VILLAGE-VISUAL-GATE (036) is the end-to-end acceptance gate after CONFIG (035). Later tasks renumbered with immutable keys preserved; none had been dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
 Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat illustration hotspots alone do not prove interchangeable buildings or modular walls.
 
 ## Scene scope boundaries

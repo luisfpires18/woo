@@ -116,7 +116,7 @@ Result labels: **VERIFIED** = exercised in a real check; **INSTALLED** = present
 - Installed 2026-10-13T21:22:30Z; 26 skills: the 25 originally requested plus `pixijs-html-source`. Each folder name matches its SKILL.md `name`. No missing or renamed skills.
 - Discovery: a fresh non-interactive Claude session (`claude -p`) listed all 26 (`COUNT=26`); the audit session also listed all 26 and invoked `pixijs`, which loaded its router.
 - Render check: temporary HTML outside the repository, served on 127.0.0.1, loaded pixi.js 8.21.0 from jsDelivr, ran `Application.init` and drew a red `Graphics` rect. Output: `OK version=8.21.0 renderer=webgl pixel=255,0,0,255`. Fixture, server and browser tab removed afterwards.
-- Compatibility: collection targets PixiJS v8; npm latest observed was 8.22.0. STACK still chooses the exact version.
+- Compatibility: collection targets PixiJS v8; npm latest observed was 8.22.0. STACK selected pixi.js 8.22.0 on 2026-10-15 ([stack](../technical/stack.md)), within the collection's v8 target.
 
 ### Other integrations found (not requested)
 

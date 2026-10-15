@@ -4,7 +4,7 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 ## Status
 
-C# / ASP.NET Core and React/TypeScript are confirmed by the owner. Other components/layout below remain recommendations or previously recorded directions; no implementation exists. Confirm exact supported versions before development.
+C# / ASP.NET Core and React/TypeScript are confirmed by the owner. Other components/layout below remain recommendations or previously recorded directions; no implementation exists. Exact versions, layout and module boundaries are selected in the [stack decision record](stack.md) (task 003, pending review).
 
 | Component | Recommendation | Purpose |
 |---|---|---|
@@ -42,3 +42,6 @@ Read [backend comparison](backend-comparison.md). The owner subsequently confirm
 
 ## Hosting reassessment, 2026-10-05
 Read [Azure versus Cloudflare](hosting-comparison.md). Initial proposal: one Azure app serves the React build and ASP.NET Core API, with R2 images. Cloudflare can host .NET through Containers, but default ephemeral disk complicates current SQLite dev persistence. A separate Cloudflare frontend is optional later. Azure remains the previously confirmed host; no resources were provisioned.
+
+## STACK selection, 2026-10-15
+See [tech stack, versions and architecture](stack.md): .NET 10 LTS (SDK 10.0.402, runtime 10.0.13), EF Core SQLite 10.0.13, Node 24.22.0 with npm 11.19.1, React 19.3.1, TypeScript 6.0.3, Vite 8.3.4 and PixiJS 8.22.0 when a scene needs it. Layout: one `Woo.Server` host organised by feature modules, a pure `Woo.Domain` project only once real rules exist, and `web/` for React. One Azure app serves API and React build; subscription eligibility and SQLite storage compatibility remain verification gates. The SignalR and separate-worker rows above remain optional, not selected.

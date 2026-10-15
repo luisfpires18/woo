@@ -1,7 +1,7 @@
 # 002: Microsoft Learn, Context7 and read-only GitHub integration
 
 Task key: MCP-SETUP
-Status: WIP
+Status: DONE
 Updated: 2026-10-15
 Milestone: Foundation
 Dependencies: SKILLS
@@ -33,14 +33,14 @@ Results and limitations are in the [inventory](../workflow/skills-and-plugins.md
 Task-spec commit: Issue #64, revision 2026-10-15T10:24:43Z
 Expected dev base: e8703aa0c882c642dac8df0ad33cd6921f102ce7 (verified equal to origin/dev, 2026-10-15)
 Implementation branch: feat/002-mcp-setup (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Implementation commit: 854489d2e1910828f13c1ded659dbb10dfc41134, 99abf03422ad06f8ed64da75606c2bf0151e5cbf
+Review: Approved, as stated in the owner's STACK resume prompt of 2026-10-15 (the review text itself was not seen by Claude)
+Merged dev commit: 99abf03422ad06f8ed64da75606c2bf0151e5cbf, verified remotely on 2026-10-15 by `git fetch` (origin/dev) and the read-only GitHub MCP `list_commits` on dev (head 99abf03, parent 854489d)
 Deployment: Not applicable (documentation and user-level configuration only)
-Issues: see inventory limitations. GitHub issue: [#64](https://github.com/luisfpires18/woo/issues/64).
+Issues: see inventory limitations. GitHub issue #64 still says WIP; ChatGPT updates it. GitHub issue: [#64](https://github.com/luisfpires18/woo/issues/64).
 
 ## TLDR
 
-Next: ChatGPT review.
+Next: none; STACK resumed as 003.
 Done: Learn, Context7 and read-only GitHub installed and smoke-checked, GitHub also through in-session `mcp__github__*` tools (issue #2, dev head e8703aa); PixiJS skills reinstalled on this computer.
 Issues: see inventory limitations.

@@ -48,6 +48,7 @@ GitHub is the primary working specification. Read current topic documents before
 - [Combat model, static board and validation research](technical/combat-research.md)
 - [Administration](admin.md)
 - [Architecture](technical/architecture.md)
+- [Tech stack, versions and architecture](technical/stack.md)
 - [Backend technology comparison](technical/backend-comparison.md)
 - [Azure versus Cloudflare hosting](technical/hosting-comparison.md)
 - [Data model planning](technical/data-model.md)

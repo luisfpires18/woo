@@ -46,3 +46,6 @@ References for this gate (checked 2026-10-05): [App Service filesystem](https://
 
 ## Hosting reassessment, 2026-10-05
 See [Azure versus Cloudflare hosting](hosting-comparison.md). With the now-confirmed ASP.NET Core backend, the initial recommendation is one Azure application serving API and React build, plus R2 asset delivery. A Cloudflare static frontend is optional later. Cloudflare Containers can run .NET but needs a distinct durability design for SQLite; it is not a drop-in replacement for the planned dev app. No host change or paid provisioning is implied.
+
+## STACK selection, 2026-10-15
+The [stack decision record](stack.md#azure-application-and-local-development) selects .NET 10 (built-in App Service stack), one app serving API and React build, Vite-proxied same-origin local development and a GitHub Actions zip deployment from dev. F1 subscription eligibility and SQLite storage compatibility remain explicit verification gates.
