@@ -1,7 +1,7 @@
 # 003: Tech stack, dependency versions and architecture
 
 Task key: STACK
-Status: WIP
+Status: DONE
 Updated: 2026-10-15
 Milestone: Foundation
 Dependencies: SKILLS, MCP-SETUP
@@ -38,10 +38,10 @@ Run proportionate checks against acceptance criteria, including relevant failure
 
 Task-spec commit: 99abf03422ad06f8ed64da75606c2bf0151e5cbf (this file at the resumed base; last edited in 854489d)
 Expected dev base: 99abf03422ad06f8ed64da75606c2bf0151e5cbf (verified equal to local dev and origin/dev, 2026-10-15)
-Implementation branch: feat/003-tech-stack (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Implementation branch: feat/003-tech-stack
+Implementation commit: 378d2965ad9ef354b40ae3f75d922e69a724f5fe, review fixes 588c5a09ab7ecce6aa596d79e63579345897c3ea
+Review: APPROVED by ChatGPT, 2026-10-15
+Merged dev commit: 588c5a09ab7ecce6aa596d79e63579345897c3ea (remote dev; documentation CI succeeded)
 Deployment: Not applicable (documentation only)
 Issues: subscription eligibility and Azure SQLite storage compatibility remain verification gates; see [stack](../technical/stack.md#azure-application-and-local-development). GitHub issue: [#2](https://github.com/luisfpires18/woo/issues/2).
 
@@ -50,9 +50,10 @@ Issues: subscription eligibility and Azure SQLite storage compatibility remain v
 1. 2026-10-14: dispatched as task 002 (issue [#2](https://github.com/luisfpires18/woo/issues/2), `[002] STACK`) against dev e8703aa0c882c642dac8df0ad33cd6921f102ce7, branch `feat/002-tech-stack`. No implementation report was received and no such branch exists locally or on origin (checked 2026-10-15).
 2. 2026-10-15: paused by the owner while [MCP-SETUP](002-mcp-setup.md) was inserted as 002; STACK became 003 with its key and scope unchanged.
 3. 2026-10-15: resumed as task 003 against the new pinned base 99abf03 on branch `feat/003-tech-stack`, after the MCP-SETUP commits (854489d, 99abf03) were on origin/dev. The historical name `feat/002-tech-stack` stays reserved and was not reused.
+4. 2026-10-15: review fixes in 588c5a0; APPROVED and merged to remote dev at 588c5a0, documentation CI succeeded.
 
 ## TLDR
 
-Next: ChatGPT review of the local commit.
-Done: versions, pinning, layout, boundaries, Azure route, gates and build identity contract documented.
-Issues: two Azure verification gates open; local toolchain upgrades required before SKELETON.
+Next: none; SKELETON (004) applies the selection.
+Done: versions, pinning, layout, boundaries, Azure route, gates and build identity contract approved and merged.
+Issues: two Azure verification gates remain open for AZURE-SETUP and SQLITE/DB-RECOVERY.

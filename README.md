@@ -15,3 +15,63 @@ This repository is now the primary game-design record. Update the relevant docum
 The working integration branch is **dev**. Read [tasks_roadmap.md](tasks_roadmap.md), [workflow](docs/workflow/development-workflow.md) and [prompt protocol](docs/workflow/implementation-protocol.md). Claude Code implements one reviewed task at a time; ChatGPT prepares prompts and reviews; the owner runs merge/Azure commands. Azure is the selected host direction. Production deployment from master is deferred until alpha release.
 
 GitHub's repository default branch may still be master; explicitly select dev to read the latest workflow. Changing the default branch is an outstanding repository setting, not claimed complete.
+
+## Run locally
+
+Status: task 004 SKELETON, a minimal page plus `/api/health`; no game features. Versions and layout follow [the stack record](docs/technical/stack.md).
+
+Prerequisites: .NET SDK 10.0.402 and Node.js 24.22.0 (npm 11.19.1) on `PATH`. `global.json` refuses any other SDK and `web/.npmrc` enforces the Node version. A side-by-side install can be put first on `PATH` for one Git Bash session, for example:
+
+```bash
+export PATH="/f/Workspace/Tools/dotnet-sdk-10.0.402:/f/Workspace/Tools/node-v24.22.0-win-x64:$PATH" DOTNET_ROOT='F:\Workspace\Tools\dotnet-sdk-10.0.402'
+```
+
+Commands below run from the repository root in Git Bash on Windows.
+
+Restore exactly what the lock files record (clean checkout):
+
+```bash
+npm --prefix web ci
+```
+
+```bash
+dotnet restore Woo.slnx --locked-mode
+```
+
+Build and test:
+
+```bash
+npm --prefix web run build
+```
+
+```bash
+dotnet build Woo.slnx --no-restore
+```
+
+```bash
+dotnet test --solution Woo.slnx --no-build
+```
+
+Develop with hot reload: start the API (http://localhost:5080) in one terminal and the Vite dev server (http://localhost:5173, proxies `/api` to the API) in another, then open http://localhost:5173.
+
+```bash
+dotnet run --project src/Woo.Server --launch-profile http
+```
+
+```bash
+npm --prefix web run dev
+```
+
+Publish the single-origin application (React build served by ASP.NET Core). Build `web/` first; publish fails if `web/dist` is missing.
+
+```bash
+dotnet publish src/Woo.Server -c Release -o artifacts/publish
+```
+
+Run the published output from its own folder (it is the content root that holds `wwwroot`) and open http://localhost:5090:
+
+```bash
+cd artifacts/publish && ASPNETCORE_URLS=http://localhost:5090 dotnet Woo.Server.dll
+```
+
+Generated output (`bin/`, `obj/`, `web/node_modules/`, `web/dist/`, `artifacts/`) and local runtime files are ignored by Git.

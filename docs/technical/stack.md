@@ -1,8 +1,8 @@
 # Tech stack, versions and architecture
 
-Updated: 2026-10-15. Status: task 003 STACK decision record, pending ChatGPT review. Documentation only: no scaffold, package, tool installation, Azure resource or deployment exists.
+Updated: 2026-10-15. Status: task 003 STACK decision record, APPROVED and merged to dev (588c5a0) on 2026-10-15. Task 004 SKELETON applies it; see [skeleton additions](#selected-by-skeleton-task-004).
 
-C# / ASP.NET Core and React/TypeScript are Confirmed (D-37). The versions, layout and boundaries below are the STACK selection (Proposal until review approves this task). Rationale for the backend and host stays in [backend comparison](backend-comparison.md) and [hosting comparison](hosting-comparison.md).
+C# / ASP.NET Core and React/TypeScript are Confirmed (D-37). The versions, layout and boundaries below are the approved STACK selection (D-39). Rationale for the backend and host stays in [backend comparison](backend-comparison.md) and [hosting comparison](hosting-comparison.md).
 
 ## Selected versions
 
@@ -51,12 +51,28 @@ Recorded on the owner's second Windows 11 computer (profile `luisf`) on 2026-10-
 
 The 2026-10-13 SKILLS audit computer reported Node 22.23.2; it was not re-inspected here.
 
+Update 2026-10-15 (task 004): SDK 10.0.402 (runtime 10.0.13) and Node 24.22.0 (npm 11.19.1) were installed side-by-side on this computer from official archives, without replacing the existing versions; see the [SKELETON record](../tasks/004-application-skeleton.md#toolchain).
+
+### Selected by SKELETON (task 004)
+
+Checked 2026-10-15 on nuget.org and the xUnit.net documentation (via Context7, `/websites/xunit_net`).
+
+| Component | Exact version | Notes |
+|---|---|---|
+| `xunit.v3.mtp-v2` | 4.0.2 (published 2026-10-09) | xUnit.net v3 on Microsoft Testing Platform v2; test projects are executables |
+| `Microsoft.AspNetCore.Mvc.Testing` | 10.0.13 | In-memory host tests; matches the runtime line |
+| Test runner | Microsoft Testing Platform, set in `global.json` `test.runner` | Required for `dotnet test` with MTP on the .NET 10 SDK; no VSTest packages (`Microsoft.NET.Test.Sdk`, `xunit.runner.visualstudio`) |
+
+Not added: ESLint/typescript-eslint, a frontend test runner, an OpenAPI generator and PixiJS. Each arrives with the task that needs it.
+
+Sources: <https://api.nuget.org/v3-flatcontainer/xunit.v3.mtp-v2/index.json>, <https://api.nuget.org/v3-flatcontainer/microsoft.aspnetcore.mvc.testing/index.json>, <https://xunit.net/docs/getting-started/v3/microsoft-testing-platform>.
+
 ## Pinning and lockfiles
 
 - `global.json` at the root pins SDK 10.0.402 with `rollForward: disable`. Microsoft recommends `disable` together with NuGet lock files because a different SDK can change implicit package versions.
 - NuGet: Central Package Management (`Directory.Packages.props`) with exact versions; `RestorePackagesWithLockFile` on every project; committed `packages.lock.json`; CI restores in locked mode.
 - .NET tools: repository manifest `.config/dotnet-tools.json` (for example `dotnet-ef` 10.0.13), restored with `dotnet tool restore`.
-- npm: exact versions in `package.json` (no `^`/`~`), `save-exact=true` in `.npmrc`, committed `package-lock.json`, CI installs with `npm ci`. `engines.node` and a `.node-version` file name 24.22.0; `packageManager` names `npm@11.19.1`.
+- npm: exact versions in `package.json` (no `^`/`~`), `save-exact=true` in `.npmrc`, committed `package-lock.json`, CI installs with `npm ci`. `engines.node` (with `engine-strict=true`) and a root `.node-version` file name 24.22.0; `packageManager` names `npm@11.19.1`.
 - Runtime patches: framework-dependent deployment rolls forward to the latest installed 10.0 patch on the host, as App Service patches its built-in stack. The SDK pin governs builds, not the host runtime.
 - Update rule: a patch refresh within the selected lines (for example 10.0.13 to 10.0.14, Vite 8.3.4 to 8.3.5) is an explicit commit with release-note evidence. A minor or major change (Vite 9, TypeScript 7, Node 26, .NET 11) needs a task or a recorded owner decision. No automatic dependency bot until a task adds one.
 - SKELETON may take a newer patch released after 2026-10-15 if it records the exact version and source; it may not change a line.

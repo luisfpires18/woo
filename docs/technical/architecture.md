@@ -4,7 +4,7 @@ Updated: 2026-10-05. Status: design documentation; no game implementation yet.
 
 ## Status
 
-C# / ASP.NET Core and React/TypeScript are confirmed by the owner. Other components/layout below remain recommendations or previously recorded directions; no implementation exists. Exact versions, layout and module boundaries are selected in the [stack decision record](stack.md) (task 003, pending review).
+C# / ASP.NET Core and React/TypeScript are confirmed by the owner. Other components/layout below remain recommendations or previously recorded directions; no implementation exists. Exact versions, layout and module boundaries are selected in the [stack decision record](stack.md) (task 003, approved 2026-10-15). Task 004 SKELETON implements the first runnable slice.
 
 | Component | Recommendation | Purpose |
 |---|---|---|

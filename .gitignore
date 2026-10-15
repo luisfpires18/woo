@@ -1,0 +1,19 @@
+# .NET build output
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# Publish output
+artifacts/
+
+# Frontend
+node_modules/
+web/dist/
+
+# Local runtime state
+*.db
+*.db-shm
+*.db-wal
+*.log

@@ -17,7 +17,7 @@ Use this list to resolve implementation blockers before writing final formulas/c
 | O-09 | What ends the medieval first season and what resets? | Alpha scope and retention |
 | O-10 | Map topology, capacities, travel and visibility? | World generation and orders |
 | O-11 | Exact first-version duties/camps, NPCs, hero and naval scope? | Scope freeze |
-| O-12 | Azure SQLite storage layout and account bootstrap? Versions and architecture are proposed in [stack](technical/stack.md), pending review | Technical setup |
+| O-12 | Azure SQLite storage layout and account bootstrap? Versions and architecture are settled in [stack](technical/stack.md) | Technical setup |
 | O-13 | Which admin edits affect active orders; content rollback semantics? | Config/event consistency |
 | O-14 | R2 confirmation, file limits, delivery and cleanup design? | Asset storage |
 | O-15 | Rune emergence within a season or via later releases? | Future roadmap |
