@@ -63,7 +63,7 @@ The 2026-10-13 SKILLS audit computer reported Node 22.23.2; it was not re-inspec
 
 ## Solution layout
 
-Proposed layout. Only folders with real content are created; SKELETON creates the starred items.
+Proposed layout. Only folders with real content are created. `*` = created by SKELETON; `v` = created by VERSION; unmarked = created by the task that first needs it.
 
 ```text
 woo/
@@ -72,7 +72,7 @@ woo/
   Directory.Packages.props *    central exact versions
   .config/dotnet-tools.json     when a .NET tool is first needed
   Woo.slnx *                    .NET 10 SDK default solution format
-  VERSION *                     build identity source (see below)
+  VERSION v                     release version source (see below)
   src/
     Woo.Server/ *               ASP.NET Core host: endpoints, modules, EF Core, SPA serving
     Woo.Domain/                 created with the first real game rules (not in SKELETON)
@@ -106,9 +106,10 @@ Frontend: `web/src/app` (shell, routing), `web/src/features/<feature>`, `web/src
 Proposal for SKELETON, AZURE-SETUP and DEV-DEPLOY:
 
 - One App Service app runs `Woo.Server`. The Vite production build is copied into the server's `wwwroot` at publish. ASP.NET Core serves the hashed assets, `/api/*` endpoints and an `index.html` fallback for client routes. One origin means same-site secure cookies, no CORS and one deployment.
-- `index.html` and build-identity responses are not cached long-term; hashed JS/CSS can be cached immutably (details in VERSION).
+- SKELETON provides only the minimal runnable page and a `/api/health` seam that reports the app is up; it carries no version or commit fields.
+- `index.html` and the build-identity response (added by VERSION) are not cached long-term; hashed JS/CSS can be cached immutably (details in VERSION).
 - Local development: Kestrel serves the API; the Vite dev server proxies `/api` to it (Vite `server.proxy`), so the browser sees one origin. Running `npm run build` then `dotnet run` reproduces the deployed single-app shape. No SPA proxy package is needed.
-- Deployment route: GitHub Actions on pushes to `dev` builds the web app, publishes `Woo.Server` framework-dependent, deploys the zip to the dev app with OIDC sign-in (preferred, to be verified), then checks the health endpoint reports the expected commit. Only `dev` deploys; `master` production waits for alpha.
+- Deployment route: GitHub Actions on pushes to `dev` builds the web app, publishes `Woo.Server` framework-dependent, deploys the zip to the dev app with OIDC sign-in (preferred, to be verified), then checks the health endpoint and that the build-identity response (from VERSION) reports the deployed commit. Only `dev` deploys; `master` production waits for alpha.
 - OS: Linux with the built-in `DOTNETCORE|10.0` stack is the candidate (Linux runtime patch channels are documented); Windows also offers .NET 10. AZURE-SETUP decides with the SQLite gate below.
 - F1 limits stay as recorded in [hosting comparison](hosting-comparison.md): shared compute, 60 CPU minutes per day, 1 GB memory, 1 GB storage, no Always On, idle unloading with cold starts, quota exhaustion stopping the app until reset, single instance.
 
@@ -126,11 +127,14 @@ Verification gates that stay open:
 
 ## Build identity contract (0.0.1-dev)
 
-Proposal; SKELETON exposes it on the health endpoint and VERSION implements the footer and bump policy.
+Proposal. Responsibilities: SKELETON delivers the minimal page and the `/api/health` seam only. VERSION implements everything below: the `VERSION` file and its consumption, coordinated build metadata, the build-identity response and the shared footer.
 
-- One source: a root `VERSION` file whose only content is the release version, initially `0.0.1-dev` (SemVer 2.0 pre-release). MSBuild and the Vite config both read this file; no other copy is typed by hand.
-- Build identity fields: `version` (from `VERSION`), `commit` (full 40-character Git SHA from CI, or `git rev-parse HEAD` locally, or `unknown`), `builtAt` (UTC ISO 8601), `environment` (`local`, `dev`; `production` later).
-- The server returns these fields from its health/build endpoint. The web build embeds the same fields at build time. The footer shows `0.0.1-dev` plus the short commit; a mismatch between the page's embedded commit and the API's commit means a stale client.
+- Release version source: a root `VERSION` file whose only content is the release version, initially `0.0.1-dev` (SemVer 2.0 pre-release). No other copy is typed by hand.
+- Fields: `version` (from `VERSION`), `commit` (full 40-character Git SHA), `builtAt` (UTC ISO 8601), `environment` (`dev`; `production` later; `local` for development).
+- Coordinated build: one build entry point (the CI job, or a single local build command added by VERSION) reads `VERSION`, captures `commit` and `builtAt` exactly once, and passes those same values to both the web build and the server publish. Neither build reads Git or the clock on its own when values are supplied, so a deployed page and API carry identical metadata by construction.
+- Separate builds never claim shared identity: a web or server build run on its own does not generate its own timestamp or commit and present it as the coordinated build's metadata.
+- Local development fallback (`npm run dev`, `dotnet run`, IDE builds): `version` still comes from `VERSION`, `environment` is `local`, and `commit` and `builtAt` are empty rather than invented. The footer then reads `0.0.1-dev (local)`. Commit comparison only runs when both sides carry coordinated metadata.
+- The server returns the fields from a build-identity response (exact route chosen in VERSION). The web build embeds the same values. The footer shows the version plus the short commit; a commit mismatch between page and API means a stale client.
 - The app version is independent of dependency versions and of image revisions. Documentation-only commits do not bump it. Increment policy is decided in VERSION.
 
 ## Rendering

@@ -34,10 +34,10 @@ Task-spec commit: Issue #64, revision 2026-10-15T10:24:43Z
 Expected dev base: e8703aa0c882c642dac8df0ad33cd6921f102ce7 (verified equal to origin/dev, 2026-10-15)
 Implementation branch: feat/002-mcp-setup (local only)
 Implementation commit: 854489d2e1910828f13c1ded659dbb10dfc41134, 99abf03422ad06f8ed64da75606c2bf0151e5cbf
-Review: Approved, as stated in the owner's STACK resume prompt of 2026-10-15 (the review text itself was not seen by Claude)
-Merged dev commit: 99abf03422ad06f8ed64da75606c2bf0151e5cbf, verified remotely on 2026-10-15 by `git fetch` (origin/dev) and the read-only GitHub MCP `list_commits` on dev (head 99abf03, parent 854489d)
+Review: APPROVED by ChatGPT after complete diff review (recorded in closed issue #64, 2026-10-15)
+Merged dev commit: 99abf03422ad06f8ed64da75606c2bf0151e5cbf, verified by ChatGPT as remote dev head with documentation CI passing; also seen by Claude on 2026-10-15 through `git fetch` and the read-only GitHub MCP `list_commits` (head 99abf03, parent 854489d)
 Deployment: Not applicable (documentation and user-level configuration only)
-Issues: see inventory limitations. GitHub issue #64 still says WIP; ChatGPT updates it. GitHub issue: [#64](https://github.com/luisfpires18/woo/issues/64).
+Issues: see inventory limitations. GitHub issue [#64](https://github.com/luisfpires18/woo/issues/64) closed as completed on 2026-10-15.
 
 ## TLDR
 

@@ -25,4 +25,4 @@ First page and deployed health/build information identify the same release. Land
 Exact release-number policy, CDN headers, response cache policy and stale-client prompt remain task-level decisions.
 
 ## Initial build identity contract, 2026-10-15
-Task 003 STACK defines the [0.0.1-dev build identity contract](stack.md#build-identity-contract-001-dev): one root `VERSION` file read by both server and web builds, plus commit, build time and environment exposed by the server and embedded in the web build. SKELETON and VERSION implement it.
+Task 003 STACK defines the [0.0.1-dev build identity contract](stack.md#build-identity-contract-001-dev): a root `VERSION` file, with commit and build time captured once per coordinated build and passed to both the web build and the server publish; local development reports `local` with no invented commit or timestamp. SKELETON provides only the page and health seam; VERSION implements the contract, footer and build-identity response.

@@ -43,7 +43,7 @@ Implementation commit: local commit on that branch; SHA given in the implementat
 Review: Pending ChatGPT review
 Merged dev commit: None
 Deployment: Not applicable (documentation only)
-Issues: subscription eligibility and Azure SQLite storage compatibility remain verification gates; see [stack](../technical/stack.md#azure-application-and-local-development). GitHub issue [#2](https://github.com/luisfpires18/woo/issues/2) still links the old 002 filename and needs updating by ChatGPT.
+Issues: subscription eligibility and Azure SQLite storage compatibility remain verification gates; see [stack](../technical/stack.md#azure-application-and-local-development). GitHub issue: [#2](https://github.com/luisfpires18/woo/issues/2).
 
 ## Dispatch history
 

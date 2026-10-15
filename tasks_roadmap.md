@@ -1,6 +1,6 @@
 # Task roadmap
 
-Updated: 2026-10-15. 001 SKILLS and 002 MCP-SETUP are DONE, 003 STACK is WIP and all other tasks remain TODO. MCP-SETUP is DONE on the owner's statement of approval plus remote verification that its commits (854489d, 99abf03) are on origin/dev. STACK was first dispatched as 002 (issue #2) against e8703aa on feat/002-tech-stack, paused on 2026-10-15 for MCP-SETUP, and resumed as 003 against base 99abf03 on feat/003-tech-stack; see its [dispatch history](docs/tasks/003-tech-stack.md#dispatch-history). This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
+Updated: 2026-10-15. 001 SKILLS and 002 MCP-SETUP are DONE, 003 STACK is WIP and all other tasks remain TODO. MCP-SETUP was approved by ChatGPT, verified on remote dev at 99abf03 with documentation CI passing, and issue #64 is closed. STACK was first dispatched as 002 (issue #2) against e8703aa on feat/002-tech-stack, paused on 2026-10-15 for MCP-SETUP, and resumed as 003 against base 99abf03 on feat/003-tech-stack; see its [dispatch history](docs/tasks/003-tech-stack.md#dispatch-history). This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
 
 Working branch: dev. Use sequential whole numbers, not 012a/012b. Numbers are current order; immutable keys preserve identity during insertion. Detailed files hold scope, dependencies and acceptance criteria. This is an evolving queue, not authorisation to implement everything now.
 
