@@ -2,7 +2,7 @@
 Updated: 2026-10-05. Status: owner-confirmed v1 presentation; layout details are proposals.
 
 ## V1 boundary
-The owner chose a board showing battalions and a final result. No animation, replay, event timeline or narrated combat log. These can be considered later in separate tasks. COMBAT-UI (013) covers local mock presentation only; COUNTERS/BATTLES/REPORTS later supply validated rules and persisted outcomes. Map, village and resources remain separate.
+The owner chose a board showing battalions and a final result. No animation, replay, event timeline or narrated combat log. These can be considered later in separate tasks. COMBAT-UI (014) covers local mock presentation only; COUNTERS/BATTLES/REPORTS later supply validated rules and persisted outcomes. Map, village and resources remain separate.
 
 Use React/CSS for the static board, cards, controls and result. A static battlefield image may sit beneath it. PixiJS is optional if a concrete requirement justifies the added machinery.
 

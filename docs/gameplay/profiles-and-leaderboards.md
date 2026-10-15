@@ -6,7 +6,7 @@ Players should be able to inspect player profiles and settlements. Settlement is
 
 The same entity is meant by older village references and settlement. Preserve stable task keys and filenames for now; agree code/entity names before implementation.
 
-## Player and settlement profiles: PROFILES (057)
+## Player and settlement profiles: PROFILES (058)
 Proposed player summary: nickname, image/symbol fallback, kingdom, approved public achievements/statistics and settlement links scoped to the current world. Account identity and per-world membership are distinct; do not mix several seasons' ownership.
 
 Proposed settlement summary: name, current owner/kingdom, authorised location and approved development summary. Link from map markers to settlement and from settlement to owner. Own-settlement management remains an existing game screen, not an unrestricted action on another player's profile.
@@ -15,7 +15,7 @@ Define self/friendly/opponent/non-member visibility first. Public fields are ser
 
 After capture, show current ownership consistently and keep historical outcomes separate. Decide old-link/deleted-settlement behaviour. No messaging, alliance groups or additional biography editor is implied.
 
-## Rankings: LEADERBOARDS (058)
+## Rankings: LEADERBOARDS (059)
 Provide world/season player and kingdom rankings. Proposed navigation: category tabs, rank/name/kingdom/score, search/filter, pagination, current-player position and clear last-update time. Link players to profiles. No alliance ranking because independent alliances are excluded.
 
 Candidate categories to review, not adopted metrics:
@@ -38,7 +38,7 @@ Use authorised world-scoped queries and bounded pagination suitable for SQLite. 
 Check ownership transfer, cross-world isolation, unknown/deleted targets, restricted search, tied ranks, empty/new seasons, retry idempotency, finished-season snapshots, accessibility and narrow screens. Public image slots/fallbacks follow ASSETS. Ranking formulas wait for approved gameplay and economy definitions.
 
 ## Tasks and next decisions
-057 owns profile and settlement inspection. 058 owns rankings, and later BALANCE/QA checks them. They remain TODO. Resolve profile visibility and ranking metrics before their implementation prompts; foundation work need not wait for these decisions.
+058 owns profile and settlement inspection. 059 owns rankings, and later BALANCE/QA checks them. They remain TODO. Resolve profile visibility and ranking metrics before their implementation prompts; foundation work need not wait for these decisions.
 
 ## TLDR
 Next: choose visible fields and useful score definitions before dispatch.

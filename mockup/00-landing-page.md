@@ -2,7 +2,7 @@
 
 Status: Approved visual reference, with mandatory correction below.
 Approved by owner: 2026-10-05.
-Implementation task: LANDING (currently 009). Approval of artwork does not mark the implementation task DONE.
+Implementation task: LANDING (currently 010). Approval of artwork does not mark the implementation task DONE.
 
 ## Files and states
 

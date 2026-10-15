@@ -68,7 +68,8 @@ Read latest repository documents, update the relevant topic, record decision cha
 - [Claude instructions](../CLAUDE.md)
 - [Development workflow](workflow/development-workflow.md)
 - [Implementation prompt protocol](workflow/implementation-protocol.md)
-- [Skills/plugin inventory](workflow/skills-and-plugins.md)
+- [Skills/plugin and MCP inventory](workflow/skills-and-plugins.md)
+- [Task 002 MCP-SETUP](tasks/002-mcp-setup.md)
 - [Azure and deployment](technical/azure-and-deployment.md)
 
 Current working specification is on dev. Explicitly read dev rather than assuming the repository default. Individual task specifications are linked from tasks_roadmap.md.

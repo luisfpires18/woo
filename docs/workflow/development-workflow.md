@@ -18,7 +18,7 @@ Use root [tasks_roadmap.md](../../tasks_roadmap.md) and detailed files in docs/t
 
 Approval is not itself DONE. Track review, merge and deployment separately in the task detail. One active implementation task at a time. If pipeline remains running, record deployment pending; owner can explicitly proceed to another task without pretending the prior pipeline passed.
 
-Numbers show current order, not permanent identity. Each task has an immutable key such as STACK, while filenames use the current number: 002-tech-stack.md. When inserting a refinement, renumber later rows and detail filenames atomically, update all links and dependencies, and preserve the immutable key. Never rewrite historical commits or rename an active implementation branch merely because its task moved. Keep its exact branch and original prompt in Execution record. Future branches use the current number. See insertion rules in tasks_roadmap.md. Use whole numbers; separately dispatched/reviewed work gets its own number rather than a letter suffix.
+Numbers show current order, not permanent identity. Each task has an immutable key such as STACK, while filenames use the current number: 003-tech-stack.md. When inserting a refinement, renumber later rows and detail filenames atomically, update all links and dependencies, and preserve the immutable key. Never rewrite historical commits or rename an active implementation branch merely because its task moved. Keep its exact branch and original prompt in Execution record. Future branches use the current number. See insertion rules in tasks_roadmap.md. Use whole numbers; separately dispatched/reviewed work gets its own number rather than a letter suffix.
 
 ## Cycle
 

@@ -1,6 +1,6 @@
 # Claude skills and plugins inventory
 
-Updated: 2026-10-13. Audited on the owner's Windows machine by task 001 SKILLS (see [audit results](#audit-results-2026-10-13)). Only the PixiJS collection was installed; everything else was recorded as found.
+Updated: 2026-10-15. MCP integrations added by task 002 (see [MCP-SETUP](#mcp-setup-2026-10-15)). Audited on the owner's Windows machine by task 001 SKILLS (see [audit results](#audit-results-2026-10-13)). Only the PixiJS collection was installed; everything else was recorded as found.
 
 ## Health check
 
@@ -124,3 +124,35 @@ Result labels: **VERIFIED** = exercised in a real check; **INSTALLED** = present
 - MCP: claude.ai connectors (Claude Docs, Figma, Gmail, Google Drive, Google Calendar connected; Notion needs authentication); user-scope `unity-mcp` (connected, tool fetch timed out); Godot MCP tools exposed in the session. WOO has no project `.mcp.json` or `.claude/` directory.
 - Claude in Chrome: tools available, but no connected Chrome browser (empty browser list). Not exercised.
 - An `lp-ai-work` folder exists in `~/.agents/skills`. Claude does not load it, and per this document it stays ChatGPT-side.
+
+## MCP-SETUP (2026-10-15)
+
+Task 002 MCP-SETUP, branch feat/002-mcp-setup, issue [#64](https://github.com/luisfpires18/woo/issues/64). Machine: the owner's second Windows computer (profile `luisf`; Claude Code 2.1.291, `~/.local/bin/claude.exe`, desktop app Code tab). It differs from the 2026-10-13 audit machine: before this task it had only the `ponytail` plugin and one user skill (`find-skills`), the claude.ai connectors (Claude Docs, Figma, Gmail, Google Drive and Calendar connected; Notion needs authentication), the built-in browser pane, and no PixiJS skills. Everything below is user scope; WOO has no `.mcp.json` or `.claude/` directory, so nothing here is in Git.
+
+| Integration | Source | Version/ref | Install route and scope | Auth | Tools discovered | Result |
+|---|---|---|---|---|---|---|
+| Microsoft Learn | github.com/MicrosoftDocs/mcp, plugin `microsoft-docs` from `claude-plugins-official` | plugin 0.3.1, marketplace commit f8ffde18 | `claude plugin install microsoft-docs@claude-plugins-official --scope user`; server `https://learn.microsoft.com/api/mcp` | none | `microsoft_docs_search`, `microsoft_docs_fetch`, `microsoft_code_sample_search`; plugin skills `microsoft-docs`, `microsoft-code-reference`, `microsoft-skill-creator` | VERIFIED |
+| Context7 | github.com/upstash/context7, plugin `context7` from marketplace `context7-marketplace` | plugin 1.0.4, marketplace commit 1658cc42 | `claude plugin marketplace add upstash/context7`, then `claude plugin install context7@context7-marketplace --scope user`; server `https://mcp.context7.com/mcp` | Context7 browser sign-in by the owner (OAuth; no key in the repo) | `resolve-library-id`, `query-docs` | VERIFIED |
+| GitHub (read-only) | github.com/github/github-mcp-server, hosted remote server | hosted, unversioned | `claude mcp add --transport http --scope user github https://api.githubcopilot.com/mcp/readonly --header 'Authorization: Bearer ${WOO_GITHUB_MCP_PAT}'`; registered in `~/.claude.json` | fine-grained personal access token limited to `luisfpires18/woo` (read-only Contents, Issues, Metadata), held in the user environment variable `WOO_GITHUB_MCP_PAT`; the config stores only the `${...}` placeholder | 28 tools on the `/readonly` endpoint | VERIFIED (read-only) |
+
+No integration was installed through two routes. The Learn and Context7 plugins bundle their servers; no separate `claude mcp add` was used for them.
+
+### Smoke checks (actual)
+
+- Learn: `microsoft_docs_search` for "ASP.NET Core minimal APIs overview" returned the APIs overview, Minimal APIs quick reference, tutorial and .NET 10 release notes (aspnetcore-10.0). Before the restart a raw JSON-RPC `tools/list` and an EF Core migrations search to the same endpoint also worked.
+- Context7: `resolve-library-id` for PixiJS returned `/pixijs/pixijs` (High reputation, versions up to v8.21.0); `query-docs` returned the v8 `Application.init` and `Graphics.rect().fill()` examples. This is documentation lookup only; it does not select WOO dependency versions (STACK does).
+- GitHub: direct JSON-RPC to the `/readonly` endpoint with the configured token listed 28 tools, none with a create/update/delete/merge/push/comment/fork style name. `issue_read` returned luisfpires18/woo issue #2 (`[002] STACK`), `get_file_contents` listed the repository root at `refs/heads/dev`, and `list_commits` on `dev` returned e8703aa0c882c642dac8df0ad33cd6921f102ce7. No write was attempted. `claude mcp list` shows `github` Connected. These calls went over raw HTTP; the GitHub tools were not yet exposed inside the Claude session that ran them (they appear after an app restart).
+- Read-only evidence is the endpoint (`/mcp/readonly`), the tool list and the token's read-only grants. They are independent: an over-broad token would still be limited by the endpoint.
+
+### PixiJS skills reinstalled on this computer
+
+The collection from task 001 was absent here, so the owner asked for it to be reinstalled. Same route and pinned installer as 001, run from a temporary directory outside the repository: `npx -y skills@1.7.2 add https://github.com/pixijs/pixijs-skills -g -a claude-code --skill '*' --copy -y`. Source main was still 83760c6f53462ca9cecd68055041f5a8c94758ce. 26 `pixijs*` skills now exist in `~/.claude/skills` and all 26 were listed by the Claude session on this computer. The render smoke check was not repeated; the 2026-10-13 check stands for the same revision.
+
+### Limitations
+
+- This computer still lacks the other 2026-10-13 items (web-design-guidelines, impeccable, taste-skill, awesome-design-md, humanizer, Caveman, the playwright-cli skill and so on). Only the PixiJS collection was reinstalled; the rest was outside this task.
+- `claude mcp list` shows the claude.ai Notion connector as needing authentication; left unchanged.
+- The GitHub token expires on the date chosen at creation; renew it and keep the same variable name. Environment variables are read at app start, so restart the Claude app after changing it.
+- The token's grants were set by the owner on github.com; this repository cannot verify them, only that the endpoint is read-only. Do not reuse the `gh` CLI login for MCP.
+- Claude in Chrome was not exercised. The built-in browser pane was untouched.
+- Context7 and the GitHub endpoint are hosted third-party services; queries are sent to them, so do not put secrets or proprietary code in queries.

@@ -1,8 +1,8 @@
 # 001: Claude setup and skills health check
 
 Task key: SKILLS
-Status: WIP
-Updated: 2026-10-13
+Status: DONE
+Updated: 2026-10-15
 Milestone: Foundation
 Dependencies: None
 
@@ -34,8 +34,8 @@ Task-spec commit: f8f6f20cb429c8f7615aed089da0c3718de74043
 Expected dev base: f8f6f20cb429c8f7615aed089da0c3718de74043 (verified equal to origin/dev at preflight, 2026-10-13)
 Implementation branch: feat/001-skills-preflight (local only)
 Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Review: Accepted by owner; merged into dev (docs: record Claude environment and skills preflight)
+Merged dev commit: e8703aa0c882c642dac8df0ad33cd6921f102ce7
 Deployment: Not applicable (environment audit and documentation only)
 Issues: see Audit outcome.
 
@@ -50,6 +50,10 @@ Evidence and per-item results: [skills inventory audit](../workflow/skills-and-p
 - Unresolved, no approved source: aspnet-core-guidance, emilkowalski, huashu-design-guidelines, ui-ux-pro-max, phase-workflow, Understand Anything.
 - Observed, left unchanged: Caveman SessionStart text injected twice (plugin plus standalone hook); humanizer user scope at 2.8.2 while its marketplace clone is at 3.0.0; Claude in Chrome has no connected browser.
 - LP AI WORK is ChatGPT-side and was not installed.
+
+## Follow-up 2026-10-15
+
+The audit and PixiJS install were done on a different computer. On this computer (user profile `luisf`, Claude Code 2.1.291) the same 26-skill collection was absent and was reinstalled by task 002; see [MCP-SETUP](002-mcp-setup.md) and the [inventory](../workflow/skills-and-plugins.md#mcp-setup-2026-10-15). Other audit items remain as recorded for the original machine.
 
 ## Validation
 
