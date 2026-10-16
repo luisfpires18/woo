@@ -36,3 +36,6 @@ V1 is a static battalion board plus final result, as clarified by the owner. Ret
 
 ## Settlement profiles and rankings
 Use settlement/settlements in player-facing labels going forward. Public player profiles, settlement detail pages and world/season leaderboards are requested; see [community views](../gameplay/profiles-and-leaderboards.md). Existing village task keys and guide filenames are legacy technical identifiers. Display server-authorised summaries only; rankings and profile pages must not bypass scouting visibility.
+
+## Design system foundation, 2026-10-16
+Task 009 implements the shared tokens, independent appearance and kingdom accents, and reusable primitives; see [design system foundation](design-system.md). Exact shades there are a first proposal for owner review.

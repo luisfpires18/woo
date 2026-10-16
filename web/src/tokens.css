@@ -1,0 +1,225 @@
+/*
+ * WOO design tokens (task 009). Theme contract, see docs/design/design-system.md:
+ * - Appearance: <html data-appearance="light|dark"> set by theme.ts (system preference by default). Light is the
+ *   fallback when the attribute is missing.
+ * - Kingdom accent: data-kingdom="arkazia|veridor|sylvara" on any element scopes --kingdom-* to that subtree;
+ *   without it the accent is neutral. Appearance and kingdom are independent.
+ * - Neutral surfaces/text, the brand action colour and semantic colours never change with the kingdom.
+ * Components read only these custom properties; no component hardcodes a colour or a kingdom.
+ */
+
+:root {
+  /* Typography: local/system stacks only, no font downloads. */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', Menlo, Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --text-3xl: clamp(1.875rem, 1.4rem + 2.4vw, 2.75rem);
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Spacing (4px base) and sizing. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --control-height: 2.75rem; /* 44px minimum touch target */
+  --control-padding-x: var(--space-4);
+  --content-max: 72rem;
+  --content-narrow: 40rem;
+  --page-gutter: clamp(var(--space-4), 4vw, var(--space-6));
+
+  /* Shape. */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-pill: 999px;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+
+  /* Focus: one ring for every focusable control, distinct from the crimson action colour. */
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+
+  /* Motion. */
+  --duration-fast: 120ms;
+
+  /* ---- Light appearance (default) ---- */
+  color-scheme: light;
+  --color-canvas: #f5f0e6;
+  --color-surface: #fffdf8;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #ece5d7;
+  --color-text: #1f1b16;
+  --color-text-muted: #564f45;
+  --color-text-inverse: #f6f2ea;
+  --color-border: #d9d0c0;
+  --color-border-strong: #857c6d;
+  --color-nav-bg: #1e2024;
+  --color-nav-text: #f3efe6;
+  --color-nav-border: #33363c;
+
+  --color-action-bg: #b1202a;
+  --color-action-bg-hover: #8f1820;
+  --color-action-border: #b1202a;
+  --color-action-text: #ffffff;
+  --color-disabled-bg: #e6e0d4;
+  --color-disabled-text: #605950;
+  --color-disabled-border: #cfc6b6;
+  --color-focus-ring: #1b5fc1;
+
+  --color-success-text: #1d6a3a;
+  --color-success-surface: #e4f1e7;
+  --color-success-border: #6fa982;
+  --color-warning-text: #774a00;
+  --color-warning-surface: #fbeed3;
+  --color-warning-border: #c99a3e;
+  --color-danger-text: #a01f1a;
+  --color-danger-surface: #fbe4e2;
+  --color-danger-border: #d98c86;
+  --color-info-text: #1c4d8c;
+  --color-info-surface: #e2ecf8;
+  --color-info-border: #86a9d6;
+
+  --shadow-1: 0 1px 2px rgb(31 27 22 / 0.08);
+  --shadow-2: 0 4px 16px rgb(31 27 22 / 0.12);
+
+  /* Neutral kingdom accent (no kingdom chosen). */
+  --kingdom-primary: #4b5059;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #3a3e45;
+  --kingdom-secondary: #9a9fa6;
+  --kingdom-text: #454a52;
+  --kingdom-tint: #ece5d7;
+  --kingdom-border: #6b7079;
+}
+
+/* ---- Dark appearance ---- */
+:root[data-appearance='dark'] {
+  color-scheme: dark;
+  --color-canvas: #121418;
+  --color-surface: #1b1e24;
+  --color-surface-raised: #22262d;
+  --color-surface-sunken: #0e1013;
+  --color-text: #ece7dd;
+  --color-text-muted: #b2ab9f;
+  --color-text-inverse: #1f1b16;
+  --color-border: #343a44;
+  --color-border-strong: #7a8291;
+  --color-nav-bg: #0c0d10;
+  --color-nav-text: #ece7dd;
+  --color-nav-border: #2a2e35;
+
+  --color-action-bg: #b8262f;
+  --color-action-bg-hover: #cf3a42;
+  --color-action-border: #e0646a;
+  --color-action-text: #ffffff;
+  --color-disabled-bg: #262a31;
+  --color-disabled-text: #9c958a;
+  --color-disabled-border: #3a4049;
+  --color-focus-ring: #8ab4ff;
+
+  --color-success-text: #86d6a0;
+  --color-success-surface: #13261a;
+  --color-success-border: #2f6b43;
+  --color-warning-text: #f2c66d;
+  --color-warning-surface: #2a2010;
+  --color-warning-border: #7a5a1a;
+  --color-danger-text: #ff9d95;
+  --color-danger-surface: #2e1514;
+  --color-danger-border: #8a3a35;
+  --color-info-text: #9fc4f6;
+  --color-info-surface: #13213a;
+  --color-info-border: #3a5f94;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-2: 0 4px 16px rgb(0 0 0 / 0.5);
+
+  --kingdom-primary: #5c636e;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #6d7480;
+  --kingdom-secondary: #a4a9b1;
+  --kingdom-text: #c3c7cd;
+  --kingdom-tint: #22262d;
+  --kingdom-border: #7a8291;
+}
+
+/* ---- Kingdom accents: light ---- */
+[data-kingdom='arkazia'] {
+  --kingdom-primary: #9e1b24;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #7f141c;
+  --kingdom-secondary: #1a1a1a; /* black */
+  --kingdom-text: #8c1820;
+  --kingdom-tint: #f6e3e1;
+  --kingdom-border: #9e1b24;
+}
+[data-kingdom='veridor'] {
+  --kingdom-primary: #1f4f8f;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #183e72;
+  --kingdom-secondary: #8f98a3; /* silver */
+  --kingdom-text: #1d4a86;
+  --kingdom-tint: #e3eaf4;
+  --kingdom-border: #1f4f8f;
+}
+[data-kingdom='sylvara'] {
+  --kingdom-primary: #22623a;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #1a4d2d;
+  --kingdom-secondary: #b8891c; /* gold */
+  --kingdom-text: #1f5a35;
+  --kingdom-tint: #e4f0e5;
+  --kingdom-border: #22623a;
+}
+
+/* ---- Kingdom accents: dark (kingdom on <html> or on a descendant of a dark <html>) ---- */
+:root[data-appearance='dark'][data-kingdom='arkazia'],
+:root[data-appearance='dark'] [data-kingdom='arkazia'] {
+  --kingdom-primary: #b52a31;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #c93a41;
+  --kingdom-secondary: #050505; /* black */
+  --kingdom-text: #ff9b95;
+  --kingdom-tint: #2c1719;
+  --kingdom-border: #d9545a;
+}
+:root[data-appearance='dark'][data-kingdom='veridor'],
+:root[data-appearance='dark'] [data-kingdom='veridor'] {
+  --kingdom-primary: #2f62a8;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #3b72bd;
+  --kingdom-secondary: #c3c9d0; /* silver */
+  --kingdom-text: #a3c3ef;
+  --kingdom-tint: #16233a;
+  --kingdom-border: #6d97d3;
+}
+:root[data-appearance='dark'][data-kingdom='sylvara'],
+:root[data-appearance='dark'] [data-kingdom='sylvara'] {
+  --kingdom-primary: #2a7443;
+  --kingdom-on-primary: #ffffff;
+  --kingdom-primary-hover: #22603a;
+  --kingdom-secondary: #d8b24a; /* gold */
+  --kingdom-text: #92d6a6;
+  --kingdom-tint: #142719;
+  --kingdom-border: #53a46d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+  }
+}

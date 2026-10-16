@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AppFooter } from './AppFooter'
+import { FoundationPreview } from './FoundationPreview'
+import { Button, Page, PageHeader, Panel } from './ui'
 
 type Health =
   | { state: 'loading' }
@@ -51,30 +53,28 @@ export function App() {
   return (
     <>
       <main>
-        <h1>Weapons of Order</h1>
-        <p>Development skeleton. No game features are available yet.</p>
+        <Page>
+          <PageHeader title="Weapons of Order" lead="Development skeleton. No game features are available yet." />
 
-        <section aria-labelledby="health-heading" className="panel">
-          <h2 id="health-heading">Server status</h2>
-          <div role="status" aria-live="polite" aria-busy={health.state === 'loading'}>
-            {health.state === 'loading' && <p>Checking the server…</p>}
-            {health.state === 'ok' && (
-              <p className="ok">
-                Server reachable. Health: <strong>{health.status}</strong>
-              </p>
-            )}
+          <Panel title="Server status">
+            <div role="status" aria-live="polite" aria-busy={health.state === 'loading'}>
+              {health.state === 'loading' && <p>Checking the server…</p>}
+              {health.state === 'ok' && (
+                <p className="health--ok">
+                  Server reachable. Health: <strong>{health.status}</strong>
+                </p>
+              )}
+              {health.state === 'error' && <p className="health--error">Server unavailable. {health.reason}</p>}
+            </div>
             {health.state === 'error' && (
-              <p className="error">
-                Server unavailable. {health.reason}
-              </p>
+              <div>
+                <Button onClick={retry}>Try again</Button>
+              </div>
             )}
-          </div>
-          {health.state === 'error' && (
-            <button type="button" onClick={retry}>
-              Try again
-            </button>
-          )}
-        </section>
+          </Panel>
+
+          <FoundationPreview />
+        </Page>
       </main>
       <AppFooter />
     </>

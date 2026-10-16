@@ -1,7 +1,7 @@
 # 008: Deploy the first page automatically from dev
 
 Task key: DEV-DEPLOY
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: Deployment
 Dependencies: AZURE-SETUP
@@ -76,15 +76,15 @@ The Azure federated credential only trusts tokens for `repo:luisfpires18@2949260
 
 Task-spec commit: dbb07cf17be0deffc3620212a5b475aa038d7486 (owner dispatch, 2026-10-16)
 Expected dev base: dbb07cf17be0deffc3620212a5b475aa038d7486 (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/008-dev-deployment (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
-Deployment: Not yet run. Requires the owner's `dev` environment setup and integration into `dev`; then the first run's deployment and verification must be checked remotely.
-Issues: the deploy job cannot run locally. Local validation covered the coordinated `dev` build, the remote verification mode against a locally served copy (cold start, stale bytes, older commit) and the head-check logic, not GitHub OIDC or `az webapp deploy` against Azure.
+Implementation branch: feat/008-dev-deployment
+Implementation commit: 44d63f440a26f64d99422bce4611730d5844acbf
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: 44d63f440a26f64d99422bce4611730d5844acbf (remote dev head, verified 2026-10-16)
+Deployment: first real deployment succeeded end to end in run [38891810702](https://github.com/luisfpires18/woo/actions/runs/38891810702) on dev at 44d63f4: `build-test` and `deploy-dev` both concluded success (build/tests, artifact handoff, OIDC login, Azure deployment and live verification). The owner created the `dev` environment and its variables.
+Issues: before integration only local validation was possible (coordinated `dev` build, remote verification mode against a locally served copy, head-check logic); the first GitHub run then exercised OIDC and `az webapp deploy` successfully.
 
 ## TLDR
 
-Next: ChatGPT review; owner creates the `dev` environment and variables; first remote deployment verified after integration.
-Done: dev-only deploy job shipping the exact tested artifact via OIDC, with bounded post-deploy verification.
+Next: none; later UI tasks deploy through this job.
+Done: approved, merged at 44d63f4 and deployed successfully to app-woo-dev-lfp18 in run 38891810702.
 Issues: see execution record.

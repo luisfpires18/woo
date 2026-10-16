@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { buildLabel, confirmStale, fetchServerBuild, pageBuild } from './build'
+import { Button } from './ui'
 
 /** Shared footer for every layout: release identity plus a notice when a newer build is deployed. */
 export function AppFooter() {
@@ -35,14 +36,15 @@ export function AppFooter() {
         {stale && (
           <div className="update-notice">
             <span>A newer version of Weapons of Order is available.</span>
-            <button type="button" onClick={() => window.location.reload()}>
-              Reload page
-            </button>
+            <Button onClick={() => window.location.reload()}>Reload page</Button>
           </div>
         )}
       </div>
       <p>
-        Weapons of Order <span title={pageBuild.builtAt ? `Built ${pageBuild.builtAt}` : undefined}>{buildLabel(pageBuild)}</span>
+        Weapons of Order{' '}
+        <span className="app-footer__version" title={pageBuild.builtAt ? `Built ${pageBuild.builtAt}` : undefined}>
+          {buildLabel(pageBuild)}
+        </span>
       </p>
     </footer>
   )

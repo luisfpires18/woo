@@ -31,6 +31,7 @@ GitHub is the primary working specification. Read current topic documents before
 ## Design and operations
 
 - [Screens and themes](design/screens-and-themes.md)
+- [Design system foundation](design/design-system.md)
 - [Artwork pipeline](design/artwork-pipeline.md)
 - [Village visual prototype: step-by-step entry point](design/village-visual-prototype.md)
 - [Village asset specification](design/village-asset-specification.md)
