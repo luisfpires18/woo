@@ -1,7 +1,7 @@
 # 006: GitHub build and focused test Actions
 
 Task key: BUILD-CI
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: Foundation
 Dependencies: VERSION
@@ -48,15 +48,15 @@ Commands are in the [README](../../README.md#continuous-integration).
 
 Task-spec commit: dc407cf325170ccee6fea19fab73ce15d42e06e9 (issue [#5](https://github.com/luisfpires18/woo/issues/5) dispatch)
 Expected dev base: dc407cf325170ccee6fea19fab73ce15d42e06e9 (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/006-build-ci (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Implementation branch: feat/006-build-ci
+Implementation commit: 6b78a16a9bef551776ed074b8e522a3594267c98, review fixes 0e69cada041971b634e735824544ea0fa60cd7e7
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: 0e69cada041971b634e735824544ea0fa60cd7e7 (remote dev head, verified 2026-10-16). First real runs on that push both succeeded on GitHub's Ubuntu runner: "Application build and tests" [38883771154](https://github.com/luisfpires18/woo/actions/runs/38883771154) and "Documentation and task checks" [38883771225](https://github.com/luisfpires18/woo/actions/runs/38883771225).
 Deployment: Not applicable (CI only; no deployment exists)
-Issues: fixed in passing: a standalone `dotnet publish` into a folder holding a coordinated publish could keep coordinated web files. `PreserveNewest` kept the newer coordinated `index.html` and manifest, and obsolete hashed files were removed only when the SDK's `obj/` still recorded the earlier publish. The server project now deletes the published `wwwroot` before copying the current web build, and copies it `Always`; `check-stale-publish.mjs` fails without that deletion (verified by removing it in a scratch clone). Review fix (2026-10-16): push runs no longer share a concurrency group. The workflow has not run on GitHub yet; it was validated by running the same commands locally in a fresh clone on Windows, not on the Ubuntu runner. No workflow linter is installed and none was added.
+Issues: fixed in passing: a standalone `dotnet publish` into a folder holding a coordinated publish could keep coordinated web files. `PreserveNewest` kept the newer coordinated `index.html` and manifest, and obsolete hashed files were removed only when the SDK's `obj/` still recorded the earlier publish. The server project now deletes the published `wwwroot` before copying the current web build, and copies it `Always`; `check-stale-publish.mjs` fails without that deletion (verified by removing it in a scratch clone). Review fix (2026-10-16): push runs no longer share a concurrency group. Before merge the workflow was validated by running the same commands locally in a fresh clone on Windows; its first GitHub run after merge passed. No workflow linter is installed and none was added.
 
 ## TLDR
 
-Next: ChatGPT review of the local commit; the first real run happens after the owner pushes.
-Done: application build/test workflow and published-build verification added; docs workflow preserved.
+Next: none; DEV-DEPLOY (008) must deploy only commits that pass this workflow.
+Done: approved and merged at 0e69cad; first Ubuntu run of both workflows passed.
 Issues: see execution record.

@@ -1,6 +1,6 @@
 # Task roadmap
 
-Updated: 2026-10-16. 001 SKILLS, 002 MCP-SETUP, 003 STACK, 004 SKELETON and 005 VERSION are DONE, 006 BUILD-CI is WIP and all other tasks remain TODO. MCP-SETUP was approved by ChatGPT, verified on remote dev at 99abf03 with documentation CI passing, and issue #64 is closed. STACK was first dispatched as 002 (issue #2) against e8703aa on feat/002-tech-stack, paused on 2026-10-15 for MCP-SETUP, resumed as 003 against base 99abf03 on feat/003-tech-stack, then approved and merged at 588c5a0 with documentation CI passing; see its [dispatch history](docs/tasks/003-tech-stack.md#dispatch-history). SKELETON (issue #3) was approved on 2026-10-16 and merged at 77e206c with documentation CI passing. VERSION (issue #4) was approved on 2026-10-16 and merged at dc407cf with documentation CI passing. BUILD-CI (issue #5) is dispatched against dc407cf on feat/006-build-ci. This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
+Updated: 2026-10-16. 001 SKILLS to 006 BUILD-CI are DONE, 007 AZURE-SETUP is WIP and all other tasks remain TODO. MCP-SETUP was approved by ChatGPT, verified on remote dev at 99abf03 with documentation CI passing, and issue #64 is closed. STACK was first dispatched as 002 (issue #2) against e8703aa on feat/002-tech-stack, paused on 2026-10-15 for MCP-SETUP, resumed as 003 against base 99abf03 on feat/003-tech-stack, then approved and merged at 588c5a0 with documentation CI passing; see its [dispatch history](docs/tasks/003-tech-stack.md#dispatch-history). SKELETON (issue #3) was approved on 2026-10-16 and merged at 77e206c with documentation CI passing. VERSION (issue #4) was approved on 2026-10-16 and merged at dc407cf with documentation CI passing. BUILD-CI (issue #5) was approved on 2026-10-16 and merged at 0e69cad; its first Ubuntu application and documentation runs passed. AZURE-SETUP is dispatched against 0e69cad and has provisioned the West Europe F1 dev app (see its task record). This expanded sequence replaced the original 12 broad tasks before any dispatch, so no branch history was affected.
 
 Working branch: dev. Use sequential whole numbers, not 012a/012b. Numbers are current order; immutable keys preserve identity during insertion. Detailed files hold scope, dependencies and acceptance criteria. This is an evolving queue, not authorisation to implement everything now.
 
@@ -17,8 +17,8 @@ Architecture is defined in task 003 ([stack decision record](docs/technical/stac
 | 003 | STACK | Tech stack, dependency versions and architecture | DONE | [003-tech-stack.md](docs/tasks/003-tech-stack.md) |
 | 004 | SKELETON | Create skeleton and run the first page | DONE | [004-application-skeleton.md](docs/tasks/004-application-skeleton.md) |
 | 005 | VERSION | App version footer and build identity | DONE | [005-app-version.md](docs/tasks/005-app-version.md) |
-| 006 | BUILD-CI | GitHub build and focused test Actions | WIP | [006-build-ci.md](docs/tasks/006-build-ci.md) |
-| 007 | AZURE-SETUP | Azure dev provisioning through step-by-step commands | TODO | [007-azure-dev-setup.md](docs/tasks/007-azure-dev-setup.md) |
+| 006 | BUILD-CI | GitHub build and focused test Actions | DONE | [006-build-ci.md](docs/tasks/006-build-ci.md) |
+| 007 | AZURE-SETUP | Azure dev provisioning through step-by-step commands | WIP | [007-azure-dev-setup.md](docs/tasks/007-azure-dev-setup.md) |
 | 008 | DEV-DEPLOY | Deploy the first page automatically from dev | TODO | [008-dev-deployment.md](docs/tasks/008-dev-deployment.md) |
 | 009 | DESIGN-SYSTEM | Shared UI foundations, themes and kingdom colours | TODO | [009-design-system.md](docs/tasks/009-design-system.md) |
 | 010 | LANDING | First landing page UI polish | TODO | [010-landing-page.md](docs/tasks/010-landing-page.md) |
@@ -113,7 +113,7 @@ TODO -> WIP when one implementation prompt is dispatched. WIP remains through fi
 Rune discovery, Conduit, Aspect, magical armour, Chaos/Order, heroes, additional kingdoms and naval/air/tunnel systems remain future design material, not active medieval implementation tasks. Production/PostgreSQL/master deployment gets its own explicit tasks when the owner chooses that release, not merely because the friends alpha starts.
 
 ## Village visual proof
-The queue contains 64 tasks: 001 SKILLS to 005 VERSION are DONE, 006 BUILD-CI is WIP, the rest TODO. VILLAGE-UI (012) is the early local layered-art proof, HOTSPOTS (034) is the saved admin editor, and VILLAGE-VISUAL-GATE (036) is the end-to-end acceptance gate after CONFIG (035). Later tasks renumbered with immutable keys preserved; none had been dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
+The queue contains 64 tasks: 001 SKILLS to 006 BUILD-CI are DONE, 007 AZURE-SETUP is WIP, the rest TODO. VILLAGE-UI (012) is the early local layered-art proof, HOTSPOTS (034) is the saved admin editor, and VILLAGE-VISUAL-GATE (036) is the end-to-end acceptance gate after CONFIG (035). Later tasks renumbered with immutable keys preserved; none had been dispatched. VILLAGE-CREATE requires this gate. Internal proof steps are checklists, not letter-suffixed tasks.
 Read [step-by-step preparation](docs/design/village-visual-prototype.md). Flat illustration hotspots alone do not prove interchangeable buildings or modular walls.
 
 ## Scene scope boundaries

@@ -49,3 +49,14 @@ See [Azure versus Cloudflare hosting](hosting-comparison.md). With the now-confi
 
 ## STACK selection, 2026-10-15
 The [stack decision record](stack.md#azure-application-and-local-development) selects .NET 10 (built-in App Service stack), one app serving API and React build, Vite-proxied same-origin local development and a GitHub Actions zip deployment from dev. F1 subscription eligibility and SQLite storage compatibility remain explicit verification gates.
+
+## Provisioned dev environment (task 007)
+
+Created 2026-10-16 in subscription "Azure for Students" (`7e1071a1-f3bb-4cda-9d0f-8299c1ee0d4d`, tenant `dba3267e-25b4-4514-9a0d-7544f1d81724`), region West Europe. Commands and evidence: [task 007](../tasks/007-azure-dev-setup.md).
+
+- `rg-woo-dev`: resource group for WOO dev only.
+- `plan-woo-dev`: Linux App Service plan, F1 (Free), 1 worker. Free tier limits apply: shared compute, 60 CPU minutes per day, 1 GB memory, 1 GB storage, no Always On, idle unloading with cold starts, and the app stops when a quota is exhausted until it resets. Nothing runs while the app is unloaded, so timed actions still need the persisted catch-up design.
+- `app-woo-dev-lfp18` (https://app-woo-dev-lfp18.azurewebsites.net): `DOTNETCORE|10.0`, HTTPS only, TLS 1.2 minimum, FTP disabled, HTTP/2, basic-auth publishing disabled, no app settings yet. `ASPNETCORE_ENVIRONMENT` is left at its Production default; the build identity's `environment` (`dev`) comes from the coordinated build, not from app settings.
+- `id-woo-dev-deploy`: user-assigned managed identity for GitHub Actions OIDC. Its single federated credential trusts only jobs in the `dev` GitHub environment of `luisfpires18/woo` (ID-based subject `repo:luisfpires18@29492601/woo@1405763514:environment:dev`), and its single role is `Website Contributor` on `app-woo-dev-lfp18`. It cannot create resources, change the plan's tier or reach other resource groups. No client secret or publish profile exists.
+- Cost: €0. The subscription's spending limit is `Off` (pay-as-you-go behaviour), so any future paid tier (for example B1) would be billed immediately; it requires an explicit owner decision with the expected cost.
+- Not provisioned: database, storage for SQLite, Application Insights, production resources, R2 changes, deployment workflow.
