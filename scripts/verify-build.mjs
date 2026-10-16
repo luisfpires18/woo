@@ -1,17 +1,19 @@
-// Smoke-checks a coordinated publish (node scripts/build.mjs) by running it:
+// Smoke-checks the app published in artifacts/publish by running it:
 // - /api/health answers;
-// - /api/build reports VERSION, the current Git commit, a UTC build time and the expected environment;
-// - the published page bundle embeds the same commit and build time (one shared identity);
+// - coordinated publish (default): /api/build reports VERSION, the current Git commit, a UTC build time and the
+//   expected environment, and the bundle the served page loads embeds the same commit and build time;
+// - standalone publish (--expect-local): /api/build is the local fallback and the served bundle carries no commit;
 // - entry HTML revalidates and every manifest-listed hashed file is immutable.
-// Usage: node scripts/verify-build.mjs [--environment local|dev|production]   (default local)
+// Usage: node scripts/verify-build.mjs [--environment local|dev|production | --expect-local]
 import { execFileSync, spawn } from 'node:child_process'
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const publish = join(root, 'artifacts', 'publish')
 const args = process.argv.slice(2)
+const expectLocal = args.includes('--expect-local')
 const envIndex = args.indexOf('--environment')
 const environment = envIndex === -1 ? 'local' : args[envIndex + 1]
 const version = readFileSync(join(root, 'VERSION'), 'utf8').trim()
@@ -39,16 +41,29 @@ try {
   console.log(`     /api/build: ${JSON.stringify(build)}`)
   expect(response.headers.get('cache-control') === 'no-store', '/api/build is no-store')
   expect(build.version === version, `version is ${version}`)
-  expect(build.commit === commit, `commit is HEAD ${commit}`)
-  expect(build.environment === environment, `environment is ${environment}`)
-  expect(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(build.builtAt), 'builtAt is a UTC timestamp')
 
-  const assets = join(publish, 'wwwroot', 'assets')
-  const bundle = readdirSync(assets).filter((f) => f.endsWith('.js')).map((f) => readFileSync(join(assets, f), 'utf8')).join('\n')
-  expect(bundle.includes(build.commit) && bundle.includes(build.builtAt), 'page bundle embeds the same commit and builtAt')
-
+  // The bundle the active page actually loads, as referenced by the served index.html.
   const entry = await fetch(`${base}/`)
   expect(entry.headers.get('cache-control') === 'no-cache', 'entry HTML is no-cache')
+  const scripts = [...(await entry.text()).matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1])
+  expect(scripts.length > 0, `served page loads ${scripts.join(', ') || 'no script'}`)
+  let bundle = ''
+  for (const src of scripts) {
+    const js = await fetch(`${base}${src}`)
+    expect(js.ok, `${src} is served`)
+    bundle += await js.text()
+  }
+
+  if (expectLocal) {
+    expect(build.commit === '' && build.builtAt === '' && build.environment === 'local', '/api/build is the local fallback')
+    expect(bundle.includes(version) && !/[0-9a-f]{40}/.test(bundle), 'served page bundle has the version and no commit')
+  } else {
+    expect(build.commit === commit, `commit is HEAD ${commit}`)
+    expect(build.environment === environment, `environment is ${environment}`)
+    expect(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(build.builtAt), 'builtAt is a UTC timestamp')
+    expect(bundle.includes(build.commit) && bundle.includes(build.builtAt), 'served page bundle embeds the same commit and builtAt')
+  }
+
   const manifest = JSON.parse(readFileSync(join(publish, 'wwwroot', '.vite', 'manifest.json'), 'utf8'))
   const hashed = Object.values(manifest).flatMap((c) => [c.file, ...(c.css ?? []), ...(c.assets ?? [])])
   for (const file of hashed) {

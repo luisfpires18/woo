@@ -7,8 +7,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+# A newer push to the same pull request cancels its older run. Every other run (pushes to dev/master,
+# manual dispatch) gets its own group, so no push run is ever cancelled or replaced while pending.
 concurrency:
-  group: app-ci-${{ github.ref }}
+  group: app-ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('run-{0}', github.run_id) }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: '1'
@@ -51,3 +53,5 @@ jobs:
         run: node scripts/build.mjs
       - name: Verify published build identity and cache headers
         run: node scripts/verify-build.mjs
+      - name: Standalone publish over a coordinated publish leaves no stale web files
+        run: node scripts/check-stale-publish.mjs

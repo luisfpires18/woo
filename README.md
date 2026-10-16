@@ -95,4 +95,4 @@ Generated output (`bin/`, `obj/`, `web/node_modules/`, `web/dist/`, `artifacts/`
 GitHub Actions runs two workflows on pushes to `dev` and `master`, pull requests targeting them, and manual dispatch:
 
 - `docs-check.yml`: `python scripts/check_docs.py`.
-- `app-ci.yml`: locked restores, web typecheck and build, .NET build, host tests, `node scripts/build.mjs` and `node scripts/verify-build.mjs`, with the SDK and Node versions taken from `global.json` and `.node-version`. Read-only permissions, no secrets and no deployment.
+- `app-ci.yml`: locked restores, web typecheck and build, .NET build, host tests, `node scripts/build.mjs`, `node scripts/verify-build.mjs` and the stale-publish regression `node scripts/check-stale-publish.mjs`, with the SDK and Node versions taken from `global.json` and `.node-version`. Read-only permissions, no secrets and no deployment. Pull request runs cancel older runs of the same pull request; push runs are never cancelled.

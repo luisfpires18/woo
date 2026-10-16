@@ -21,12 +21,13 @@
   <!-- Publish ships the Vite production build as wwwroot. Build web/ first (see README). -->
   <Target Name="IncludeWebDist" BeforeTargets="ComputeFilesToPublish">
     <Error Condition="!Exists('$(WebDist)index.html')" Text="$(WebDist)index.html is missing. Run 'npm --prefix web ci' and 'npm --prefix web run build' before publishing, or use 'node scripts/build.mjs'." />
+    <!-- wwwroot holds only the web build: remove the previous one so no obsolete hashed file,
+         index.html or manifest from an earlier publish into the same folder survives. -->
+    <RemoveDir Directories="$(PublishDir)wwwroot" />
     <ItemGroup>
       <WebDistFile Include="$(WebDist)**\*" />
       <ResolvedFileToPublish Include="@(WebDistFile->'%(FullPath)')">
         <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
-        <!-- Always: an older web build must overwrite a newer one already in the output folder,
-             or index.html and the manifest from a previous (e.g. coordinated) publish would survive. -->
         <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
