@@ -6,6 +6,9 @@
     <!-- Coordinated builds (scripts/build.mjs) pass WooCommit, WooBuiltAt and WooEnvironment.
          Standalone builds keep the honest local fallback: empty commit and build time. -->
     <WooEnvironment Condition="'$(WooEnvironment)' == ''">local</WooEnvironment>
+    <!-- Keep the SDK from stamping its own "1.0.0+<git HEAD>"; build identity comes only from the values above. -->
+    <InformationalVersion>$(WooVersion)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>

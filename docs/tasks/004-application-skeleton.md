@@ -2,7 +2,7 @@
 
 Task key: SKELETON
 Status: DONE
-Updated: 2026-10-15
+Updated: 2026-10-16
 Milestone: Foundation
 Dependencies: STACK
 
@@ -54,7 +54,7 @@ Task-spec commit: 588c5a09ab7ecce6aa596d79e63579345897c3ea (issue [#3](https://g
 Expected dev base: 588c5a09ab7ecce6aa596d79e63579345897c3ea (verified equal to local dev and origin/dev, 2026-10-15)
 Implementation branch: feat/004-application-skeleton
 Implementation commit: 77e206cd47f5a444485ac0dfb3aba194ad059d7f
-Review: APPROVED by ChatGPT, 2026-10-15
+Review: APPROVED by ChatGPT, 2026-10-16
 Merged dev commit: 77e206cd47f5a444485ac0dfb3aba194ad059d7f (remote dev; documentation CI succeeded)
 Deployment: Not applicable to this task (deployment is DEV-DEPLOY)
 Issues: browser checks covered the Vite proxy (HTTP 502) failure path; the timeout and network-error messages were not exercised in a browser.

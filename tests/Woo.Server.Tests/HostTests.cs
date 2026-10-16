@@ -69,10 +69,13 @@ public sealed class HostTests : IClassFixture<HostTests.SpaFactory>
         Assert.Equal("public, max-age=31536000, immutable", response.Headers.CacheControl?.ToString());
     }
 
-    [Fact]
-    public async Task Unversioned_files_are_not_immutable()
+    [Theory]
+    [InlineData("/robots.txt")]
+    [InlineData("/assets/settings.json")] // under /assets/ but not in the build manifest
+    [InlineData("/.vite/manifest.json")] // public anyway: it only names files index.html already references
+    public async Task Unversioned_files_must_revalidate(string path)
     {
-        var response = await _client.GetAsync("/robots.txt", Ct);
+        var response = await _client.GetAsync(path, Ct);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("no-cache", response.Headers.CacheControl?.ToString());
@@ -90,7 +93,7 @@ public sealed class HostTests : IClassFixture<HostTests.SpaFactory>
 
     private sealed record HealthBody(string Status);
 
-    // Stands in for the published wwwroot: entry page, one hashed asset, one unversioned file.
+    // Stands in for the published wwwroot: entry page, Vite manifest, one hashed asset and unversioned files.
     public sealed class SpaFactory : WebApplicationFactory<Program>
     {
         public const string Marker = "<!-- woo-test-index -->";
@@ -102,6 +105,10 @@ public sealed class HostTests : IClassFixture<HostTests.SpaFactory>
             File.WriteAllText(Path.Combine(_webRoot, "robots.txt"), "User-agent: *");
             Directory.CreateDirectory(Path.Combine(_webRoot, "assets"));
             File.WriteAllText(Path.Combine(_webRoot, "assets", "index-AbCd1234.js"), "// hashed");
+            File.WriteAllText(Path.Combine(_webRoot, "assets", "settings.json"), "{}");
+            Directory.CreateDirectory(Path.Combine(_webRoot, ".vite"));
+            File.WriteAllText(Path.Combine(_webRoot, ".vite", "manifest.json"),
+                """{"index.html":{"file":"assets/index-AbCd1234.js","name":"index","src":"index.html","isEntry":true}}""");
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.UseWebRoot(_webRoot);

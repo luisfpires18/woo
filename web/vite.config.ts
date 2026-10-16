@@ -18,6 +18,10 @@ export default defineConfig({
   define: {
     __WOO_BUILD__: JSON.stringify(build),
   },
+  // .vite/manifest.json lists the content-hashed files; the server marks only those immutable.
+  build: {
+    manifest: true,
+  },
   server: {
     proxy: {
       '/api': 'http://localhost:5080',

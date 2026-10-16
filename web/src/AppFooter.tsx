@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react'
-import { buildLabel, fetchServerBuild, isStale, pageBuild } from './build'
+import { buildLabel, confirmStale, fetchServerBuild, pageBuild } from './build'
 
 /** Shared footer for every layout: release identity plus a notice when a newer build is deployed. */
 export function AppFooter() {
   const [stale, setStale] = useState(false)
 
-  // Check on load and whenever the tab becomes visible again; no polling. Only a confirmed
-  // newer server build shows the notice, and an unavailable server never clears or raises it.
+  // Check on load and whenever the tab becomes visible again; no polling. Each check cancels the one
+  // before it, so an older response can never override a newer one. Only a valid coordinated server
+  // identity changes the notice; unavailable or unconfirmable responses keep the last confirmed state.
   useEffect(() => {
-    const controller = new AbortController()
+    let current: AbortController | undefined
     const check = () => {
       if (document.visibilityState !== 'visible') return
+      current?.abort()
+      const controller = (current = new AbortController())
       fetchServerBuild(controller.signal).then((server) => {
-        if (!controller.signal.aborted && isStale(pageBuild, server)) setStale(true)
+        if (controller.signal.aborted) return
+        const confirmed = confirmStale(pageBuild, server)
+        if (confirmed !== undefined) setStale(confirmed)
       })
     }
     check()
     document.addEventListener('visibilitychange', check)
     return () => {
       document.removeEventListener('visibilitychange', check)
-      controller.abort()
+      current?.abort()
     }
   }, [])
 

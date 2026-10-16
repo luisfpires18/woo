@@ -31,6 +31,13 @@ export async function fetchServerBuild(signal: AbortSignal): Promise<BuildIdenti
   }
 }
 
-/** A newer deployment exists only when both sides are coordinated builds with different commits. */
-export const isStale = (page: BuildIdentity, server: BuildIdentity | null) =>
-  server !== null && isCoordinated(page) && isCoordinated(server) && page.commit !== server.commit
+/**
+ * Whether a newer deployment is confirmed, given the latest server response. Returns undefined when the
+ * response cannot confirm anything (unavailable, malformed or not a coordinated build), so the caller keeps
+ * its last confirmed state. A local page never reports a newer deployment.
+ */
+export function confirmStale(page: BuildIdentity, server: BuildIdentity | null): boolean | undefined {
+  if (!isCoordinated(page)) return false
+  if (server === null || !isCoordinated(server)) return undefined
+  return page.commit !== server.commit
+}

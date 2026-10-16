@@ -41,7 +41,7 @@ Implementation commit: local commit on that branch; SHA given in the implementat
 Review: Pending ChatGPT review
 Merged dev commit: None
 Deployment: Not applicable to this task (deployment is DEV-DEPLOY)
-Issues: no frontend unit-test runner exists, so footer/notice logic was verified in the browser, not by automated tests. Tab-visibility re-checks were triggered by dispatching the browser event, not by switching real tabs.
+Issues: no frontend unit-test runner exists, so footer/notice logic was verified in the browser, not by automated tests. Tab-visibility re-checks were triggered by dispatching the browser event, not by switching real tabs. Cancellation of overlapping checks was reviewed in code but not reproduced with a deliberately slow response. Review fixes (2026-10-16): manifest-based immutable caching, latest-state update notice, no SDK commit stamp in standalone DLLs.
 
 ## TLDR
 
