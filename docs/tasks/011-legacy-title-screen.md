@@ -1,7 +1,7 @@
 # 011: Port legacy title screen, then retire old staging Azure
 
 Task key: LEGACY-TITLE
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: UI
 Dependencies: LANDING
@@ -84,16 +84,16 @@ Run proportionate checks against acceptance criteria. Report actual local eviden
 
 Task-spec commit: Issue #65, created 2026-10-16T14:07:25Z; owner dispatch 2026-10-16 (migration phase only)
 Expected dev base: 006be69e689180703c9acd3d826aab4476801d22 (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/011-legacy-title (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
-Deployment: Deploys through DEV-DEPLOY after integration; not yet run
-Azure retirement: Not started; gated on live verification and explicit owner approval. No old Azure resource was inspected, stopped, changed or deleted
+Implementation branch: feat/011-legacy-title
+Implementation commit: 86ec3ebc2ef9906ab5b27ebfb1cf0ef942799f67 (migration), 2e295cfaacf4f56e22f8f9b51590bdeb8c935c52 (review docs fix)
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: 2e295cfaacf4f56e22f8f9b51590bdeb8c935c52
+Deployment: deployed to dev through DEV-DEPLOY; live `/api/build` reported commit 2e295cfaacf4f56e22f8f9b51590bdeb8c935c52, environment dev (verified 2026-10-16)
+Azure retirement: completed 2026-10-16 on explicit owner authorisation. In subscription Azure for Students (7e1071a1-f3bb-4cda-9d0f-8299c1ee0d4d), resource group `rg-weaponsoforder-staging` (tags application=weapons-of-order, environment=staging) was deleted with its nine resources: `app-woo-staging-le5jrs` (web app), `plan-woo-staging` (F1 plan), `id-woo-staging-deploy`, `appi-woo-staging`, `log-woo-staging`, `acs-woo-staging-le5jrs`, `acsemail-woo-staging-le5jrs` and its `AzureManagedDomain`, and the `Application Insights Smart Detection` action group. Afterwards the group no longer existed, the old hostname no longer resolved, and `rg-woo-dev` (`plan-woo-dev`, `app-woo-dev-lfp18`, `id-woo-dev-deploy`) was unchanged. Azure keeps the soft-deleted `log-woo-staging` workspace for 14 days and a deleted-app restore record for about 30 days; both expire on their own. The weapons-of-order GitHub repository was not changed
 Issues: the frontend/design/accessibility skills in the inventory are not installed on this computer; the port follows the old source directly. No automated frontend tests.
 
 ## TLDR
 
-Next: ChatGPT review of the local commit and screenshots; after integration and live verification, the gated Azure inventory.
-Done: legacy title at `/` with original artwork and wordmark, ENTER WORLD to the landing page at `/worlds`, provenance and checks recorded.
-Issues: see unresolved decisions; Azure retirement not started.
+Next: none; GAME-SHELL (012) resumes on this result.
+Done: approved, merged and deployed at 2e295cf; old staging Azure resource group deleted and verified.
+Issues: see unresolved decisions.

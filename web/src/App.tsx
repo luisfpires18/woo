@@ -1,15 +1,23 @@
 import { AppFooter } from './AppFooter'
 import { signedInFixture } from './devFixtures'
+import { GameShell } from './game/GameShell'
+import { defaultGamePath } from './game/views'
 import { Landing } from './landing/Landing'
 import { Navbar } from './landing/Navbar'
 import { NotAvailable } from './landing/NotAvailable'
+import { usePathname } from './routing'
 import { MAIN_PATH, TitleScreen } from './title/TitleScreen'
 
-// No client router yet: "/" is the full-screen title (issue #65), /worlds is the main landing page and every other
-// path (including the future /login, /settings and /profile pages) shows an honest "not available yet" page.
-// Links are ordinary page navigations.
+// No router package: "/" is the full-screen title (issue #65), /worlds is the main landing page, /game/... is the
+// game shell (task 012) and every other path (including the future /login, /settings and /profile pages) shows an
+// honest "not available yet" page. Outside the game shell, links are ordinary page navigations.
 export function App() {
-  const pathname = window.location.pathname.replace(/(.)\/+$/, '$1')
+  let pathname = usePathname().replace(/(.)\/+$/, '$1')
+  if (pathname === '/game') {
+    window.history.replaceState(null, '', defaultGamePath + window.location.search)
+    pathname = defaultGamePath
+  }
+  if (pathname.startsWith('/game/')) return <GameShell pathname={pathname} />
   // The title screen has no navbar or footer; its only action leads to the main page.
   if (pathname === '/') return <TitleScreen />
 

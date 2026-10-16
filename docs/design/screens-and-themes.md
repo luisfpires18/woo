@@ -45,3 +45,6 @@ Task 010 implements the approved landing structure with a placeholder banner, pr
 
 ## Legacy title screen, 2026-10-16
 Issue #65 (task 011 LEGACY-TITLE) restores the full-screen forge/cavern title from the discontinued weapons-of-order app as the entry screen at `/`: the original artwork, the WEAPONS / OF / ORDER Cinzel wordmark with ember rules and a single ENTER WORLD action. Settings is not on it. ENTER WORLD opens the task 010 landing page, now at `/worlds`. The title has no navbar or footer. See [task 011](../tasks/011-legacy-title-screen.md#result).
+
+## Game shell implementation, 2026-10-16
+Task 012 adds the game shell under `/game/`: a charcoal command bar with a preview resource header, a left navigation rail that becomes a bottom tab bar on phones, and placeholder Settlement, Kingdom Map, Forge, Army and Kingdom Duties views with a framed stage for later scenes. Resource types stay undecided (numbered preview slots); kingdom accents appear only through a labelled dev fixture. It sits alongside the title screen at `/` and the main page at `/worlds`. See [task 012](../tasks/012-game-ui-shell.md#result).

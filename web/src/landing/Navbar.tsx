@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { MAIN_PATH } from '../title/TitleScreen'
 import { AnvilIcon, ChevronDownIcon } from './icons'
 
@@ -6,11 +6,12 @@ export type Account = { nickname: string; avatarUrl?: string }
 
 /**
  * Slim navigation bar: brand at left; Log in (signed out) or the account menu (signed in) at right.
- * No section links and no appearance controls (Settings is its own page).
+ * No section links and no appearance controls (Settings is its own page). The game shell passes its resource header
+ * as children (shown between brand and account) and uses the full-width variant.
  */
-export function Navbar({ account }: { account: Account | null }) {
+export function Navbar({ account, children, wide = false }: { account: Account | null; children?: ReactNode; wide?: boolean }) {
   return (
-    <header className="navbar">
+    <header className={wide ? 'navbar navbar--wide' : 'navbar'}>
       <div className="navbar__inner">
         <a className="navbar__brand" href={MAIN_PATH} aria-label="Weapons of Order main page">
           <span className="navbar__anvil">
@@ -18,6 +19,7 @@ export function Navbar({ account }: { account: Account | null }) {
           </span>
           <span className="navbar__wordmark">WOO</span>
         </a>
+        {children}
         {account ? (
           <AccountMenu account={account} />
         ) : (

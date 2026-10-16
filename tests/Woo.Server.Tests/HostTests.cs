@@ -50,6 +50,7 @@ public sealed class HostTests : IClassFixture<HostTests.SpaFactory>
     [Theory]
     [InlineData("/some/client/route")]
     [InlineData("/worlds")] // main page behind the title screen (task 011) loads directly
+    [InlineData("/game/settlement")] // game-shell routes (task 012) load directly
     [InlineData("/index.html")]
     public async Task Entry_html_is_served_and_must_revalidate(string path)
     {

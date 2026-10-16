@@ -1,6 +1,6 @@
 # Design system foundation
 
-Updated: 2026-10-16. Status: task 009 DESIGN-SYSTEM, approved and merged (ed1f3c2); extended by task 010 LANDING and task 011 LEGACY-TITLE. Applies the confirmed direction in [screens and themes](screens-and-themes.md); exact shades below are the first implemented proposal, open to owner adjustment.
+Updated: 2026-10-16. Status: task 009 DESIGN-SYSTEM, approved and merged (ed1f3c2); extended by task 010 LANDING, task 011 LEGACY-TITLE and task 012 GAME-SHELL. Applies the confirmed direction in [screens and themes](screens-and-themes.md); exact shades below are the first implemented proposal, open to owner adjustment.
 
 ## Theme contract
 
@@ -22,11 +22,12 @@ There is no Settings page yet: a later task stores the player's explicit choice 
 - Sizing: `--control-height` 44px (minimum touch target for buttons and inputs), `--content-max` 72rem, `--content-narrow` 40rem.
 - Shape: `--radius-sm|md|lg|pill`, `--border-width`, `--border-width-strong`.
 - Surfaces and text: `--color-canvas` (warm ivory / charcoal page), `--color-surface`, `--color-surface-raised`, `--color-surface-sunken`, `--color-text`, `--color-text-muted`, `--color-text-inverse`, `--color-border` (decorative), `--color-border-strong` (control boundaries).
-- Navigation: `--color-nav-bg` (dark charcoal in both appearances), `--color-nav-text`, `--color-nav-border`, `--color-nav-border-strong`, `--color-nav-focus-ring`, `--color-nav-action-border` (3:1 edge for crimson actions on charcoal), `--color-nav-avatar-bg`; used by the landing navbar and ready for the game shell (task 012).
+- Navigation: `--color-nav-bg` (dark charcoal in both appearances), `--color-nav-text`, `--color-nav-border`, `--color-nav-border-strong`, `--color-nav-focus-ring`, `--color-nav-action-border` (3:1 edge for crimson actions on charcoal), `--color-nav-avatar-bg`, plus `--color-nav-text-muted` and `--color-nav-surface` (raised plate for the current game-navigation item and resource slots, task 012); used by the landing navbar and the game shell.
 - Title banner (task 010): `--banner-art` (`none` until the approved asset exists), `--banner-stone`, `--banner-stone-light`, `--banner-lava`, `--banner-ember`, `--banner-rune-light`, `--banner-title`, `--banner-title-shadow`, `--banner-height`; identical in both appearances.
 - Title screen (task 011): `--title-void`, `--title-bone`, `--title-ember` (legacy weapons-of-order theme values, identical in both appearances because they sit on artwork), `--font-title` (Cinzel, self-hosted under the SIL OFL in `web/src/assets/fonts/`), `--text-title`, `--text-title-menu`.
 - States: `--color-disabled-*`, `--color-focus-ring` (blue, distinct from crimson), `--focus-ring-width`, `--focus-ring-offset`.
 - Elevation: `--shadow-1`, `--shadow-2`. Motion: `--duration-fast`, `--duration-slow` (both 0 with `prefers-reduced-motion`).
+- Kingdom accent on the charcoal navigation: `--kingdom-on-nav` (neutral grey, or an Arkazia/Veridor/Sylvara shade readable on charcoal). It is the same in both appearances because the navigation is always charcoal (task 012).
 - Kingdom accent (per appearance): `--kingdom-primary`, `--kingdom-on-primary`, `--kingdom-primary-hover`, `--kingdom-secondary` (Arkazia black, Veridor silver, Sylvara gold), `--kingdom-text` (accent text on surfaces), `--kingdom-tint` (subtle accent surface), `--kingdom-border`.
 
 Artwork is never filtered or darkened for dark appearance; the same images are used in both.
@@ -44,6 +45,10 @@ Artwork is never filtered or darkened for dark appearance; the same images are u
 | `KingdomBadge` | Kingdom ownership marker: name text plus a two-colour swatch, so colour is never the only indicator |
 
 The shared `AppFooter` (version label and update notice) uses these tokens; the notice's reload control is a `Button`. Utilities: `.visually-hidden`, `.skip-link`; links can use `ui-button` classes (`a.ui-button`). The task 009 development preview was replaced by the landing page in task 010.
+
+## Game shell (task 012)
+
+`web/src/game/GameShell.tsx` exports the reusable `ResourceBar` (resource-header contract) and `GameView` (heading row, framed stage, optional side column). Architecture, route table and checks are in [task 012](../tasks/012-game-ui-shell.md#result).
 
 ## Accessibility and responsive checks (2026-10-16, dev server, built-in browser)
 

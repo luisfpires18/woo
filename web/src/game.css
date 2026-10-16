@@ -1,0 +1,425 @@
+/* Game shell (task 012). Built on tokens.css: charcoal command bar and navigation in both appearances, ivory or
+   charcoal content from the appearance, kingdom accent only on the marker stripe, current-item bar and stage edge. */
+
+.game {
+  --game-rail-width: 7rem;
+  --game-tabbar-height: 4rem;
+  flex: 1;
+  display: grid;
+  grid-template-columns: var(--game-rail-width) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header header'
+    'nav body';
+}
+
+/* ---- Command bar: the landing navbar at full width with the resource header between brand and account ---- */
+
+.game > .navbar {
+  grid-area: header;
+  border-bottom: 3px solid var(--kingdom-on-nav);
+}
+
+.navbar--wide .navbar__inner {
+  max-width: none;
+  flex-wrap: wrap;
+}
+
+.resources {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.resources__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.resources__slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 2.5rem;
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-2);
+  background: var(--color-nav-surface);
+  border: var(--border-width) solid var(--color-nav-border);
+  border-radius: var(--radius-md);
+}
+
+.resources__slot dt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-nav-text-muted);
+}
+
+.resources__slot dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.resources__capacity {
+  font-size: var(--text-sm);
+  color: var(--color-nav-text-muted);
+}
+
+/* Neutral fallback symbol until admin-uploaded resource images exist. */
+.resources__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  overflow: hidden;
+  border: var(--border-width-strong) dashed var(--color-nav-border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.resources__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resources .preview-tag {
+  color: var(--color-nav-text-muted);
+  border-color: var(--color-nav-border-strong);
+}
+
+/* ---- Navigation rail (bottom tab bar on narrow screens) ---- */
+
+.game-nav {
+  grid-area: nav;
+  background: var(--color-nav-bg);
+  border-right: var(--border-width) solid var(--color-nav-border);
+}
+
+.game-nav__list {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-2);
+  list-style: none;
+}
+
+.game-nav__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 4.75rem;
+  padding: var(--space-2) var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  color: var(--color-nav-text-muted);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--duration-fast),
+    color var(--duration-fast);
+}
+
+.game-nav__link:hover {
+  color: var(--color-nav-text);
+  background: var(--color-nav-surface);
+}
+
+/* Current page: raised plate, visible edge, bold label, forge-lit icon and a marker bar; never colour alone. */
+.game-nav__link[aria-current='page'] {
+  color: var(--color-nav-text);
+  font-weight: var(--weight-bold);
+  background: var(--color-nav-surface);
+  border-color: var(--color-nav-border-strong);
+}
+
+.game-nav__link[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  left: calc(-1 * var(--space-2));
+  width: 4px;
+  background: var(--kingdom-on-nav);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.game-nav__icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.game-nav__link[aria-current='page'] .game-nav__icon {
+  color: var(--banner-ember);
+}
+
+.game-nav__short {
+  display: none;
+}
+
+.game-nav :focus-visible {
+  outline-color: var(--color-nav-focus-ring);
+}
+
+/* ---- Content column ---- */
+
+.game__body {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.game__main {
+  flex: 1;
+}
+
+.game-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: var(--space-5) var(--page-gutter) var(--space-6);
+}
+
+.game-view__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+}
+
+.game-view__header h1 {
+  margin: 0;
+  font-size: var(--text-2xl);
+}
+
+/* Short kingdom-accent rule under the page title (neutral grey without a kingdom). */
+.game-view__header h1::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: var(--space-2);
+  background: var(--kingdom-border);
+}
+
+.game-view__lead {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.game-view__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.game-view__body {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.game-view__body--aside {
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+}
+
+/* Stage: the frame later screens fill with their illustrated scene (settlement, map). Double rule, no texture. */
+.game-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 18rem;
+  aspect-ratio: 16 / 9;
+  padding: var(--space-6) var(--space-5);
+  background: var(--color-surface-sunken);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-top: 4px solid var(--kingdom-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Iron corner fittings: the one medieval ornament, drawn with gradients rather than a texture image. */
+.game-stage::before {
+  --fitting: var(--color-text-muted);
+  --arm: 1.5rem;
+  --bar: 3px;
+  content: '';
+  position: absolute;
+  inset: var(--space-2);
+  pointer-events: none;
+  background:
+    linear-gradient(var(--fitting) 0 0) left top / var(--arm) var(--bar),
+    linear-gradient(var(--fitting) 0 0) left top / var(--bar) var(--arm),
+    linear-gradient(var(--fitting) 0 0) right top / var(--arm) var(--bar),
+    linear-gradient(var(--fitting) 0 0) right top / var(--bar) var(--arm),
+    linear-gradient(var(--fitting) 0 0) left bottom / var(--arm) var(--bar),
+    linear-gradient(var(--fitting) 0 0) left bottom / var(--bar) var(--arm),
+    linear-gradient(var(--fitting) 0 0) right bottom / var(--arm) var(--bar),
+    linear-gradient(var(--fitting) 0 0) right bottom / var(--bar) var(--arm);
+  background-repeat: no-repeat;
+}
+
+.game-stage::after {
+  content: '';
+  position: absolute;
+  inset: var(--space-2);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.game-stage__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 26rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.game-stage__icon svg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.game-stage__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+}
+
+.planned {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.planned li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.planned__task {
+  align-self: flex-start;
+  padding: 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Medium screens: resources get their own row under brand and account; side column moves under the stage ---- */
+
+@media (max-width: 64rem) {
+  .game .resources {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    padding-bottom: var(--space-1);
+  }
+
+  .game-view__body--aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Narrow screens: bottom tab bar within thumb reach, resources as a grid under the brand row ---- */
+
+@media (max-width: 47.99rem) {
+  .game {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'header'
+      'body';
+    padding-bottom: calc(var(--game-tabbar-height) + env(safe-area-inset-bottom));
+  }
+
+  .resources__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .game-nav {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 4;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-right: 0;
+    border-top: var(--border-width) solid var(--color-nav-border-strong);
+  }
+
+  .game-nav__list {
+    position: static;
+    flex-direction: row;
+    gap: var(--space-1);
+    padding: var(--space-1);
+  }
+
+  .game-nav__list li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .game-nav__link {
+    min-height: calc(var(--game-tabbar-height) - 2 * var(--space-1));
+    padding: var(--space-1) 0;
+    font-size: var(--text-xs);
+  }
+
+  .game-nav__link[aria-current='page']::before {
+    top: calc(-1 * var(--space-1));
+    bottom: auto;
+    left: 20%;
+    right: 20%;
+    width: auto;
+    height: 4px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+
+  .game-nav__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .game-nav__label {
+    display: none;
+  }
+
+  .game-nav__short {
+    display: block;
+  }
+
+  .game-stage {
+    aspect-ratio: 4 / 3;
+    min-height: 14rem;
+  }
+}

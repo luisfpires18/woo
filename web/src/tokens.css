@@ -97,6 +97,8 @@
   --color-nav-focus-ring: #8ab4ff;
   --color-nav-action-border: #e0646a;
   --color-nav-avatar-bg: #555a62;
+  --color-nav-text-muted: #c4beb2;
+  --color-nav-surface: #2b2e34; /* raised plate on charcoal: current game-navigation item, resource slots */
 
   --color-action-bg: #b1202a;
   --color-action-bg-hover: #8f1820;
@@ -131,6 +133,8 @@
   --kingdom-text: #454a52;
   --kingdom-tint: #ece5d7;
   --kingdom-border: #6b7079;
+  /* Accent on the charcoal navigation, the same in both appearances because the navigation is always charcoal. */
+  --kingdom-on-nav: #9a9fa6;
 }
 
 /* ---- Dark appearance ---- */
@@ -152,6 +156,8 @@
   --color-nav-focus-ring: #8ab4ff;
   --color-nav-action-border: #e0646a;
   --color-nav-avatar-bg: #555a62;
+  --color-nav-text-muted: #bcb6aa;
+  --color-nav-surface: #1d2025;
 
   --color-action-bg: #b8262f;
   --color-action-bg-hover: #cf3a42;
@@ -189,6 +195,7 @@
 
 /* ---- Kingdom accents: light ---- */
 [data-kingdom='arkazia'] {
+  --kingdom-on-nav: #e0646a;
   --kingdom-primary: #9e1b24;
   --kingdom-on-primary: #ffffff;
   --kingdom-primary-hover: #7f141c;
@@ -198,6 +205,7 @@
   --kingdom-border: #9e1b24;
 }
 [data-kingdom='veridor'] {
+  --kingdom-on-nav: #7fa9e3;
   --kingdom-primary: #1f4f8f;
   --kingdom-on-primary: #ffffff;
   --kingdom-primary-hover: #183e72;
@@ -207,6 +215,7 @@
   --kingdom-border: #1f4f8f;
 }
 [data-kingdom='sylvara'] {
+  --kingdom-on-nav: #62b97e;
   --kingdom-primary: #22623a;
   --kingdom-on-primary: #ffffff;
   --kingdom-primary-hover: #1a4d2d;
