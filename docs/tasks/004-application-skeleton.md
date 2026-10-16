@@ -1,7 +1,7 @@
 # 004: Create skeleton and run the first page
 
 Task key: SKELETON
-Status: WIP
+Status: DONE
 Updated: 2026-10-15
 Milestone: Foundation
 Dependencies: STACK
@@ -52,15 +52,15 @@ On the owner's second computer (2026-10-15), the pinned toolchain was installed 
 
 Task-spec commit: 588c5a09ab7ecce6aa596d79e63579345897c3ea (issue [#3](https://github.com/luisfpires18/woo/issues/3) dispatch)
 Expected dev base: 588c5a09ab7ecce6aa596d79e63579345897c3ea (verified equal to local dev and origin/dev, 2026-10-15)
-Implementation branch: feat/004-application-skeleton (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Implementation branch: feat/004-application-skeleton
+Implementation commit: 77e206cd47f5a444485ac0dfb3aba194ad059d7f
+Review: APPROVED by ChatGPT, 2026-10-15
+Merged dev commit: 77e206cd47f5a444485ac0dfb3aba194ad059d7f (remote dev; documentation CI succeeded)
 Deployment: Not applicable to this task (deployment is DEV-DEPLOY)
 Issues: browser checks covered the Vite proxy (HTTP 502) failure path; the timeout and network-error messages were not exercised in a browser.
 
 ## TLDR
 
-Next: ChatGPT review of the local commit.
-Done: solution, server, tests and web page created; locked restore, builds, tests, publish and browser checks run locally.
+Next: none; VERSION (005) builds on this skeleton.
+Done: approved and merged to dev at 77e206c with documentation CI passing.
 Issues: see execution record.

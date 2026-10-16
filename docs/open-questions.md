@@ -42,7 +42,7 @@ Current LP AI WORK file and exact sources for requested Claude tools; actual loc
 
 Early skeleton, page, version and deployment tasks do not require every medieval mechanic decided. Resolve a task's own blockers before dispatch; UI mocks are explicit until persistence exists. SQLite local/dev is settled, PostgreSQL production is deferred.
 
-New task-level decisions: release version increment policy/shared metadata; image revision/cache headers; DDD boundary depth; World membership cardinality and kingdom switching; actual Azure SQLite file/journal/backup compatibility. These are tracked by relevant detail files in the expanded queue.
+New task-level decisions: image revision/cache headers (app release versioning, shared build metadata and app asset cache headers were settled by task 005, see [versioning](technical/versioning-and-cache.md#version-bump-policy)); DDD boundary depth; World membership cardinality and kingdom switching; actual Azure SQLite file/journal/backup compatibility. These are tracked by relevant detail files in the expanded queue.
 
 ## Map and resource scope clarification
 

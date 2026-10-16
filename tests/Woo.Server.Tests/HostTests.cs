@@ -11,46 +11,98 @@ public sealed class HostTests : IClassFixture<HostTests.SpaFactory>
 
     public HostTests(SpaFactory factory) => _client = factory.CreateClient();
 
+    private static CancellationToken Ct => TestContext.Current.CancellationToken;
+
     [Fact]
     public async Task Health_returns_ok_json()
     {
-        var response = await _client.GetAsync("/api/health", TestContext.Current.CancellationToken);
+        var response = await _client.GetAsync("/api/health", Ct);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var body = await response.Content.ReadFromJsonAsync<HealthBody>(TestContext.Current.CancellationToken);
+        var body = await response.Content.ReadFromJsonAsync<HealthBody>(Ct);
         Assert.Equal("ok", body?.Status);
+    }
+
+    [Fact]
+    public async Task Build_identity_uses_VERSION_and_honest_local_fallback()
+    {
+        var response = await _client.GetAsync("/api/build", Ct);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("no-store", response.Headers.CacheControl?.ToString());
+        var body = await response.Content.ReadFromJsonAsync<BuildIdentity>(Ct);
+        // Tests run on a standalone build: version from VERSION, environment local, nothing invented.
+        Assert.Equal(new BuildIdentity(ReadVersionFile(), "", "", "local"), body);
     }
 
     [Theory]
     [InlineData("/api/does-not-exist")]
     [InlineData("/api/health/extra")]
+    [InlineData("/api/build/extra")]
     public async Task Unknown_api_route_is_404_problem_not_spa_html(string path)
     {
-        var response = await _client.GetAsync(path, TestContext.Current.CancellationToken);
+        var response = await _client.GetAsync(path, Ct);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Fact]
-    public async Task Client_route_falls_back_to_index_html()
+    [Theory]
+    [InlineData("/some/client/route")]
+    [InlineData("/index.html")]
+    public async Task Entry_html_is_served_and_must_revalidate(string path)
     {
-        var response = await _client.GetAsync("/some/client/route", TestContext.Current.CancellationToken);
+        var response = await _client.GetAsync(path, Ct);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("text/html", response.Content.Headers.ContentType?.MediaType);
-        Assert.Contains(SpaFactory.Marker, await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Contains(SpaFactory.Marker, await response.Content.ReadAsStringAsync(Ct));
+        Assert.Equal("no-cache", response.Headers.CacheControl?.ToString());
+    }
+
+    [Fact]
+    public async Task Hashed_assets_are_immutable()
+    {
+        var response = await _client.GetAsync("/assets/index-AbCd1234.js", Ct);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("public, max-age=31536000, immutable", response.Headers.CacheControl?.ToString());
+    }
+
+    [Fact]
+    public async Task Unversioned_files_are_not_immutable()
+    {
+        var response = await _client.GetAsync("/robots.txt", Ct);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("no-cache", response.Headers.CacheControl?.ToString());
+    }
+
+    private static string ReadVersionFile()
+    {
+        for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)
+        {
+            var path = Path.Combine(dir.FullName, "VERSION");
+            if (File.Exists(path)) return File.ReadAllText(path).Trim();
+        }
+        throw new FileNotFoundException("VERSION not found above the test output folder.");
     }
 
     private sealed record HealthBody(string Status);
 
-    // Stands in for the published wwwroot with a temporary index.html.
+    // Stands in for the published wwwroot: entry page, one hashed asset, one unversioned file.
     public sealed class SpaFactory : WebApplicationFactory<Program>
     {
         public const string Marker = "<!-- woo-test-index -->";
         private readonly string _webRoot = Directory.CreateTempSubdirectory("woo-webroot-").FullName;
 
-        public SpaFactory() => File.WriteAllText(Path.Combine(_webRoot, "index.html"), Marker);
+        public SpaFactory()
+        {
+            File.WriteAllText(Path.Combine(_webRoot, "index.html"), Marker);
+            File.WriteAllText(Path.Combine(_webRoot, "robots.txt"), "User-agent: *");
+            Directory.CreateDirectory(Path.Combine(_webRoot, "assets"));
+            File.WriteAllText(Path.Combine(_webRoot, "assets", "index-AbCd1234.js"), "// hashed");
+        }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.UseWebRoot(_webRoot);
 

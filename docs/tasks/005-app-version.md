@@ -1,8 +1,8 @@
 # 005: App version footer and build identity
 
 Task key: VERSION
-Status: TODO
-Updated: 2026-10-05
+Status: WIP
+Updated: 2026-10-16
 Milestone: Foundation
 Dependencies: SKELETON
 
@@ -28,19 +28,23 @@ A separately reviewable planning task. ChatGPT inspects current code and resolve
 
 Run proportionate checks against acceptance criteria, including relevant failure/retry scenarios. Report actual local evidence. ChatGPT checks remote merge/deployment where applicable. Content/images follow admin configuration and cleanup rules; new mechanics remain code changes.
 
+## Result
+
+Implemented as recorded in [versioning and cache](../technical/versioning-and-cache.md#implementation-task-005), following the [stack contract](../technical/stack.md#build-identity-contract-001-dev): root `VERSION` (`0.0.1-dev`), coordinated `node scripts/build.mjs`, `GET /api/build`, the reusable `AppFooter` with the update notice, explicit cache headers and the [bump policy](../technical/versioning-and-cache.md#version-bump-policy). Commands are in the [README](../../README.md#run-locally). No CI, deployment, accounts, database, gameplay, PixiJS or image revision work.
+
 ## Execution record
 
-Task-spec commit: Not dispatched
-Expected dev base: Not dispatched
-Implementation branch: Not created
-Implementation commit: None
-Review: Pending
+Task-spec commit: 77e206cd47f5a444485ac0dfb3aba194ad059d7f (issue [#4](https://github.com/luisfpires18/woo/issues/4) dispatch)
+Expected dev base: 77e206cd47f5a444485ac0dfb3aba194ad059d7f (verified equal to local dev and origin/dev, 2026-10-16)
+Implementation branch: feat/005-app-version (local only)
+Implementation commit: local commit on that branch; SHA given in the implementation report
+Review: Pending ChatGPT review
 Merged dev commit: None
-Deployment: Not started; applicability defined in prompt
-Issues: Relevant decisions and implementation details must be resolved before dispatch.
+Deployment: Not applicable to this task (deployment is DEV-DEPLOY)
+Issues: no frontend unit-test runner exists, so footer/notice logic was verified in the browser, not by automated tests. Tab-visibility re-checks were triggered by dispatching the browser event, not by switching real tabs.
 
 ## TLDR
 
-Next: prepare when prerequisites are ready.
-Done: task recorded, no implementation.
-Issues: acceptance checks not yet run.
+Next: ChatGPT review of the local commit.
+Done: VERSION file, coordinated build, build-identity API, footer, update notice, cache headers and bump policy, with host tests and browser checks.
+Issues: see execution record.

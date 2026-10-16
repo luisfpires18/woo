@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { AppFooter } from './AppFooter'
 
 type Health =
   | { state: 'loading' }
@@ -48,31 +49,34 @@ export function App() {
   }, [attempt])
 
   return (
-    <main>
-      <h1>Weapons of Order</h1>
-      <p>Development skeleton. No game features are available yet.</p>
+    <>
+      <main>
+        <h1>Weapons of Order</h1>
+        <p>Development skeleton. No game features are available yet.</p>
 
-      <section aria-labelledby="health-heading" className="panel">
-        <h2 id="health-heading">Server status</h2>
-        <div role="status" aria-live="polite" aria-busy={health.state === 'loading'}>
-          {health.state === 'loading' && <p>Checking the server…</p>}
-          {health.state === 'ok' && (
-            <p className="ok">
-              Server reachable. Health: <strong>{health.status}</strong>
-            </p>
-          )}
+        <section aria-labelledby="health-heading" className="panel">
+          <h2 id="health-heading">Server status</h2>
+          <div role="status" aria-live="polite" aria-busy={health.state === 'loading'}>
+            {health.state === 'loading' && <p>Checking the server…</p>}
+            {health.state === 'ok' && (
+              <p className="ok">
+                Server reachable. Health: <strong>{health.status}</strong>
+              </p>
+            )}
+            {health.state === 'error' && (
+              <p className="error">
+                Server unavailable. {health.reason}
+              </p>
+            )}
+          </div>
           {health.state === 'error' && (
-            <p className="error">
-              Server unavailable. {health.reason}
-            </p>
+            <button type="button" onClick={retry}>
+              Try again
+            </button>
           )}
-        </div>
-        {health.state === 'error' && (
-          <button type="button" onClick={retry}>
-            Try again
-          </button>
-        )}
-      </section>
-    </main>
+        </section>
+      </main>
+      <AppFooter />
+    </>
   )
 }

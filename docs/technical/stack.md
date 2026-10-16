@@ -89,6 +89,7 @@ woo/
   .config/dotnet-tools.json     when a .NET tool is first needed
   Woo.slnx *                    .NET 10 SDK default solution format
   VERSION v                     release version source (see below)
+  scripts/build.mjs v           coordinated build and publish entry point
   src/
     Woo.Server/ *               ASP.NET Core host: endpoints, modules, EF Core, SPA serving
     Woo.Domain/                 created with the first real game rules (not in SKELETON)
@@ -143,15 +144,15 @@ Verification gates that stay open:
 
 ## Build identity contract (0.0.1-dev)
 
-Proposal. Responsibilities: SKELETON delivers the minimal page and the `/api/health` seam only. VERSION implements everything below: the `VERSION` file and its consumption, coordinated build metadata, the build-identity response and the shared footer.
+Implemented by task 005 VERSION (see [versioning and cache](versioning-and-cache.md#implementation-task-005) for routes, headers and the bump policy). SKELETON delivered the minimal page and `/api/health`; VERSION added the `VERSION` file, `scripts/build.mjs`, `GET /api/build` and the shared footer.
 
 - Release version source: a root `VERSION` file whose only content is the release version, initially `0.0.1-dev` (SemVer 2.0 pre-release). No other copy is typed by hand.
 - Fields: `version` (from `VERSION`), `commit` (full 40-character Git SHA), `builtAt` (UTC ISO 8601), `environment` (`dev`; `production` later; `local` for development).
 - Coordinated build: one build entry point (the CI job, or a single local build command added by VERSION) reads `VERSION`, captures `commit` and `builtAt` exactly once, and passes those same values to both the web build and the server publish. Neither build reads Git or the clock on its own when values are supplied, so a deployed page and API carry identical metadata by construction.
 - Separate builds never claim shared identity: a web or server build run on its own does not generate its own timestamp or commit and present it as the coordinated build's metadata.
 - Local development fallback (`npm run dev`, `dotnet run`, IDE builds): `version` still comes from `VERSION`, `environment` is `local`, and `commit` and `builtAt` are empty rather than invented. The footer then reads `0.0.1-dev (local)`. Commit comparison only runs when both sides carry coordinated metadata.
-- The server returns the fields from a build-identity response (exact route chosen in VERSION). The web build embeds the same values. The footer shows the version plus the short commit; a commit mismatch between page and API means a stale client.
-- The app version is independent of dependency versions and of image revisions. Documentation-only commits do not bump it. Increment policy is decided in VERSION.
+- The server returns the fields from a build-identity response (`GET /api/build`). The web build embeds the same values. The footer shows the version plus the short commit; a commit mismatch between page and API means a stale client.
+- The app version is independent of dependency versions and of image revisions. Documentation-only commits do not bump it. Increment policy: [bump policy](versioning-and-cache.md#version-bump-policy).
 
 ## Rendering
 

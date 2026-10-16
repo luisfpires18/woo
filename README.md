@@ -18,7 +18,7 @@ GitHub's repository default branch may still be master; explicitly select dev to
 
 ## Run locally
 
-Status: task 004 SKELETON, a minimal page plus `/api/health`; no game features. Versions and layout follow [the stack record](docs/technical/stack.md).
+Status: tasks 004 SKELETON and 005 VERSION: a minimal page, `/api/health`, `/api/build` and a version footer; no game features. Versions and layout follow [the stack record](docs/technical/stack.md).
 
 Prerequisites: .NET SDK 10.0.402 and Node.js 24.22.0 (npm 11.19.1) on `PATH`. `global.json` refuses any other SDK and `web/.npmrc` enforces the Node version. A side-by-side install can be put first on `PATH` for one Git Bash session, for example:
 
@@ -62,13 +62,21 @@ dotnet run --project src/Woo.Server --launch-profile http
 npm --prefix web run dev
 ```
 
-Publish the single-origin application (React build served by ASP.NET Core). Build `web/` first; publish fails if `web/dist` is missing.
+Standalone builds and hot reload report the local fallback: `/api/build` returns version `0.0.1-dev`, environment `local` and empty commit/build time, and the footer reads `0.0.1-dev (local)`.
+
+Coordinated build and publish (the single-origin app, React build served by ASP.NET Core). It requires committed tracked files, reads `VERSION`, captures the full commit and UTC build time once and passes the same values to the web build (`artifacts/web`) and the server publish (`artifacts/publish`). The footer then shows the version and short commit. `--environment` accepts `local` (default), `dev` or `production`.
+
+```bash
+node scripts/build.mjs
+```
+
+A standalone publish (local fallback metadata) needs `npm --prefix web run build` first and fails if `web/dist` is missing:
 
 ```bash
 dotnet publish src/Woo.Server -c Release -o artifacts/publish
 ```
 
-Run the published output from its own folder (it is the content root that holds `wwwroot`) and open http://localhost:5090:
+Run the published output from its own folder (it is the content root that holds `wwwroot`) and open http://localhost:5090; `curl http://localhost:5090/api/build` shows the build identity:
 
 ```bash
 cd artifacts/publish && ASPNETCORE_URLS=http://localhost:5090 dotnet Woo.Server.dll

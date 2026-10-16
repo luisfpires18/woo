@@ -2,11 +2,22 @@
 
   <PropertyGroup>
     <WebDist>$(MSBuildThisFileDirectory)..\..\web\dist\</WebDist>
+    <WooVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\..\VERSION').Trim())</WooVersion>
+    <!-- Coordinated builds (scripts/build.mjs) pass WooCommit, WooBuiltAt and WooEnvironment.
+         Standalone builds keep the honest local fallback: empty commit and build time. -->
+    <WooEnvironment Condition="'$(WooEnvironment)' == ''">local</WooEnvironment>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="WooVersion" Value="$(WooVersion)" />
+    <AssemblyMetadata Include="WooCommit" Value="$(WooCommit)" />
+    <AssemblyMetadata Include="WooBuiltAt" Value="$(WooBuiltAt)" />
+    <AssemblyMetadata Include="WooEnvironment" Value="$(WooEnvironment)" />
+  </ItemGroup>
 
   <!-- Publish ships the Vite production build as wwwroot. Build web/ first (see README). -->
   <Target Name="IncludeWebDist" BeforeTargets="ComputeFilesToPublish">
-    <Error Condition="!Exists('$(WebDist)index.html')" Text="web/dist/index.html is missing. Run 'npm --prefix web ci' and 'npm --prefix web run build' before publishing." />
+    <Error Condition="!Exists('$(WebDist)index.html')" Text="$(WebDist)index.html is missing. Run 'npm --prefix web ci' and 'npm --prefix web run build' before publishing, or use 'node scripts/build.mjs'." />
     <ItemGroup>
       <WebDistFile Include="$(WebDist)**\*" />
       <ResolvedFileToPublish Include="@(WebDistFile->'%(FullPath)')">
