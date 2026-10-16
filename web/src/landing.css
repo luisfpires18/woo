@@ -1,0 +1,519 @@
+/* Landing page (task 010). Built on tokens.css; no colour or size literals outside the banner placeholder. */
+
+/* ---- Navbar: dark charcoal in both appearances ---- */
+
+.navbar {
+  background: var(--color-nav-bg);
+  color: var(--color-nav-text);
+  border-bottom: var(--border-width) solid var(--color-nav-border);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  max-width: var(--content-max);
+  min-height: 3.75rem;
+  margin: 0 auto;
+  padding: var(--space-2) var(--page-gutter);
+}
+
+.navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--control-height);
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.navbar__anvil {
+  display: inline-flex;
+  color: var(--banner-ember);
+}
+
+.navbar__anvil svg {
+  width: 2.25rem;
+  height: auto;
+}
+
+.navbar__wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+}
+
+.navbar .ui-button--primary {
+  border-color: var(--color-nav-action-border);
+}
+
+/* Focus ring stays visible on the charcoal bar in both appearances. */
+.navbar :focus-visible {
+  outline-color: var(--color-nav-focus-ring);
+}
+
+/* ---- Account menu ---- */
+
+.account-menu {
+  position: relative;
+}
+
+.account-menu__button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-height);
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  color: var(--color-nav-text);
+  background: transparent;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.account-menu__button:hover,
+.account-menu__button[aria-expanded='true'] {
+  border-color: var(--color-nav-border-strong);
+}
+
+.account-menu__avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-nav-text);
+  background: var(--color-nav-avatar-bg);
+}
+
+.account-menu__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-menu__name {
+  font-weight: var(--weight-semibold);
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-menu__list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  z-index: 5;
+  min-width: 13rem;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+}
+
+.account-menu__list[hidden] {
+  display: none;
+}
+
+.account-menu__list li + li:last-child {
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.account-menu__list a,
+.account-menu__list button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.account-menu__list a:hover,
+.account-menu__list button:hover,
+.account-menu__list a:focus-visible,
+.account-menu__list button:focus-visible {
+  background: var(--color-surface-sunken);
+}
+
+.account-menu__list :focus-visible {
+  outline-color: var(--color-focus-ring);
+  outline-offset: -3px;
+}
+
+/* ---- Banner (placeholder scene; identical in both appearances) ---- */
+
+.banner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: var(--banner-height);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    var(--banner-art) center / cover no-repeat,
+    radial-gradient(ellipse 60% 70% at 50% 45%, transparent 35%, rgb(0 0 0 / 0.55)),
+    radial-gradient(ellipse 55% 40% at 50% 112%, color-mix(in srgb, var(--banner-lava) 55%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--banner-stone-light), var(--banner-stone) 75%);
+  border-bottom: var(--border-width) solid var(--color-nav-border);
+}
+
+/* Faint masonry joints; kept very subtle so the scene reads as stone, not a grid. */
+.banner__scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 38px, rgb(0 0 0 / 0.12) 38px 40px),
+    repeating-linear-gradient(90deg, transparent 0 86px, rgb(0 0 0 / 0.08) 86px 88px);
+  mask-image: linear-gradient(180deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.35));
+}
+
+/* Forge mouth (left), cool rune light (right) and lava floor: soft light, no hard shapes. */
+.banner__glow {
+  position: absolute;
+  inset: 0;
+  animation: banner-flicker var(--duration-slow) ease-in-out infinite alternate;
+}
+
+.banner__glow--left {
+  background: radial-gradient(ellipse 13% 30% at 16% 52%, var(--banner-ember), color-mix(in srgb, var(--banner-lava) 70%, transparent) 35%, transparent 100%);
+}
+
+.banner__glow--right {
+  background: radial-gradient(ellipse 12% 28% at 85% 50%, color-mix(in srgb, var(--banner-rune-light) 55%, transparent), transparent 100%);
+  animation-delay: -3s;
+}
+
+.banner__lava {
+  position: absolute;
+  inset: auto 0 0;
+  height: 26%;
+  background:
+    radial-gradient(ellipse 22% 55% at 20% 100%, color-mix(in srgb, var(--banner-lava) 80%, transparent), transparent 75%),
+    radial-gradient(ellipse 24% 60% at 80% 100%, color-mix(in srgb, var(--banner-lava) 70%, transparent), transparent 75%),
+    radial-gradient(ellipse 34% 50% at 50% 115%, var(--banner-ember), transparent 75%);
+  opacity: 0.8;
+}
+
+@keyframes banner-flicker {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner__glow {
+    animation: none;
+  }
+}
+
+.banner__content {
+  padding: var(--space-5) var(--page-gutter);
+  text-align: center;
+}
+
+.banner__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--banner-title);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-shadow:
+    0 2px 0 var(--banner-title-shadow),
+    0 0 24px color-mix(in srgb, var(--banner-lava) 55%, transparent);
+}
+
+.banner__title-main {
+  font-size: clamp(2.25rem, 1.4rem + 5vw, 5rem);
+}
+
+.banner__title-of {
+  margin: var(--space-1) 0;
+  font-size: clamp(0.875rem, 0.7rem + 1vw, 1.375rem);
+  letter-spacing: 0.4em;
+}
+
+.banner__note {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--banner-title);
+  opacity: 0.85;
+  text-shadow: 0 1px 2px var(--banner-title-shadow);
+}
+
+/* ---- Landing content ---- */
+
+.landing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--page-gutter) var(--space-7);
+}
+
+.landing__headline {
+  margin: 0;
+  font-size: var(--text-3xl);
+}
+
+.landing__tagline {
+  margin-top: var(--space-2);
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.features__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: var(--weight-medium);
+}
+
+.features__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--color-action-border);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* ---- Metrics ---- */
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.metrics__list {
+  flex: 1 1 28rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+}
+
+.metrics__item {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  text-align: center;
+}
+
+.metrics__item + .metrics__item {
+  border-left: var(--border-width) solid var(--color-border);
+}
+
+.metrics__item dt {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.metrics__item dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+}
+
+.preview-tag {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Worlds ---- */
+
+.worlds {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.worlds__header h2 {
+  margin: 0;
+}
+
+.worlds__lead {
+  margin-top: var(--space-1);
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+.worlds__note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.worlds__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.world-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-4) var(--space-5);
+  height: 100%;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.world-card__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.world-card__heading h3 {
+  margin: 0;
+}
+
+.world-card__status {
+  padding: 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.world-card__meta {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.world-card__kingdoms {
+  padding-left: var(--space-5);
+  border-left: var(--border-width) solid var(--color-border);
+}
+
+.world-card__kingdoms-title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.world-card__kingdoms ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.world-card__action {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* ---- Narrow screens ---- */
+
+@media (max-width: 40rem) {
+  .metrics__list {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics__item {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-2) 0;
+  }
+
+  .metrics__item + .metrics__item {
+    border-left: 0;
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .world-card {
+    grid-template-columns: 1fr;
+  }
+
+  .world-card__kingdoms {
+    padding: var(--space-4) 0 0;
+    border-left: 0;
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .world-card__kingdoms ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .account-menu__name {
+    max-width: 7rem;
+  }
+}

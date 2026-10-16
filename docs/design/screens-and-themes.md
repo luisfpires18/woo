@@ -39,3 +39,6 @@ Use settlement/settlements in player-facing labels going forward. Public player 
 
 ## Design system foundation, 2026-10-16
 Task 009 implements the shared tokens, independent appearance and kingdom accents, and reusable primitives; see [design system foundation](design-system.md). Exact shades there are a first proposal for owner review.
+
+## Landing implementation, 2026-10-16
+Task 010 implements the approved landing structure with a placeholder banner, preview-only world data and separate (not yet available) Login/Settings/Profile paths; decisions and differences from the screenshots are recorded in [task 010](../tasks/010-landing-page.md).

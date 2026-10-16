@@ -56,6 +56,19 @@
 
   /* Motion. */
   --duration-fast: 120ms;
+  --duration-slow: 6s;
+
+  /* Title banner: artwork colours are identical in light and dark appearance (never darkened for dark mode).
+     --banner-art is 'none' until the approved banner asset exists; then it becomes url(...). */
+  --banner-art: none;
+  --banner-stone: #1b1714;
+  --banner-stone-light: #3a302a;
+  --banner-lava: #ff6a1a;
+  --banner-ember: #ffb347;
+  --banner-rune-light: #3fb7c9;
+  --banner-title: #f3e3c3;
+  --banner-title-shadow: #1a0f08;
+  --banner-height: clamp(13rem, 9rem + 18vw, 24rem);
 
   /* ---- Light appearance (default) ---- */
   color-scheme: light;
@@ -71,6 +84,10 @@
   --color-nav-bg: #1e2024;
   --color-nav-text: #f3efe6;
   --color-nav-border: #33363c;
+  --color-nav-border-strong: #6b7079;
+  --color-nav-focus-ring: #8ab4ff;
+  --color-nav-action-border: #e0646a;
+  --color-nav-avatar-bg: #555a62;
 
   --color-action-bg: #b1202a;
   --color-action-bg-hover: #8f1820;
@@ -122,6 +139,10 @@
   --color-nav-bg: #0c0d10;
   --color-nav-text: #ece7dd;
   --color-nav-border: #2a2e35;
+  --color-nav-border-strong: #6b7079;
+  --color-nav-focus-ring: #8ab4ff;
+  --color-nav-action-border: #e0646a;
+  --color-nav-avatar-bg: #555a62;
 
   --color-action-bg: #b8262f;
   --color-action-bg-hover: #cf3a42;
@@ -221,5 +242,6 @@
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-fast: 0ms;
+    --duration-slow: 0ms;
   }
 }

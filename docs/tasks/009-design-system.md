@@ -1,7 +1,7 @@
 # 009: Shared UI foundations, themes and kingdom colours
 
 Task key: DESIGN-SYSTEM
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: UI
 Dependencies: DEV-DEPLOY
@@ -42,15 +42,15 @@ Token/theme contract, primitives, accessibility checks and open visual decisions
 
 Task-spec commit: 44d63f440a26f64d99422bce4611730d5844acbf (owner dispatch, 2026-10-16)
 Expected dev base: 44d63f440a26f64d99422bce4611730d5844acbf (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/009-design-system (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
-Deployment: Deploys through DEV-DEPLOY after integration; not yet run
+Implementation branch: feat/009-design-system
+Implementation commit: ed1f3c2975e2041dc7375f1ae900e2d797bce121
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: ed1f3c2975e2041dc7375f1ae900e2d797bce121 (remote dev head, verified 2026-10-16; documentation CI succeeded)
+Deployment: run [38900180639](https://github.com/luisfpires18/woo/actions/runs/38900180639) on dev at ed1f3c2: `build-test` and `deploy-dev` succeeded, including live Azure verification of the exact tested artifact
 Issues: contrast and keyboard/form/narrow-layout checks ran in the built-in browser against the dev server; no automated frontend test exists. Exact shades remain owner-adjustable (see open decisions).
 
 ## TLDR
 
-Next: ChatGPT review of the local commit.
-Done: design tokens, independent appearance and kingdom theming, shared primitives, footer on tokens, accessibility checks.
-Issues: see execution record.
+Next: none; LANDING (010) builds on these tokens and primitives.
+Done: approved, merged at ed1f3c2 and deployed in run 38900180639.
+Issues: see execution record and the open visual decisions in the design system record.

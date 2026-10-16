@@ -1,6 +1,6 @@
 # Design system foundation
 
-Updated: 2026-10-16. Status: task 009 DESIGN-SYSTEM implementation, pending review. Applies the confirmed direction in [screens and themes](screens-and-themes.md); exact shades below are the first implemented proposal, open to owner adjustment.
+Updated: 2026-10-16. Status: task 009 DESIGN-SYSTEM, approved and merged (ed1f3c2); extended by task 010 LANDING. Applies the confirmed direction in [screens and themes](screens-and-themes.md); exact shades below are the first implemented proposal, open to owner adjustment.
 
 ## Theme contract
 
@@ -22,9 +22,10 @@ There is no Settings page yet: a later task stores the player's explicit choice 
 - Sizing: `--control-height` 44px (minimum touch target for buttons and inputs), `--content-max` 72rem, `--content-narrow` 40rem.
 - Shape: `--radius-sm|md|lg|pill`, `--border-width`, `--border-width-strong`.
 - Surfaces and text: `--color-canvas` (warm ivory / charcoal page), `--color-surface`, `--color-surface-raised`, `--color-surface-sunken`, `--color-text`, `--color-text-muted`, `--color-text-inverse`, `--color-border` (decorative), `--color-border-strong` (control boundaries).
-- Navigation: `--color-nav-bg` (dark charcoal in both appearances), `--color-nav-text`, `--color-nav-border`, ready for the game shell (task 011).
+- Navigation: `--color-nav-bg` (dark charcoal in both appearances), `--color-nav-text`, `--color-nav-border`, `--color-nav-border-strong`, `--color-nav-focus-ring`, `--color-nav-action-border` (3:1 edge for crimson actions on charcoal), `--color-nav-avatar-bg`; used by the landing navbar and ready for the game shell (task 011).
+- Title banner (task 010): `--banner-art` (`none` until the approved asset exists), `--banner-stone`, `--banner-stone-light`, `--banner-lava`, `--banner-ember`, `--banner-rune-light`, `--banner-title`, `--banner-title-shadow`, `--banner-height`; identical in both appearances.
 - States: `--color-disabled-*`, `--color-focus-ring` (blue, distinct from crimson), `--focus-ring-width`, `--focus-ring-offset`.
-- Elevation: `--shadow-1`, `--shadow-2`. Motion: `--duration-fast` (0 with `prefers-reduced-motion`).
+- Elevation: `--shadow-1`, `--shadow-2`. Motion: `--duration-fast`, `--duration-slow` (both 0 with `prefers-reduced-motion`).
 - Kingdom accent (per appearance): `--kingdom-primary`, `--kingdom-on-primary`, `--kingdom-primary-hover`, `--kingdom-secondary` (Arkazia black, Veridor silver, Sylvara gold), `--kingdom-text` (accent text on surfaces), `--kingdom-tint` (subtle accent surface), `--kingdom-border`.
 
 Artwork is never filtered or darkened for dark appearance; the same images are used in both.
@@ -41,7 +42,7 @@ Artwork is never filtered or darkened for dark appearance; the same images are u
 | `StatusMessage` | Success / warning / error / note with colour, icon and a text label |
 | `KingdomBadge` | Kingdom ownership marker: name text plus a two-colour swatch, so colour is never the only indicator |
 
-The shared `AppFooter` (version label and update notice) uses these tokens; the notice's reload control is a `Button`.
+The shared `AppFooter` (version label and update notice) uses these tokens; the notice's reload control is a `Button`. Utilities: `.visually-hidden`, `.skip-link`; links can use `ui-button` classes (`a.ui-button`). The task 009 development preview was replaced by the landing page in task 010.
 
 ## Accessibility and responsive checks (2026-10-16, dev server, built-in browser)
 

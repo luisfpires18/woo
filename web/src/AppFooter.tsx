@@ -40,12 +40,15 @@ export function AppFooter() {
           </div>
         )}
       </div>
-      <p>
-        Weapons of Order{' '}
-        <span className="app-footer__version" title={pageBuild.builtAt ? `Built ${pageBuild.builtAt}` : undefined}>
-          {buildLabel(pageBuild)}
-        </span>
-      </p>
+      <div className="app-footer__row">
+        <p className="app-footer__name">Weapons of Order</p>
+        <p>
+          <span className="visually-hidden">Version </span>
+          <span className="app-footer__version" title={pageBuild.builtAt ? `Built ${pageBuild.builtAt}` : undefined}>
+            {buildLabel(pageBuild)}
+          </span>
+        </p>
+      </div>
     </footer>
   )
 }
