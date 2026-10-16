@@ -25,7 +25,9 @@
       <WebDistFile Include="$(WebDist)**\*" />
       <ResolvedFileToPublish Include="@(WebDistFile->'%(FullPath)')">
         <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <!-- Always: an older web build must overwrite a newer one already in the output folder,
+             or index.html and the manifest from a previous (e.g. coordinated) publish would survive. -->
+        <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>

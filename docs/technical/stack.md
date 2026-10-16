@@ -65,6 +65,10 @@ Checked 2026-10-15 on nuget.org and the xUnit.net documentation (via Context7, `
 
 Not added: ESLint/typescript-eslint, a frontend test runner, an OpenAPI generator and PixiJS. Each arrives with the task that needs it.
 
+### Selected by BUILD-CI (task 006)
+
+GitHub Actions used by `app-ci.yml`, checked 2026-10-16 against each repository's latest release: `actions/checkout@v7` (v7.0.1), `actions/setup-dotnet@v6` (v6.0.0), `actions/setup-node@v7` (v7.1.0). Major-version tags follow the existing `docs-check.yml` convention. Runtime versions are not set in the workflow; the actions read `global.json` and `.node-version`. Sources: <https://github.com/actions/checkout/releases>, <https://github.com/actions/setup-dotnet/releases>, <https://github.com/actions/setup-node/releases>.
+
 Sources: <https://api.nuget.org/v3-flatcontainer/xunit.v3.mtp-v2/index.json>, <https://api.nuget.org/v3-flatcontainer/microsoft.aspnetcore.mvc.testing/index.json>, <https://xunit.net/docs/getting-started/v3/microsoft-testing-platform>.
 
 ## Pinning and lockfiles

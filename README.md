@@ -82,4 +82,17 @@ Run the published output from its own folder (it is the content root that holds 
 cd artifacts/publish && ASPNETCORE_URLS=http://localhost:5090 dotnet Woo.Server.dll
 ```
 
+Verify a coordinated publish the same way CI does (starts the published app on http://127.0.0.1:5099, checks identity and cache headers, then stops it):
+
+```bash
+node scripts/verify-build.mjs
+```
+
 Generated output (`bin/`, `obj/`, `web/node_modules/`, `web/dist/`, `artifacts/`) and local runtime files are ignored by Git.
+
+## Continuous integration
+
+GitHub Actions runs two workflows on pushes to `dev` and `master`, pull requests targeting them, and manual dispatch:
+
+- `docs-check.yml`: `python scripts/check_docs.py`.
+- `app-ci.yml`: locked restores, web typecheck and build, .NET build, host tests, `node scripts/build.mjs` and `node scripts/verify-build.mjs`, with the SDK and Node versions taken from `global.json` and `.node-version`. Read-only permissions, no secrets and no deployment.

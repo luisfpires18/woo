@@ -1,0 +1,53 @@
+name: Application build and tests
+on:
+  push:
+    branches: [dev, master]
+  pull_request:
+    branches: [dev, master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: app-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_NOLOGO: '1'
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # Versions come from the repository pins: global.json (SDK 10.0.402) and .node-version (24.22.0, npm 11.19.1).
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Show toolchain
+        run: |
+          dotnet --version
+          node --version
+          npm --version
+      - name: Restore web dependencies (locked)
+        run: npm --prefix web ci
+      - name: Restore .NET dependencies (locked)
+        run: dotnet restore Woo.slnx --locked-mode
+      - name: Typecheck and build web (standalone)
+        run: npm --prefix web run build
+      - name: Build .NET
+        run: dotnet build Woo.slnx --no-restore -c Release
+      - name: Host tests
+        run: dotnet test --solution Woo.slnx --no-build -c Release
+      - name: Coordinated build and publish
+        run: node scripts/build.mjs
+      - name: Verify published build identity and cache headers
+        run: node scripts/verify-build.mjs

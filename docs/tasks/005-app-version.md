@@ -1,7 +1,7 @@
 # 005: App version footer and build identity
 
 Task key: VERSION
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: Foundation
 Dependencies: SKELETON
@@ -36,15 +36,15 @@ Implemented as recorded in [versioning and cache](../technical/versioning-and-ca
 
 Task-spec commit: 77e206cd47f5a444485ac0dfb3aba194ad059d7f (issue [#4](https://github.com/luisfpires18/woo/issues/4) dispatch)
 Expected dev base: 77e206cd47f5a444485ac0dfb3aba194ad059d7f (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/005-app-version (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Implementation branch: feat/005-app-version
+Implementation commit: b312e9d7b1a7654f59af71d7aeda29140a944686, review fixes dc407cf325170ccee6fea19fab73ce15d42e06e9
+Review: APPROVED by ChatGPT, 2026-10-16 (dc407cf named as the integration target)
+Merged dev commit: dc407cf325170ccee6fea19fab73ce15d42e06e9 (remote dev head, verified 2026-10-16 with `git fetch`; documentation CI run [38878504707](https://github.com/luisfpires18/woo/actions/runs/38878504707) succeeded on that push, the only CI that existed then)
 Deployment: Not applicable to this task (deployment is DEV-DEPLOY)
 Issues: no frontend unit-test runner exists, so footer/notice logic was verified in the browser, not by automated tests. Tab-visibility re-checks were triggered by dispatching the browser event, not by switching real tabs. Cancellation of overlapping checks was reviewed in code but not reproduced with a deliberately slow response. Review fixes (2026-10-16): manifest-based immutable caching, latest-state update notice, no SDK commit stamp in standalone DLLs.
 
 ## TLDR
 
-Next: ChatGPT review of the local commit.
-Done: VERSION file, coordinated build, build-identity API, footer, update notice, cache headers and bump policy, with host tests and browser checks.
+Next: none; BUILD-CI (006) verifies the coordinated build in CI.
+Done: approved and merged to dev at dc407cf with documentation CI passing.
 Issues: see execution record.

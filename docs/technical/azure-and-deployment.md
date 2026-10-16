@@ -26,7 +26,7 @@ SQLite is the confirmed local/dev database. Establish its durable file location 
 
 ## Actions plan
 
-The repository now has executable documentation/task validation CI on dev/master pushes and pull requests. Application build/test and dev deployment Actions will be added in tasks AZURE-SETUP and DEV-DEPLOY once the code layout, runtime, subscription/resources and authentication are known. This is intentionally not a dummy deployment workflow that claims success without deploying.
+The repository has documentation/task validation CI and, since task 006 BUILD-CI, application build/test CI (`app-ci.yml`) on dev/master pushes and pull requests; it needs no Azure credentials. Dev deployment Actions will be added in AZURE-SETUP and DEV-DEPLOY once subscription/resources and authentication are known, and must deploy only commits that passed the application build/test checks. This is intentionally not a dummy deployment workflow that claims success without deploying.
 
 Dev deploy should build/test an exact dev revision, authenticate with Azure using a selected mechanism (OIDC preferred subject to support), deploy that artifact to the named dev app and check a health endpoint. Do not deploy PR branches or arbitrary refs. Define environment-level configuration, migration handling, serial deployment and failure reporting. Docs-only changes need not redeploy the app once path filtering is defined.
 
