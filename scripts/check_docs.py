@@ -31,13 +31,14 @@ for expected, (number, key, title, status, target) in enumerate(rows, 1):
     keys.add(key)
     if status not in {"TODO", "WIP", "DONE"}:
         errors.append(f"{key}: invalid status {status}")
-    active += status == "WIP"
     path = ROOT / target
     referenced.add(path.resolve())
     if not path.is_file():
         errors.append(f"{key}: missing detail {target}")
         continue
     text = path.read_text(encoding="utf-8")
+    # A dispatched task paused for an inserted task stays WIP (with a "Paused: ..." line) but is not active.
+    active += status == "WIP" and not re.search(r"^Paused: ", text, re.M)
     if not path.name.startswith(number + "-") or not text.startswith(f"# {number}: "):
         errors.append(f"{key}: detail number mismatch")
     if f"Task key: {key}\n" not in text or f"Status: {status}\n" not in text:
@@ -46,7 +47,7 @@ for expected, (number, key, title, status, target) in enumerate(rows, 1):
     if not match:
         errors.append(f"{key}: dependencies missing")
 if active > 1:
-    errors.append("Only one WIP task is permitted")
+    errors.append("Only one active (not paused) WIP task is permitted")
 for path in (ROOT / "docs/tasks").glob("[0-9][0-9][0-9]-*.md"):
     if path.resolve() not in referenced:
         errors.append(f"Unregistered detail: {path.relative_to(ROOT)}")

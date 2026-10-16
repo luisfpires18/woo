@@ -1,7 +1,8 @@
 # 012: Game UI structure and navigation polish
 
 Task key: GAME-SHELL
-Status: TODO
+Status: WIP
+Paused: 2026-10-16, pending 011 LEGACY-TITLE (issue #65)
 Updated: 2026-10-16
 Milestone: UI
 Dependencies: LANDING
@@ -35,14 +36,14 @@ Run proportionate checks against acceptance criteria, including relevant failure
 
 ## Execution record
 
-Task-spec commit: Not dispatched
-Expected dev base: Not dispatched
-Implementation branch: Not created
-Implementation commit: None
-Review: Pending
+Task-spec commit: 006be69e689180703c9acd3d826aab4476801d22, dispatched 2026-10-16 as task 011
+Expected dev base: 006be69e689180703c9acd3d826aab4476801d22
+Implementation branch: feat/011-game-shell (local only, preserved unchanged)
+Implementation commit: d4f4bbe7f827aae208f611c514bcf7d84d84fd8a
+Review: Pending ChatGPT review; currently paused for LEGACY-TITLE
 Merged dev commit: None
-Deployment: Not started; applicability defined in prompt
-Issues: Relevant decisions and implementation details must be resolved before dispatch.
+Deployment: Not started; GAME-SHELL must first be rebased onto the integrated LEGACY-TITLE result before review/integration
+Issues: the historical branch name keeps 011; the task is now 012 after the LEGACY-TITLE insertion (see dispatch history).
 
 ## TLDR
 

@@ -29,7 +29,7 @@ Owner-requested intervening migration, issue [#65](https://github.com/luisfpires
 
 ## Result
 
-### Provenance (old repository `luisfpires18/weapons-of-order`, main at f74ce3cb1b9b8c332812b89cd27e8bbaa6c7a210, read 2026-10-16)
+### Provenance (old repository `luisfpires18/weapons-of-order`, master at f74ce3cb1b9b8c332812b89cd27e8bbaa6c7a210, read 2026-10-16)
 
 | Old source | Used as | Notes |
 |---|---|---|
