@@ -1,7 +1,7 @@
 # 007: Azure dev provisioning through step-by-step commands
 
 Task key: AZURE-SETUP
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: Deployment
 Dependencies: BUILD-CI
@@ -81,15 +81,15 @@ Provisioning, each verified before the next:
 
 Task-spec commit: 0e69cada041971b634e735824544ea0fa60cd7e7 (owner dispatch, 2026-10-16)
 Expected dev base: 0e69cada041971b634e735824544ea0fa60cd7e7 (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/007-azure-dev-setup (local only; documentation of the provisioning)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
+Implementation branch: feat/007-azure-dev-setup (documentation of the provisioning)
+Implementation commit: dbb07cf17be0deffc3620212a5b475aa038d7486
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: dbb07cf17be0deffc3620212a5b475aa038d7486 (remote dev head, verified 2026-10-16). "Documentation and task checks" run [38889440668](https://github.com/luisfpires18/woo/actions/runs/38889440668) succeeded; in "Application build and tests" run [38889440627](https://github.com/luisfpires18/woo/actions/runs/38889440627) the `build-test` job concluded success with every step passing, while GitHub still listed the overall run as in progress when checked.
 Deployment: Not applicable (provisioning only; nothing deployed; the app serves the platform placeholder page)
-Issues: F1 quota numbers not read (needs `Microsoft.Quota` registration); ARM index shows the plan as `U13`/`LinuxFree`; spending limit off. GitHub environment and variables not created.
+Issues: F1 quota numbers not read (needs `Microsoft.Quota` registration); ARM index shows the plan as `U13`/`LinuxFree`; spending limit off. GitHub environment and variables are created by the owner for DEV-DEPLOY (task 008).
 
 ## TLDR
 
-Next: ChatGPT review of the provisioning evidence; then DEV-DEPLOY when dispatched.
-Done: rg-woo-dev, Linux F1 plan-woo-dev, app-woo-dev-lfp18 (.NET 10) and an app-scoped OIDC deployment identity in West Europe, at €0.
+Next: none; DEV-DEPLOY (008) deploys to these resources.
+Done: approved and merged at dbb07cf; West Europe F1 dev app and app-scoped OIDC identity provisioned at €0.
 Issues: see execution record.

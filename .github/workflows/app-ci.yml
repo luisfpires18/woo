@@ -19,6 +19,9 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # dev pushes and manual runs on dev build the dev deployment artifact; everything else stays local.
+      WOO_BUILD_ENVIRONMENT: ${{ github.ref == 'refs/heads/dev' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'dev' || 'local' }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -49,9 +52,109 @@ jobs:
         run: dotnet build Woo.slnx --no-restore -c Release
       - name: Host tests
         run: dotnet test --solution Woo.slnx --no-build -c Release
-      - name: Coordinated build and publish
-        run: node scripts/build.mjs
+      - name: Coordinated build and publish (${{ env.WOO_BUILD_ENVIRONMENT }})
+        run: node scripts/build.mjs --environment "$WOO_BUILD_ENVIRONMENT"
       - name: Verify published build identity and cache headers
-        run: node scripts/verify-build.mjs
+        run: node scripts/verify-build.mjs --environment "$WOO_BUILD_ENVIRONMENT"
+      # The exact folder verified above is the deployment artifact; nothing is rebuilt for deployment.
+      - name: Upload tested dev artifact
+        if: env.WOO_BUILD_ENVIRONMENT == 'dev'
+        uses: actions/upload-artifact@v7
+        with:
+          name: woo-dev-${{ github.sha }}
+          path: artifacts/publish/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
       - name: Standalone publish over a coordinated publish leaves no stale web files
         run: node scripts/check-stale-publish.mjs
+
+  deploy-dev:
+    needs: build-test
+    if: github.ref == 'refs/heads/dev' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: dev
+      url: https://app-woo-dev-lfp18.azurewebsites.net
+    permissions:
+      contents: read
+      id-token: write
+    # One deployment at a time. A newer waiting deployment replaces an older waiting one; a running one finishes.
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: false
+    env:
+      AZURE_RESOURCE_GROUP: rg-woo-dev
+      AZURE_WEBAPP: app-woo-dev-lfp18
+      APP_URL: https://app-woo-dev-lfp18.azurewebsites.net
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Skip if dev has moved on
+        id: head
+        run: |
+          head=$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/dev | cut -f1)
+          if [ "$head" = "$GITHUB_SHA" ]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::dev is now at $head; not deploying the older $GITHUB_SHA over it."
+          fi
+      - name: Check deployment variables
+        if: steps.head.outputs.current == 'true'
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          missing=""
+          for name in AZURE_CLIENT_ID AZURE_TENANT_ID AZURE_SUBSCRIPTION_ID; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::GitHub environment 'dev' is missing variables:$missing"
+            exit 1
+          fi
+      - uses: actions/setup-node@v7
+        if: steps.head.outputs.current == 'true'
+        with:
+          node-version-file: .node-version
+      - name: Download tested artifact
+        if: steps.head.outputs.current == 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: woo-dev-${{ github.sha }}
+          path: artifacts/publish
+      - name: Azure login (OIDC)
+        if: steps.head.outputs.current == 'true'
+        uses: azure/login@v3
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Set startup command
+        if: steps.head.outputs.current == 'true'
+        run: az webapp config set --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_WEBAPP" --startup-file "dotnet Woo.Server.dll" --output none
+      - name: Deploy tested artifact
+        if: steps.head.outputs.current == 'true'
+        run: |
+          (cd artifacts/publish && zip -qr "$RUNNER_TEMP/woo-dev.zip" .)
+          az webapp deploy --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_WEBAPP" \
+            --src-path "$RUNNER_TEMP/woo-dev.zip" --type zip --clean true --restart true \
+            --track-status false --timeout 900000
+      # Waits with bounded backoff for the F1 cold start/restart, then checks identity, page and file bytes.
+      - name: Verify deployment
+        if: steps.head.outputs.current == 'true'
+        run: node scripts/verify-build.mjs --url "$APP_URL" --environment dev --max-wait 300
+      - name: Deployment summary
+        if: steps.head.outputs.current == 'true'
+        run: |
+          {
+            echo "### Deployed to dev"
+            echo "- URL: $APP_URL"
+            echo "- Version: $(cat VERSION)"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Build identity: $(curl -fsS --max-time 30 "$APP_URL/api/build")"
+          } >> "$GITHUB_STEP_SUMMARY"

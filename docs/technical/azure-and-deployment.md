@@ -60,3 +60,7 @@ Created 2026-10-16 in subscription "Azure for Students" (`7e1071a1-f3bb-4cda-9d0
 - `id-woo-dev-deploy`: user-assigned managed identity for GitHub Actions OIDC. Its single federated credential trusts only jobs in the `dev` GitHub environment of `luisfpires18/woo` (ID-based subject `repo:luisfpires18@29492601/woo@1405763514:environment:dev`), and its single role is `Website Contributor` on `app-woo-dev-lfp18`. It cannot create resources, change the plan's tier or reach other resource groups. No client secret or publish profile exists.
 - Cost: €0. The subscription's spending limit is `Off` (pay-as-you-go behaviour), so any future paid tier (for example B1) would be billed immediately; it requires an explicit owner decision with the expected cost.
 - Not provisioned: database, storage for SQLite, Application Insights, production resources, R2 changes, deployment workflow.
+
+## Dev deployment (task 008)
+
+`app-ci.yml` job `deploy-dev` deploys only from `dev`, after `build-test` passes in the same run, using the artifact that run verified (no rebuild). It signs in with `id-woo-dev-deploy` through GitHub OIDC in environment `dev`, sets the startup command `dotnet Woo.Server.dll`, runs `az webapp deploy --type zip --clean true --restart true`, and verifies `/api/health`, the page, `/api/build` and byte-identical files with bounded cold-start backoff. Details, recovery and the owner's GitHub setup: [task 008](../tasks/008-dev-deployment.md).

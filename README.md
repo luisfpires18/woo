@@ -82,7 +82,7 @@ Run the published output from its own folder (it is the content root that holds 
 cd artifacts/publish && ASPNETCORE_URLS=http://localhost:5090 dotnet Woo.Server.dll
 ```
 
-Verify a coordinated publish the same way CI does (starts the published app on http://127.0.0.1:5099, checks identity and cache headers, then stops it):
+Verify a coordinated publish the same way CI does (starts the published app on http://127.0.0.1:5099, checks identity and cache headers, then stops it). Add `--url <base URL>` to check a running deployment of `artifacts/publish` instead, including byte-identical files:
 
 ```bash
 node scripts/verify-build.mjs
@@ -95,4 +95,4 @@ Generated output (`bin/`, `obj/`, `web/node_modules/`, `web/dist/`, `artifacts/`
 GitHub Actions runs two workflows on pushes to `dev` and `master`, pull requests targeting them, and manual dispatch:
 
 - `docs-check.yml`: `python scripts/check_docs.py`.
-- `app-ci.yml`: locked restores, web typecheck and build, .NET build, host tests, `node scripts/build.mjs`, `node scripts/verify-build.mjs` and the stale-publish regression `node scripts/check-stale-publish.mjs`, with the SDK and Node versions taken from `global.json` and `.node-version`. Read-only permissions, no secrets and no deployment. Pull request runs cancel older runs of the same pull request; push runs are never cancelled.
+- `app-ci.yml`: locked restores, web typecheck and build, .NET build, host tests, `node scripts/build.mjs`, `node scripts/verify-build.mjs` and the stale-publish regression `node scripts/check-stale-publish.mjs`, with the SDK and Node versions taken from `global.json` and `.node-version`. Pull request runs cancel older runs of the same pull request; push runs are never cancelled. On `dev` pushes and manual runs on `dev` the build uses environment `dev`, the verified `artifacts/publish` folder is uploaded, and job `deploy-dev` deploys exactly that artifact to https://app-woo-dev-lfp18.azurewebsites.net through GitHub OIDC (environment `dev`, `contents: read` and `id-token: write` only, no secrets) and verifies it with `node scripts/verify-build.mjs --url ... --environment dev`. `master` and pull requests never deploy.
