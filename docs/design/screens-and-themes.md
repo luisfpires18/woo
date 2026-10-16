@@ -48,3 +48,6 @@ Issue #65 (task 011 LEGACY-TITLE) restores the full-screen forge/cavern title fr
 
 ## Game shell implementation, 2026-10-16
 Task 012 adds the game shell under `/game/`: a charcoal command bar with a preview resource header, a left navigation rail that becomes a bottom tab bar on phones, and placeholder Settlement, Kingdom Map, Forge, Army and Kingdom Duties views with a framed stage for later scenes. Resource types stay undecided (numbered preview slots); kingdom accents appear only through a labelled dev fixture. It sits alongside the title screen at `/` and the main page at `/worlds`. See [task 012](../tasks/012-game-ui-shell.md#result).
+
+## Settlement scene prototype, 2026-10-16
+Task 013 replaces the empty Settlement stage with a PixiJS scene drawn from prototype geometry (no approved village art exists yet): terrain, river and bridge, plots, a forge with two visual stages, two other placeholder buildings, a tree and wall/corner/gate/tower pieces, with a React building list and inspector. Scene colours are identical in light and dark UI. See [task 013](../tasks/013-village-ui.md#result).

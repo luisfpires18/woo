@@ -6,6 +6,7 @@ import { followLink } from '../routing'
 import { kingdoms } from '../theme'
 import { Panel } from '../ui'
 import { previewResourceSlots, type ResourceSlot } from './previewData'
+import { SettlementView } from './SettlementView'
 import { findGameView, gameViews, defaultGamePath, type GameView as View } from './views'
 
 /**
@@ -30,6 +31,13 @@ export function GameShell({ pathname }: { pathname: string }) {
     headingRef.current?.focus()
   }, [view])
 
+  const tags = (
+    <>
+      <span className="preview-tag">Layout prototype · nothing is saved</span>
+      {kingdom && <span className="preview-tag">Accent preview: {kingdoms.find((k) => k.id === kingdom)?.name}</span>}
+    </>
+  )
+
   return (
     <div className="game" data-kingdom={kingdom ?? undefined}>
       <a className="skip-link" href="#main">
@@ -41,21 +49,14 @@ export function GameShell({ pathname }: { pathname: string }) {
       <GameNav current={view} />
       <div className="game__body">
         <main id="main" tabIndex={-1} className="game__main">
-          {view ? (
+          {view?.id === 'settlement' ? (
+            <SettlementView headingRef={headingRef} tags={tags} />
+          ) : view ? (
             <GameView
               title={view.label}
               lead={view.lead}
               headingRef={headingRef}
-              tags={
-                <>
-                  <span className="preview-tag">Layout prototype · nothing is saved</span>
-                  {kingdom && (
-                    <span className="preview-tag">
-                      Accent preview: {kingdoms.find((k) => k.id === kingdom)?.name}
-                    </span>
-                  )}
-                </>
-              }
+              tags={tags}
               stage={<StagePlaceholder view={view} />}
               aside={<PlannedPanel view={view} />}
             />
@@ -153,6 +154,8 @@ export function GameView(props: {
   headingRef?: Ref<HTMLHeadingElement>
   tags?: ReactNode
   stage: ReactNode
+  /** Extra class for the stage frame (e.g. a full-bleed scene). */
+  stageClassName?: string
   aside?: ReactNode
 }) {
   const id = useId()
@@ -168,7 +171,7 @@ export function GameView(props: {
         {props.tags && <p className="game-view__tags">{props.tags}</p>}
       </header>
       <div className={props.aside ? 'game-view__body game-view__body--aside' : 'game-view__body'}>
-        <section className="game-stage" aria-labelledby={`${id}-stage`}>
+        <section className={props.stageClassName ? `game-stage ${props.stageClassName}` : 'game-stage'} aria-labelledby={`${id}-stage`}>
           <h2 id={`${id}-stage`} className="visually-hidden">
             {props.title} main area
           </h2>

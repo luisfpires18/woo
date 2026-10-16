@@ -20,7 +20,8 @@ Checked 2026-10-15 against the sources listed at the end. "Selected" means the e
 | TypeScript | 6.0.3 | Latest 6.x; 6.0 is the maintained JS-API line beside 7.0 | See [TypeScript 6 versus 7](#typescript-6-versus-7) |
 | Vite | 8.3.4 | Current stable (`latest`, 2026-10-08) | Dev server with `/api` proxy and hashed production build |
 | `@vitejs/plugin-react` | 6.1.2 | Current; peers `vite` ^8.0.0 | Official React plugin for Vite 8 |
-| PixiJS | `pixi.js` 8.22.0 | Current v8 stable (2026-10-01) | Matches the installed v8 PixiJS skills; added only by a scene task that needs it |
+| PixiJS | `pixi.js` 8.22.0 | Current v8 stable (2026-10-01) | Matches the installed v8 PixiJS skills; installed by task 013 VILLAGE-UI, loaded only on the Settlement screen |
+| Scene camera | `pixi-viewport` 6.0.3 | Current (`latest`, 2024-11-27); peers `pixi.js` >=8 | Task 013: bounded drag/pinch/wheel camera with a drag threshold and a `clicked` event in world coordinates |
 
 Not selected here: test frameworks, linters, the OpenAPI-to-TypeScript generator, Identity packages and the R2/S3 client. Each is chosen by the task that first needs it (SKELETON, BUILD-CI, IDENTITY, R2-CONFIG) under the same pinning rules, and must target the lines above.
 
@@ -64,6 +65,8 @@ Checked 2026-10-15 on nuget.org and the xUnit.net documentation (via Context7, `
 | Test runner | Microsoft Testing Platform, set in `global.json` `test.runner` | Required for `dotnet test` with MTP on the .NET 10 SDK; no VSTest packages (`Microsoft.NET.Test.Sdk`, `xunit.runner.visualstudio`) |
 
 Not added: ESLint/typescript-eslint, a frontend test runner, an OpenAPI generator and PixiJS. Each arrives with the task that needs it.
+
+Task 013 (2026-10-16) added `pixi.js` 8.22.0 and `pixi-viewport` 6.0.3. `@pixi/react` was not added: its latest release (8.0.5, 2025-12-01) pins `react-reconciler` 0.31.0, which targets React 19.0, while WOO runs React 19.3.1 (matching reconciler 0.34). A version-mismatched reconciler is a known source of breakage, and the scene is data-driven, so a small direct wrapper (`web/src/scenes/settlement/SettlementRenderer.ts`) is simpler. Revisit if a release built for React 19.3 appears and declarative scene components become useful.
 
 ### Selected by BUILD-CI (task 006)
 

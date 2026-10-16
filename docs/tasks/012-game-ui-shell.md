@@ -1,7 +1,7 @@
 # 012: Game UI structure and navigation polish
 
 Task key: GAME-SHELL
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: UI
 Dependencies: LANDING
@@ -114,14 +114,14 @@ Visual changes from the integration: none inside the shell. Its brand now opens 
 Task-spec commit: 006be69e689180703c9acd3d826aab4476801d22, dispatched 2026-10-16 as task 011; resumed 2026-10-16 as task 012
 Expected dev base: 2e295cfaacf4f56e22f8f9b51590bdeb8c935c52 (resumption; verified equal to origin/dev, 2026-10-16). Original base 006be69e689180703c9acd3d826aab4476801d22
 Implementation branch: feat/011-game-shell (local only; historical name kept)
-Implementation commit: original d4f4bbe7f827aae208f611c514bcf7d84d84fd8a; rebased commit SHA given in the resumption report
-Review: Pending ChatGPT review
-Merged dev commit: None
-Deployment: Deploys through DEV-DEPLOY after integration; not yet run
+Implementation commit: original d4f4bbe7f827aae208f611c514bcf7d84d84fd8a; resumed 8a743e4dbe00ab8568c51b84d5f1ce27105c4c39
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: 8a743e4dbe00ab8568c51b84d5f1ce27105c4c39
+Deployment: deployed to dev through DEV-DEPLOY; the owner reported the deployment of 8a743e4 as successful (2026-10-16)
 Issues: the historical branch name keeps 011; the task is now 012 after the LEGACY-TITLE insertion (see dispatch history). The frontend/design/accessibility skills in the inventory are not installed on this computer. No automated frontend tests.
 
 ## TLDR
 
-Next: ChatGPT review of the resumed commit and the screenshots in screenshots/012/.
-Done: game shell rebased onto the LEGACY-TITLE result; routes `/`, `/worlds` and `/game/*` coexist; full validation rerun.
+Next: none; VILLAGE-UI (013) fills the Settlement view.
+Done: approved, merged and deployed at 8a743e4.
 Issues: see unresolved visual decisions.

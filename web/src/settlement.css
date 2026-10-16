@@ -1,0 +1,241 @@
+/* Settlement screen (task 013). The scene itself has fixed colours (identical in light and dark appearance); the
+   controls, list and inspector around it follow the UI theme. */
+
+.game-stage--scene {
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #2b3320;
+}
+
+/* The dashed placeholder frame is for empty stages only; the iron corner fittings stay above the canvas. */
+.game-stage--scene::after {
+  display: none;
+}
+
+.game-stage--scene::before {
+  z-index: 2;
+  --fitting: #e8dcc0;
+  opacity: 0.75;
+}
+
+.settlement-stage,
+.settlement-stage__canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.settlement-stage__canvas {
+  touch-action: none;
+  cursor: grab;
+}
+
+.settlement-stage__canvas:active {
+  cursor: grabbing;
+}
+
+.settlement-stage__canvas canvas {
+  display: block;
+}
+
+.settlement-stage__note {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Fixed dark chip: it sits on the scene, not on a themed surface. */
+.settlement-stage__note .preview-tag {
+  color: #f6f2ea;
+  background: rgb(30 32 36 / 0.85);
+  border-color: #c4beb2;
+}
+
+.settlement-stage__status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  text-align: center;
+  font-weight: var(--weight-semibold);
+  color: #f6f2ea;
+}
+
+.settlement-stage__status--failed {
+  background: #2b3320;
+}
+
+.settlement-stage__controls {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 3;
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Charcoal camera buttons in both appearances (they sit on the scene). */
+.scene-control {
+  min-width: var(--control-height);
+  min-height: var(--control-height);
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-nav-text);
+  background: rgb(30 32 36 / 0.9);
+  border: var(--border-width) solid var(--color-nav-border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.scene-control--wide {
+  font-size: var(--text-sm);
+}
+
+.scene-control:hover {
+  background: var(--color-nav-bg);
+}
+
+.scene-control:focus-visible {
+  outline-color: var(--color-nav-focus-ring);
+}
+
+/* ---- Building list ---- */
+
+.building-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.building-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.building-list__item:hover {
+  background: var(--color-surface-sunken);
+}
+
+/* Selected: thicker edge, bold name and a check mark, not colour alone. */
+.building-list__item[aria-pressed='true'] {
+  border: var(--border-width-strong) solid var(--color-text);
+  background: var(--color-surface-sunken);
+}
+
+.building-list__item[aria-pressed='true'] .building-list__name {
+  font-weight: var(--weight-bold);
+}
+
+.building-list__item[aria-pressed='true'] .building-list__name::before {
+  content: '✓ ';
+}
+
+.building-list__name {
+  font-weight: var(--weight-semibold);
+}
+
+.building-list__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---- Inspector ---- */
+
+.inspector__empty,
+.inspector__hint {
+  color: var(--color-text-muted);
+}
+
+.inspector__hint {
+  font-size: var(--text-sm);
+}
+
+.inspector__facts {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.inspector__facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.inspector__facts dt {
+  color: var(--color-text-muted);
+}
+
+.inspector__facts dd {
+  margin: 0;
+  font-weight: var(--weight-semibold);
+  text-align: right;
+}
+
+.inspector__upgrade h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.inspector__upgrade ul {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-5);
+}
+
+.inspector__stages {
+  margin: 0;
+  padding: var(--space-3);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.inspector__stages legend {
+  padding: 0 var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.game-view__aside:has(.building-list) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+@media (max-width: 47.99rem) {
+  .game-stage--scene {
+    aspect-ratio: 4 / 5;
+  }
+
+  .settlement-stage__controls {
+    right: var(--space-3);
+    bottom: var(--space-3);
+  }
+
+  .settlement-stage__note {
+    top: var(--space-3);
+    left: var(--space-3);
+  }
+}

@@ -20,3 +20,8 @@ export function kingdomFixture(): Kingdom | null {
   const value = new URLSearchParams(window.location.search).get('kingdom')
   return kingdoms.find((k) => k.id === value)?.id ?? null
 }
+
+/** `?scene=fail` on the Vite dev server simulates a renderer that cannot start, to check the Settlement fallback. */
+export function sceneFailureFixture(): boolean {
+  return import.meta.env.DEV && new URLSearchParams(window.location.search).get('scene') === 'fail'
+}

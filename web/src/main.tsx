@@ -7,6 +7,7 @@ import './styles.css'
 import './landing.css'
 import './title.css'
 import './game.css'
+import './settlement.css'
 
 // Follow the operating system until a Settings page stores an explicit light/dark choice.
 applyAppearance('system')

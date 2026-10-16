@@ -26,7 +26,9 @@
 }
 
 .resources {
-  flex: 1 1 auto;
+  /* Shrinks and wraps its own slots, so a scrollbar never pushes the account control onto a second row. */
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
