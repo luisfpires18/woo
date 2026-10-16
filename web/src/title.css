@@ -1,0 +1,132 @@
+/* Title screen (issue #65): a faithful port of the legacy weapons-of-order title. Values come from the legacy theme
+   through the --title-* tokens; the artwork and colours are identical in light and dark appearance. */
+
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('./assets/fonts/cinzel-latin-variable.woff2') format('woff2');
+}
+
+.title-screen {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--title-void);
+  color: var(--title-bone);
+}
+
+.title-screen__art {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+/* Legacy scrim: darker at the top behind the wordmark, lighter over the forge floor. */
+.title-screen__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--title-void) 70%, transparent) 0%,
+    color-mix(in srgb, var(--title-void) 30%, transparent) 60%,
+    color-mix(in srgb, var(--title-void) 30%, transparent) 100%
+  );
+}
+
+.title-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  /* The legacy menu had a second row (SETTINGS, 1.5 line + 1.5rem gap). Reserving that height keeps the wordmark and
+     ENTER WORLD where they were, clear of the anvil and rune stones in the artwork. */
+  padding: var(--space-6) var(--space-4) calc(var(--space-6) + var(--text-title-menu) * 1.5 + var(--space-5));
+}
+
+/* ---- Wordmark: WEAPONS / — OF — / ORDER ---- */
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: var(--weight-bold);
+  color: var(--title-bone);
+  user-select: none;
+}
+
+/* Tracking is per line so 0.06em resolves against that line's size; the negative margin removes the trailing
+   letter-space so each line centres optically. */
+.wordmark__line {
+  font-size: var(--text-title);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  margin-right: -0.06em;
+}
+
+.wordmark__line--of {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-right: 0;
+  font-size: calc(var(--text-title) * 0.55);
+}
+
+.wordmark__of {
+  margin-right: -0.06em;
+}
+
+.wordmark__rule {
+  width: 1.5em;
+  height: 2px;
+  background: var(--title-ember);
+}
+
+/* ---- Menu: one centred text action ---- */
+
+.title-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.title-menu__item {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height);
+  padding: 0 var(--space-2);
+  font-family: var(--font-title);
+  font-size: var(--text-title-menu);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.1em;
+  color: var(--title-bone);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.title-menu__item:hover,
+.title-menu__item:focus {
+  color: var(--title-ember);
+}
+
+.title-menu__item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--title-ember);
+  outline-offset: 6px;
+}

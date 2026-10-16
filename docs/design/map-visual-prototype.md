@@ -2,7 +2,7 @@
 Updated: 2026-10-05. Status: proposed implementation plan; no code or production assets.
 
 ## Purpose and boundaries
-Prove a convincing interactive world map and a square-based authoring workflow in the dedicated MAP-UI (013) task. This guide does not implement village interiors or resource landscapes. Resource names, counts, production fields and screen layout are undecided.
+Prove a convincing interactive world map and a square-based authoring workflow in the dedicated MAP-UI (014) task. This guide does not implement village interiors or resource landscapes. Resource names, counts, production fields and screen layout are undecided.
 
 Confirmed constraints: kingdom ownership, admin image slots/fallbacks, safe cleanup, dark/light UI, restrained textures and owner-managed Git image uploads. RPG-Maker-like square painting is a candidate editing approach, not a confirmed movement grid. The latest map preview awaits visual approval; its names, geography and numbers are illustrative.
 
@@ -26,7 +26,7 @@ Use synthetic geography containing a coast, river bend and explicit crossing, fo
 | 9 | Measure loading, frame behaviour and texture memory; review approach | Named devices, agreed budgets, defects and owner visual verdict |
 | 10 | Later integrate protected drafts, publication and world state | DISTRICTS owns saved map configuration; matching revisions and safe live-edit policy |
 
-013 owns steps 1–9 with local fixtures only. It does not depend on Identity, SQLite or R2. Step 10 is separate from village HOTSPOTS. Refine/split its map task before implementation if needed; no automatic successor work.
+014 owns steps 1–9 with local fixtures only. It does not depend on Identity, SQLite or R2. Step 10 is separate from village HOTSPOTS. Refine/split its map task before implementation if needed; no automatic successor work.
 
 ## Success and fallback
 The grid can be hidden without making the map confusing. Connected terrain looks coherent at actual scale; ownership and markers change independently. Picking survives camera transforms. Multi-cell props and two-chunk boundaries work at fractional zoom. An exported fixture reloads consistently.

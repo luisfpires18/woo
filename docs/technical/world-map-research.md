@@ -2,7 +2,7 @@
 Updated: 2026-10-05. Status: researched proposal, not implemented or benchmarked.
 
 ## Owner direction and hard boundaries
-The owner wants a convincing cel-shaded world map with an RPG-Maker-like square authoring workflow and independently uploaded transparent assets. The map has its own task: MAP-UI (013). Village interiors belong to VILLAGE-UI/HOTSPOTS; resource types and resource presentation remain undefined. Do not invent a resource catalogue, production fields or a Travian resource ring.
+The owner wants a convincing cel-shaded world map with an RPG-Maker-like square authoring workflow and independently uploaded transparent assets. The map has its own task: MAP-UI (014). Village interiors belong to VILLAGE-UI/HOTSPOTS; resource types and resource presentation remain undefined. Do not invent a resource catalogue, production fields or a Travian resource ring.
 
 Square painting is a candidate editor interaction, not an accepted gameplay topology. A paint cell, render tile, streaming chunk, political district and settlement location are different entities. No one-village-per-square or diagonal-travel rule is implied.
 
@@ -76,7 +76,7 @@ A district travel graph may coexist with square authoring; ROUTES decides author
 7. Render the same fixture in the player view, grid hidden, with accessible location selection and ownership overlays.
 8. Compare the tile and illustration approaches with the same geometry, zoom and marker density; record defects and art effort.
 
-No authenticated draft storage or R2 uploads in 013. Saved map editing/publication belongs to DISTRICTS (044), independently of village HOTSPOTS (034). Refine or split 044 into whole-number tasks before dispatch if its implementation becomes too large.
+No authenticated draft storage or R2 uploads in 014. Saved map editing/publication belongs to DISTRICTS (045), independently of village HOTSPOTS (035). Refine or split 045 into whole-number tasks before dispatch if its implementation becomes too large.
 
 ## Import contract and traps
 If Tiled is used, define a deliberately small supported subset: one chosen orientation, selected layer types, documented custom properties and known tilesets. Handle or reject external tilesets, compressed/encoded layer data, layer offsets, tile transforms and object alignment. Infinite maps can include negative coordinates and chunks. Preserve stable WOO IDs separately from Tiled tile IDs and object-export details.

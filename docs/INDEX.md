@@ -72,6 +72,7 @@ Read latest repository documents, update the relevant topic, record decision cha
 - [Implementation prompt protocol](workflow/implementation-protocol.md)
 - [Skills/plugin and MCP inventory](workflow/skills-and-plugins.md)
 - [Task 002 MCP-SETUP](tasks/002-mcp-setup.md)
+- [Task 011 LEGACY-TITLE](tasks/011-legacy-title-screen.md) (issue #65: legacy title screen, then gated old-staging Azure retirement)
 - [Azure and deployment](technical/azure-and-deployment.md)
 
 Current working specification is on dev. Explicitly read dev rather than assuming the repository default. Individual task specifications are linked from tasks_roadmap.md.

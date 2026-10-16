@@ -4,7 +4,7 @@ Updated: 2026-10-05. Status: researched guidance; owner-confirmed static v1 pres
 ## Scope
 V1 shows a battalion board and final result. No animation, replay, event timeline or narrated combat log is required. Earlier animated-replay recommendations are deferred. Warfare, conquest and powerful armies remain the central experience.
 
-014 proves local board/result presentation. 049 defines and validates numbers. 050 commits authoritative outcomes. 051 displays authorised final results. Map, village and resources are independent. Exact slots, stances, targeting, timing, casualty categories and faction rosters remain open.
+015 proves local board/result presentation. 050 defines and validates numbers. 051 commits authoritative outcomes. 052 displays authorised final results. Map, village and resources are independent. Exact slots, stances, targeting, timing, casualty categories and faction rosters remain open.
 
 ## Static board implementation
 React/CSS is the first choice: a responsive grid of formation slots, battalion cards and a result panel. Use stable IDs, accessible selection/buttons and optional placement controls. A backdrop and transparent static unit icons can preserve the illustrated style. There is no need for a canvas, physics engine or spritesheet pipeline solely to show this board.
@@ -22,7 +22,7 @@ Keep role, movement domain, armour and equipment distinct. Wesnoth's separation 
 
 If RNG is selected, pin generator/seed, call order and stable tie-breaks. Seed alone is not a determinism guarantee. Integer/fixed-point conventions may help but require overflow/rounding checks. The server is authoritative; the browser does not recalculate results.
 
-## Model validation for 049
+## Model validation for 050
 | Scenario | Check |
 |---|---|
 | Equal forces with sides swapped | No accidental iteration/first-side advantage unless intended |
@@ -36,7 +36,7 @@ If RNG is selected, pin generator/seed, call order and stable tie-breaks. Seed a
 
 Use curated cases and invariants. If RNG exists, test distributions and preserve failing seeds. Equal-headcount and equal-cost tests answer different questions; costs await the owner-defined economy. Full faction balance remains BALANCE. No roster merges/deletions are authorised.
 
-## Persistence and concurrency for 050
+## Persistence and concurrency for 051
 Define commitment/withdrawal and troop reservation rules before real orders. Persist battle ID, due time, frozen input/rules references and final result. Calculate without holding a long database write transaction, then atomically check versions and apply accepted losses with result/audit persistence.
 
 EF Core transactions and concurrency mechanisms support this, but WOO still needs database-enforced idempotency and uniqueness. SQLite lacks database-generated concurrency tokens; use a suitable application-managed token. Test duplicate jobs, concurrent workers, stale input versions and crashes before/after commit. Losses and approved rewards apply once. Viewing a report applies nothing.
@@ -45,7 +45,7 @@ Keep sufficient audit data to investigate outcomes; a player-facing event stream
 
 Azure App Service may unload an idle application with Always On disabled. Persist due times and define recovery/catch-up under ORDERS; do not depend on an in-memory timer or UI countdown. Exact-time worker arrangements remain a hosting decision before live timed combat.
 
-## Final results for 051
+## Final results for 052
 Display outcome, starting forces, survivors and approved loss categories. Reconcile totals. Wounded/captured/retreated remain unapproved until their rules exist. Compact recorded modifiers may be optional detail, but no narrative log or exact causal percentages are required.
 
 Authorise/redact on the server before returning opponent data. Store historical results rather than recomputing using current balance. Define result schema/version compatibility and retention. Handle missing images, failed fetches, switching battles and unknown data with usable static fallback.

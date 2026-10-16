@@ -70,6 +70,15 @@
   --banner-title-shadow: #1a0f08;
   --banner-height: clamp(13rem, 9rem + 18vw, 24rem);
 
+  /* Title screen (issue #65): values from the legacy weapons-of-order theme, identical in light and dark appearance
+     because they sit on the forge artwork. Cinzel is self-hosted in title.css (SIL OFL), no font download at runtime. */
+  --title-void: #030a10;
+  --title-bone: #e6e1d3;
+  --title-ember: #fb5000;
+  --font-title: 'Cinzel', var(--font-display);
+  --text-title: clamp(3rem, 7vw, 5.5rem);
+  --text-title-menu: 1.5rem;
+
   /* ---- Light appearance (default) ---- */
   color-scheme: light;
   --color-canvas: #f5f0e6;

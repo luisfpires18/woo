@@ -1,0 +1,46 @@
+# 034: Image cache revisions and immediate replacements
+
+Task key: IMAGE-CACHE
+Status: TODO
+Updated: 2026-10-05
+Milestone: Assets
+Dependencies: ASSETS, VERSION
+
+## Goal
+
+Ensure updated images render reliably without disabling all caching.
+
+## Acceptance criteria
+
+Assign image revision/content hash or unique object key per replacement. Changing one image refreshes its URL without bumping app version; same revision reusable across renders. No Date.now cache busting each request. Browser/CDN checks confirm replacement and cleanup.
+
+## Required reading
+
+- [docs/technical/versioning-and-cache.md](../../docs/technical/versioning-and-cache.md)
+- [Scope](../scope.md)
+- [Prompt protocol](../workflow/implementation-protocol.md)
+
+## Implementation boundary
+
+A separately reviewable planning task. ChatGPT inspects current code and resolves this task's blockers before issuing one pinned Claude prompt. Preserve medieval v1. Split/refine based on actual development; do not implement successors automatically.
+
+## Validation and administration
+
+Run proportionate checks against acceptance criteria, including relevant failure/retry scenarios. Report actual local evidence. ChatGPT checks remote merge/deployment where applicable. Content/images follow admin configuration and cleanup rules; new mechanics remain code changes.
+
+## Execution record
+
+Task-spec commit: Not dispatched
+Expected dev base: Not dispatched
+Implementation branch: Not created
+Implementation commit: None
+Review: Pending
+Merged dev commit: None
+Deployment: Not started; applicability defined in prompt
+Issues: Relevant decisions and implementation details must be resolved before dispatch.
+
+## TLDR
+
+Next: prepare when prerequisites are ready.
+Done: task recorded, no implementation.
+Issues: acceptance checks not yet run.

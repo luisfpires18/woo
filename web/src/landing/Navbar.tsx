@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
+import { MAIN_PATH } from '../title/TitleScreen'
 import { AnvilIcon, ChevronDownIcon } from './icons'
 
 export type Account = { nickname: string; avatarUrl?: string }
@@ -11,7 +12,7 @@ export function Navbar({ account }: { account: Account | null }) {
   return (
     <header className="navbar">
       <div className="navbar__inner">
-        <a className="navbar__brand" href="/" aria-label="Weapons of Order home">
+        <a className="navbar__brand" href={MAIN_PATH} aria-label="Weapons of Order main page">
           <span className="navbar__anvil">
             <AnvilIcon />
           </span>

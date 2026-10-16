@@ -1,7 +1,7 @@
 # 010: First landing page UI polish
 
 Task key: LANDING
-Status: WIP
+Status: DONE
 Updated: 2026-10-16
 Milestone: UI
 Dependencies: DESIGN-SYSTEM
@@ -67,15 +67,15 @@ Preview data is isolated in `web/src/landing/previewData.ts` and labelled in the
 
 Task-spec commit: ed1f3c2975e2041dc7375f1ae900e2d797bce121 (owner dispatch, 2026-10-16)
 Expected dev base: ed1f3c2975e2041dc7375f1ae900e2d797bce121 (verified equal to local dev and origin/dev, 2026-10-16)
-Implementation branch: feat/010-landing-page (local only)
-Implementation commit: local commit on that branch; SHA given in the implementation report
-Review: Pending ChatGPT review
-Merged dev commit: None
-Deployment: Deploys through DEV-DEPLOY after integration; not yet run
-Issues: the requested frontend/image-to-code/design/accessibility skills are not installed on this computer (only the PixiJS collection), so the work follows the mockups, written corrections and design records directly. Final banner asset and real Login/Settings/Profile pages remain open. No automated frontend tests.
+Implementation branch: feat/010-landing-page
+Implementation commit: 006be69e689180703c9acd3d826aab4476801d22
+Review: APPROVED by ChatGPT, 2026-10-16
+Merged dev commit: 006be69e689180703c9acd3d826aab4476801d22 (remote dev head, verified 2026-10-16; documentation CI succeeded)
+Deployment: run [38906266025](https://github.com/luisfpires18/woo/actions/runs/38906266025) on dev at 006be69: application build/test and deployment succeeded, including live Azure verification of the exact tested artifact
+Issues: the requested frontend/image-to-code/design/accessibility skills were not installed on that computer, so the work followed the mockups, written corrections and design records directly. Final banner asset and real Login/Settings/Profile pages remain open. No automated frontend tests. Task 011 LEGACY-TITLE later moved this page from `/` to `/worlds` behind the legacy title screen.
 
 ## TLDR
 
-Next: ChatGPT review of the local commit and screenshots.
-Done: landing page with navbar/account menu, placeholder banner, introduction, preview metrics and world cards, shared footer; responsive and accessibility checks.
+Next: none; LEGACY-TITLE (011) puts the title screen in front of this page.
+Done: approved, merged at 006be69 and deployed in run 38906266025.
 Issues: see execution record.

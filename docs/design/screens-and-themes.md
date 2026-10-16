@@ -42,3 +42,6 @@ Task 009 implements the shared tokens, independent appearance and kingdom accent
 
 ## Landing implementation, 2026-10-16
 Task 010 implements the approved landing structure with a placeholder banner, preview-only world data and separate (not yet available) Login/Settings/Profile paths; decisions and differences from the screenshots are recorded in [task 010](../tasks/010-landing-page.md).
+
+## Legacy title screen, 2026-10-16
+Issue #65 (task 011 LEGACY-TITLE) restores the full-screen forge/cavern title from the discontinued weapons-of-order app as the entry screen at `/`: the original artwork, the WEAPONS / OF / ORDER Cinzel wordmark with ember rules and a single ENTER WORLD action. Settings is not on it. ENTER WORLD opens the task 010 landing page, now at `/worlds`. The title has no navbar or footer. See [task 011](../tasks/011-legacy-title-screen.md#result).
